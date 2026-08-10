@@ -1043,20 +1043,23 @@ bool SquareMatrixT4<T>::eigenSystem(T* eigenValues, VectorT4<T>* eigenVectors) c
 	 */
 
 	const T a = values[0];
-	const T b = values[1];
-	const T c = values[2];
-	const T d = values[3];
-	const T e = values[4];
+	const T e = values[1];
+	const T i = values[2];
+	const T m = values[3];
+
+	const T b = values[4];
 	const T f = values[5];
-	const T g = values[6];
-	const T h = values[7];
-	const T i = values[8];
-	const T j = values[9];
+	const T j = values[6];
+	const T n = values[7];
+
+	const T c = values[8];
+	const T g = values[9];
 	const T k = values[10];
-	const T l = values[11];
-	const T m = values[12];
-	const T n = values[13];
-	const T o = values[14];
+	const T o = values[11];
+
+	const T d = values[12];
+	const T h = values[13];
+	const T l = values[14];
 	const T p = values[15];
 
 	const T a1 = 1.0;

@@ -1587,6 +1587,78 @@ bool TestSquareMatrix4::testEigenSystem(const double testDuration)
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
+			// an upper triangular matrix is not symmetric, so that the eigenvectors of the matrix and of its transposed matrix differ, its eigenvalues are the diagonal elements
+
+			T diagonal[4];
+
+			for (unsigned int iDiagonal = 0u; iDiagonal < 4u; ++iDiagonal)
+			{
+				// the eigenvalues are kept well separated, so that the eigenvectors stay well conditioned
+				diagonal[iDiagonal] = T(iDiagonal) * T(10) + RandomT<T>::scalar(randomGenerator, T(-1), T(1));
+			}
+
+			SquareMatrixT4<T> triangularMatrix;
+
+			for (unsigned int row = 0u; row < 4u; ++row)
+			{
+				for (unsigned int column = 0u; column < 4u; ++column)
+				{
+					if (column < row)
+					{
+						triangularMatrix(row, column) = T(0);
+					}
+					else if (column == row)
+					{
+						triangularMatrix(row, column) = diagonal[row];
+					}
+					else
+					{
+						triangularMatrix(row, column) = RandomT<T>::scalar(randomGenerator, T(-1), T(1));
+					}
+				}
+			}
+
+			T eigenValues[4];
+			VectorT4<T> eigenVectors[4];
+
+			if (triangularMatrix.eigenSystem(eigenValues, eigenVectors))
+			{
+				constexpr T epsilon = std::is_same<T, float>::value ? T(0.1) : NumericT<T>::weakEps();
+
+				std::vector<T> expectedEigenValues = {diagonal[0], diagonal[1], diagonal[2], diagonal[3]};
+				std::sort(expectedEigenValues.begin(), expectedEigenValues.end());
+
+				std::vector<T> actualEigenValues = {eigenValues[0], eigenValues[1], eigenValues[2], eigenValues[3]};
+				std::sort(actualEigenValues.begin(), actualEigenValues.end());
+
+				for (unsigned int iEigen = 0u; iEigen < 4u; ++iEigen)
+				{
+					if (NumericT<T>::isNotEqual(expectedEigenValues[iEigen], actualEigenValues[iEigen], epsilon))
+					{
+						scopedIteration.setInaccurate();
+					}
+				}
+
+				for (unsigned int iEigen = 0u; iEigen < 4u; ++iEigen)
+				{
+					const VectorT4<T> Av = triangularMatrix * eigenVectors[iEigen];
+					const VectorT4<T> lambdaV = eigenVectors[iEigen] * eigenValues[iEigen];
+
+					if (!Av.isEqual(lambdaV, epsilon))
+					{
+						scopedIteration.setInaccurate();
+					}
+				}
+			}
+			else
+			{
+				scopedIteration.setInaccurate();
+			}
+		}
+
+		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			// symmetric matrix, all eigenvalues should be real and eigenvectors should be orthogonal
 
 			SquareMatrixT4<T> matrix;
