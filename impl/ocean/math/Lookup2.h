@@ -1413,7 +1413,7 @@ inline AdvancedLookupCenter2<T, TScalar>::AdvancedLookupCenter2(const AdvancedLo
 
 template <typename T, typename TScalar>
 inline AdvancedLookupCenter2<T, TScalar>::AdvancedLookupCenter2(AdvancedLookupCenter2<T, TScalar>&& lookup) noexcept :
-	LookupCenter2<T, TScalar>(lookup),
+	LookupCenter2<T, TScalar>(std::move(lookup)),
 	validBins_(std::move(lookup.validBins_))
 {
 	// nothing to do here

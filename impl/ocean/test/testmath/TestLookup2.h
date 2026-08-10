@@ -59,6 +59,13 @@ class OCEAN_TEST_MATH_EXPORT TestLookup2
 		static bool testAdvancedCenterLookupClampedValues(const double testDuration);
 
 		/**
+		 * Tests the move constructor of the advanced center lookup object.
+		 * @param testDuration The number of seconds for each test
+		 * @return True, if succeeded
+		 */
+		static bool testAdvancedCenterLookupMoveConstructor(const double testDuration);
+
+		/**
 		 * Tests the nearest neighbor interpolation function of the corner lookup object.
 		 * @param testDuration The number of seconds for each test
 		 * @return True, if succeeded

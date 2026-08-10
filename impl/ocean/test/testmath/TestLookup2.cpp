@@ -56,6 +56,15 @@ bool TestLookup2::test(const double testDuration, const TestSelector& selector)
 		Log::info() << " ";
 	}
 
+	if (selector.shouldRun("advancedcenterlookupmoveconstructor"))
+	{
+		testResult = testAdvancedCenterLookupMoveConstructor(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
 	if (selector.shouldRun("cornerlookupnearestneighbor"))
 	{
 		testResult = testCornerLookupNearestNeighbor(testDuration);
@@ -111,6 +120,11 @@ TEST(TestLookup2, CenterLookupClampedValues)
 TEST(TestLookup2, AdvancedCenterLookupClampedValues)
 {
 	EXPECT_TRUE(TestLookup2::testAdvancedCenterLookupClampedValues(GTEST_TEST_DURATION));
+}
+
+TEST(TestLookup2, AdvancedCenterLookupMoveConstructor)
+{
+	EXPECT_TRUE(TestLookup2::testAdvancedCenterLookupMoveConstructor(GTEST_TEST_DURATION));
 }
 
 TEST(TestLookup2, CornerLookupNearestNeighbor)
@@ -412,6 +426,56 @@ bool TestLookup2::testAdvancedCenterLookupClampedValues(const double testDuratio
 		}
 	}
 	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestLookup2::testAdvancedCenterLookupMoveConstructor(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Advanced center lookup object move constructor test:";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const unsigned int sizeX = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int sizeY = RandomI::random(randomGenerator, 1u, 100u);
+
+		const unsigned int binsX = RandomI::random(randomGenerator, 1u, sizeX);
+		const unsigned int binsY = RandomI::random(randomGenerator, 1u, sizeY);
+
+		AdvancedLookupCenter2<Scalar> lookupObject(sizeX, sizeY, binsX, binsY);
+
+		for (unsigned int yBin = 0u; yBin < lookupObject.binsY(); ++yBin)
+		{
+			for (unsigned int xBin = 0u; xBin < lookupObject.binsX(); ++xBin)
+			{
+				lookupObject.setBinCenterValue(xBin, yBin, Random::scalar(randomGenerator, -100, 100), RandomI::boolean(randomGenerator));
+			}
+		}
+
+		const AdvancedLookupCenter2<Scalar> expectedLookupObject(lookupObject);
+
+		const AdvancedLookupCenter2<Scalar> movedLookupObject(std::move(lookupObject));
+
+		// the moved object must hold everything the source held
+
+		OCEAN_EXPECT_TRUE(validation, movedLookupObject == expectedLookupObject);
+
+		// the source must be left empty, otherwise its own emptiness guard reports a usable object while the bins are gone
+
+		OCEAN_EXPECT_FALSE(validation, bool(lookupObject)); // NOLINT(bugprone-use-after-move)
+		OCEAN_EXPECT_EQUAL(validation, lookupObject.binsX(), size_t(0));
+		OCEAN_EXPECT_EQUAL(validation, lookupObject.binsY(), size_t(0));
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
