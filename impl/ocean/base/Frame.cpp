@@ -565,6 +565,8 @@ bool FrameType::formatIsLimitedRange(const PixelFormat pixelFormat)
 		case FORMAT_Y_VU12_LIMITED_RANGE:
 		case FORMAT_Y_U_V12_LIMITED_RANGE:
 		case FORMAT_Y_V_U12_LIMITED_RANGE:
+		case FORMAT_YUV24_LIMITED_RANGE:
+		case FORMAT_YVU24_LIMITED_RANGE:
 			return true;
 
 		default:

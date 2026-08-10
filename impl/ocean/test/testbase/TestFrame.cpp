@@ -5072,11 +5072,9 @@ bool TestFrame::testFormatIsLimitedRange()
 			case FrameType::FORMAT_RGBT32:
 			case FrameType::FORMAT_RGGB10_PACKED:
 			case FrameType::FORMAT_UYVY16:
-			case FrameType::FORMAT_YUV24:
 			case FrameType::FORMAT_YUV24_FULL_RANGE:
 			case FrameType::FORMAT_YUVA32:
 			case FrameType::FORMAT_YUVT32:
-			case FrameType::FORMAT_YVU24:
 			case FrameType::FORMAT_YVU24_FULL_RANGE:
 			case FrameType::FORMAT_YUYV16:
 			case FrameType::FORMAT_Y16:
@@ -5106,6 +5104,8 @@ bool TestFrame::testFormatIsLimitedRange()
 			case FrameType::FORMAT_Y_VU12_LIMITED_RANGE:
 			case FrameType::FORMAT_Y_U_V12_LIMITED_RANGE:
 			case FrameType::FORMAT_Y_V_U12_LIMITED_RANGE:
+			case FrameType::FORMAT_YUV24_LIMITED_RANGE:
+			case FrameType::FORMAT_YVU24_LIMITED_RANGE:
 				testFormatIsLimitedRange = true;
 				break;
 
