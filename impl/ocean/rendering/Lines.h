@@ -54,8 +54,8 @@ class OCEAN_RENDERING_EXPORT Lines : virtual public IndependentPrimitive
 		virtual VertexIndices indices() const;
 
 		/**
-		 * Returns the number of point indices defined in this primitive.
-		 * @return Number of point indices
+		 * Returns the number of vertex indices defined in this primitive.
+		 * @return Number of vertex indices
 		 * @exception NotSupportedException Is thrown if this function is not supported
 		 */
 		virtual unsigned int numberIndices() const;
@@ -77,11 +77,12 @@ class OCEAN_RENDERING_EXPORT Lines : virtual public IndependentPrimitive
 		virtual void setIndices(const VertexIndices& indices);
 
 		/**
-		 * Sets the indices of the used vertex lines.
-		 * @param numberImplicitLines The number of lines on points with consecutive indices, with range [0, infinity)
+		 * Sets the indices of the used vertex lines to a consecutive range starting at zero.
+		 * Two consecutive vertices define one line, so the number of resulting lines is half of the given number of vertices.
+		 * @param numberImplicitVertices The number of consecutive vertices to be used, with range [0, infinity)
 		 * @exception NotSupportedException Is thrown if this function is not supported
 		 */
-		virtual void setIndices(const unsigned int numberImplicitLines);
+		virtual void setIndices(const unsigned int numberImplicitVertices);
 
 		/**
 		 * Sets the width (thickness) in pixels at which all lines will be rendered.

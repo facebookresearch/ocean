@@ -78,8 +78,9 @@ class OCEAN_RENDERING_EXPORT Points : virtual public IndependentPrimitive
 		virtual void setIndices(const VertexIndices& indices);
 
 		/**
-		 * Sets the indices of the used vertex points.
-		 * @param numberImplicitPoints The number of points on points with consecutive indices, with range [0, infinity)
+		 * Sets the indices of the used vertex points to a consecutive range starting at zero.
+		 * One vertex defines one point.
+		 * @param numberImplicitPoints The number of consecutive vertices to be used, with range [0, infinity)
 		 * @exception NotSupportedException Is thrown if this function is not supported
 		 */
 		virtual void setIndices(const unsigned int numberImplicitPoints);

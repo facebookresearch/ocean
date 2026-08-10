@@ -41,11 +41,11 @@ unsigned int GLESLines::numberIndices() const
 {
 	const ScopedLock scopedLock(objectLock_);
 
-	ocean_assert(explicitLineIndices_.empty() || numberImplicitLines_ == 0u);
+	ocean_assert(explicitLineIndices_.empty() || numberImplicitVertices_ == 0u);
 
 	if (explicitLineIndices_.empty())
 	{
-		return numberImplicitLines_;
+		return numberImplicitVertices_;
 	}
 
 	return (unsigned int)(explicitLineIndices_.size());
@@ -78,7 +78,7 @@ void GLESLines::setIndices(const VertexIndices& indices)
 	ocean_assert(GL_NO_ERROR == glGetError());
 
 	explicitLineIndices_ = indices;
-	numberImplicitLines_ = 0u;
+	numberImplicitVertices_ = 0u;
 
 	ocean_assert(GL_NO_ERROR == glGetError());
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * explicitLineIndices_.size(), explicitLineIndices_.data(), GL_STATIC_DRAW);
@@ -99,13 +99,13 @@ void GLESLines::setIndices(const VertexIndices& indices)
 	updateBoundingBox();
 }
 
-void GLESLines::setIndices(const unsigned int numberImplicitLines)
+void GLESLines::setIndices(const unsigned int numberImplicitVertices)
 {
 	const ScopedLock scopedLock(objectLock_);
 
 	release();
 
-	numberImplicitLines_ = numberImplicitLines;
+	numberImplicitVertices_ = numberImplicitVertices;
 
 	updateBoundingBox();
 }
@@ -125,7 +125,7 @@ void GLESLines::setLineWidth(const Scalar width)
 
 void GLESLines::render(const GLESFramebuffer& framebuffer, const SquareMatrix4& projectionMatrix, const HomogenousMatrix4& camera_T_object, const HomogenousMatrix4& camera_T_world, const SquareMatrix3& normalMatrix, GLESAttributeSet& attributeSet, const Lights& lights)
 {
-	if (explicitLineIndices_.empty() && numberImplicitLines_ == 0u)
+	if (explicitLineIndices_.empty() && numberImplicitVertices_ == 0u)
 	{
 		return;
 	}
@@ -158,7 +158,7 @@ void GLESLines::render(const SquareMatrix4& projectionMatrix, const HomogenousMa
 {
 	ocean_assert(shaderProgram.isCompiled());
 
-	if (explicitLineIndices_.empty() && numberImplicitLines_ == 0u)
+	if (explicitLineIndices_.empty() && numberImplicitVertices_ == 0u)
 	{
 		return;
 	}
@@ -189,7 +189,7 @@ void GLESLines::drawLines()
 		ocean_assert(GL_NO_ERROR == glGetError());
 	}
 
-	if (numberImplicitLines_ == 0u)
+	if (numberImplicitVertices_ == 0u)
 	{
 		ocean_assert(vboIndices_ != 0u);
 		ocean_assert(GL_NO_ERROR == glGetError());
@@ -205,7 +205,7 @@ void GLESLines::drawLines()
 	}
 	else
 	{
-		glDrawArrays(GL_LINES, 0u, numberImplicitLines_);
+		glDrawArrays(GL_LINES, 0u, numberImplicitVertices_);
 		ocean_assert(GL_NO_ERROR == glGetError());
 	}
 
@@ -228,7 +228,7 @@ void GLESLines::release()
 	}
 
 	explicitLineIndices_.clear();
-	numberImplicitLines_ = 0u;
+	numberImplicitVertices_ = 0u;
 
 	boundingBox_ = BoundingBox();
 }
@@ -237,7 +237,7 @@ void GLESLines::updateBoundingBox()
 {
 	boundingBox_ = BoundingBox();
 
-	if (vertexSet_.isNull() || (explicitLineIndices_.empty() && numberImplicitLines_ == 0u))
+	if (vertexSet_.isNull() || (explicitLineIndices_.empty() && numberImplicitVertices_ == 0u))
 	{
 		return;
 	}
@@ -247,7 +247,7 @@ void GLESLines::updateBoundingBox()
 
 	if (explicitLineIndices_.empty())
 	{
-		boundingBox_ = glesVertexSet->boundingBox(numberImplicitLines_);
+		boundingBox_ = glesVertexSet->boundingBox(numberImplicitVertices_);
 	}
 	else
 	{

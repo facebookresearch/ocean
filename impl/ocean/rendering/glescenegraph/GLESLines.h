@@ -62,7 +62,7 @@ class OCEAN_RENDERING_GLES_EXPORT GLESLines :
 		 * Sets the indices of the used vertex lines.
 		 * @see Lines::setIndices().
 		 */
-		void setIndices(const unsigned int numberImplicitLines) override;
+		void setIndices(const unsigned int numberImplicitVertices) override;
 
 		/**
 		 * Sets the width (thickness) in pixels at which all lines will be rendered.
@@ -118,8 +118,8 @@ class OCEAN_RENDERING_GLES_EXPORT GLESLines :
 		/// The line indices, in case lines are defined via explicit line indices.
 		VertexIndices explicitLineIndices_;
 
-		/// Number of lines, in case lines are defined implicitly based on lines with consecutive indices.
-		unsigned int numberImplicitLines_ = 0u;
+		/// Number of vertices, in case lines are defined implicitly based on vertices with consecutive indices, two vertices per line.
+		unsigned int numberImplicitVertices_ = 0u;
 
 		/// The width (thickness) of the line in pixels, with range [1, infinity)
 		Scalar lineWidth_ = Scalar(1);

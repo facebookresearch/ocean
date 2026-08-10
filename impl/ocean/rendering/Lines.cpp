@@ -44,7 +44,7 @@ void Lines::setIndices(const VertexIndices& /*indices*/)
 	throw NotSupportedException();
 }
 
-void Lines::setIndices(const unsigned int /*numberImplicitPoints*/)
+void Lines::setIndices(const unsigned int /*numberImplicitVertices*/)
 {
 	throw NotSupportedException();
 }
