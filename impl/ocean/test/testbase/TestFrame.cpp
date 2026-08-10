@@ -3665,7 +3665,8 @@ bool TestFrame::testPlaneBytesPerPixel()
 			case FrameType::FORMAT_RGB24:
 			case FrameType::FORMAT_YUV24: // FORMAT_YUV24_LIMITED_RANGE
 			case FrameType::FORMAT_YUV24_FULL_RANGE:
-			case FrameType::FORMAT_YVU24:
+			case FrameType::FORMAT_YVU24: // FORMAT_YVU24_LIMITED_RANGE
+			case FrameType::FORMAT_YVU24_FULL_RANGE:
 			{
 				OCEAN_EXPECT_EQUAL(validation, frame.numberPlanes(), 1u);
 
@@ -5076,6 +5077,7 @@ bool TestFrame::testFormatIsLimitedRange()
 			case FrameType::FORMAT_YUVA32:
 			case FrameType::FORMAT_YUVT32:
 			case FrameType::FORMAT_YVU24:
+			case FrameType::FORMAT_YVU24_FULL_RANGE:
 			case FrameType::FORMAT_YUYV16:
 			case FrameType::FORMAT_Y16:
 			case FrameType::FORMAT_Y32:

@@ -496,6 +496,7 @@ class OCEAN_BASE_EXPORT FrameType
 			FORMAT_Y_V_U12 = 24ull | GenericPixelFormat<DT_UNSIGNED_INTEGER_8, CV_CHANNELS_UNDEFINED /* as non-generic */, PV_PLANES_3, MV_MULTIPLE_2, MV_MULTIPLE_2>::value,
 
 			/**
+			 * This pixel format is deprecated and is currently an alias for FORMAT_YVU24_LIMITED_RANGE.
 			 * Pixel format with byte order YVU and 24-bits per pixel.
 			 * Here is the memory layout:
 			 * <pre>
@@ -1074,9 +1075,53 @@ class OCEAN_BASE_EXPORT FrameType
 			FORMAT_YUV24_FULL_RANGE = 50ull | GenericPixelFormat<DT_UNSIGNED_INTEGER_8, CV_CHANNELS_3, PV_PLANES_1, MV_MULTIPLE_1, MV_MULTIPLE_1>::value,
 
 			/**
+			 * Pixel format with byte order YVU and 24 bits per pixel.
+			 *
+			 * The pixel format is using a limited value range for all three channels:
+			 * <pre>
+			 * Y channel: [16, 235]
+			 * V channel: [16, 240]
+			 * U channel: [16, 240]
+			 * </pre>
+			 *
+			 * Here is the memory layout:
+			 * <pre>
+			 *   Pixel:  0                        1                        2
+			 *    Byte:  0       1       2        3       4       5        6
+			 *     Bit:  0123456789ABCDEF01234567 89ABCDEF0123456789ABCDEF 01234567
+			 * Channel:  0       1       2        0       1       2        0
+			 *   Color:  YYYYYYYYVVVVVVVVUUUUUUUU YYYYYYYYVVVVVVVVUUUUUUUU YYYYYYYY ........
+			 * </pre>
+			 * @see FORMAT_YVU24_FULL_RANGE.
+			 */
+			FORMAT_YVU24_LIMITED_RANGE = FORMAT_YVU24,
+
+			/**
+			 * Pixel format with byte order YVU and 24 bits per pixel.
+			 *
+			 * The pixel format is using a full value range for all three channels:
+			 * <pre>
+			 * Y channel: [0, 255]
+			 * V channel: [0, 255]
+			 * U channel: [0, 255]
+			 * </pre>
+			 *
+			 * Here is the memory layout:
+			 * <pre>
+			 *   Pixel:  0                        1                        2
+			 *    Byte:  0       1       2        3       4       5        6
+			 *     Bit:  0123456789ABCDEF01234567 89ABCDEF0123456789ABCDEF 01234567
+			 * Channel:  0       1       2        0       1       2        0
+			 *   Color:  YYYYYYYYVVVVVVVVUUUUUUUU YYYYYYYYVVVVVVVVUUUUUUUU YYYYYYYY ........
+			 * </pre>
+			 * @see FORMAT_YVU24_LIMITED_RANGE.
+			 */
+			FORMAT_YVU24_FULL_RANGE = 51ull | GenericPixelFormat<DT_UNSIGNED_INTEGER_8, CV_CHANNELS_3, PV_PLANES_1, MV_MULTIPLE_1, MV_MULTIPLE_1>::value,
+
+			/**
 			 * The helper pixel format which can be used to identify the last defined pixel format, FORMAT_END is exclusive.
 			 */
-			FORMAT_END = 51ull
+			FORMAT_END = 52ull
 		};
 
 		/**
