@@ -1244,7 +1244,10 @@ bool VideoDevice::Sample::append(const PayloadHeader& payloadHeader, const void 
 	}
 
 	ocean_assert(position_ <= buffer_.size());
-	if (position_ + size > buffer_.size())
+
+	// written as a subtraction, as 'position_ + size' can wrap for a large size
+
+	if (size > buffer_.size() - position_)
 	{
 		if (allowToResize_)
 		{
@@ -2575,6 +2578,14 @@ void VideoDevice::processPayload(const BufferPointers& bufferPointers)
 		if (payloadHeader.hasError())
 		{
 			Log::error() << "Invalid payload header";
+		}
+
+		// the header length is reported by the device, a value beyond the packet would underflow the payload size below
+
+		if (size_t(payloadHeader.bHeaderLength_) > size)
+		{
+			Log::error() << "Payload header length " << int(payloadHeader.bHeaderLength_) << " exceeds the packet size " << size;
+			continue;
 		}
 
 		const size_t payloadSize = size - payloadHeader.bHeaderLength_;
