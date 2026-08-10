@@ -1112,9 +1112,25 @@ Indices32 VSDescriptor::frameIntervals(const TDescriptor& descriptor, std::vecto
 
 		result.reserve(16);
 
-		for (unsigned int frameInterval = descriptor.dwMinFrameInterval_; frameInterval <= descriptor.dwMaxFrameInterval_; frameInterval += descriptor.dwFrameIntervalStep_)
+		if (descriptor.dwFrameIntervalStep_ == 0u)
 		{
-			result.emplace_back(frameInterval);
+			// the device does not provide a step, so the range defines the boundaries only
+
+			result.emplace_back(descriptor.dwMinFrameInterval_);
+
+			if (descriptor.dwMaxFrameInterval_ != descriptor.dwMinFrameInterval_)
+			{
+				result.emplace_back(descriptor.dwMaxFrameInterval_);
+			}
+		}
+		else
+		{
+			// the accumulator is 64 bit, so that the last step cannot wrap back into the range
+
+			for (uint64_t frameInterval = descriptor.dwMinFrameInterval_; frameInterval <= uint64_t(descriptor.dwMaxFrameInterval_); frameInterval += descriptor.dwFrameIntervalStep_)
+			{
+				result.emplace_back(Index32(frameInterval));
+			}
 		}
 	}
 	else
