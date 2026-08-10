@@ -223,6 +223,9 @@ class OCEAN_RENDERING_GLES_EXPORT GLESProgramManager : public Singleton<GLESProg
 		/// Fragment shader code: PT_MATERIAL | PT_TEXTURE_LOWER/UPPER_LEFT.
 		static const char* programFragmentShaderMaterialTexture_;
 
+		/// Fragment shader code: PT_MATERIAL | PT_TEXTURE_LOWER/UPPER_LEFT, for pixel formats stored in two textures.
+		static const char* programFragmentShaderMaterialTwoTextures_;
+
 		/// Fragment shader code: PT_PHANTOM_VIDEO_FAST | PT_TEXTURE_LOWER/UPPER_LEFT.
 		static const char* programFragmentShaderPhantomVideoFastOneTexture_;
 

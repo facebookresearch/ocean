@@ -1194,6 +1194,43 @@ const char* GLESProgramManager::programFragmentShaderMaterialTexture_ =
 		}
 	)SHADER";
 
+const char* GLESProgramManager::programFragmentShaderMaterialTwoTextures_ =
+	R"SHADER(
+		// Resulting front face color
+		in OCEAN_LOWP vec4 vFrontColor;
+
+		// Resulting back face color
+		in OCEAN_LOWP vec4 vBackColor;
+
+		// Resulting front face specular color
+		in OCEAN_LOWP vec4 vFrontSpecularColor;
+
+		// Resulting back face specular color
+		in OCEAN_LOWP vec4 vBackSpecularColor;
+
+		// Resulting texture coordinate
+		in OCEAN_LOWP vec2 vTextureCoordinate;
+
+		// 2D texture samples
+		uniform sampler2D primaryTexture;
+		uniform sampler2D secondaryTexture;
+
+		// The out fragment color
+		out OCEAN_LOWP vec4 fragColor;
+
+		void main()
+		{
+			if (gl_FrontFacing)
+			{
+				fragColor = vFrontSpecularColor + vFrontColor * OCEAN_TWO_TEXTURES_LOOKUP_TO_RGBA(primaryTexture, secondaryTexture, vTextureCoordinate.xy);
+			}
+			else
+			{
+				fragColor = vBackSpecularColor + vBackColor * OCEAN_TWO_TEXTURES_LOOKUP_TO_RGBA(primaryTexture, secondaryTexture, vTextureCoordinate.xy);
+			}
+		}
+	)SHADER";
+
 const char* GLESProgramManager::programFragmentShaderPhantomVideoFastOneTexture_ =
 	R"SHADER(
 		// Input texture coordinate
@@ -1516,6 +1553,16 @@ GLESProgramManager::ShaderCodes GLESProgramManager::vertexShaderCodes(const GLES
 		case GLESAttribute::PT_MATERIAL | GLESAttribute::PT_LIGHT | GLESAttribute::PT_TEXTURE_LOWER_LEFT | GLESAttribute::PT_TEXTURE_Y:
 		case GLESAttribute::PT_MATERIAL | GLESAttribute::PT_LIGHT | GLESAttribute::PT_TEXTURE_LOWER_LEFT | GLESAttribute::PT_TEXTURE_RGBA:
 		case GLESAttribute::PT_MATERIAL | GLESAttribute::PT_LIGHT | GLESAttribute::PT_TEXTURE_LOWER_LEFT | GLESAttribute::PT_TEXTURE_BGRA:
+		case GLESAttribute::PT_MATERIAL | GLESAttribute::PT_LIGHT | GLESAttribute::PT_TEXTURE_UPPER_LEFT | GLESAttribute::PT_TEXTURE_YUV24:
+		case GLESAttribute::PT_MATERIAL | GLESAttribute::PT_LIGHT | GLESAttribute::PT_TEXTURE_UPPER_LEFT | GLESAttribute::PT_TEXTURE_YVU24:
+		case GLESAttribute::PT_MATERIAL | GLESAttribute::PT_LIGHT | GLESAttribute::PT_TEXTURE_UPPER_LEFT | GLESAttribute::PT_TEXTURE_Y_UV12:
+		case GLESAttribute::PT_MATERIAL | GLESAttribute::PT_LIGHT | GLESAttribute::PT_TEXTURE_UPPER_LEFT | GLESAttribute::PT_TEXTURE_Y_VU12:
+		case GLESAttribute::PT_MATERIAL | GLESAttribute::PT_LIGHT | GLESAttribute::PT_TEXTURE_UPPER_LEFT | GLESAttribute::PT_TEXTURE_Y_U_V12:
+		case GLESAttribute::PT_MATERIAL | GLESAttribute::PT_LIGHT | GLESAttribute::PT_TEXTURE_LOWER_LEFT | GLESAttribute::PT_TEXTURE_YUV24:
+		case GLESAttribute::PT_MATERIAL | GLESAttribute::PT_LIGHT | GLESAttribute::PT_TEXTURE_LOWER_LEFT | GLESAttribute::PT_TEXTURE_YVU24:
+		case GLESAttribute::PT_MATERIAL | GLESAttribute::PT_LIGHT | GLESAttribute::PT_TEXTURE_LOWER_LEFT | GLESAttribute::PT_TEXTURE_Y_UV12:
+		case GLESAttribute::PT_MATERIAL | GLESAttribute::PT_LIGHT | GLESAttribute::PT_TEXTURE_LOWER_LEFT | GLESAttribute::PT_TEXTURE_Y_VU12:
+		case GLESAttribute::PT_MATERIAL | GLESAttribute::PT_LIGHT | GLESAttribute::PT_TEXTURE_LOWER_LEFT | GLESAttribute::PT_TEXTURE_Y_U_V12:
 			return {partPlatform_, partDefinitionMaterial_, partDefinitionLight_, partFunctionLighting_, programVertexShaderMaterialLightTexture_};
 
 		case GLESAttribute::PT_PHANTOM_VIDEO_TEXTURE_COORDINATES_FAST | GLESAttribute::PT_TEXTURE_Y:
@@ -1623,6 +1670,36 @@ GLESProgramManager::ShaderCodes GLESProgramManager::fragmentShaderCodes(const GL
 		case GLESAttribute::PT_TEXTURE_LOWER_LEFT | GLESAttribute::PT_TEXTURE_RGBA | GLESAttribute::PT_MATERIAL | GLESAttribute::PT_LIGHT:
 		case GLESAttribute::PT_TEXTURE_UPPER_LEFT | GLESAttribute::PT_TEXTURE_RGBA | GLESAttribute::PT_MATERIAL | GLESAttribute::PT_LIGHT:
 			return {partPlatform_, partOneTextureLookupRGBA32ToRGBA32_, programFragmentShaderMaterialTexture_};
+
+		case GLESAttribute::PT_TEXTURE_LOWER_LEFT | GLESAttribute::PT_TEXTURE_YUV24 | GLESAttribute::PT_MATERIAL:
+		case GLESAttribute::PT_TEXTURE_UPPER_LEFT | GLESAttribute::PT_TEXTURE_YUV24 | GLESAttribute::PT_MATERIAL:
+		case GLESAttribute::PT_TEXTURE_LOWER_LEFT | GLESAttribute::PT_TEXTURE_YUV24 | GLESAttribute::PT_MATERIAL | GLESAttribute::PT_LIGHT:
+		case GLESAttribute::PT_TEXTURE_UPPER_LEFT | GLESAttribute::PT_TEXTURE_YUV24 | GLESAttribute::PT_MATERIAL | GLESAttribute::PT_LIGHT:
+			return {partPlatform_, limitedRange ? partOneTextureLookupLimitedRangeYUV24ToRGBA32_ : partOneTextureLookupFullRangeYUV24ToRGBA32_, programFragmentShaderMaterialTexture_};
+
+		case GLESAttribute::PT_TEXTURE_LOWER_LEFT | GLESAttribute::PT_TEXTURE_YVU24 | GLESAttribute::PT_MATERIAL:
+		case GLESAttribute::PT_TEXTURE_UPPER_LEFT | GLESAttribute::PT_TEXTURE_YVU24 | GLESAttribute::PT_MATERIAL:
+		case GLESAttribute::PT_TEXTURE_LOWER_LEFT | GLESAttribute::PT_TEXTURE_YVU24 | GLESAttribute::PT_MATERIAL | GLESAttribute::PT_LIGHT:
+		case GLESAttribute::PT_TEXTURE_UPPER_LEFT | GLESAttribute::PT_TEXTURE_YVU24 | GLESAttribute::PT_MATERIAL | GLESAttribute::PT_LIGHT:
+			return {partPlatform_, limitedRange ? partOneTextureLookupLimitedRangeYVU24ToRGBA32_ : partOneTextureLookupFullRangeYVU24ToRGBA32_, programFragmentShaderMaterialTexture_};
+
+		case GLESAttribute::PT_TEXTURE_LOWER_LEFT | GLESAttribute::PT_TEXTURE_Y_VU12 | GLESAttribute::PT_MATERIAL:
+		case GLESAttribute::PT_TEXTURE_UPPER_LEFT | GLESAttribute::PT_TEXTURE_Y_VU12 | GLESAttribute::PT_MATERIAL:
+		case GLESAttribute::PT_TEXTURE_LOWER_LEFT | GLESAttribute::PT_TEXTURE_Y_VU12 | GLESAttribute::PT_MATERIAL | GLESAttribute::PT_LIGHT:
+		case GLESAttribute::PT_TEXTURE_UPPER_LEFT | GLESAttribute::PT_TEXTURE_Y_VU12 | GLESAttribute::PT_MATERIAL | GLESAttribute::PT_LIGHT:
+			return {partPlatform_, limitedRange ? partTwoTexturesLookupLimitedRangeY_VU12ToRGBA32_ : partTwoTexturesLookupFullRangeY_VU12ToRGBA32_, programFragmentShaderMaterialTwoTextures_};
+
+		case GLESAttribute::PT_TEXTURE_LOWER_LEFT | GLESAttribute::PT_TEXTURE_Y_U_V12 | GLESAttribute::PT_MATERIAL:
+		case GLESAttribute::PT_TEXTURE_UPPER_LEFT | GLESAttribute::PT_TEXTURE_Y_U_V12 | GLESAttribute::PT_MATERIAL:
+		case GLESAttribute::PT_TEXTURE_LOWER_LEFT | GLESAttribute::PT_TEXTURE_Y_U_V12 | GLESAttribute::PT_MATERIAL | GLESAttribute::PT_LIGHT:
+		case GLESAttribute::PT_TEXTURE_UPPER_LEFT | GLESAttribute::PT_TEXTURE_Y_U_V12 | GLESAttribute::PT_MATERIAL | GLESAttribute::PT_LIGHT:
+			return {partPlatform_, limitedRange ? partTwoTexturesLookupLimitedRangeY_U_V12ToRGBA32_ : partTwoTexturesLookupFullRangeY_U_V12ToRGBA32_, programFragmentShaderMaterialTwoTextures_};
+
+		case GLESAttribute::PT_TEXTURE_LOWER_LEFT | GLESAttribute::PT_TEXTURE_Y_UV12 | GLESAttribute::PT_MATERIAL:
+		case GLESAttribute::PT_TEXTURE_UPPER_LEFT | GLESAttribute::PT_TEXTURE_Y_UV12 | GLESAttribute::PT_MATERIAL:
+		case GLESAttribute::PT_TEXTURE_LOWER_LEFT | GLESAttribute::PT_TEXTURE_Y_UV12 | GLESAttribute::PT_MATERIAL | GLESAttribute::PT_LIGHT:
+		case GLESAttribute::PT_TEXTURE_UPPER_LEFT | GLESAttribute::PT_TEXTURE_Y_UV12 | GLESAttribute::PT_MATERIAL | GLESAttribute::PT_LIGHT:
+			return {partPlatform_, limitedRange ? partTwoTexturesLookupLimitedRangeY_UV12ToRGBA32_ : partTwoTexturesLookupFullRangeY_UV12ToRGBA32_, programFragmentShaderMaterialTwoTextures_};
 
 		case GLESAttribute::PT_PHANTOM_VIDEO_FAST | GLESAttribute::PT_TEXTURE_Y:
 		case GLESAttribute::PT_PHANTOM_VIDEO_FAST | GLESAttribute::PT_TEXTURE_BGRA:
