@@ -86,6 +86,7 @@ bool GLESTextureFramebuffer::resize(const unsigned int width, const unsigned int
 			break;
 
 		case FrameType::FORMAT_Y8:
+		case FrameType::FORMAT_Y8_LIMITED_RANGE:
 #ifdef OCEAN_RENDERING_GLES_USE_ES
 			textureInternalFormat = GL_R8;
 			textureFormat = GL_RED;
@@ -280,6 +281,7 @@ bool GLESTextureFramebuffer::setPixelFormat(const FrameType::PixelFormat pixelFo
 		case FrameType::FORMAT_RGB24:
 		case FrameType::FORMAT_RGBA32:
 		case FrameType::FORMAT_Y8:
+		case FrameType::FORMAT_Y8_LIMITED_RANGE:
 		case FrameType::FORMAT_YA16:
 		case FrameType::FORMAT_Y32:
 		case FrameType::FORMAT_F32:
@@ -511,6 +513,7 @@ bool GLESTextureFramebuffer::copyColorTextureToFrame(Frame& frame, const CV::Pix
 				break;
 
 			case FrameType::FORMAT_Y8:
+			case FrameType::FORMAT_Y8_LIMITED_RANGE:
 				textureFormat = GL_RED;
 				break;
 
