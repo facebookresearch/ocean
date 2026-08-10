@@ -76,6 +76,17 @@ class OCEAN_TEST_MATH_EXPORT TestPinholeCamera
 		static bool testDistortion(const unsigned int width, const unsigned int height, const double testDuration);
 
 		/**
+		 * Tests the undistortion function with a zoom factor.
+		 * @param width The width of the camera image in pixel
+		 * @param height The height of the camera image in pixel
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 * @tparam T The data type of a scalar, 'float' or 'double'
+		 */
+		template <typename T>
+		static bool testUndistortWithZoom(const unsigned int width, const unsigned int height, const double testDuration);
+
+		/**
 		 * Tests the vector function with an undistorted camera.
 		 * @param width The width of the camera image in pixel
 		 * @param height The height of the camera image in pixel

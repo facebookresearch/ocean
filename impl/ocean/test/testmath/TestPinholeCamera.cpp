@@ -80,6 +80,17 @@ bool TestPinholeCamera::test(const double testDuration, const TestSelector& sele
 		Log::info() << " ";
 	}
 
+	if (selector.shouldRun("undistortwithzoom"))
+	{
+		testResult = testUndistortWithZoom<float>(640u, 480u, testDuration);
+		Log::info() << " ";
+		testResult = testUndistortWithZoom<double>(640u, 480u, testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
 	if (selector.shouldRun("vectordistortionfree"))
 	{
 		testResult = testVectorDistortionFree<float>(640u, 480u, testDuration);
@@ -156,6 +167,16 @@ TEST(TestPinholeCamera, Distortion_float)
 TEST(TestPinholeCamera, Distortion_double)
 {
 	EXPECT_TRUE(TestPinholeCamera::testDistortion<double>(640u, 480u, GTEST_TEST_DURATION));
+}
+
+TEST(TestPinholeCamera, UndistortWithZoom_float)
+{
+	EXPECT_TRUE(TestPinholeCamera::testUndistortWithZoom<float>(640u, 480u, GTEST_TEST_DURATION));
+}
+
+TEST(TestPinholeCamera, UndistortWithZoom_double)
+{
+	EXPECT_TRUE(TestPinholeCamera::testUndistortWithZoom<double>(640u, 480u, GTEST_TEST_DURATION));
 }
 
 TEST(TestPinholeCamera, VectorDistortionFree_float)
@@ -529,6 +550,66 @@ bool TestPinholeCamera::testDistortion(const unsigned int width, const unsigned 
 				{
 					scopedIteration.setInaccurate();
 				}
+			}
+		}
+	}
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+template <typename T>
+bool TestPinholeCamera::testUndistortWithZoom(const unsigned int width, const unsigned int height, const double testDuration)
+{
+	static_assert(std::is_same<T, float>::value || std::is_same<T, double>::value, "Template parameter T must be float or double.");
+
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Undistortion with zoom test (" << TypeNamer::name<T>() << "):";
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		for (unsigned int n = 0u; n < 4u; ++n)
+		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+			// no distortion at all, radial only, tangential only, and both
+			const T k1 = (n == 1u || n == 3u) ? RandomT<T>::scalar(randomGenerator, T(-0.1), T(0.1)) : T(0);
+			const T k2 = (n == 1u || n == 3u) ? RandomT<T>::scalar(randomGenerator, T(-0.1), T(0.1)) : T(0);
+
+			const T p1 = (n == 2u || n == 3u) ? RandomT<T>::scalar(randomGenerator, T(-0.01), T(0.01)) : T(0);
+			const T p2 = (n == 2u || n == 3u) ? RandomT<T>::scalar(randomGenerator, T(-0.01), T(0.01)) : T(0);
+
+			const T focalLengthX = RandomT<T>::scalar(randomGenerator, 500, 600);
+			const T focalLengthY = RandomT<T>::scalar(randomGenerator, 500, 600);
+			const T principalX = RandomT<T>::scalar(randomGenerator, T(width) * T(0.5) - 50, T(width) * T(0.5) + 50);
+			const T principalY = RandomT<T>::scalar(randomGenerator, T(height) * T(0.5) - 50, T(height) * T(0.5) + 50);
+
+			const T zoom = RandomT<T>::scalar(randomGenerator, T(0.2), T(5));
+
+			const PinholeCameraT<T> camera(width, height, focalLengthX, focalLengthY, principalX, principalY,
+								typename PinholeCameraT<T>::DistortionPair(k1, k2), typename PinholeCameraT<T>::DistortionPair(p1, p2));
+
+			// the zoom only scales the focal length, so this camera has to behave exactly like the camera above used with the zoom
+			const PinholeCameraT<T> scaledCamera(width, height, focalLengthX * zoom, focalLengthY * zoom, principalX, principalY,
+								typename PinholeCameraT<T>::DistortionPair(k1, k2), typename PinholeCameraT<T>::DistortionPair(p1, p2));
+
+			const VectorT2<T> undistortedPoint = RandomT<T>::vector2(randomGenerator, T(0), T(width - 1u), T(0), T(height - 1u));
+			const VectorT2<T> distortedPoint = camera.template distort<true>(undistortedPoint);
+
+			const VectorT2<T> zoomedResult = camera.template undistort<true>(distortedPoint, 100u, zoom);
+			const VectorT2<T> scaledResult = scaledCamera.template undistort<true>(distortedPoint, 100u);
+
+			if (!zoomedResult.isEqual(scaledResult, NumericT<T>::weakEps()))
+			{
+				scopedIteration.setInaccurate();
 			}
 		}
 	}

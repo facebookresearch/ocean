@@ -1548,8 +1548,8 @@ VectorT2<T> PinholeCameraT<T>::undistort(const VectorT2<T>& distorted, const uns
 
 		nIntermediateUndistorted = nIntermediateUndistorted + nIntermediateOffset * T(0.75);
 
-		const T offsetPixelX = NumericT<T>::abs(nIntermediateOffset.x() * focalLengthX());
-		const T offsetPixelY = NumericT<T>::abs(nIntermediateOffset.y() * focalLengthY());
+		const T offsetPixelX = NumericT<T>::abs(nIntermediateOffset.x() * focalLengthX() * zoom);
+		const T offsetPixelY = NumericT<T>::abs(nIntermediateOffset.y() * focalLengthY() * zoom);
 
 		if (offsetPixelX < 0.05 && offsetPixelY < 0.05)
 		{
