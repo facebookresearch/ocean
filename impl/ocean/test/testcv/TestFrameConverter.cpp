@@ -6052,7 +6052,8 @@ bool TestFrameConverter::containsGrayscaleChannel(const FrameType::PixelFormat p
 			return false;
 
 		case FrameType::FORMAT_UYVY16:
-		case FrameType::FORMAT_YUV24:
+		case FrameType::FORMAT_YUV24: // FORMAT_YUV24_LIMITED_RANGE
+		case FrameType::FORMAT_YUV24_FULL_RANGE:
 		case FrameType::FORMAT_YUVA32:
 		case FrameType::FORMAT_YUVT32:
 		case FrameType::FORMAT_YVU24:

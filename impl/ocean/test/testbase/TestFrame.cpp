@@ -2769,13 +2769,13 @@ bool TestFrame::testAccessorsPixelFormats(const double testDuration)
 
 	constexpr unsigned int testsPerPlane = 100u;
 
-	const FrameType::PixelFormats pixelFormats = FrameType::definedPixelFormats();
+	const FrameType::PixelFormats& pixelFormats = FrameType::definedPixelFormats();
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, FrameType::definedPixelFormats());
+		const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, pixelFormats);
 
 		const unsigned int widthMultiple = FrameType::widthMultiple(pixelFormat);
 		const unsigned int heightMultiple = FrameType::heightMultiple(pixelFormat);
@@ -3663,7 +3663,8 @@ bool TestFrame::testPlaneBytesPerPixel()
 
 			case FrameType::FORMAT_BGR24:
 			case FrameType::FORMAT_RGB24:
-			case FrameType::FORMAT_YUV24:
+			case FrameType::FORMAT_YUV24: // FORMAT_YUV24_LIMITED_RANGE
+			case FrameType::FORMAT_YUV24_FULL_RANGE:
 			case FrameType::FORMAT_YVU24:
 			{
 				OCEAN_EXPECT_EQUAL(validation, frame.numberPlanes(), 1u);
@@ -5071,6 +5072,7 @@ bool TestFrame::testFormatIsLimitedRange()
 			case FrameType::FORMAT_RGGB10_PACKED:
 			case FrameType::FORMAT_UYVY16:
 			case FrameType::FORMAT_YUV24:
+			case FrameType::FORMAT_YUV24_FULL_RANGE:
 			case FrameType::FORMAT_YUVA32:
 			case FrameType::FORMAT_YUVT32:
 			case FrameType::FORMAT_YVU24:

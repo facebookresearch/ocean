@@ -175,7 +175,8 @@ unsigned int FrameType::formatBitsPerPixelRedChannel(const PixelFormat pixelForm
 		case FORMAT_Y32:
 		case FORMAT_Y64:
 		case FORMAT_YA16:
-		case FORMAT_YUV24:
+		case FORMAT_YUV24: // FORMAT_YUV24_LIMITED_RANGE
+		case FORMAT_YUV24_FULL_RANGE:
 		case FORMAT_YUVA32:
 		case FORMAT_YUVT32:
 		case FORMAT_Y_U_V12: // FORMAT_Y_U_V12_LIMITED_RANGE
@@ -253,7 +254,8 @@ unsigned int FrameType::formatBitsPerPixelGreenChannel(const PixelFormat pixelFo
 		case FORMAT_Y32:
 		case FORMAT_Y64:
 		case FORMAT_YA16:
-		case FORMAT_YUV24:
+		case FORMAT_YUV24: // FORMAT_YUV24_LIMITED_RANGE
+		case FORMAT_YUV24_FULL_RANGE:
 		case FORMAT_YUVA32:
 		case FORMAT_YUVT32:
 		case FORMAT_Y_U_V12: // FORMAT_Y_U_V12_LIMITED_RANGE
@@ -329,7 +331,8 @@ unsigned int FrameType::formatBitsPerPixelBlueChannel(const PixelFormat pixelFor
 		case FORMAT_Y32:
 		case FORMAT_Y64:
 		case FORMAT_YA16:
-		case FORMAT_YUV24:
+		case FORMAT_YUV24: // FORMAT_YUV24_LIMITED_RANGE
+		case FORMAT_YUV24_FULL_RANGE:
 		case FORMAT_YUVA32:
 		case FORMAT_YUVT32:
 		case FORMAT_Y_U_V12: // FORMAT_Y_U_V12_LIMITED_RANGE
@@ -388,7 +391,8 @@ unsigned int FrameType::formatBitsPerPixelAlphaChannel(const PixelFormat pixelFo
 		case FORMAT_Y_U_V12_FULL_RANGE:
 		case FORMAT_Y_U_V24: // FORMAT_Y_U_V24_LIMITED_RANGE
 		case FORMAT_Y_U_V24_FULL_RANGE:
-		case FORMAT_YUV24:
+		case FORMAT_YUV24: // FORMAT_YUV24_LIMITED_RANGE
+		case FORMAT_YUV24_FULL_RANGE:
 		case FORMAT_YUVT32:
 		case FORMAT_UYVY16:
 		case FORMAT_YUYV16:
@@ -458,7 +462,8 @@ bool FrameType::formatHasAlphaChannel(const PixelFormat pixelFormat, bool* isLas
 		case FORMAT_Y_U_V12_FULL_RANGE:
 		case FORMAT_Y_U_V24: // FORMAT_Y_U_V24_LIMITED_RANGE
 		case FORMAT_Y_U_V24_FULL_RANGE:
-		case FORMAT_YUV24:
+		case FORMAT_YUV24: // FORMAT_YUV24_LIMITED_RANGE
+		case FORMAT_YUV24_FULL_RANGE:
 		case FORMAT_YUVT32:
 		case FORMAT_UYVY16:
 		case FORMAT_YUYV16:
@@ -742,7 +747,8 @@ FrameType::PixelFormat FrameType::formatRemoveAlphaChannel(const PixelFormat pix
 		case FORMAT_Y_U_V12_FULL_RANGE:
 		case FORMAT_Y_U_V24: // FORMAT_Y_U_V24_LIMITED_RANGE
 		case FORMAT_Y_U_V24_FULL_RANGE:
-		case FORMAT_YUV24:
+		case FORMAT_YUV24: // FORMAT_YUV24_LIMITED_RANGE
+		case FORMAT_YUV24_FULL_RANGE:
 		case FORMAT_YUVT32:
 		case FORMAT_Y_V_U12: // FORMAT_Y_V_U12_LIMITED_RANGE
 		case FORMAT_Y_V_U12_FULL_RANGE:
@@ -1343,6 +1349,16 @@ FrameType::PixelFormat FrameType::translatePixelFormat(const std::string& pixelF
 		return FORMAT_YUV24;
 	}
 
+	if (upperValue == "YUV24_LIMITED_RANGE")
+	{
+		return FORMAT_YUV24_LIMITED_RANGE;
+	}
+
+	if (upperValue == "YUV24_FULL_RANGE")
+	{
+		return FORMAT_YUV24_FULL_RANGE;
+	}
+
 	if (upperValue == "YUVA32")
 	{
 		return FORMAT_YUVA32;
@@ -1635,8 +1651,11 @@ std::string FrameType::translatePixelFormat(const PixelFormat pixelFormat)
 		case FORMAT_Y_U_V24_FULL_RANGE:
 			return "Y_U_V24_FULL_RANGE";
 
-		case FORMAT_YUV24:
+		case FORMAT_YUV24: // FORMAT_YUV24_LIMITED_RANGE
 			return "YUV24";
+
+		case FORMAT_YUV24_FULL_RANGE:
+			return "YUV24_FULL_RANGE";
 
 		case FORMAT_YUVA32:
 			return "YUVA32";
@@ -2124,7 +2143,8 @@ const FrameType::PixelFormats& FrameType::definedPixelFormats()
 		FrameType::FORMAT_RGBT32,
 		FrameType::FORMAT_RGGB10_PACKED,
 		FrameType::FORMAT_UYVY16,
-		FrameType::FORMAT_YUV24,
+		FrameType::FORMAT_YUV24, // FORMAT_YUV24_LIMITED_RANGE
+		FrameType::FORMAT_YUV24_FULL_RANGE,
 		FrameType::FORMAT_YUVA32,
 		FrameType::FORMAT_YUVT32,
 		FrameType::FORMAT_YVU24,
