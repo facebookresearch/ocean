@@ -736,7 +736,15 @@ bool SparseMatrixT<T>::invertDiagonal()
 	}
 
 #ifdef OCEAN_INTENSIVE_DEBUG
-	ocean_assert(SparseMatrixT<T>((void*)&copyMatrix) * SparseMatrixT<T>((void*)&sparseMatrix) == SparseMatrixT<T>((void*)&identityMatrix));
+	{
+		// SparseMatrixT takes ownership of the given matrix, so each of the three needs its own copy
+
+		const SparseMatrixT<T> debugCopyMatrix(new typename InternalMatrix<T>::Type(copyMatrix));
+		const SparseMatrixT<T> debugInvertedMatrix(new typename InternalMatrix<T>::Type(sparseMatrix));
+		const SparseMatrixT<T> debugIdentityMatrix(new typename InternalMatrix<T>::Type(identityMatrix));
+
+		ocean_assert(debugCopyMatrix * debugInvertedMatrix == debugIdentityMatrix);
+	}
 #endif
 
 	return true;
