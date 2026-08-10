@@ -69,13 +69,13 @@ class ClusteringSpectral
 		static Matrix determineSymmetricLaplacianMatrix(const Matrix& affinityMatrix);
 
 		/**
-		 * Sorts a list of eigenvectors with corresponding eigenvalues in descending order
+		 * Sorts a list of eigenvectors with corresponding eigenvalues in ascending order
 		 * @param firstElem First pair of eigenvalue and eigenvector
 		 * @param secondElem Second pair of eigenvalue and eigenvector
-		 * @return first eigenvalue is greater than eigenvalue of second element
+		 * @return first eigenvalue is smaller than eigenvalue of second element
 		 */
 		template <typename T>
-		static inline bool pairSortDescending(const std::pair<T, MatrixT<T>>& firstElem, const std::pair<T, MatrixT<T>>& secondElem);
+		static inline bool pairSortAscending(const std::pair<T, MatrixT<T>>& firstElem, const std::pair<T, MatrixT<T>>& secondElem);
 
 	protected:
 
@@ -84,9 +84,9 @@ class ClusteringSpectral
 };
 
 template <typename T>
-inline bool ClusteringSpectral::pairSortDescending(const std::pair<T, MatrixT<T>>& firstElem, const std::pair<T, MatrixT<T>>& secondElem)
+inline bool ClusteringSpectral::pairSortAscending(const std::pair<T, MatrixT<T>>& firstElem, const std::pair<T, MatrixT<T>>& secondElem)
 {
-	return firstElem.first > secondElem.first;
+	return firstElem.first < secondElem.first;
 }
 
 }

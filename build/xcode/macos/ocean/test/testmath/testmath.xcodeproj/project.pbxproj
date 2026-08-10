@@ -296,13 +296,21 @@
 		93EE70CC20B5F52D006E342E /* TestFourierTransformation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93EE70C920B5F52C006E342E /* TestFourierTransformation.cpp */; };
 		93EE70CD20B5F52D006E342E /* TestFourierTransformation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93EE70C920B5F52C006E342E /* TestFourierTransformation.cpp */; };
 		93FE35C32361153E00108484 /* TestCone3.h in Headers */ = {isa = PBXBuildFile; fileRef = 93FE35C22361153E00108484 /* TestCone3.h */; };
+		610BC1B5E1D40E4BE50771C2 /* TestClusteringSpectral.h in Headers */ = {isa = PBXBuildFile; fileRef = 5EC8D57FCD76A8CE49F9621C /* TestClusteringSpectral.h */; };
 		93FE35C42361153E00108484 /* TestCone3.h in Headers */ = {isa = PBXBuildFile; fileRef = 93FE35C22361153E00108484 /* TestCone3.h */; };
+		FD211624A6ABA8CF8E2B6506 /* TestClusteringSpectral.h in Headers */ = {isa = PBXBuildFile; fileRef = 5EC8D57FCD76A8CE49F9621C /* TestClusteringSpectral.h */; };
 		93FE35C52361153E00108484 /* TestCone3.h in Headers */ = {isa = PBXBuildFile; fileRef = 93FE35C22361153E00108484 /* TestCone3.h */; };
+		B45FF011626267B5026342B6 /* TestClusteringSpectral.h in Headers */ = {isa = PBXBuildFile; fileRef = 5EC8D57FCD76A8CE49F9621C /* TestClusteringSpectral.h */; };
 		93FE35C62361153E00108484 /* TestCone3.h in Headers */ = {isa = PBXBuildFile; fileRef = 93FE35C22361153E00108484 /* TestCone3.h */; };
+		CCB96E151FB360AC13A1E9C6 /* TestClusteringSpectral.h in Headers */ = {isa = PBXBuildFile; fileRef = 5EC8D57FCD76A8CE49F9621C /* TestClusteringSpectral.h */; };
 		93FE35C82361155000108484 /* TestCone3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93FE35C72361154F00108484 /* TestCone3.cpp */; };
+		0359CACEDAA2F9D585C05E1F /* TestClusteringSpectral.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42106CCB4A1383DF095DA711 /* TestClusteringSpectral.cpp */; };
 		93FE35C92361155000108484 /* TestCone3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93FE35C72361154F00108484 /* TestCone3.cpp */; };
+		35B8394901740BB59572E468 /* TestClusteringSpectral.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42106CCB4A1383DF095DA711 /* TestClusteringSpectral.cpp */; };
 		93FE35CA2361155000108484 /* TestCone3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93FE35C72361154F00108484 /* TestCone3.cpp */; };
+		CFA761B1DD77D08A4C93DACE /* TestClusteringSpectral.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42106CCB4A1383DF095DA711 /* TestClusteringSpectral.cpp */; };
 		93FE35CB2361155000108484 /* TestCone3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93FE35C72361154F00108484 /* TestCone3.cpp */; };
+		A023ECF711CF1821FA0A3D85 /* TestClusteringSpectral.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42106CCB4A1383DF095DA711 /* TestClusteringSpectral.cpp */; };
 		C09DFB631E9B83D30013811D /* TestAutomaticDifferentiation.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB621E9B83D30013811D /* TestAutomaticDifferentiation.h */; };
 		C09DFB641E9B83DB0013811D /* TestAutomaticDifferentiation.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB621E9B83D30013811D /* TestAutomaticDifferentiation.h */; };
 		C09DFB651E9B83DB0013811D /* TestAutomaticDifferentiation.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB621E9B83D30013811D /* TestAutomaticDifferentiation.h */; };
@@ -478,7 +486,9 @@
 		93EE70C420B5F4F9006E342E /* TestFourierTransformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestFourierTransformation.h; path = ../../../../../../impl/ocean/test/testmath/TestFourierTransformation.h; sourceTree = "<group>"; };
 		93EE70C920B5F52C006E342E /* TestFourierTransformation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestFourierTransformation.cpp; path = ../../../../../../impl/ocean/test/testmath/TestFourierTransformation.cpp; sourceTree = "<group>"; };
 		93FE35C22361153E00108484 /* TestCone3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestCone3.h; path = ../../../../../../impl/ocean/test/testmath/TestCone3.h; sourceTree = "<group>"; };
+		5EC8D57FCD76A8CE49F9621C /* TestClusteringSpectral.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestClusteringSpectral.h; path = ../../../../../../impl/ocean/test/testmath/TestClusteringSpectral.h; sourceTree = "<group>"; };
 		93FE35C72361154F00108484 /* TestCone3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestCone3.cpp; path = ../../../../../../impl/ocean/test/testmath/TestCone3.cpp; sourceTree = "<group>"; };
+		42106CCB4A1383DF095DA711 /* TestClusteringSpectral.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestClusteringSpectral.cpp; path = ../../../../../../impl/ocean/test/testmath/TestClusteringSpectral.cpp; sourceTree = "<group>"; };
 		C09DFB621E9B83D30013811D /* TestAutomaticDifferentiation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestAutomaticDifferentiation.h; path = ../../../../../../impl/ocean/test/testmath/TestAutomaticDifferentiation.h; sourceTree = "<group>"; };
 		C09DFB671E9B83EE0013811D /* TestAutomaticDifferentiation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestAutomaticDifferentiation.cpp; path = ../../../../../../impl/ocean/test/testmath/TestAutomaticDifferentiation.cpp; sourceTree = "<group>"; };
 		C0E9B17F1DACEF1400895C4B /* libOceanTestMathD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestMathD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -528,6 +538,7 @@
 				5DB3A2B51BAB37AB0000B274 /* TestBox2.h */,
 				5DB3A2B61BAB37AB0000B274 /* TestBox3.h */,
 				93FE35C22361153E00108484 /* TestCone3.h */,
+				5EC8D57FCD76A8CE49F9621C /* TestClusteringSpectral.h */,
 				936BA64523DE3FE5001E200F /* TestCylinder3.h */,
 				5DB3A2B81BAB37AB0000B274 /* TestEquation.h */,
 				5DEAE9731C85C04C0035D95A /* TestEuler.h */,
@@ -602,6 +613,7 @@
 				5DB3A27F1BAB379B0000B274 /* TestBox2.cpp */,
 				5DB3A2801BAB379B0000B274 /* TestBox3.cpp */,
 				93FE35C72361154F00108484 /* TestCone3.cpp */,
+				42106CCB4A1383DF095DA711 /* TestClusteringSpectral.cpp */,
 				936BA64023DE3FB7001E200F /* TestCylinder3.cpp */,
 				5DB3A2821BAB379B0000B274 /* TestEquation.cpp */,
 				5DEAE9701C85C03E0035D95A /* TestEuler.cpp */,
@@ -681,6 +693,7 @@
 				93C0869A2A96757800340652 /* TestVariance.h in Headers */,
 				5D9370D71BC6D19C0046ACD4 /* TestBox3.h in Headers */,
 				93FE35C42361153E00108484 /* TestCone3.h in Headers */,
+				FD211624A6ABA8CF8E2B6506 /* TestClusteringSpectral.h in Headers */,
 				9300C94227CE165900806E93 /* TestFrustum.h in Headers */,
 				5D9370D81BC6D19C0046ACD4 /* TestApproximation.h in Headers */,
 				5D9370D91BC6D19C0046ACD4 /* TestEquation.h in Headers */,
@@ -735,6 +748,7 @@
 				93C086992A96757800340652 /* TestVariance.h in Headers */,
 				5DB3A2D11BAB37AB0000B274 /* TestBox3.h in Headers */,
 				93FE35C32361153E00108484 /* TestCone3.h in Headers */,
+				610BC1B5E1D40E4BE50771C2 /* TestClusteringSpectral.h in Headers */,
 				9300C94127CE165900806E93 /* TestFrustum.h in Headers */,
 				5DB3A2CD1BAB37AB0000B274 /* TestApproximation.h in Headers */,
 				5DB3A2D31BAB37AB0000B274 /* TestEquation.h in Headers */,
@@ -789,6 +803,7 @@
 				93C0869B2A96757800340652 /* TestVariance.h in Headers */,
 				5DD14ADE1D953FE100CCA9F0 /* TestBox3.h in Headers */,
 				93FE35C52361153E00108484 /* TestCone3.h in Headers */,
+				B45FF011626267B5026342B6 /* TestClusteringSpectral.h in Headers */,
 				9300C94327CE165900806E93 /* TestFrustum.h in Headers */,
 				5DD14ADF1D953FE100CCA9F0 /* TestApproximation.h in Headers */,
 				5DD14AE01D953FE100CCA9F0 /* TestEquation.h in Headers */,
@@ -843,6 +858,7 @@
 				93C0869C2A96757800340652 /* TestVariance.h in Headers */,
 				C0E9B16D1DACEF1400895C4B /* TestBox3.h in Headers */,
 				93FE35C62361153E00108484 /* TestCone3.h in Headers */,
+				CCB96E151FB360AC13A1E9C6 /* TestClusteringSpectral.h in Headers */,
 				9300C94427CE165900806E93 /* TestFrustum.h in Headers */,
 				C0E9B16E1DACEF1400895C4B /* TestApproximation.h in Headers */,
 				C0E9B16F1DACEF1400895C4B /* TestEquation.h in Headers */,
@@ -1025,6 +1041,7 @@
 				9355A9012794C27B00F12C46 /* TestRateCalculator.cpp in Sources */,
 				5D9370AB1BC6D19C0046ACD4 /* TestPinholeCamera.cpp in Sources */,
 				93FE35C92361155000108484 /* TestCone3.cpp in Sources */,
+				35B8394901740BB59572E468 /* TestClusteringSpectral.cpp in Sources */,
 				5D9370AC1BC6D19C0046ACD4 /* TestLine3.cpp in Sources */,
 				5D9370AD1BC6D19C0046ACD4 /* TestBox2.cpp in Sources */,
 				5D9370AE1BC6D19C0046ACD4 /* TestNumeric.cpp in Sources */,
@@ -1079,6 +1096,7 @@
 				9355A9002794C27B00F12C46 /* TestRateCalculator.cpp in Sources */,
 				5DB3A29C1BAB379B0000B274 /* TestPinholeCamera.cpp in Sources */,
 				93FE35C82361155000108484 /* TestCone3.cpp in Sources */,
+				0359CACEDAA2F9D585C05E1F /* TestClusteringSpectral.cpp in Sources */,
 				5DB3A2A21BAB379B0000B274 /* TestLine3.cpp in Sources */,
 				5DB3A29A1BAB379B0000B274 /* TestBox2.cpp in Sources */,
 				5DB3A2A71BAB379B0000B274 /* TestNumeric.cpp in Sources */,
@@ -1133,6 +1151,7 @@
 				9355A9022794C27B00F12C46 /* TestRateCalculator.cpp in Sources */,
 				5DD14AAC1D953FE100CCA9F0 /* TestPinholeCamera.cpp in Sources */,
 				93FE35CA2361155000108484 /* TestCone3.cpp in Sources */,
+				CFA761B1DD77D08A4C93DACE /* TestClusteringSpectral.cpp in Sources */,
 				5DD14AAD1D953FE100CCA9F0 /* TestLine3.cpp in Sources */,
 				5DD14AAE1D953FE100CCA9F0 /* TestBox2.cpp in Sources */,
 				5DD14AAF1D953FE100CCA9F0 /* TestNumeric.cpp in Sources */,
@@ -1187,6 +1206,7 @@
 				9355A9032794C27B00F12C46 /* TestRateCalculator.cpp in Sources */,
 				C0E9B13B1DACEF1400895C4B /* TestPinholeCamera.cpp in Sources */,
 				93FE35CB2361155000108484 /* TestCone3.cpp in Sources */,
+				A023ECF711CF1821FA0A3D85 /* TestClusteringSpectral.cpp in Sources */,
 				C0E9B13C1DACEF1400895C4B /* TestLine3.cpp in Sources */,
 				C0E9B13D1DACEF1400895C4B /* TestBox2.cpp in Sources */,
 				C0E9B13E1DACEF1400895C4B /* TestNumeric.cpp in Sources */,

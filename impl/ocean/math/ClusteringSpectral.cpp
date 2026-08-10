@@ -38,7 +38,9 @@ ClusteringSpectral::ClusteringSpectral(const Matrix& affinityMatrix, const unsig
 	{
 		listToSort.push_back(std::make_pair(values(i), vectors.row(i)));
 	}
-	std::sort(listToSort.begin(), listToSort.end(), pairSortDescending<Scalar>);
+
+	// the cluster indicators are the eigenvectors belonging to the smallest eigenvalues of the Laplacian matrix
+	std::sort(listToSort.begin(), listToSort.end(), pairSortAscending<Scalar>);
 
 	reducedEigenvectors = Matrix(numberCluster, size);
 
