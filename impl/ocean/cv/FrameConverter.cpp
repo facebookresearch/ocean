@@ -326,13 +326,17 @@ FrameConverter::ConversionFunctionMap::ConversionFunctionMap()
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_U_V24_LIMITED_RANGE, FrameType::FORMAT_RGBA32, Options::OT_ALPHA_CHANNEL_TARGET_VALUE), FrameConverterY_U_V24::convertY_U_V24LimitedRangeToRGBA32);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_U_V24_LIMITED_RANGE, FrameType::FORMAT_YUV24), FrameConverterY_U_V24::convertY_U_V24ToYUV24);
 
-	// FORMAT_YUV24
+	// FORMAT_YUV24 (aka FORMAT_YUV24_LIMITED_RANGE)
+	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_YUV24_LIMITED_RANGE, FrameType::FORMAT_Y8_LIMITED_RANGE), FrameConverterYUV24::convertYUV24LimitedRangeToY8LimitedRange);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_YUV24, FrameType::FORMAT_BGR24), FrameConverterYUV24::convertYUV24ToBGR24);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_YUV24, FrameType::FORMAT_RGB24), FrameConverterYUV24::convertYUV24ToRGB24);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_YUV24, FrameType::FORMAT_Y8_FULL_RANGE), FrameConverterYUV24::convertYUV24ToY8);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_YUV24, FrameType::FORMAT_YVU24), FrameConverterYUV24::convertYUV24ToYVU24);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_YUV24, FrameType::FORMAT_Y_U_V12), FrameConverterYUV24::convertYUV24ToY_U_V12);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_YUV24, FrameType::FORMAT_BGRA32, Options::OT_ALPHA_CHANNEL_TARGET_VALUE), FrameConverterYUV24::convertYUV24ToBGRA32Precision6Bit);
+
+	// FORMAT_YUV24_FULL_RANGE
+	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_YUV24_FULL_RANGE, FrameType::FORMAT_Y8_FULL_RANGE), FrameConverterYUV24::convertYUV24FullRangeToY8FullRange);
 
 	// FORMAT_YUVA32
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_YUVA32, FrameType::FORMAT_YUV24), FrameChannels::removeLastChannel<uint8_t, 4u>);
@@ -342,12 +346,16 @@ FrameConverter::ConversionFunctionMap::ConversionFunctionMap()
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_YUVT32, FrameType::FORMAT_YUV24), FrameChannels::removeLastChannel<uint8_t, 4u>);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_YUVT32, FrameType::FORMAT_Y8_FULL_RANGE), FrameConverterYUVA32::convertYUVA32ToY8);
 
-	// FORMAT_YVU24
+	// FORMAT_YVU24 (aka FORMAT_YVU24_LIMITED_RANGE)
+	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_YVU24_LIMITED_RANGE, FrameType::FORMAT_Y8_LIMITED_RANGE), FrameConverterYVU24::convertYVU24LimitedRangeToY8LimitedRange);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_YVU24, FrameType::FORMAT_BGR24), FrameConverterYVU24::convertYVU24ToBGR24);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_YVU24, FrameType::FORMAT_RGB24), FrameConverterYVU24::convertYVU24ToRGB24);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_YVU24, FrameType::FORMAT_Y8_FULL_RANGE), FrameConverterYVU24::convertYVU24ToY8);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_YVU24, FrameType::FORMAT_YUV24), FrameConverterYVU24::convertYVU24ToYUV24);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_YVU24, FrameType::FORMAT_Y_V_U12), FrameConverterYVU24::convertYVU24ToY_V_U12);
+
+	// FORMAT_YVU24_FULL_RANGE
+	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_YVU24_FULL_RANGE, FrameType::FORMAT_Y8_FULL_RANGE), FrameConverterYVU24::convertYVU24FullRangeToY8FullRange);
 
 	// FORMAT_YUYV16
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_YUYV16, FrameType::FORMAT_BGR24), FrameConverterYUYV16::convertYUYV16ToBGR24);

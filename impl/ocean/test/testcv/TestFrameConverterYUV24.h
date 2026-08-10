@@ -101,6 +101,28 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverterYUV24
 		static bool testYUV24ToY8(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker);
 
 		/**
+		 * Tests the limited range YUV24 to limited range Y8 conversion.
+		 * @param width The width of the original frame in pixel, with range [1, infinity)
+		 * @param height The height of the original frame in pixel, with range [1, infinity)
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param flag The conversion flag that has been applied during conversion
+		 * @param worker The worker object
+		 * @return True, if succeeded
+		 */
+		static bool testYUV24LimitedRangeToY8LimitedRange(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker);
+
+		/**
+		 * Tests the full range YUV24 to full range Y8 conversion.
+		 * @param width The width of the original frame in pixel, with range [1, infinity)
+		 * @param height The height of the original frame in pixel, with range [1, infinity)
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param flag The conversion flag that has been applied during conversion
+		 * @param worker The worker object
+		 * @return True, if succeeded
+		 */
+		static bool testYUV24FullRangeToY8FullRange(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker);
+
+		/**
 		 * Tests the YUV24 to YVU24 conversion.
 		 * @param width The width of the original frame in pixel, with range [1, infinity)
 		 * @param height The height of the original frame in pixel, with range [1, infinity)

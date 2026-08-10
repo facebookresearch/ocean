@@ -96,6 +96,34 @@ class OCEAN_CV_EXPORT FrameConverterYUV24 : public FrameConverter
 		static inline void convertYUV24ToY8(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
 
 		/**
+		 * Converts a limited range YUV 24 bit frame to a limited range Y 8 bit frame.
+		 * The luminance channel is copied without any modification, as both pixel formats are using the same value range.
+		 * @param source The source frame buffer, must be valid
+		 * @param target The target frame buffer, must be valid
+		 * @param width The width of the frame in pixel, with range [1, infinity)
+		 * @param height The height of the frame in pixel, with range [1, infinity)
+		 * @param flag Determining the type of conversion
+		 * @param sourcePaddingElements The number of padding elements at the end of each source row, in elements, with range [0, infinity)
+		 * @param targetPaddingElements The number of padding elements at the end of each target row, in elements, with range [0, infinity)
+		 * @param worker Optional worker object to distribute the computation
+		 */
+		static inline void convertYUV24LimitedRangeToY8LimitedRange(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
+
+		/**
+		 * Converts a full range YUV 24 bit frame to a full range Y 8 bit frame.
+		 * The luminance channel is copied without any modification, as both pixel formats are using the same value range.
+		 * @param source The source frame buffer, must be valid
+		 * @param target The target frame buffer, must be valid
+		 * @param width The width of the frame in pixel, with range [1, infinity)
+		 * @param height The height of the frame in pixel, with range [1, infinity)
+		 * @param flag Determining the type of conversion
+		 * @param sourcePaddingElements The number of padding elements at the end of each source row, in elements, with range [0, infinity)
+		 * @param targetPaddingElements The number of padding elements at the end of each target row, in elements, with range [0, infinity)
+		 * @param worker Optional worker object to distribute the computation
+		 */
+		static inline void convertYUV24FullRangeToY8FullRange(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
+
+		/**
 		 * Converts a YUV 24 bit frame to a YUV 24 bit frame.
 		 * @param source The source frame buffer, must be valid
 		 * @param target The target frame buffer, must be valid
@@ -297,6 +325,16 @@ inline void FrameConverterYUV24::convertYUV24ToY8(const uint8_t* source, uint8_t
 	constexpr unsigned int shufflePattern = 0x0u;
 
 	FrameChannels::shuffleChannels<uint8_t, 3u, 1u, shufflePattern>(source, target, width, height, flag, sourcePaddingElements, targetPaddingElements, worker);
+}
+
+inline void FrameConverterYUV24::convertYUV24LimitedRangeToY8LimitedRange(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker)
+{
+	convertYUV24ToY8(source, target, width, height, flag, sourcePaddingElements, targetPaddingElements, worker);
+}
+
+inline void FrameConverterYUV24::convertYUV24FullRangeToY8FullRange(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker)
+{
+	convertYUV24ToY8(source, target, width, height, flag, sourcePaddingElements, targetPaddingElements, worker);
 }
 
 inline void FrameConverterYUV24::convertYUV24ToYUV24(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker)

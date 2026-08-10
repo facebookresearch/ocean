@@ -74,6 +74,36 @@ bool TestFrameConverterYVU24::test(const unsigned int width, const unsigned int 
 		Log::info() << " ";
 	}
 
+	if (selector.shouldRun("YVU24LimitedRangeToY8LimitedRange"))
+	{
+		Log::info() << "Testing limited range YVU24 to limited range Y8 conversion with resolution " << width << "x" << height << ":";
+
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
+		{
+			Log::info() << " ";
+			testResult = testYVU24LimitedRangeToY8LimitedRange(width, height, flag, testDuration, worker);
+		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("YVU24FullRangeToY8FullRange"))
+	{
+		Log::info() << "Testing full range YVU24 to full range Y8 conversion with resolution " << width << "x" << height << ":";
+
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
+		{
+			Log::info() << " ";
+			testResult = testYVU24FullRangeToY8FullRange(width, height, flag, testDuration, worker);
+		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
 	if (selector.shouldRun("YVU24ToYUV24"))
 	{
 		Log::info() << "Testing YVU24 to YUV24 conversion with resolution " << width << "x" << height << ":";
@@ -199,6 +229,56 @@ TEST(TestFrameConverterYVU24, YVU24ToY8FlippedMirrored)
 }
 
 
+TEST(TestFrameConverterYVU24, YVU24LimitedRangeToY8LimitedRangeNormal)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterYVU24::testYVU24LimitedRangeToY8LimitedRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_NORMAL, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterYVU24, YVU24LimitedRangeToY8LimitedRangeFlipped)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterYVU24::testYVU24LimitedRangeToY8LimitedRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterYVU24, YVU24LimitedRangeToY8LimitedRangeMirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterYVU24::testYVU24LimitedRangeToY8LimitedRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterYVU24, YVU24LimitedRangeToY8LimitedRangeFlippedMirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterYVU24::testYVU24LimitedRangeToY8LimitedRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
+
+TEST(TestFrameConverterYVU24, YVU24FullRangeToY8FullRangeNormal)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterYVU24::testYVU24FullRangeToY8FullRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_NORMAL, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterYVU24, YVU24FullRangeToY8FullRangeFlipped)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterYVU24::testYVU24FullRangeToY8FullRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterYVU24, YVU24FullRangeToY8FullRangeMirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterYVU24::testYVU24FullRangeToY8FullRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterYVU24, YVU24FullRangeToY8FullRangeFlippedMirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterYVU24::testYVU24FullRangeToY8FullRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
+
 TEST(TestFrameConverterYVU24, YVU24ToYUV24Normal)
 {
 	Worker worker;
@@ -308,6 +388,40 @@ bool TestFrameConverterYVU24::testYVU24ToY8(const unsigned int width, const unsi
 	transformationMatrix(0, 0) = 1.0;
 
 	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_YVU24, FrameType::FORMAT_Y8, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterYVU24::convertYVU24ToY8), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+}
+
+bool TestFrameConverterYVU24::testYVU24LimitedRangeToY8LimitedRange(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+	ocean_assert(width != 0u && height != 0u);
+
+	// source and target are both using the limited value range, so the luminance channel is copied without any rescaling
+
+	//                     | Y |
+	// | Y | = | 1 0 0 | * | V |
+	//                     | U |
+
+	MatrixD transformationMatrix(1, 3, false);
+	transformationMatrix(0, 0) = 1.0;
+
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_YVU24_LIMITED_RANGE, FrameType::FORMAT_Y8_LIMITED_RANGE, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterYVU24::convertYVU24LimitedRangeToY8LimitedRange), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+}
+
+bool TestFrameConverterYVU24::testYVU24FullRangeToY8FullRange(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+	ocean_assert(width != 0u && height != 0u);
+
+	// source and target are both using the full value range, so the luminance channel is copied without any rescaling
+
+	//                     | Y |
+	// | Y | = | 1 0 0 | * | V |
+	//                     | U |
+
+	MatrixD transformationMatrix(1, 3, false);
+	transformationMatrix(0, 0) = 1.0;
+
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_YVU24_FULL_RANGE, FrameType::FORMAT_Y8_FULL_RANGE, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterYVU24::convertYVU24FullRangeToY8FullRange), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 bool TestFrameConverterYVU24::testYVU24ToYUV24(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
