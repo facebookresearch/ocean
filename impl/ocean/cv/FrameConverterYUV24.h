@@ -23,6 +23,9 @@ namespace CV
 /**
  * This class provides functions to convert frames with YUV24 pixel format to other pixel formats.
  * See Frame::PixelFormat for details of the YUV24 pixel format.<br>
+ * The conversions to RGB and BGR exist in two variants which differ in the assumed value range, and not only in precision as the name may suggest:
+ * the functions without a suffix apply the limited range BT.601 conversion, while the 'Precision6Bit' functions apply the full range conversion.<br>
+ * A Frame based conversion picks between them by target pixel format, the limited range functions are registered for BGR24 and RGB24 and the full range function for BGRA32, so the very same FORMAT_YUV24 frame yields different colors depending on the requested target.
  * @ingroup cv
  */
 class OCEAN_CV_EXPORT FrameConverterYUV24 : public FrameConverter
@@ -31,6 +34,7 @@ class OCEAN_CV_EXPORT FrameConverterYUV24 : public FrameConverter
 
 		/**
 		 * Converts a YUV 24 bit frame to a BGR 24 bit frame.
+		 * The conversion applies the limited range BT.601 specification.
 		 * @param source The source frame buffer, must be valid
 		 * @param target The target frame buffer, must be valid
 		 * @param width The width of the frame in pixel, with range [1, infinity)
@@ -44,6 +48,7 @@ class OCEAN_CV_EXPORT FrameConverterYUV24 : public FrameConverter
 
 		/**
 		 * Converts a YUV 24 bit frame to a BGRA 32 bit frame with 6 bit precision.
+		 * The conversion applies the full range specification, unlike convertYUV24ToBGR24() which applies the limited range BT.601 specification.
 		 * @param source The source frame buffer, must be valid
 		 * @param target The target frame buffer, must be valid
 		 * @param width The width of the frame in pixel, with range [1, infinity)
@@ -58,6 +63,7 @@ class OCEAN_CV_EXPORT FrameConverterYUV24 : public FrameConverter
 
 		/**
 		 * Converts a YUV 24 bit frame to a RGB 24 bit frame.
+		 * The conversion applies the limited range BT.601 specification.
 		 * @param source The source frame buffer, must be valid
 		 * @param target The target frame buffer, must be valid
 		 * @param width The width of the frame in pixel, with range [1, infinity)
@@ -71,6 +77,7 @@ class OCEAN_CV_EXPORT FrameConverterYUV24 : public FrameConverter
 
 		/**
 		 * Converts a YUV 24 bit frame to a RGB 24 bit frame with 6 bit precision.
+		 * The conversion applies the full range specification, unlike convertYUV24ToRGB24() which applies the limited range BT.601 specification.
 		 * @param source The source frame buffer, must be valid
 		 * @param target The target frame buffer, must be valid
 		 * @param width The width of the frame in pixel, with range [1, infinity)
