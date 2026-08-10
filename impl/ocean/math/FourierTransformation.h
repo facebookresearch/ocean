@@ -750,7 +750,7 @@ void FourierTransformation::elementwiseMultiplicationCCS(const TComplex* sourceA
 		const unsigned int elementsCount = std::max(width, height);
 		const unsigned int lastElement = elementsCount - 1u;
 
-		for (unsigned int j = 1u; j < elementsCount; j += 2)
+		for (unsigned int j = 1u; j + 1u < elementsCount; j += 2u)
 		{
 			const TIntermediate realA = (TIntermediate)sourceA[j];
 			const TIntermediate imaginaryA = (TIntermediate)(tComplexConjugateA ? -sourceA[j + 1u] : sourceA[j + 1u]);

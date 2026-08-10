@@ -57,6 +57,15 @@ class OCEAN_TEST_MATH_EXPORT TestFourierTransformation
 		static bool testElementwiseMultiplication2(const double testDuration);
 
 		/**
+		 * Tests the element-wise multiplication of two spectrums in CCS-packed format.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 * @tparam T The data type to be tested, 'float' or 'double'
+		 */
+		template <typename T>
+		static bool testElementwiseMultiplicationCCS(const double testDuration);
+
+		/**
 		 * Tests the element-wise division of two complex spectrums.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
@@ -64,6 +73,18 @@ class OCEAN_TEST_MATH_EXPORT TestFourierTransformation
 		 */
 		template <typename T>
 		static bool testElementwiseDivision2(const double testDuration);
+
+	protected:
+
+		/**
+		 * Returns the offsets of the real part and of the imaginary part of every complex value of a CCS-packed spectrum.
+		 * The offsets are determined from the CCS layout documented in FourierTransformation.h, independently of the implementation under test.
+		 * @param width The width of the spectrum in elements, with range [1, infinity)
+		 * @param height The height of the spectrum in elements, with range [1, infinity)
+		 * @param paddingElements The number of padding elements at the end of each spectrum row, with range [0, infinity)
+		 * @return The offset of the real part and the offset of the imaginary part of each complex value, the second offset is `Index32(-1)` for the values without an imaginary part
+		 */
+		static IndexPairs32 ccsSpectrumValues(const unsigned int width, const unsigned int height, const unsigned int paddingElements);
 };
 
 }

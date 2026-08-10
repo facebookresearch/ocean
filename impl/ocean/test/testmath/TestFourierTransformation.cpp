@@ -60,6 +60,17 @@ bool TestFourierTransformation::test(const double testDuration, const TestSelect
 		Log::info() << " ";
 	}
 
+	if (selector.shouldRun("elementwisemultiplicationccs"))
+	{
+		testResult = testElementwiseMultiplicationCCS<float>(testDuration);
+		Log::info() << " ";
+		testResult = testElementwiseMultiplicationCCS<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
 	if (selector.shouldRun("elementwisedivision2"))
 	{
 		testResult = testElementwiseDivision2<float>(testDuration);
@@ -104,6 +115,16 @@ TEST(TestFourierTransformation, ElementwiseMultiplication2Float)
 TEST(TestFourierTransformation, ElementwiseMultiplication2Double)
 {
 	EXPECT_TRUE(TestFourierTransformation::testElementwiseMultiplication2<double>(GTEST_TEST_DURATION));
+}
+
+TEST(TestFourierTransformation, ElementwiseMultiplicationCCSFloat)
+{
+	EXPECT_TRUE(TestFourierTransformation::testElementwiseMultiplicationCCS<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestFourierTransformation, ElementwiseMultiplicationCCSDouble)
+{
+	EXPECT_TRUE(TestFourierTransformation::testElementwiseMultiplicationCCS<double>(GTEST_TEST_DURATION));
 }
 
 TEST(TestFourierTransformation, ElementwiseDivision2Float)
@@ -435,6 +456,167 @@ bool TestFourierTransformation::testElementwiseMultiplication2(const double test
 }
 
 template <typename T>
+bool TestFourierTransformation::testElementwiseMultiplicationCCS(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Elementwise-multiplication test for CCS-packed spectrums for " << TypeNamer::name<T>() << ":";
+
+	constexpr T epsilon = std::is_same<T, double>::value ? T(0.00001) : T(0.001);
+
+	constexpr Index32 invalidIndex = Index32(-1);
+
+	// additional elements behind the spectrum, any modification of these elements is a buffer overrun
+	constexpr unsigned int guardElements = 8u;
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		unsigned int width = 1u;
+		unsigned int height = 1u;
+
+		switch (RandomI::random(randomGenerator, 2u))
+		{
+			case 0u:
+				// one-dimensional spectrum stored in a single row
+				width = RandomI::random(randomGenerator, 1u, 64u);
+				break;
+
+			case 1u:
+				// one-dimensional spectrum stored in a single column
+				height = RandomI::random(randomGenerator, 1u, 64u);
+				break;
+
+			default:
+				width = RandomI::random(randomGenerator, 2u, 64u);
+				height = RandomI::random(randomGenerator, 2u, 64u);
+				break;
+		}
+
+		// the one-dimensional code path addresses the elements without applying the stride, so a spectrum stored in a single column must not have any padding
+		const bool allowPadding = width != 1u || height == 1u;
+
+		const unsigned int paddingSourceA = allowPadding ? RandomI::random(randomGenerator, 0u, 16u) : 0u;
+		const unsigned int paddingSourceB = allowPadding ? RandomI::random(randomGenerator, 0u, 16u) : 0u;
+		const unsigned int paddingTarget = allowPadding ? RandomI::random(randomGenerator, 0u, 16u) : 0u;
+
+		std::vector<T> sourceA((width + paddingSourceA) * height + guardElements);
+		std::vector<T> sourceB((width + paddingSourceB) * height + guardElements);
+		std::vector<T> target((width + paddingTarget) * height + guardElements);
+
+		for (T& value : sourceA)
+		{
+			value = RandomT<T>::scalar(randomGenerator, T(-1), T(1));
+		}
+
+		for (T& value : sourceB)
+		{
+			value = RandomT<T>::scalar(randomGenerator, T(-1), T(1));
+		}
+
+		for (T& value : target)
+		{
+			value = RandomT<T>::scalar(randomGenerator, T(-1), T(1));
+		}
+
+		const std::vector<T> targetCopy(target);
+
+		bool complexConjugateA = false;
+		bool complexConjugateB = false;
+
+		switch (RandomI::random(randomGenerator, 3u))
+		{
+			case 0u:
+				FourierTransformation::elementwiseMultiplicationCCS<T, false, false>(sourceA.data(), sourceB.data(), target.data(), width, height, paddingSourceA, paddingSourceB, paddingTarget);
+				break;
+
+			case 1u:
+				complexConjugateA = true;
+				FourierTransformation::elementwiseMultiplicationCCS<T, true, false>(sourceA.data(), sourceB.data(), target.data(), width, height, paddingSourceA, paddingSourceB, paddingTarget);
+				break;
+
+			case 2u:
+				complexConjugateB = true;
+				FourierTransformation::elementwiseMultiplicationCCS<T, false, true>(sourceA.data(), sourceB.data(), target.data(), width, height, paddingSourceA, paddingSourceB, paddingTarget);
+				break;
+
+			case 3u:
+				complexConjugateA = true;
+				complexConjugateB = true;
+				FourierTransformation::elementwiseMultiplicationCCS<T, true, true>(sourceA.data(), sourceB.data(), target.data(), width, height, paddingSourceA, paddingSourceB, paddingTarget);
+				break;
+
+			default:
+				ocean_assert(false && "Invalid combination!");
+				OCEAN_SET_FAILED(validation);
+				break;
+		}
+
+		const IndexPairs32 valuesSourceA = ccsSpectrumValues(width, height, paddingSourceA);
+		const IndexPairs32 valuesSourceB = ccsSpectrumValues(width, height, paddingSourceB);
+		const IndexPairs32 valuesTarget = ccsSpectrumValues(width, height, paddingTarget);
+
+		if (valuesSourceA.size() != valuesTarget.size() || valuesSourceB.size() != valuesTarget.size())
+		{
+			ocean_assert(false && "This should never happen!");
+			OCEAN_SET_FAILED(validation);
+
+			break;
+		}
+
+		std::vector<bool> isSpectrumElement(target.size(), false);
+
+		for (size_t n = 0; n < valuesTarget.size(); ++n)
+		{
+			const IndexPair32& indicesSourceA = valuesSourceA[n];
+			const IndexPair32& indicesSourceB = valuesSourceB[n];
+			const IndexPair32& indicesTarget = valuesTarget[n];
+
+			const T imaginarySourceA = indicesSourceA.second == invalidIndex ? T(0) : sourceA[indicesSourceA.second];
+			const T imaginarySourceB = indicesSourceB.second == invalidIndex ? T(0) : sourceB[indicesSourceB.second];
+
+			const std::complex<T> valueSourceA(sourceA[indicesSourceA.first], complexConjugateA ? -imaginarySourceA : imaginarySourceA);
+			const std::complex<T> valueSourceB(sourceB[indicesSourceB.first], complexConjugateB ? -imaginarySourceB : imaginarySourceB);
+
+			const std::complex<T> groundTruthResult = valueSourceA * valueSourceB;
+
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(groundTruthResult.real(), target[indicesTarget.first], epsilon));
+
+			isSpectrumElement[indicesTarget.first] = true;
+
+			if (indicesTarget.second != invalidIndex)
+			{
+				OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(groundTruthResult.imag(), target[indicesTarget.second], epsilon));
+
+				isSpectrumElement[indicesTarget.second] = true;
+			}
+		}
+
+		// the elements which do not belong to the spectrum - the padding and the guard elements behind the spectrum - must be untouched
+
+		for (size_t n = 0; n < target.size(); ++n)
+		{
+			if (!isSpectrumElement[n] && target[n] != targetCopy[n])
+			{
+				ocean_assert(false && "The function has written outside of the spectrum!");
+				OCEAN_SET_FAILED(validation);
+
+				break;
+			}
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+template <typename T>
 bool TestFourierTransformation::testElementwiseDivision2(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
@@ -550,6 +732,78 @@ bool TestFourierTransformation::testElementwiseDivision2(const double testDurati
 	Log::info() << "Validation: " << validation;
 
 	return validation.succeeded();
+}
+
+IndexPairs32 TestFourierTransformation::ccsSpectrumValues(const unsigned int width, const unsigned int height, const unsigned int paddingElements)
+{
+	ocean_assert(width != 0u && height != 0u);
+
+	constexpr Index32 invalidIndex = Index32(-1);
+
+	const unsigned int strideElements = width + paddingElements;
+
+	IndexPairs32 values;
+
+	if (width == 1u || height == 1u)
+	{
+		// the first element and, for an even length, the last element are real-only, all remaining elements form real/imaginary pairs
+
+		const unsigned int elements = std::max(width, height);
+
+		values.emplace_back(0u, invalidIndex);
+
+		for (Index32 element = 1u; element + 1u < elements; element += 2u)
+		{
+			values.emplace_back(element, element + 1u);
+		}
+
+		if (elements % 2u == 0u)
+		{
+			values.emplace_back(elements - 1u, invalidIndex);
+		}
+
+		return values;
+	}
+
+	// the left-most column and, for an even width, the right-most column are packed along the vertical direction
+
+	const bool isWidthEven = width % 2u == 0u;
+
+	Indices32 verticalColumns(1, 0u);
+
+	if (isWidthEven)
+	{
+		verticalColumns.emplace_back(width - 1u);
+	}
+
+	for (const Index32 column : verticalColumns)
+	{
+		values.emplace_back(column, invalidIndex);
+
+		for (Index32 row = 1u; row + 1u < height; row += 2u)
+		{
+			values.emplace_back(row * strideElements + column, (row + 1u) * strideElements + column);
+		}
+
+		if (height % 2u == 0u)
+		{
+			values.emplace_back((height - 1u) * strideElements + column, invalidIndex);
+		}
+	}
+
+	// all remaining columns are packed along the horizontal direction, in every row
+
+	const unsigned int lastHorizontalColumn = isWidthEven ? width - 2u : width - 1u;
+
+	for (Index32 row = 0u; row < height; ++row)
+	{
+		for (Index32 column = 1u; column < lastHorizontalColumn; column += 2u)
+		{
+			values.emplace_back(row * strideElements + column, row * strideElements + column + 1u);
+		}
+	}
+
+	return values;
 }
 
 }
