@@ -129,7 +129,7 @@ class HomogenousMatrixT4
 		 * Copy constructor.
 		 * @param matrix The matrix to copy
 		 */
-		inline HomogenousMatrixT4(const HomogenousMatrixT4<T>& matrix);
+		HomogenousMatrixT4(const HomogenousMatrixT4<T>& matrix) = default;
 
 		/**
 		 * Copy constructor for a matrix with difference element data type than T.
@@ -719,12 +719,6 @@ template <typename T>
 inline HomogenousMatrixT4<T>::HomogenousMatrixT4()
 {
 	// nothing to do here
-}
-
-template <typename T>
-inline HomogenousMatrixT4<T>::HomogenousMatrixT4(const HomogenousMatrixT4<T>& matrix)
-{
-	memcpy(values_, matrix.values_, sizeof(T) * 16);
 }
 
 template <typename T>
