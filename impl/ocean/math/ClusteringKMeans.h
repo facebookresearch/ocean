@@ -998,7 +998,7 @@ void ClusteringKMeans<T, tDimension, TSum, TSquareDistance, tUseIndices>::determ
 	ocean_assert(iterations >= 1);
 	applyOptimizationIteration(worker);
 
-	for (size_t i = 0; i < iterations; i++)
+	for (size_t n = 1; n < iterations; ++n)
 	{
 		applyOptimizationIteration(worker);
 	}
