@@ -9,6 +9,8 @@
 #include "ocean/rendering/glescenegraph/GLESTexture.h"
 #include "ocean/rendering/glescenegraph/GLESTexture2D.h"
 
+#include <atomic>
+
 
 namespace Ocean
 {
@@ -56,22 +58,30 @@ void GLESTextures::unbindAttribute()
 
 GLESAttribute::ProgramType GLESTextures::necessaryShader() const
 {
-	if (numberTextures() > 1u)
+	if (numberTextures() >= 1u)
 	{
-		return GLESAttribute::PT_TEXTURES;
-	}
+		// no shader program exists for several texture layers, so the geometry is rendered with one layer instead of not being rendered at all
+		// bindAttribute() binds the layers in order and they share the same uniform name, so the last layer is the one the shader will sample, and the program must be selected for that layer
 
-	if (numberTextures() == 1u)
-	{
-		const TextureRef firstTexture = texture(0);
-		ocean_assert(firstTexture);
+		if (numberTextures() > 1u)
+		{
+			static std::atomic<bool> warningReported(false);
 
-		if (firstTexture->type() == TYPE_TEXTURE_FRAMEBUFFER)
+			if (!warningReported.exchange(true))
+			{
+				Log::warning() << "GLESceneGraph does not support several texture layers, only the last layer is rendered. This warning is reported once.";
+			}
+		}
+
+		const TextureRef samplingTexture = texture(numberTextures() - 1u);
+		ocean_assert(samplingTexture);
+
+		if (samplingTexture->type() == TYPE_TEXTURE_FRAMEBUFFER)
 		{
 			return GLESAttribute::ProgramType(GLESAttribute::PT_TEXTURE_LOWER_LEFT | GLESAttribute::PT_TEXTURE_RGBA);
 		}
 
-		const SmartObjectRef<GLESTexture2D> texture2D(firstTexture);
+		const SmartObjectRef<GLESTexture2D> texture2D(samplingTexture);
 		ocean_assert(texture2D);
 
 		const FrameType frameType = texture2D->sourceFrameType();
