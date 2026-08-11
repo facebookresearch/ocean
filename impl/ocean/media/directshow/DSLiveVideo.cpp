@@ -202,10 +202,10 @@ bool DSLiveVideo::collectPreferredVideoFormats(DSSortableFrameTypes& sortableFra
 			{
 				sortableFrameTypes.emplace_back(DSMediaType(*type), preferredFrameType_);
 			}
-		}
 
-		FreeMediaType(*type);
-		CoTaskMemFree(type);
+			FreeMediaType(*type);
+			CoTaskMemFree(type);
+		}
 	}
 
 	std::sort(sortableFrameTypes.begin(), sortableFrameTypes.end());
