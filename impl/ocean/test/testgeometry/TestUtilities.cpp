@@ -78,6 +78,15 @@ bool TestUtilities::test(const double testDuration, const TestSelector& selector
 		testResult = testRandomCameraPoseFisheye(testDuration);
 
 		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("intersectconvexpolygons"))
+	{
+		testResult = testIntersectConvexPolygons(testDuration);
+
+		Log::info() << " ";
 	}
 
 	Log::info() << testResult;
@@ -105,6 +114,11 @@ TEST(TestUtilities, IsInsideConvexPolygon)
 TEST(TestUtilities, RandomCameraPosePinhole)
 {
 	EXPECT_TRUE(TestUtilities::testRandomCameraPosePinhole(GTEST_TEST_DURATION));
+}
+
+TEST(TestUtilities, IntersectConvexPolygons)
+{
+	EXPECT_TRUE(TestUtilities::testIntersectConvexPolygons(GTEST_TEST_DURATION));
 }
 
 TEST(TestUtilities, RandomCameraPoseFisheye)
@@ -486,6 +500,95 @@ bool TestUtilities::testRandomCameraPoseFisheye(const double testDuration)
 		}
 	}
 	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestUtilities::testIntersectConvexPolygons(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing intersection of convex polygons:";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		// two squares which do not overlap at all, the clipping empties the polygon before the last clipping line
+
+		{
+			const Scalar offset = Random::scalar(randomGenerator, Scalar(10), Scalar(1000));
+
+			const Vectors2 square0 = {Vector2(0, 0), Vector2(1, 0), Vector2(1, 1), Vector2(0, 1)};
+			const Vectors2 square1 = {Vector2(offset, offset), Vector2(offset + 1, offset), Vector2(offset + 1, offset + 1), Vector2(offset, offset + 1)};
+
+			Vectors2 intersection;
+			OCEAN_EXPECT_FALSE(validation, Geometry::Utilities::intersectConvexPolygons(square0, square1, intersection));
+		}
+
+		// two squares sharing exactly one edge, the intersection degenerates to a line
+
+		{
+			const Vectors2 square0 = {Vector2(0, 0), Vector2(1, 0), Vector2(1, 1), Vector2(0, 1)};
+			const Vectors2 square1 = {Vector2(1, 0), Vector2(2, 0), Vector2(2, 1), Vector2(1, 1)};
+
+			Vectors2 intersection;
+			OCEAN_EXPECT_FALSE(validation, Geometry::Utilities::intersectConvexPolygons(square0, square1, intersection));
+		}
+
+		// two squares sharing exactly one corner, the intersection degenerates to a point
+
+		{
+			const Vectors2 square0 = {Vector2(0, 0), Vector2(1, 0), Vector2(1, 1), Vector2(0, 1)};
+			const Vectors2 square1 = {Vector2(1, 1), Vector2(2, 1), Vector2(2, 2), Vector2(1, 2)};
+
+			Vectors2 intersection;
+			OCEAN_EXPECT_FALSE(validation, Geometry::Utilities::intersectConvexPolygons(square0, square1, intersection));
+		}
+
+		// a square fully containing a smaller square, the intersection is the smaller square
+
+		{
+			const Vectors2 square0 = {Vector2(0, 0), Vector2(10, 0), Vector2(10, 10), Vector2(0, 10)};
+			const Vectors2 square1 = {Vector2(2, 2), Vector2(4, 2), Vector2(4, 4), Vector2(2, 4)};
+
+			Vectors2 intersection;
+
+			if (Geometry::Utilities::intersectConvexPolygons(square0, square1, intersection))
+			{
+				OCEAN_EXPECT_EQUAL(validation, intersection.size(), size_t(4));
+				OCEAN_EXPECT_TRUE(validation, Numeric::isWeakEqual(Numeric::abs(Geometry::Utilities::computePolygonArea(intersection)), Scalar(4)));
+			}
+			else
+			{
+				OCEAN_SET_FAILED(validation);
+			}
+		}
+
+		// a square overlapping a band of another square, the intersection is that band
+
+		{
+			const Vectors2 square0 = {Vector2(0, 0), Vector2(10, 0), Vector2(10, 10), Vector2(0, 10)};
+			const Vectors2 square1 = {Vector2(3, -5), Vector2(7, -5), Vector2(7, 5), Vector2(3, 5)};
+
+			Vectors2 intersection;
+
+			if (Geometry::Utilities::intersectConvexPolygons(square0, square1, intersection))
+			{
+				OCEAN_EXPECT_TRUE(validation, Numeric::isWeakEqual(Numeric::abs(Geometry::Utilities::computePolygonArea(intersection)), Scalar(20)));
+			}
+			else
+			{
+				OCEAN_SET_FAILED(validation);
+			}
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 

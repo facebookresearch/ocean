@@ -71,6 +71,13 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestUtilities
 		 * @return True, if succeeded
 		 */
 		static bool testRandomCameraPoseFisheye(const double testDuration);
+
+		/**
+		 * Tests the intersection of two convex polygons.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testIntersectConvexPolygons(const double testDuration);
 };
 
 } // namespace TestGeometry

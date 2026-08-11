@@ -794,9 +794,15 @@ bool Utilities::intersectConvexPolygons(const Vector2* vertices0, const size_t s
 		const Vectors2 verticesToCheck = std::move(intersection);
 		intersection = Vectors2();
 
+		if (verticesToCheck.empty())
+		{
+			// a previous clipping line rejected every remaining vertex, so the polygons do not overlap
+
+			return false;
+		}
+
 		const FiniteLine2 clippingLine(vertices0[i], vertices0[(i + 1) % size0]);
 
-		ocean_assert(!verticesToCheck.empty());
 		Vector2 firstPoint = verticesToCheck.back();
 		bool firstPointInside = clippingLine.isLeftOfLine(firstPoint) == insideIsLeftHalfPlane;
 
@@ -837,8 +843,9 @@ bool Utilities::intersectConvexPolygons(const Vector2* vertices0, const size_t s
 	}
 
 	// Discard border cases, e.g., intersections consisting of single points or lines (adjacent polygons).
+	// isPolygonConvex() accepts anything with less than three vertices, so the size is checked separately.
 
-	if (!isPolygonConvex(intersection.data(), intersection.size()))
+	if (intersection.size() < 3 || !isPolygonConvex(intersection.data(), intersection.size()))
 	{
 		return false;
 	}
