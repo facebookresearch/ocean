@@ -351,6 +351,11 @@ bool StereoscopicGeometry::cameraPose(const AnyCamera& camera, const ConstIndexe
 
 		const bool debugResult = determineValidCorrespondencesIF<ConstTemplateArrayAccessor<Vector3>, ConstIndexedAccessor<Vector2>, ConstIndexedAccessor<Vector2>>(camera, flippedCamera0_T_world, AnyCamera::standard2InvertedFlipped(world_T_camera1), ConstTemplateArrayAccessor<Vector3>(bestObjectPoints), accessorImagePoints0, accessorImagePoints1, bestIndices, maxArbitrarySqrError, true);
 		ocean_assert_and_suppress_unused(debugResult, debugResult);
+
+		if (bestObjectPoints.size() != bestIndices.size())
+		{
+			bestObjectPoints = Subset::subset(bestObjectPoints, bestIndices);
+		}
 	}
 
 	ocean_assert(bestObjectPoints.size() == bestIndices.size());

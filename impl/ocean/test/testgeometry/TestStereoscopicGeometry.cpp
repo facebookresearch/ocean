@@ -45,6 +45,10 @@ bool TestStereoscopicGeometry::test(const double testDuration, const TestSelecto
 		Log::info() << " ";
 	}
 
+	Log::info() << " ";
+
+	testResult = testCameraPoseWithOutliers(testDuration);
+
 	Log::info() << testResult;
 
 	return testResult.succeeded();
@@ -358,6 +362,87 @@ bool TestStereoscopicGeometry::testCameraPose(const unsigned int numberCorrespon
 
 		OCEAN_EXPECT_TRUE(validation, validationPrecision.succeeded());
 	}
+
+	return validation.succeeded();
+}
+
+bool TestStereoscopicGeometry::testCameraPoseWithOutliers(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing camera pose with outlier correspondences:";
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.95, randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+		const SharedAnyCamera camera = std::make_shared<AnyCameraPinhole>(PinholeCamera(640u, 480u, Numeric::deg2rad(60)));
+
+		Vectors3 objectPoints;
+		for (unsigned int n = 0u; n < 20u; ++n)
+		{
+			objectPoints.emplace_back(Random::vector3(randomGenerator, Scalar(-1), Scalar(1)) + Vector3(0, 0, Scalar(-5)));
+		}
+
+		const HomogenousMatrix4 world_T_camera0(true);
+		const HomogenousMatrix4 world_T_camera1(Vector3(Random::scalar(randomGenerator, Scalar(0.05), Scalar(0.2)), 0, 0));
+
+		Vectors2 imagePoints0;
+		Vectors2 imagePoints1;
+
+		for (const Vector3& objectPoint : objectPoints)
+		{
+			imagePoints0.push_back(camera->projectToImage(world_T_camera0, objectPoint));
+			imagePoints1.push_back(camera->projectToImage(world_T_camera1, objectPoint));
+		}
+
+		// gross outliers, so that the valid subset is genuinely smaller than the full set;
+		// without them every correspondence is valid and the two lengths agree by accident
+
+		for (unsigned int n = 0u; n < 2u; ++n)
+		{
+			imagePoints1[n] += Vector2(Random::scalar(randomGenerator, Scalar(5), Scalar(15)) * Random::sign(randomGenerator), Random::scalar(randomGenerator, Scalar(5), Scalar(15)) * Random::sign(randomGenerator));
+		}
+
+		HomogenousMatrix4 world_T_determinedCamera0(false);
+		HomogenousMatrix4 world_T_determinedCamera1(false);
+
+		Vectors3 determinedObjectPoints;
+		Indices32 validIndices;
+
+		// zero RANSAC iterations forces the fallback branch, where the object points used to keep the full length
+		// while the indices held only the valid subset
+
+		if (Geometry::StereoscopicGeometry::cameraPose(*camera, ConstArrayAccessor<Vector2>(imagePoints0), ConstArrayAccessor<Vector2>(imagePoints1), randomGenerator, world_T_determinedCamera0, world_T_determinedCamera1, nullptr, &determinedObjectPoints, &validIndices, Numeric::sqr(Scalar(2)), Numeric::sqr(Scalar(2)), 0u /*iterations*/))
+		{
+			// the two out-parameters are index-aligned by contract, so they must have the same length
+
+			if (determinedObjectPoints.size() != validIndices.size())
+			{
+				scopedIteration.setInaccurate();
+			}
+
+			for (const Index32& index : validIndices)
+			{
+				if (size_t(index) >= imagePoints0.size())
+				{
+					scopedIteration.setInaccurate();
+				}
+			}
+		}
+		else
+		{
+			scopedIteration.setInaccurate();
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
 
 	return validation.succeeded();
 }

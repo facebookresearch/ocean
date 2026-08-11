@@ -53,6 +53,13 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestStereoscopicGeometry
 		 */
 		template <bool tPureRotation>
 		static bool testCameraPose(const unsigned int numberCorrespondences, const double testDuration);
+
+		/**
+		 * Tests the camera pose determination with outlier correspondences, so that only a subset of the correspondences is valid.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testCameraPoseWithOutliers(const double testDuration);
 };
 
 }
