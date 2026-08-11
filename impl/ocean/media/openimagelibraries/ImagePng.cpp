@@ -81,6 +81,25 @@ Frame ImagePng::decodeImage(const void* buffer, const size_t size)
 		return Frame();
 	}
 
+	unsigned int numberOfPasses = 1u;
+
+	const png_byte interlaceType = png_get_interlace_type(pngReadStruct, pngInfoStruct);
+
+	if (interlaceType == PNG_INTERLACE_ADAM7)
+	{
+		const int passes = png_set_interlace_handling(pngReadStruct);
+
+		if (passes >= 1 && passes <= 256) // currently PNG should return 7
+		{
+			numberOfPasses = (unsigned int)(passes);
+		}
+		else
+		{
+			ocean_assert(false && "Invalid interlace type");
+			return Frame();
+		}
+	}
+
 	FrameType::PixelFormat pixelFormat = FrameType::FORMAT_UNDEFINED;
 
 	if (colorType == PNG_COLOR_TYPE_PALETTE && bitDepthPerChannel >= 1 && bitDepthPerChannel <= 8)
@@ -145,25 +164,6 @@ Frame ImagePng::decodeImage(const void* buffer, const size_t size)
 	{
 		ocean_assert(false && "do we handle stride?");
 		return Frame();
-	}
-
-	unsigned int numberOfPasses = 1u;
-
-	const png_byte interlaceType = png_get_interlace_type(pngReadStruct, pngInfoStruct);
-
-	if (interlaceType == PNG_INTERLACE_ADAM7)
-	{
-		const int passes = png_set_interlace_handling(pngReadStruct);
-
-		if (passes >= 1 && passes <= 256) // currently PNG should return 7
-		{
-			numberOfPasses = (unsigned int)(passes);
-		}
-		else
-		{
-			ocean_assert(false && "Invalid interlace type");
-			return Frame();
-		}
 	}
 
 	for (unsigned int nPass = 0u; nPass < numberOfPasses; ++nPass)
