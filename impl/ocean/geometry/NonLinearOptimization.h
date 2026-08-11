@@ -1437,8 +1437,9 @@ bool NonLinearOptimization::advancedDenseOptimization(T& advancedDenseProvider, 
 
 	const bool useLevenbergMarquardt = (lambda > 0 && lambdaFactor > 1);
 
-	// we determine the initial error only for the Levenberg-Marquardt optimization of if the user explicitly requests that value
-	Scalar bestError = (useLevenbergMarquardt || initialError) ? advancedDenseProvider.determineError() : Numeric::minValue();
+	// determineError() is also what fills the provider's error cache, which determineHessianAndErrorJacobian() reads,
+	// so it has to run before the first Hessian is built even when its return value is not needed
+	Scalar bestError = advancedDenseProvider.determineError();
 
 	if (bestError == Numeric::maxValue())
 	{
@@ -1522,7 +1523,8 @@ bool NonLinearOptimization::advancedDenseOptimization(T& advancedDenseProvider, 
 				// we apply the deltas by: new = old - deltas
 				advancedDenseProvider.applyCorrection(deltas);
 
-				const Scalar iterationError = (useLevenbergMarquardt || intermediateErrors) ? advancedDenseProvider.determineError() : Numeric::minValue();
+				// this also refreshes the provider's error cache for the next Hessian, the corrected model would otherwise be scored with the errors of the previous one
+				const Scalar iterationError = advancedDenseProvider.determineError();
 
 				// check whether a Levenberg-Marquardt approach is intended and then check whether the new error is not better than the best one
 				if (useLevenbergMarquardt && iterationError >= bestError)
@@ -1603,8 +1605,9 @@ bool NonLinearOptimization::advancedSparseOptimization(T& advancedSparseProvider
 
 	const bool useLevenbergMarquardt = (lambda > 0 && lambdaFactor > 1);
 
-	// we determine the initial error only for the Levenberg-Marquardt optimization of if the user explicitly requests that value
-	Scalar bestError = (useLevenbergMarquardt || initialError) ? advancedSparseProvider.determineError() : Numeric::minValue();
+	// determineError() is also what fills the provider's error cache, which determineParameters() reads,
+	// so it has to run before the first parameters are determined even when its return value is not needed
+	Scalar bestError = advancedSparseProvider.determineError();
 
 	if (bestError == Numeric::maxValue())
 	{
@@ -1656,7 +1659,8 @@ bool NonLinearOptimization::advancedSparseOptimization(T& advancedSparseProvider
 				// we apply the deltas by: new = old - deltas
 				advancedSparseProvider.applyCorrection(deltas);
 
-				const Scalar iterationError = (useLevenbergMarquardt || intermediateErrors) ? advancedSparseProvider.determineError() : Numeric::minValue();
+				// this also refreshes the provider's error cache for the next parameters, the corrected model would otherwise be scored with the errors of the previous one
+				const Scalar iterationError = advancedSparseProvider.determineError();
 
 				// check whether a Levenberg-Marquardt approach is intended and then check whether the new error is not better than the best one
 				if (useLevenbergMarquardt && iterationError >= bestError)
