@@ -246,10 +246,6 @@ class NonLinearOptimizationOrientation::CameraOrientationOptimizationProvider : 
 			pinholeCamera.setRadialDistortion(std::make_pair(pinholeCamera.radialDistortion().first - deltas(3), pinholeCamera.radialDistortion().second - deltas(4)));
 			pinholeCamera.setTangentialDistortion(std::make_pair(pinholeCamera.tangentialDistortion().first - deltas(5), pinholeCamera.tangentialDistortion().second - deltas(6)));
 
-			ocean_assert(candidateCamera_.principalPointX() >= 0 && candidateCamera_.principalPointY() >= 0);
-			ocean_assert(candidateCamera_.principalPointX() < Scalar(candidateCamera_.width()) && candidateCamera_.principalPointY() < Scalar(candidateCamera_.height()));
-			ocean_assert(candidateCamera_.focalLengthX() > 0 && candidateCamera_.focalLengthY() > 0);
-
 			const Pose deltaPose(0, 0, 0, deltas(0), deltas(1), deltas(2));
 			const Pose newPose(pose - deltaPose);
 
