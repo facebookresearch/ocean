@@ -272,6 +272,8 @@ bool MFLiveVideo::enumerateVideoDevices(Library::Definitions& definitions)
 
 	if (S_OK == MFEnumDeviceSources(*attributes, &devices, &numberDevices))
 	{
+		ocean_assert(numberDevices == 0u || devices != nullptr);
+
 		for (UINT32 n = 0u; n < numberDevices; ++n)
 		{
 			std::string friendlyName;
@@ -289,6 +291,9 @@ bool MFLiveVideo::enumerateVideoDevices(Library::Definitions& definitions)
 
 			release(devices[n]);
 		}
+
+		CoTaskMemFree(devices);
+		devices = nullptr;
 	}
 
 	return true;
