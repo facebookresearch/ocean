@@ -94,6 +94,15 @@ bool TestSpatialDistribution::test(const double testDuration, const TestSelector
 		testResult = testCopyConstructorWithNeighborhood8(testDuration);
 
 		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("distributetoarrayempty"))
+	{
+		testResult = testDistributeToArrayEmpty(testDuration);
+
+		Log::info() << " ";
 	}
 
 	Log::info() << testResult;
@@ -131,6 +140,11 @@ TEST(TestSpatialDistribution, DistributeAndFilter)
 TEST(TestSpatialDistribution, DistributeAndFilterIndices)
 {
 	EXPECT_TRUE(TestSpatialDistribution::testDistributeAndFilterIndices(GTEST_TEST_DURATION));
+}
+
+TEST(TestSpatialDistribution, DistributeToArrayEmpty)
+{
+	EXPECT_TRUE(TestSpatialDistribution::testDistributeToArrayEmpty(GTEST_TEST_DURATION));
 }
 
 TEST(TestSpatialDistribution, CopyConstructorWithNeighborhood8)
@@ -718,6 +732,66 @@ bool TestSpatialDistribution::testCopyConstructorWithNeighborhood8(const double 
 				}
 			}
 		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestSpatialDistribution::testDistributeToArrayEmpty(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing distributeToArray() with an empty set of points:";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const Scalar left = Random::scalar(randomGenerator, Scalar(-100), Scalar(100));
+		const Scalar top = Random::scalar(randomGenerator, Scalar(-100), Scalar(100));
+		const Scalar width = Random::scalar(randomGenerator, Scalar(1), Scalar(1000));
+		const Scalar height = Random::scalar(randomGenerator, Scalar(1), Scalar(1000));
+
+		const unsigned int averagePointsPerBin = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int maxHorizontalBins = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int maxVerticalBins = RandomI::random(randomGenerator, 1u, 100u);
+
+		// the out-parameters carry a recognizable value, the function has to overwrite both of them
+
+		unsigned int horizontalBins = 0xFFFFFFFFu;
+		unsigned int verticalBins = 0xFFFFFFFFu;
+
+		const Geometry::SpatialDistribution::DistributionArray distributionArray = Geometry::SpatialDistribution::distributeToArray(nullptr, 0, left, top, width, height, averagePointsPerBin, maxHorizontalBins, maxVerticalBins, horizontalBins, verticalBins);
+
+		// the header documents both results with range [1, infinity)
+
+		OCEAN_EXPECT_GREATER_EQUAL(validation, horizontalBins, 1u);
+		OCEAN_EXPECT_GREATER_EQUAL(validation, verticalBins, 1u);
+
+		OCEAN_EXPECT_LESS_EQUAL(validation, horizontalBins, maxHorizontalBins);
+		OCEAN_EXPECT_LESS_EQUAL(validation, verticalBins, maxVerticalBins);
+
+		// the resulting array must match the bins the function reported
+
+		OCEAN_EXPECT_EQUAL(validation, distributionArray.horizontalBins(), horizontalBins);
+		OCEAN_EXPECT_EQUAL(validation, distributionArray.verticalBins(), verticalBins);
+
+		// and it must be empty, as no point was given
+
+		size_t numberIndices = 0;
+
+		for (unsigned int nBin = 0u; nBin < distributionArray.bins(); ++nBin)
+		{
+			numberIndices += distributionArray[nBin].size();
+		}
+
+		OCEAN_EXPECT_EQUAL(validation, numberIndices, size_t(0));
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 

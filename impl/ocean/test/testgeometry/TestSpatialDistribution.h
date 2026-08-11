@@ -85,6 +85,13 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestSpatialDistribution
 		 * @return True, if succeeded
 		 */
 		static bool testCopyConstructorWithNeighborhood8(const double testDuration);
+
+		/**
+		 * Tests distributeToArray() with an empty set of image points.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testDistributeToArrayEmpty(const double testDuration);
 };
 
 }

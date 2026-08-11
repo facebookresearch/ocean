@@ -1775,6 +1775,9 @@ inline SpatialDistribution::DistributionArray SpatialDistribution::distributeToA
 
 	if (number == 0)
 	{
+		horizontalBins = 1u;
+		verticalBins = 1u;
+
 		return DistributionArray(left, top, width, height, horizontalBins, verticalBins);
 	}
 
