@@ -197,6 +197,8 @@ bool DSFrameRecorder::lockBufferToFill(Frame& recorderFrame, const bool respectF
 			};
 
 			recorderFrame = Frame(frameType(), planeInitializer);
+
+			return true;
 		}
 	}
 
