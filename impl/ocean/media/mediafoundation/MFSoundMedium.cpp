@@ -40,7 +40,7 @@ float MFSoundMedium::soundVolume() const
 
 	if (!mediaSession_.isValid())
 	{
-		return false;
+		return -100.0f;
 	}
 
 	float volume = -100.0f;
@@ -101,8 +101,10 @@ bool MFSoundMedium::setSoundVolume(const float volume)
 		float level = NumericF::pow(10.0f, volume * 0.05f);
 		UINT32 channels = 0;
 
-		if (S_OK == audioStreamVolume->GetChannelCount(&channels))
+		if (S_OK == audioStreamVolume->GetChannelCount(&channels) && channels != 0u)
 		{
+			success = true;
+
 			for (UINT32 i = 0; i < channels; ++i)
 			{
 				success = S_OK == audioStreamVolume->SetChannelVolume(i, level) && success;
