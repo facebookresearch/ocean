@@ -260,13 +260,6 @@ class VideoDecoder
 		 */
 		static bool isAnnexB(const void* data, const size_t size, const bool isCodecConfig = false);
 
-		/**
-		 * Move operator.
-		 * @param videoDecoder The video decoder to be moved
-		 * @return Reference to this object
-		 */
-		inline VideoDecoder& operator=(VideoDecoder&& videoDecoder) noexcept;
-
 	protected:
 
 		/**
@@ -275,10 +268,22 @@ class VideoDecoder
 		VideoDecoder(const VideoDecoder&) = delete;
 
 		/**
+		 * Disabled move constructor, a video decoder cannot be moved.
+		 * `VTDecompressionSessionCreate()` stores the address of the decoder as the reference constant of the output callback, and VideoToolbox provides no way to change it afterwards, so a moved session would keep reporting its frames to the moved-from object.
+		 */
+		VideoDecoder(VideoDecoder&&) = delete;
+
+		/**
 		 * Disabled copy operator.
 		 * @return Reference to this object
 		 */
 		VideoDecoder& operator=(const VideoDecoder&) = delete;
+
+		/**
+		 * Disabled move operator, a video decoder cannot be moved.
+		 * @return Reference to this object
+		 */
+		VideoDecoder& operator=(VideoDecoder&&) = delete;
 
 		/**
 		 * Handles a newly decoded frame by either delivering it directly or deferring it for later delivery in DM_ORDERED mode.

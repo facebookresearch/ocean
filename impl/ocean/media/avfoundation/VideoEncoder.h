@@ -262,12 +262,6 @@ class VideoEncoder
 		VideoEncoder();
 
 		/**
-		 * Move constructor.
-		 * @param videoEncoder The encoder to be moved
-		 */
-		inline VideoEncoder(VideoEncoder&& videoEncoder) noexcept;
-
-		/**
 		 * Destructs the video encoder and releases all associated resources.
 		 */
 		~VideoEncoder();
@@ -337,13 +331,6 @@ class VideoEncoder
 		 */
 		void release();
 
-		/**
-		 * Move operator.
-		 * @param videoEncoder The video encoder to be moved
-		 * @return Reference to this object
-		 */
-		inline VideoEncoder& operator=(VideoEncoder&& videoEncoder) noexcept;
-
 	protected:
 
 		/**
@@ -358,10 +345,22 @@ class VideoEncoder
 		VideoEncoder(const VideoEncoder&) = delete;
 
 		/**
+		 * Disabled move constructor, a video encoder cannot be moved.
+		 * `VTCompressionSessionCreate()` stores the address of the encoder as the reference constant of the output callback, and VideoToolbox provides no way to change it afterwards, so a moved session would keep reporting its samples to the moved-from object.
+		 */
+		VideoEncoder(VideoEncoder&&) = delete;
+
+		/**
 		 * Disabled copy operator.
 		 * @return Reference to this object
 		 */
 		VideoEncoder& operator=(const VideoEncoder&) = delete;
+
+		/**
+		 * Disabled move operator, a video encoder cannot be moved.
+		 * @return Reference to this object
+		 */
+		VideoEncoder& operator=(VideoEncoder&&) = delete;
 
 		/**
 		 * Callback function for encoded samples from VideoToolbox.
@@ -489,11 +488,6 @@ inline void VideoEncoder::releaseVTCompressionSession(VTCompressionSessionRef se
 	}
 }
 
-inline VideoEncoder::VideoEncoder(VideoEncoder&& videoEncoder) noexcept
-{
-	*this = std::move(videoEncoder);
-}
-
 inline bool VideoEncoder::isInitialized() const
 {
 	const ScopedLock scopedLock(lock_);
@@ -508,37 +502,6 @@ inline bool VideoEncoder::isStarted() const
 	ocean_assert(!isStarted_ || isInitialized());
 
 	return isStarted_;
-}
-
-inline VideoEncoder& VideoEncoder::operator=(VideoEncoder&& videoEncoder) noexcept
-{
-	if (this != &videoEncoder)
-	{
-		release();
-
-		compressionSession_ = std::move(videoEncoder.compressionSession_);
-
-		encodedSamples_ = std::move(videoEncoder.encodedSamples_);
-
-		width_ = videoEncoder.width_;
-		videoEncoder.width_ = 0u;
-
-		height_ = videoEncoder.height_;
-		videoEncoder.height_ = 0u;
-
-		isStarted_ = videoEncoder.isStarted_;
-		videoEncoder.isStarted_ = false;
-
-#ifdef OCEAN_DEBUG
-		debugPreviousSubmittedTimestamp_ = videoEncoder.debugPreviousSubmittedTimestamp_;
-		videoEncoder.debugPreviousSubmittedTimestamp_ = NumericT<int64_t>::minValue();
-
-		debugPreviousEncodedTimestamp_ = videoEncoder.debugPreviousEncodedTimestamp_;
-		videoEncoder.debugPreviousEncodedTimestamp_ = NumericT<int64_t>::minValue();
-#endif
-	}
-
-	return *this;
 }
 
 }
