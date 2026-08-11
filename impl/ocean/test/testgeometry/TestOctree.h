@@ -66,6 +66,13 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestOctree
 		 * @return True, if succeeded
 		 */
 		static bool testEdgeCases(const double testDuration);
+
+		/**
+		 * Tests the move operator, also when the target octree already holds a subtree.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testMoveOperator(const double testDuration);
 };
 
 }

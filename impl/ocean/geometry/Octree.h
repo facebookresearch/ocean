@@ -862,6 +862,8 @@ OctreeT<T>& OctreeT<T>::operator=(OctreeT<T>&& octree)
 
 		for (unsigned int n = 0u; n < 8u; ++n)
 		{
+			delete childNodes_[n];
+
 			childNodes_[n] = octree.childNodes_[n];
 			octree.childNodes_[n] = nullptr;
 		}

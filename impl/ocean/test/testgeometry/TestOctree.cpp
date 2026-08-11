@@ -66,6 +66,15 @@ bool TestOctree::test(const double testDuration, const TestSelector& selector)
 		testResult = testEdgeCases(testDuration);
 
 		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("moveoperator"))
+	{
+		testResult = testMoveOperator(testDuration);
+
+		Log::info() << " ";
 	}
 
 	Log::info() << testResult;
@@ -88,6 +97,11 @@ TEST(TestOctree, ClosestPoints)
 TEST(TestOctree, IntersectingLeavesForRays)
 {
 	EXPECT_TRUE(TestOctree::testIntersectingLeavesForRays(GTEST_TEST_DURATION));
+}
+
+TEST(TestOctree, MoveOperator)
+{
+	EXPECT_TRUE(TestOctree::testMoveOperator(GTEST_TEST_DURATION));
 }
 
 TEST(TestOctree, EdgeCases)
@@ -581,6 +595,72 @@ bool TestOctree::testEdgeCases(const double testDuration)
 				}
 			}
 		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestOctree::testMoveOperator(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Test move operator:";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const unsigned int numberSourcePoints = RandomI::random(randomGenerator, 1u, 2000u);
+		const unsigned int numberTargetPoints = RandomI::random(randomGenerator, 1u, 2000u);
+
+		Vectors3 sourcePoints;
+		sourcePoints.reserve(numberSourcePoints);
+
+		for (unsigned int n = 0u; n < numberSourcePoints; ++n)
+		{
+			sourcePoints.emplace_back(Random::vector3(randomGenerator, Scalar(-100), Scalar(100)));
+		}
+
+		Vectors3 targetPoints;
+		targetPoints.reserve(numberTargetPoints);
+
+		for (unsigned int n = 0u; n < numberTargetPoints; ++n)
+		{
+			targetPoints.emplace_back(Random::vector3(randomGenerator, Scalar(-100), Scalar(100)));
+		}
+
+		// the target already holds a subtree, so the move has to release it before taking the new one
+
+		Geometry::Octree octree(targetPoints.data(), targetPoints.size());
+		OCEAN_EXPECT_TRUE(validation, octree.isValid());
+
+		octree = Geometry::Octree(sourcePoints.data(), sourcePoints.size());
+
+		OCEAN_EXPECT_TRUE(validation, octree.isValid());
+
+		// after the move the octree must behave exactly like a freshly constructed one
+
+		const Geometry::Octree referenceOctree(sourcePoints.data(), sourcePoints.size());
+
+		const Vector3 queryPoint = Random::vector3(randomGenerator, Scalar(-100), Scalar(100));
+		const Scalar queryRadius = Random::scalar(randomGenerator, Scalar(1), Scalar(50));
+
+		Indices32 movedPointIndices;
+		octree.closestPoints(sourcePoints.data(), queryPoint, queryRadius, movedPointIndices);
+
+		Indices32 referencePointIndices;
+		referenceOctree.closestPoints(sourcePoints.data(), queryPoint, queryRadius, referencePointIndices);
+
+		std::sort(movedPointIndices.begin(), movedPointIndices.end());
+		std::sort(referencePointIndices.begin(), referencePointIndices.end());
+
+		OCEAN_EXPECT_EQUAL(validation, movedPointIndices, referencePointIndices);
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
