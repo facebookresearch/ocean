@@ -22,7 +22,10 @@ Grid::Grid(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_
 	gridUpperCorner_(Vector2(0.5, 0.5))
 {
 	// sets the physical and virtual grid2plane transformation
-	setVirtualGrid2planeTransformation(virtualGrid2planeTransformation);
+	if (!setVirtualGrid2planeTransformation(virtualGrid2planeTransformation))
+	{
+		return;
+	}
 
 	ocean_assert(pinholeCamera.isValid() && world_T_camera.isValid());
 	ocean_assert(imagePoints.size() == 4);
