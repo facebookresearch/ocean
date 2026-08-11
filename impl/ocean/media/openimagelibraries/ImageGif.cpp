@@ -296,7 +296,10 @@ Frames ImageGif::decodeImages(const void* buffer, const size_t size, const size_
 			{
 				case DISPOSAL_UNSPECIFIED:
 				case DISPOSE_DO_NOT:
+				default:
 				{
+					// giflib takes the disposal mode from three bits without validating it, so a crafted image can specify one of the reserved modes 4-7, which are handled like DISPOSE_DO_NOT so that this switch always appends exactly one image
+
 					// we create a copy of the current image
 					frames.emplace_back(frame, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
 
@@ -325,7 +328,13 @@ Frames ImageGif::decodeImages(const void* buffer, const size_t size, const size_
 
 				case DISPOSE_PREVIOUS:
 				{
-					if (imageIndex > 0)
+					if (imageIndex == 0)
+					{
+						// there is no previous image which could be restored, so the current image is kept
+
+						frames.emplace_back(frame, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
+					}
+					else
 					{
 						if (subFrame.width() == (unsigned int)(maxWidth) && subFrame.height() == (unsigned int)(maxHeight))
 						{
