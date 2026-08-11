@@ -92,6 +92,10 @@ bool TestMultipleViewGeometry::testMultipleViewGeometry(const double testDuratio
 		}
 	}
 
+	Log::info() << " ";
+
+	testResult = testCalibrateFromProjectionsMatricesIFThreeViews(testDuration);
+
 	Log::info() << testResult;
 
 	return testResult.succeeded();
@@ -706,6 +710,66 @@ Scalar TestMultipleViewGeometry::evaluateReprojectionError(const std::vector<Vec
 	}
 
 	return maxSquaredMetricError;
+}
+
+bool TestMultipleViewGeometry::testCalibrateFromProjectionsMatricesIFThreeViews(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing calibration from three projection matrices:";
+
+	constexpr unsigned int views = 3u;
+	constexpr unsigned int points = 20u;
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		std::vector<Vectors2> imagePointsPerPose;
+		imagePointsPerPose.reserve(views);
+
+		const unsigned int width = RandomI::random(randomGenerator, 600u, 800u);
+		const unsigned int height = RandomI::random(randomGenerator, 600u, 800u);
+		const PinholeCamera pinholeCamera(width, height, Numeric::deg2rad(Random::scalar(randomGenerator, 30, 70)));
+
+		if (!generatedImagePointGroups(pinholeCamera, points, views, randomGenerator, imagePointsPerPose, Scalar(0)))
+		{
+			continue;
+		}
+
+		HomogenousMatrices4 projectionIF(views);
+		NonconstArrayAccessor<HomogenousMatrix4> projAccessor(projectionIF, views);
+
+		if (!Geometry::MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(ConstArrayAccessor<Vectors2>(imagePointsPerPose), projAccessor.pointer(), 2))
+		{
+			continue;
+		}
+
+		SquareMatrix3 cameraIntrinsics(false);
+		HomogenousMatrix4 flippedCamera1_T_world(false);
+		HomogenousMatrix4 flippedCamera2_T_world(false);
+		HomogenousMatrix4 flippedCamera3_T_world(false);
+
+		// the self-calibration declines a significant share of the random configurations, that is not what is tested here
+
+		if (!Geometry::MultipleViewGeometry::calibrateFromProjectionsMatricesIF(projectionIF[0], projectionIF[1], projectionIF[2], width, height, cameraIntrinsics, flippedCamera1_T_world, flippedCamera2_T_world, flippedCamera3_T_world))
+		{
+			continue;
+		}
+
+		// the result is a camera intrinsics matrix, so it has to be normalized with a lower right element of 1;
+		// the accessor overload guarantees this and the three-matrix overload has to agree with it
+
+		OCEAN_EXPECT_TRUE(validation, Numeric::isWeakEqual(cameraIntrinsics(2, 2), Scalar(1)));
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 }

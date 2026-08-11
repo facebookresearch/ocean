@@ -353,6 +353,14 @@ bool MultipleViewGeometry::calibrateFromProjectionsMatricesIF(const HomogenousMa
 		}
 	}
 
+	ocean_assert(!Numeric::isEqualEps(cameraIntrinsics(2, 2)));
+	if (Numeric::isEqualEps(cameraIntrinsics(2, 2)))
+	{
+		return false;
+	}
+
+	cameraIntrinsics *= Scalar(1) / cameraIntrinsics(2, 2);
+
 	// metric upgrade
 	HomogenousMatrices4 metricFlippedCameras_P_world(3);
 	if (!AutoCalibration::transformProjectiveToMetricIF(symQ, ConstArrayAccessor<HomogenousMatrix4>(flippedCameras_P_world), metricFlippedCameras_P_world.data()))

@@ -78,6 +78,13 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestMultipleViewGeometry
 		static bool testFaultyProjectiveReconstruction(const unsigned int views, const double testDuration);
 
 		/**
+		 * Tests the three-matrix overload of the calibration from projection matrices.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testCalibrateFromProjectionsMatricesIFThreeViews(const double testDuration);
+
+		/**
 		 * Generate groups of corresponding image points for individual camera poses.
 		 * @param pinholeCamera The pinhole camera profile to be used, must be valid
 		 * @param points Number of point correspondences, with range [1, infinity)
