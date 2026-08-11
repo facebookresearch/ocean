@@ -2154,8 +2154,11 @@ bool AutoCalibration::findCommonIntrinsicsFromProjectionMatricesIF(const ConstIn
 	 * w*(2, 1) = w*(1, 2) = [P_i * Q* * P^T_i](2, 1) = 0 -> < P_i(2, :) * Q*, P_i(1, :) > = 0
 	 * w*(1, 0) = w*(0, 1) = [P_i * Q* * P^T_i](1, 0) = 0 -> < P_i(1, :) * Q*, P_i(0, :) > = 0
 	 *
-	 * f_x1 = f_y1 = f_x,j = f_y,j
-	 * w*_i(0,0) - w*_j(1,1) = 0
+	 * square pixels, f_x,i = f_y,i, gives one more equation per camera
+	 * w*_i(0,0) - w*_i(1,1) = 0
+	 *
+	 * both entries come from the same camera on purpose; a projective reconstruction fixes every P_i only up to its own
+	 * scale, and w*_i = P_i * Q* * P_i^T scales with the square of it, so an equation spanning two cameras would not hold
 	 */
 
 	HomogenousMatrices4 normedFlippedCameras_P_world(views);
@@ -2165,24 +2168,22 @@ bool AutoCalibration::findCommonIntrinsicsFromProjectionMatricesIF(const ConstIn
 	}
 
 	// create linear system for solving Q* via A * q = 0
-	const size_t noEquations = views * 4 - 1;
+	const size_t noEquations = views * 4;
 
 	Matrix linearSystem(noEquations, 10);
 	Scalar* linearSystemData = linearSystem.data();
 
-	const HomogenousMatrix4& Pj = normedFlippedCameras_P_world[0];
-
-	for (size_t i = 1; i < views; ++i)
+	for (size_t i = 0; i < views; ++i)
 	{
 		const HomogenousMatrix4& Pi = normedFlippedCameras_P_world[i];
 
-		//  w*_i(0,0) = w*_j(1,1)
-		const Matrix wi = createLinearSystemForAbsoluteDualQuadric(0, 0, Pi);
-		const Matrix wj = createLinearSystemForAbsoluteDualQuadric(1, 1, Pj);
+		// w*_i(0,0) = w*_i(1,1), both taken from the same camera so that the arbitrary per-camera scale of a projective reconstruction cancels
+		const Matrix w00 = createLinearSystemForAbsoluteDualQuadric(0, 0, Pi);
+		const Matrix w11 = createLinearSystemForAbsoluteDualQuadric(1, 1, Pi);
 
 		for (unsigned int n = 0u; n < 10u; n++)
 		{
-			*linearSystemData++ = wj(0, n) - wi(0, n);
+			*linearSystemData++ = w00(0, n) - w11(0, n);
 		}
 	}
 
