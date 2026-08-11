@@ -180,7 +180,8 @@ bool JLinkage::homographyMatrices(const Vector2* leftImagePoints, const Vector2*
 		{
 			homographies.push_back(globalHomography);
 		}
-		modelCounts = 1u;
+
+		modelCounts = homographies.size();
 	}
 
 	// determining consensus/ preference set matrix
