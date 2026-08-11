@@ -353,7 +353,7 @@ bool Homography::homographyMatrixFromPointsAndLinesSVD(const Vector2* leftPoints
 		bufferNormalizationRightPoints.assign(rightPoints, rightPoints + pointCorrespondences);
 
 		normalizedLeft_T_left = Normalization::calculateNormalizedPoints(bufferNormalizationLeftPoints.data(), pointCorrespondences);
-		Normalization::calculateNormalizedPoints(bufferNormalizationLeftPoints.data(), pointCorrespondences, &right_T_normalizedRight);
+		Normalization::calculateNormalizedPoints(bufferNormalizationRightPoints.data(), pointCorrespondences, &right_T_normalizedRight);
 		ocean_assert(!right_T_normalizedRight.isSingular());
 
 		normalizationLeftPoints = bufferNormalizationLeftPoints.data();
