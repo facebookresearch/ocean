@@ -557,7 +557,9 @@ bool WICObject::writeFrameToBitmapDecoder(IWICImagingFactory* imagingFactory, IW
 
 	if (noError)
 	{
-		const HRESULT result = bitmapFrameEncode->WritePixels(targetFrame.height(), targetFrame.strideBytes(0u), targetFrame.size(), targetFrame.data<BYTE>());
+		BYTE* targetFrameData = const_cast<BYTE*>(targetFrame.constdata<BYTE>()); // const cast is necessary as WritePixels() does not modify the buffer
+
+		const HRESULT result = bitmapFrameEncode->WritePixels(targetFrame.height(), targetFrame.strideBytes(0u), targetFrame.size(), targetFrameData);
 
 		if (result == WINCODEC_ERR_PALETTEUNAVAILABLE)
 		{
@@ -607,7 +609,7 @@ bool WICObject::writeFrameToBitmapDecoder(IWICImagingFactory* imagingFactory, IW
 				noError = false;
 			}
 
-			if (noError && S_OK != bitmapFrameEncode->WritePixels(targetFrame.height(), targetFrame.strideBytes(0u), targetFrame.size(), targetFrame.data<BYTE>()))
+			if (noError && S_OK != bitmapFrameEncode->WritePixels(targetFrame.height(), targetFrame.strideBytes(0u), targetFrame.size(), targetFrameData))
 			{
 				noError = false;
 			}
