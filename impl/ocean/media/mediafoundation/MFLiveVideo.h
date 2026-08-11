@@ -145,13 +145,13 @@ class OCEAN_MEDIA_MF_EXPORT MFLiveVideo :
 		/**
 		 * Translates the exposure value from log base 2 to a linear exposure in seconds.
 		 * @param logBase2 The exposure value in log base 2, with range (-infinity, infinity)
-		 * @return The resulting exposure value in seconds, with range [0, infinity)
+		 * @return The resulting exposure value in seconds, with range (0, infinity)
 		 */
 		static double translateExposure(const LONG logBase2);
 
 		/**
 		 * Translates the exposure value from a linear exposure in seconds to log base 2.
-		 * @param exposure The exposure value in seconds, with range [0, infinity)
+		 * @param exposure The exposure value in seconds, with range (0, infinity)
 		 * @return The resulting exposure value in log base 2, with range (-infinity, infinity)
 		 */
 		static LONG translateExposure(const double exposure);

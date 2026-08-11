@@ -514,32 +514,14 @@ bool MFLiveVideo::exposure(IKsControl* iKsControl, double& exposure, ControlMode
 
 double MFLiveVideo::translateExposure(const LONG logBase2)
 {
-	if (logBase2 >= 0)
-	{
-		return double(logBase2) * 2.0;
-	}
-	else
-	{
-		return 1.0 / NumericD::pow(2.0, double(-logBase2));
-	}
+	return NumericD::pow(2.0, double(logBase2));
 }
 
 LONG MFLiveVideo::translateExposure(const double exposure)
 {
 	ocean_assert(exposure > 0.0);
 
-	if (exposure >= 1.0)
-	{
-		const double exposureValueD = exposure / 2.0;
-
-		return NumericD::round32(exposureValueD);
-	}
-	else
-	{
-		const double exposureValueD = NumericD::log2(exposure);
-
-		return NumericD::round32(exposureValueD);
-	}
+	return NumericD::round32(NumericD::log2(exposure));
 }
 
 }
