@@ -920,8 +920,8 @@ class NonLinearOptimizationHomography::CameraHomographiesData
 
 			const Vector2 error(transformedRightPoint - rightPoint);
 
-			result[0] = Scalar(int(error[0] * Scalar(5))) * Scalar(0.2); // **TODO**
-			result[1] = Scalar(int(error[1] * Scalar(5))) * Scalar(0.2);
+			result[0] = error[0];
+			result[1] = error[1];
 			return true;
 		}
 
@@ -1004,8 +1004,8 @@ class NonLinearOptimizationHomography::DistortionCameraHomographiesData
 
 			const Vector2 error(transformedRightPoint - rightPoint);
 
-			result[0] = Scalar(int(error[0] * Scalar(5))) * Scalar(0.2); // **TODO**
-			result[1] = Scalar(int(error[1] * Scalar(5))) * Scalar(0.2);
+			result[0] = error[0];
+			result[1] = error[1];
 			return true;
 		}
 
