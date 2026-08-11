@@ -92,6 +92,13 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestSpatialDistribution
 		 * @return True, if succeeded
 		 */
 		static bool testDistributeToArrayEmpty(const double testDuration);
+
+		/**
+		 * Tests distributeAndFilter() when some points lie outside of the distribution area.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testDistributeAndFilterOutsidePoints(const double testDuration);
 };
 
 }

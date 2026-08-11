@@ -103,6 +103,15 @@ bool TestSpatialDistribution::test(const double testDuration, const TestSelector
 		testResult = testDistributeToArrayEmpty(testDuration);
 
 		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("distributeandfilteroutsidepoints"))
+	{
+		testResult = testDistributeAndFilterOutsidePoints(testDuration);
+
+		Log::info() << " ";
 	}
 
 	Log::info() << testResult;
@@ -140,6 +149,11 @@ TEST(TestSpatialDistribution, DistributeAndFilter)
 TEST(TestSpatialDistribution, DistributeAndFilterIndices)
 {
 	EXPECT_TRUE(TestSpatialDistribution::testDistributeAndFilterIndices(GTEST_TEST_DURATION));
+}
+
+TEST(TestSpatialDistribution, DistributeAndFilterOutsidePoints)
+{
+	EXPECT_TRUE(TestSpatialDistribution::testDistributeAndFilterOutsidePoints(GTEST_TEST_DURATION));
 }
 
 TEST(TestSpatialDistribution, DistributeToArrayEmpty)
@@ -792,6 +806,63 @@ bool TestSpatialDistribution::testDistributeToArrayEmpty(const double testDurati
 		}
 
 		OCEAN_EXPECT_EQUAL(validation, numberIndices, size_t(0));
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestSpatialDistribution::testDistributeAndFilterOutsidePoints(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing distributeAndFilter() with points outside of the distribution area:";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		constexpr Scalar width = Scalar(100);
+		constexpr Scalar height = Scalar(100);
+
+		const unsigned int numberInside = RandomI::random(randomGenerator, 20u, 100u);
+		const unsigned int numberOutside = RandomI::random(randomGenerator, 1u, 20u);
+
+		Vectors2 imagePoints;
+		imagePoints.reserve(numberInside + numberOutside);
+
+		for (unsigned int n = 0u; n < numberInside; ++n)
+		{
+			imagePoints.emplace_back(Random::scalar(randomGenerator, Scalar(1), width - Scalar(1)), Random::scalar(randomGenerator, Scalar(1), height - Scalar(1)));
+		}
+
+		// points strictly outside of the area, distributeToArray() discards these so they can never be returned
+
+		for (unsigned int n = 0u; n < numberOutside; ++n)
+		{
+			imagePoints.emplace_back(width + Random::scalar(randomGenerator, Scalar(10), Scalar(100)), height + Random::scalar(randomGenerator, Scalar(10), Scalar(100)));
+		}
+
+		// ask for more points than can possibly be returned, but fewer than were handed in, so the early-out for size >= numberImagePoints does not apply
+
+		const size_t requested = size_t(numberInside + numberOutside) - 1;
+
+		const Vectors2 filteredPoints = Geometry::SpatialDistribution::distributeAndFilter(imagePoints.data(), imagePoints.size(), Scalar(0), Scalar(0), width, height, 8u, 8u, requested);
+
+		// the function has to return, and it can only return points which lie inside the area
+
+		OCEAN_EXPECT_LESS_EQUAL(validation, filteredPoints.size(), requested);
+
+		for (const Vector2& filteredPoint : filteredPoints)
+		{
+			OCEAN_EXPECT_TRUE(validation, filteredPoint.x() >= Scalar(0) && filteredPoint.x() <= width);
+			OCEAN_EXPECT_TRUE(validation, filteredPoint.y() >= Scalar(0) && filteredPoint.y() <= height);
+		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 

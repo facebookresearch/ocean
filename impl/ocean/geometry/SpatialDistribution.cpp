@@ -803,6 +803,8 @@ Vectors2 SpatialDistribution::distributeAndFilter(const Vector2* imagePoints, co
 
 	while (results.size() < size)
 	{
+		const size_t previousResults = results.size();
+
 		// take the first feature from each bin in the first iteration, take the second feature point from each bin in the second iteration, ...
 		for (unsigned int n = 0u; n < distribution.bins() && results.size() < size; ++n)
 		{
@@ -813,6 +815,13 @@ Vectors2 SpatialDistribution::distributeAndFilter(const Vector2* imagePoints, co
 				ocean_assert(indices.front() < numberImagePoints);
 				results.push_back(imagePoints[indices[iteration]]);
 			}
+		}
+
+		if (results.size() == previousResults)
+		{
+			// no bin holds a point for this iteration, distributeToArray() discards points lying outside of the area so fewer points can be available than requested
+
+			break;
 		}
 
 		iteration++;
