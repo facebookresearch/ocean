@@ -182,9 +182,9 @@ double MFLiveVideo::exposureDuration(double* minDuration, double* maxDuration, C
 	const ScopedLock scopedLock(lock_);
 
 	ScopedIKsControl iKsControl;
-	if (S_OK != mediaSource_->QueryInterface(IID_IKsControl, (void**)(&iKsControl.resetObject())))
+	if (!mediaSource_.isValid() || S_OK != mediaSource_->QueryInterface(IID_IKsControl, (void**)(&iKsControl.resetObject())))
 	{
-		return false;
+		return LiveVideo::exposureDuration(minDuration, maxDuration, exposureMode);
 	}
 
 	if (minDuration != nullptr || maxDuration != nullptr)
@@ -241,7 +241,7 @@ bool MFLiveVideo::setExposureDuration(const double duration, const bool /*allowS
 	}
 
 	ScopedIKsControl iKsControl;
-	if (S_OK != mediaSource_->QueryInterface(IID_IKsControl, (void**)(&iKsControl.resetObject())))
+	if (!mediaSource_.isValid() || S_OK != mediaSource_->QueryInterface(IID_IKsControl, (void**)(&iKsControl.resetObject())))
 	{
 		return false;
 	}
