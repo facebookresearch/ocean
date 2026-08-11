@@ -32,21 +32,21 @@ RegistryConfig::RegistryValue::RegistryValue(const HKEY key)
 
 	Registry::Names names = Registry::keys(key);
 
-	for (const std::wstring& name : names)
+	for (const std::string& name : names)
 	{
 		ocean_assert(subValues_.find(name) == subValues_.end());
 
 		HKEY subKey = Registry::openKey(key, name);
 		ocean_assert(subKey != nullptr);
 
-		subValues_[*i] = RegistryValue(subKey);
+		subValues_[name] = RegistryValue(subKey);
 
 		Registry::closeKey(subKey);
 	}
 
 	names = Registry::values(key);
 
-	for (const std::wstring& name : names)
+	for (const std::string& name : names)
 	{
 		ocean_assert(subValues_.find(name) == subValues_.end());
 
@@ -409,21 +409,21 @@ bool RegistryConfig::read()
 
 	Registry::Names names = Registry::keys(key);
 
-	for (const std::wstring& name : names)
+	for (const std::string& name : names)
 	{
 		ocean_assert(values_.find(name) == values_.end());
 
 		HKEY subKey = Registry::openKey(key, name);
 		ocean_assert(subKey != nullptr);
 
-		values_[*i] = RegistryValue(subKey);
+		values_[name] = RegistryValue(subKey);
 
 		Registry::closeKey(subKey);
 	}
 
 	names = Registry::values(key);
 
-	for (const std::wstring& name : names)
+	for (const std::string& name : names)
 	{
 		ocean_assert(values_.find(name) == values_.end());
 
