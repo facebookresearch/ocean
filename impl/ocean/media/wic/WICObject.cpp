@@ -243,17 +243,17 @@ bool WICObject::hasAlphaChannel(IWICImagingFactory* imagingFactor, IWICBitmapDec
 
 	else if (noError && (format == GUID_WICPixelFormat1bppIndexed || format == GUID_WICPixelFormat2bppIndexed || format == GUID_WICPixelFormat4bppIndexed || format == GUID_WICPixelFormat8bppIndexed))
 	{
-		IWICPalette* palette = nullptr;
-		if (noError && S_OK != imagingFactor->CreatePalette(&palette))
+		ScopedIWICPalette palette;
+		if (noError && S_OK != imagingFactor->CreatePalette(&palette.resetObject()))
 		{
 			noError = false;
 		}
 
 		// the palette can be stored in the decoder or in the individual frames
 
-		if (noError && S_OK != bitmapDecoder->CopyPalette(palette))
+		if (noError && S_OK != bitmapDecoder->CopyPalette(*palette))
 		{
-			if (S_OK != frameDecode->CopyPalette(palette))
+			if (S_OK != frameDecode->CopyPalette(*palette))
 			{
 				noError = false;
 			}
@@ -265,14 +265,7 @@ bool WICObject::hasAlphaChannel(IWICImagingFactory* imagingFactor, IWICBitmapDec
 			noError = true;
 		}
 
-		const bool result = value == TRUE;
-
-		if (palette)
-		{
-			palette->Release();
-		}
-
-		return result;
+		return value == TRUE;
 	}
 
 	ocean_assert(false && "Unknown format!");
@@ -378,8 +371,8 @@ Frame WICObject::loadFrameFromBitmapDecoder(IWICImagingFactory* imagingFactory, 
 
 	if (noError && frameCount >= 1u)
 	{
-		IWICBitmapFrameDecode* bitmapFrameDecode = nullptr;
-		if (S_OK != bitmapDecoder->GetFrame(0u, &bitmapFrameDecode) || bitmapFrameDecode == nullptr)
+		ScopedIWICBitmapFrameDecode bitmapFrameDecode;
+		if (S_OK != bitmapDecoder->GetFrame(0u, &bitmapFrameDecode.resetObject()) || !bitmapFrameDecode.isValid())
 		{
 			// the decoder announced at least one frame, but the frame itself cannot be read
 
@@ -422,10 +415,10 @@ Frame WICObject::loadFrameFromBitmapDecoder(IWICImagingFactory* imagingFactory, 
 		}
 		else
 		{
-			const bool hasAlpha = hasAlphaChannel(imagingFactory, bitmapDecoder, bitmapFrameDecode);
+			const bool hasAlpha = hasAlphaChannel(imagingFactory, bitmapDecoder, *bitmapFrameDecode);
 
-			IWICFormatConverter* formatConverter = nullptr;
-			if (noError && S_OK != imagingFactory->CreateFormatConverter(&formatConverter))
+			ScopedIWICFormatConverter formatConverter;
+			if (noError && S_OK != imagingFactory->CreateFormatConverter(&formatConverter.resetObject()))
 			{
 				noError = false;
 			}
@@ -438,7 +431,7 @@ Frame WICObject::loadFrameFromBitmapDecoder(IWICImagingFactory* imagingFactory, 
 				noError = false;
 			}
 
-			if (noError && S_OK != formatConverter->Initialize(bitmapFrameDecode, wicTargetPixelFormat, WICBitmapDitherTypeNone, nullptr, 0.0, WICBitmapPaletteTypeCustom))
+			if (noError && S_OK != formatConverter->Initialize(*bitmapFrameDecode, wicTargetPixelFormat, WICBitmapDitherTypeNone, nullptr, 0.0, WICBitmapPaletteTypeCustom))
 			{
 				noError = false;
 			}
@@ -471,16 +464,6 @@ Frame WICObject::loadFrameFromBitmapDecoder(IWICImagingFactory* imagingFactory, 
 					}
 				}
 			}
-
-			if (formatConverter)
-			{
-				formatConverter->Release();
-			}
-		}
-
-		if (bitmapFrameDecode)
-		{
-			bitmapFrameDecode->Release();
 		}
 	}
 
@@ -493,8 +476,8 @@ bool WICObject::writeFrameToBitmapDecoder(IWICImagingFactory* imagingFactory, IW
 
 	bool noError = true;
 
-	IWICBitmapEncoderInfo* bitmapEncoderInfo = nullptr;
-	if (noError && S_OK != bitmapEncoder->GetEncoderInfo(&bitmapEncoderInfo))
+	ScopedIWICBitmapEncoderInfo bitmapEncoderInfo;
+	if (noError && S_OK != bitmapEncoder->GetEncoderInfo(&bitmapEncoderInfo.resetObject()))
 	{
 		noError = false;
 	}
@@ -519,15 +502,15 @@ bool WICObject::writeFrameToBitmapDecoder(IWICImagingFactory* imagingFactory, IW
 		noError = false;
 	}
 
-	IWICBitmapFrameEncode* bitmapFrameEncode = nullptr;
-	IPropertyBag2* propertyBag = nullptr;
+	ScopedIWICBitmapFrameEncode bitmapFrameEncode;
+	ScopedIPropertyBag2 propertyBag;
 
-	if (noError && S_OK != bitmapEncoder->CreateNewFrame(&bitmapFrameEncode, &propertyBag))
+	if (noError && S_OK != bitmapEncoder->CreateNewFrame(&bitmapFrameEncode.resetObject(), &propertyBag.resetObject()))
 	{
 		noError = false;
 	}
 
-	if (noError && S_OK != bitmapFrameEncode->Initialize(propertyBag))
+	if (noError && S_OK != bitmapFrameEncode->Initialize(*propertyBag))
 	{
 		noError = false;
 	}
@@ -563,8 +546,8 @@ bool WICObject::writeFrameToBitmapDecoder(IWICImagingFactory* imagingFactory, IW
 
 		if (result == WINCODEC_ERR_PALETTEUNAVAILABLE)
 		{
-			IWICPalette* palette = nullptr;
-			if (noError && S_OK != imagingFactory->CreatePalette(&palette))
+			ScopedIWICPalette palette;
+			if (noError && S_OK != imagingFactory->CreatePalette(&palette.resetObject()))
 			{
 				noError = false;
 			}
@@ -604,7 +587,7 @@ bool WICObject::writeFrameToBitmapDecoder(IWICImagingFactory* imagingFactory, IW
 				noError = false;
 			}
 
-			if (noError && S_OK != bitmapFrameEncode->SetPalette(palette))
+			if (noError && S_OK != bitmapFrameEncode->SetPalette(*palette))
 			{
 				noError = false;
 			}
@@ -612,11 +595,6 @@ bool WICObject::writeFrameToBitmapDecoder(IWICImagingFactory* imagingFactory, IW
 			if (noError && S_OK != bitmapFrameEncode->WritePixels(targetFrame.height(), targetFrame.strideBytes(0u), targetFrame.size(), targetFrameData))
 			{
 				noError = false;
-			}
-
-			if (palette)
-			{
-				palette->Release();
 			}
 		}
 		else if (result != S_OK)
@@ -633,21 +611,6 @@ bool WICObject::writeFrameToBitmapDecoder(IWICImagingFactory* imagingFactory, IW
 	if (noError && S_OK != bitmapEncoder->Commit())
 	{
 		noError = false;
-	}
-
-	if (propertyBag)
-	{
-		propertyBag->Release();
-	}
-
-	if (bitmapFrameEncode)
-	{
-		bitmapFrameEncode->Release();
-	}
-
-	if (bitmapEncoderInfo)
-	{
-		bitmapEncoderInfo->Release();
 	}
 
 	if (hasBeenConverted)

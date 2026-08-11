@@ -35,14 +35,14 @@ Frame Image::decodeImage(const void* buffer, const size_t size, const std::strin
 
 	WICLibrary::ComInitializer::get().initialize();
 
-	IWICImagingFactory* imagingFactory = nullptr;
-	if (noError && S_OK != CoCreateInstance(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, IID_IWICImagingFactory, (void**)(&imagingFactory)))
+	ScopedIWICImagingFactory imagingFactory;
+	if (noError && S_OK != CoCreateInstance(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, IID_IWICImagingFactory, (void**)(&imagingFactory.resetObject())))
 	{
 		noError = false;
 	}
 
-	IWICStream* stream = nullptr;
-	if (noError && S_OK != imagingFactory->CreateStream(&stream))
+	ScopedIWICStream stream;
+	if (noError && S_OK != imagingFactory->CreateStream(&stream.resetObject()))
 	{
 		noError = false;
 	}
@@ -52,15 +52,15 @@ Frame Image::decodeImage(const void* buffer, const size_t size, const std::strin
 		noError = false;
 	}
 
-	IWICBitmapDecoder* bitmapDecoder = nullptr;
-	if (noError && S_OK != imagingFactory->CreateDecoderFromStream(stream, nullptr, WICDecodeMetadataCacheOnLoad, &bitmapDecoder))
+	ScopedIWICBitmapDecoder bitmapDecoder;
+	if (noError && S_OK != imagingFactory->CreateDecoderFromStream(*stream, nullptr, WICDecodeMetadataCacheOnLoad, &bitmapDecoder.resetObject()))
 	{
 		noError = false;
 	}
 
 	if (noError)
 	{
-		result = WICObject::loadFrameFromBitmapDecoder(imagingFactory, bitmapDecoder);
+		result = WICObject::loadFrameFromBitmapDecoder(*imagingFactory, *bitmapDecoder);
 	}
 
 	if (noError && imageBufferTypeOut != nullptr)
@@ -70,21 +70,6 @@ Frame Image::decodeImage(const void* buffer, const size_t size, const std::strin
 		{
 			*imageBufferTypeOut = WICObject::translateContainerFormat(containerFormat);
 		}
-	}
-
-	if (bitmapDecoder)
-	{
-		bitmapDecoder->Release();
-	}
-
-	if (stream)
-	{
-		stream->Release();
-	}
-
-	if (imagingFactory)
-	{
-		imagingFactory->Release();
 	}
 
 	return result;
@@ -108,41 +93,41 @@ bool Image::encodeImage(const Frame& frame, const std::string& imageType, std::v
 		return false;
 	}
 
-	IWICImagingFactory* imagingFactory = nullptr;
-	if (noError && S_OK != CoCreateInstance(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, IID_IWICImagingFactory, (void**)&imagingFactory))
+	ScopedIWICImagingFactory imagingFactory;
+	if (noError && S_OK != CoCreateInstance(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, IID_IWICImagingFactory, (void**)(&imagingFactory.resetObject())))
 	{
 		noError = false;
 	}
 
-	IWICStream* stream = nullptr;
-	if (noError && S_OK != imagingFactory->CreateStream(&stream))
+	ScopedIWICStream stream;
+	if (noError && S_OK != imagingFactory->CreateStream(&stream.resetObject()))
 	{
 		noError = false;
 	}
 
-	IStream* memoryStream = nullptr;
-	if (noError && S_OK != CreateStreamOnHGlobal(nullptr, TRUE, &memoryStream))
+	ScopedIStream memoryStream;
+	if (noError && S_OK != CreateStreamOnHGlobal(nullptr, TRUE, &memoryStream.resetObject()))
 	{
 		noError = false;
 	}
 
-	if (noError && S_OK != stream->InitializeFromIStream(memoryStream))
+	if (noError && S_OK != stream->InitializeFromIStream(*memoryStream))
 	{
 		noError = false;
 	}
 
-	IWICBitmapEncoder* bitmapEncoder = nullptr;
-	if (noError && S_OK != imagingFactory->CreateEncoder(containerFormat, nullptr, &bitmapEncoder))
+	ScopedIWICBitmapEncoder bitmapEncoder;
+	if (noError && S_OK != imagingFactory->CreateEncoder(containerFormat, nullptr, &bitmapEncoder.resetObject()))
 	{
 		noError = false;
 	}
 
-	if (noError && S_OK != bitmapEncoder->Initialize(stream, WICBitmapEncoderNoCache))
+	if (noError && S_OK != bitmapEncoder->Initialize(*stream, WICBitmapEncoderNoCache))
 	{
 		noError = false;
 	}
 
-	if (noError && !WICObject::writeFrameToBitmapDecoder(imagingFactory, bitmapEncoder, frame, allowConversion, hasBeenConverted))
+	if (noError && !WICObject::writeFrameToBitmapDecoder(*imagingFactory, *bitmapEncoder, frame, allowConversion, hasBeenConverted))
 	{
 		noError = false;
 	}
@@ -173,26 +158,6 @@ bool Image::encodeImage(const Frame& frame, const std::string& imageType, std::v
 		}
 	}
 
-	if (bitmapEncoder)
-	{
-		bitmapEncoder->Release();
-	}
-
-	if (memoryStream)
-	{
-		memoryStream->Release();
-	}
-
-	if (stream)
-	{
-		stream->Release();
-	}
-
-	if (imagingFactory)
-	{
-		imagingFactory->Release();
-	}
-
 	return noError;
 }
 
@@ -210,31 +175,21 @@ Frame Image::readImage(const std::string& filename)
 
 	WICLibrary::ComInitializer::get().initialize();
 
-	IWICImagingFactory* imagingFactory = nullptr;
-	if (noError && S_OK != CoCreateInstance(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, IID_IWICImagingFactory, (void**)&imagingFactory))
+	ScopedIWICImagingFactory imagingFactory;
+	if (noError && S_OK != CoCreateInstance(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, IID_IWICImagingFactory, (void**)(&imagingFactory.resetObject())))
 	{
 		noError = false;
 	}
 
-	IWICBitmapDecoder* bitmapDecoder = nullptr;
-	if (noError && S_OK != imagingFactory->CreateDecoderFromFilename(String::toWString(filename).c_str(), nullptr, GENERIC_READ, WICDecodeMetadataCacheOnDemand, &bitmapDecoder))
+	ScopedIWICBitmapDecoder bitmapDecoder;
+	if (noError && S_OK != imagingFactory->CreateDecoderFromFilename(String::toWString(filename).c_str(), nullptr, GENERIC_READ, WICDecodeMetadataCacheOnDemand, &bitmapDecoder.resetObject()))
 	{
 		noError = false;
 	}
 
 	if (noError)
 	{
-		result = WICObject::loadFrameFromBitmapDecoder(imagingFactory, bitmapDecoder);
-	}
-
-	if (bitmapDecoder)
-	{
-		bitmapDecoder->Release();
-	}
-
-	if (imagingFactory)
-	{
-		imagingFactory->Release();
+		result = WICObject::loadFrameFromBitmapDecoder(*imagingFactory, *bitmapDecoder);
 	}
 
 	return result;
@@ -267,52 +222,41 @@ bool Image::writeImage(const Frame& frame, const std::string& filename, const bo
 		return false;
 	}
 
-	IWICImagingFactory* imagingFactory = nullptr;
-	if (noError && S_OK != CoCreateInstance(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, IID_IWICImagingFactory, (void**)&imagingFactory))
 	{
-		noError = false;
-	}
+		// own scope to ensure that the stream is released before DeleteFileW() is called
 
-	IWICStream* stream = nullptr;
-	if (noError && S_OK != imagingFactory->CreateStream(&stream))
-	{
-		noError = false;
-	}
+		ScopedIWICImagingFactory imagingFactory;
+		if (noError && S_OK != CoCreateInstance(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, IID_IWICImagingFactory, (void**)(&imagingFactory.resetObject())))
+		{
+			noError = false;
+		}
 
-	if (noError && S_OK != stream->InitializeFromFilename(String::toWString(filename).c_str(), GENERIC_WRITE))
-	{
-		noError = false;
-	}
+		ScopedIWICStream stream;
+		if (noError && S_OK != imagingFactory->CreateStream(&stream.resetObject()))
+		{
+			noError = false;
+		}
 
-	IWICBitmapEncoder* bitmapEncoder = nullptr;
-	if (noError && S_OK != imagingFactory->CreateEncoder(containerFormat, nullptr, &bitmapEncoder))
-	{
-		noError = false;
-	}
+		if (noError && S_OK != stream->InitializeFromFilename(String::toWString(filename).c_str(), GENERIC_WRITE))
+		{
+			noError = false;
+		}
 
-	if (noError && S_OK != bitmapEncoder->Initialize(stream, WICBitmapEncoderNoCache))
-	{
-		noError = false;
-	}
+		ScopedIWICBitmapEncoder bitmapEncoder;
+		if (noError && S_OK != imagingFactory->CreateEncoder(containerFormat, nullptr, &bitmapEncoder.resetObject()))
+		{
+			noError = false;
+		}
 
-	if (noError && !WICObject::writeFrameToBitmapDecoder(imagingFactory, bitmapEncoder, frame, allowConversion, hasBeenConverted))
-	{
-		noError = false;
-	}
+		if (noError && S_OK != bitmapEncoder->Initialize(*stream, WICBitmapEncoderNoCache))
+		{
+			noError = false;
+		}
 
-	if (bitmapEncoder)
-	{
-		bitmapEncoder->Release();
-	}
-
-	if (stream)
-	{
-		stream->Release();
-	}
-
-	if (imagingFactory)
-	{
-		imagingFactory->Release();
+		if (noError && !WICObject::writeFrameToBitmapDecoder(*imagingFactory, *bitmapEncoder, frame, allowConversion, hasBeenConverted))
+		{
+			noError = false;
+		}
 	}
 
 	if (!noError)

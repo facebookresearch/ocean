@@ -11,6 +11,7 @@
 #include "ocean/media/wic/WIC.h"
 
 #include "ocean/base/Frame.h"
+#include "ocean/base/ScopedObject.h"
 
 #include <Wincodec.h>
 
@@ -22,6 +23,98 @@ namespace Media
 
 namespace WIC
 {
+
+/**
+ * This functions allows to release a WIC object if it does exist.
+ * @param object The WIC object to be released
+ * @ingroup mediawic
+ */
+template <class T> void release(T* object);
+
+/**
+ * Template specialization for ScopedObjectCompileTimeVoid using the release() function to release WIC objects.
+ * @tparam T The data type of the wrapped object
+ * @ingroup mediawic
+ */
+template <typename T>
+using ScopedWICObject = ScopedObjectCompileTimeVoidT<T*, release>;
+
+/**
+ * Definition of a scoped object holding an IPropertyBag2 object.
+ * The wrapped IPropertyBag2 object will be released automatically once the scoped object does not exist anymore.
+ * @ingroup mediawic
+ */
+using ScopedIPropertyBag2 = ScopedWICObject<IPropertyBag2>;
+
+/**
+ * Definition of a scoped object holding an IStream object.
+ * The wrapped IStream object will be released automatically once the scoped object does not exist anymore.
+ * @ingroup mediawic
+ */
+using ScopedIStream = ScopedWICObject<IStream>;
+
+/**
+ * Definition of a scoped object holding an IWICBitmapDecoder object.
+ * The wrapped IWICBitmapDecoder object will be released automatically once the scoped object does not exist anymore.
+ * @ingroup mediawic
+ */
+using ScopedIWICBitmapDecoder = ScopedWICObject<IWICBitmapDecoder>;
+
+/**
+ * Definition of a scoped object holding an IWICBitmapEncoder object.
+ * The wrapped IWICBitmapEncoder object will be released automatically once the scoped object does not exist anymore.
+ * @ingroup mediawic
+ */
+using ScopedIWICBitmapEncoder = ScopedWICObject<IWICBitmapEncoder>;
+
+/**
+ * Definition of a scoped object holding an IWICBitmapEncoderInfo object.
+ * The wrapped IWICBitmapEncoderInfo object will be released automatically once the scoped object does not exist anymore.
+ * @ingroup mediawic
+ */
+using ScopedIWICBitmapEncoderInfo = ScopedWICObject<IWICBitmapEncoderInfo>;
+
+/**
+ * Definition of a scoped object holding an IWICBitmapFrameDecode object.
+ * The wrapped IWICBitmapFrameDecode object will be released automatically once the scoped object does not exist anymore.
+ * @ingroup mediawic
+ */
+using ScopedIWICBitmapFrameDecode = ScopedWICObject<IWICBitmapFrameDecode>;
+
+/**
+ * Definition of a scoped object holding an IWICBitmapFrameEncode object.
+ * The wrapped IWICBitmapFrameEncode object will be released automatically once the scoped object does not exist anymore.
+ * @ingroup mediawic
+ */
+using ScopedIWICBitmapFrameEncode = ScopedWICObject<IWICBitmapFrameEncode>;
+
+/**
+ * Definition of a scoped object holding an IWICFormatConverter object.
+ * The wrapped IWICFormatConverter object will be released automatically once the scoped object does not exist anymore.
+ * @ingroup mediawic
+ */
+using ScopedIWICFormatConverter = ScopedWICObject<IWICFormatConverter>;
+
+/**
+ * Definition of a scoped object holding an IWICImagingFactory object.
+ * The wrapped IWICImagingFactory object will be released automatically once the scoped object does not exist anymore.
+ * @ingroup mediawic
+ */
+using ScopedIWICImagingFactory = ScopedWICObject<IWICImagingFactory>;
+
+/**
+ * Definition of a scoped object holding an IWICPalette object.
+ * The wrapped IWICPalette object will be released automatically once the scoped object does not exist anymore.
+ * @ingroup mediawic
+ */
+using ScopedIWICPalette = ScopedWICObject<IWICPalette>;
+
+/**
+ * Definition of a scoped object holding an IWICStream object.
+ * The wrapped IWICStream object will be released automatically once the scoped object does not exist anymore.
+ * @ingroup mediawic
+ */
+using ScopedIWICStream = ScopedWICObject<IWICStream>;
 
 /**
  * This class is the base class for all object inside this library.
@@ -90,6 +183,15 @@ class OCEAN_MEDIA_WIC_EXPORT WICObject
 		 */
 		static bool writeFrameToBitmapDecoder(IWICImagingFactory* imagingFactory, IWICBitmapEncoder* bitmapEncoder, const Frame& frame, const bool allowConversion = true, bool* hasBeenConverted = nullptr);
 };
+
+template <class T>
+void release(T* object)
+{
+	if (object != nullptr)
+	{
+		object->Release();
+	}
+}
 
 }
 
