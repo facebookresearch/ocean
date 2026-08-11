@@ -186,17 +186,18 @@ bool AMovieRecorder::lockBufferToFill(Frame& recorderFrame, const bool respectFr
 
 	constexpr int64_t kInputTimeoutUs = int64_t(1000000); // 1 second
 
-	bufferIndex_ = nativeMediaLibrary.AMediaCodec_dequeueInputBuffer(mediaCodec_, kInputTimeoutUs);
+	const ssize_t bufferIndex = nativeMediaLibrary.AMediaCodec_dequeueInputBuffer(mediaCodec_, kInputTimeoutUs);
 
-	if (bufferIndex_ < ssize_t(0))
+	if (bufferIndex < ssize_t(0))
 	{
-		Log::error() << "Failed to dequeue codec input buffer (" << bufferIndex_ << ").";
+		Log::error() << "Failed to dequeue codec input buffer (" << bufferIndex << ").";
 		return false;
 	}
 
-	uint8_t* const buffer = nativeMediaLibrary.AMediaCodec_getInputBuffer(mediaCodec_, size_t(bufferIndex_), &bufferSize_);
+	size_t bufferSize = 0;
+	uint8_t* const buffer = nativeMediaLibrary.AMediaCodec_getInputBuffer(mediaCodec_, size_t(bufferIndex), &bufferSize);
 
-	if (bufferSize_ < frameType_.frameTypeSize())
+	if (bufferSize < frameType_.frameTypeSize())
 	{
 		ocean_assert(false && "Invalid buffer!");
 		return false;
@@ -267,7 +268,7 @@ bool AMovieRecorder::lockBufferToFill(Frame& recorderFrame, const bool respectFr
 
 		const unsigned int planeSize = (planeWidth * planeChannels + planePaddingElements) * bytesPerElement * planeSliceHeight;
 
-		if (bufferOffset + planeSize > bufferSize_)
+		if (bufferOffset + planeSize > bufferSize)
 		{
 			// the provided buffer is not large enough, this indicates a bug in the underlying media codec
 
@@ -285,7 +286,15 @@ bool AMovieRecorder::lockBufferToFill(Frame& recorderFrame, const bool respectFr
 	recorderFrame = Frame(frameType_, planeInitializer);
 	ocean_assert(recorderFrame.isValid());
 
-	return recorderFrame.isValid();
+	if (!recorderFrame.isValid())
+	{
+		return false;
+	}
+
+	bufferIndex_ = bufferIndex;
+	bufferSize_ = bufferSize;
+
+	return true;
 }
 
 void AMovieRecorder::unlockBufferToFill()
