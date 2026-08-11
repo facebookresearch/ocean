@@ -891,6 +891,26 @@ class NonLinearOptimizationHomography::CameraHomographiesData
 			result[1] = transformedRightPoint[1];
 		}
 
+		/**
+		 * Determines whether the shared camera model is a usable camera.
+		 * The optimizer is otherwise free to move the focal length through zero, and a camera with a negative
+		 * focal length makes `PinholeCamera::distort()` clamp against an inverted interval.
+		 * @param externalSharedModel The shared camera model to check
+		 * @return True, if the model describes a valid camera
+		 */
+		bool sharedModelIsValid(const StaticBuffer<Scalar, 8>& externalSharedModel)
+		{
+			const Scalar& focalLengthX = externalSharedModel[0];
+			const Scalar& focalLengthY = externalSharedModel[1];
+
+			const Scalar& principalPointX = externalSharedModel[2];
+			const Scalar& principalPointY = externalSharedModel[3];
+
+			return focalLengthX > Numeric::eps() && focalLengthY > Numeric::eps()
+						&& principalPointX >= 0 && principalPointX < Scalar(cameraWidth_)
+						&& principalPointY >= 0 && principalPointY < Scalar(cameraHeight_);
+		}
+
 		bool error(const StaticBuffer<Scalar, 8>& externalSharedModel, const StaticBuffer<Scalar, 9>& externalIndividualModel, const size_t individualModelIndex, const size_t elementIndex, StaticBuffer<Scalar, 2>& result)
 		{
 			const Vector2& leftPoint = imagePointsPairs_[individualModelIndex].first[elementIndex];
@@ -1070,7 +1090,7 @@ bool NonLinearOptimizationHomography::optimizeCameraHomographies(const PinholeCa
 	if (!UniversalOptimization::optimizeUniversalModel(sharedModel, individualModels, numberElementsPerIndividualModel.data(),
 					UniversalOptimization::ValueCallback::create(data, &CameraHomographiesData::value),
 					UniversalOptimization::ErrorCallback::create(data, &CameraHomographiesData::error),
-					UniversalOptimization::SharedModelIsValidCallback(),
+					UniversalOptimization::SharedModelIsValidCallback::create(data, &CameraHomographiesData::sharedModelIsValid),
 					UniversalOptimization::SharedModelTransformationCallback::create(data, &CameraHomographiesData::transformSharedModel),
 					UniversalOptimization::IndividualModelTransformationCallback::create(data, &CameraHomographiesData::transformIndividualModel),
 					UniversalOptimization::ModelAcceptedCallback(),
