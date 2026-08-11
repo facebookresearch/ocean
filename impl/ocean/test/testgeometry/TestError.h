@@ -71,6 +71,13 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestError
 		 * @return True, if succeeded
 		 */
 		static bool testDetermineHomographyErrorSeparate(const double testDuration);
+
+		/**
+		 * Tests the averaged robust error determination function using a subset of the errors.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testAveragedRobustErrorIndexed(const double testDuration);
 };
 
 }

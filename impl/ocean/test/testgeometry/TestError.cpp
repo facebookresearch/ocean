@@ -76,6 +76,15 @@ bool TestError::test(const double testDuration, const TestSelector& selector)
 		testResult = testDetermineHomographyErrorSeparate(testDuration);
 
 		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("averagedrobusterrorindexed"))
+	{
+		testResult = testAveragedRobustErrorIndexed(testDuration);
+
+		Log::info() << " ";
 	}
 
 	Log::info() << testResult;
@@ -108,6 +117,11 @@ TEST(TestError, DeterminePoseErrorCombinedAnyCamera)
 TEST(TestError, DetermineHomographyErrorSeparate)
 {
 	EXPECT_TRUE(TestError::testDetermineHomographyErrorSeparate(GTEST_TEST_DURATION));
+}
+
+TEST(TestError, AveragedRobustErrorIndexed)
+{
+	EXPECT_TRUE(TestError::testAveragedRobustErrorIndexed(GTEST_TEST_DURATION));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -689,6 +703,105 @@ bool TestError::testDetermineHomographyErrorSeparate(const double testDuration)
 					}
 				}
 			}
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestError::testAveragedRobustErrorIndexed(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing indexed averaged robust error determination:";
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+		const unsigned int numberErrors = RandomI::random(randomGenerator, 1u, 100u);
+		const size_t numberIndices = size_t(RandomI::random(randomGenerator, 1u, numberErrors));
+
+		Scalars sqrErrors(numberErrors);
+
+		for (unsigned int n = 0u; n < numberErrors; ++n)
+		{
+			sqrErrors[n] = Random::scalar(randomGenerator, 0, 10);
+		}
+
+		// a random subset of the errors, the same value may be selected several times
+
+		Indices32 indices;
+		indices.reserve(numberIndices);
+
+		Scalars subsetSqrErrors;
+		subsetSqrErrors.reserve(numberIndices);
+
+		for (size_t n = 0; n < numberIndices; ++n)
+		{
+			const unsigned int index = RandomI::random(randomGenerator, numberErrors - 1u);
+
+			indices.push_back(index);
+			subsetSqrErrors.push_back(sqrErrors[index]);
+		}
+
+		// selecting the errors through the indices must give the same result as gathering them first
+
+		const Scalar indexedError = Geometry::Error::averagedRobustError<Geometry::Estimator::ET_SQUARE>(sqrErrors.data(), indices.data(), numberIndices);
+		const Scalar gatheredError = Geometry::Error::averagedRobustError<Geometry::Estimator::ET_SQUARE>(subsetSqrErrors.data(), subsetSqrErrors.size());
+
+		if (!Numeric::isWeakEqual(indexedError, gatheredError))
+		{
+			scopedIteration.setInaccurate();
+		}
+
+		// the same with explicit weights
+
+		Scalars weights(numberErrors);
+
+		for (unsigned int n = 0u; n < numberErrors; ++n)
+		{
+			weights[n] = Random::scalar(randomGenerator, Scalar(0.1), Scalar(2));
+		}
+
+		Scalars subsetWeights;
+		subsetWeights.reserve(numberIndices);
+
+		for (const Index32& index : indices)
+		{
+			subsetWeights.push_back(weights[index]);
+		}
+
+		const Scalar indexedWeightedError = Geometry::Error::averagedRobustError<Geometry::Estimator::ET_SQUARE>(sqrErrors.data(), indices.data(), numberIndices, weights.data());
+		const Scalar gatheredWeightedError = Geometry::Error::averagedRobustError<Geometry::Estimator::ET_SQUARE>(subsetSqrErrors.data(), subsetSqrErrors.size(), subsetWeights.data());
+
+		if (!Numeric::isWeakEqual(indexedWeightedError, gatheredWeightedError))
+		{
+			scopedIteration.setInaccurate();
+		}
+
+		// an explicit average of the selected errors, independent of the implementation, ET_SQUARE weights each error with value^2 / 2
+
+		Scalar expectedError = Scalar(0);
+
+		for (const Index32& index : indices)
+		{
+			expectedError += sqrErrors[index] * Scalar(0.5);
+		}
+
+		expectedError /= Scalar(numberIndices);
+
+		if (!Numeric::isWeakEqual(indexedError, expectedError))
+		{
+			scopedIteration.setInaccurate();
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));

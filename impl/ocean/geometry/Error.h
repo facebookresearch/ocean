@@ -1450,7 +1450,8 @@ inline Scalar Error::averagedRobustError(const Scalar* sqrErrors, const size_t n
 template <Estimator::EstimatorType tEstimator>
 Scalar Error::averagedRobustError(const Scalar* sqrErrors, const unsigned int* indices, const size_t numberIndices, const Scalar* explicitWeights)
 {
-	ocean_assert(sqrErrors);
+	ocean_assert(sqrErrors != nullptr);
+	ocean_assert(indices != nullptr);
 	ocean_assert(numberIndices > 0);
 
 	if (numberIndices == 0)
@@ -1465,19 +1466,18 @@ Scalar Error::averagedRobustError(const Scalar* sqrErrors, const unsigned int* i
 
 	if (explicitWeights)
 	{
-		const Scalar* const sqrErrorsEnd = sqrErrors + numberIndices;
-		while (sqrErrors != sqrErrorsEnd)
+		for (size_t n = 0; n < numberIndices; ++n)
 		{
-			const unsigned int index = *indices++;
+			const unsigned int index = indices[n];
+
 			summedError += Estimator::robustErrorSquare<tEstimator>(sqrErrors[index], sqrSigma) * explicitWeights[index];
 		}
 	}
 	else
 	{
-		const Scalar* const sqrErrorsEnd = sqrErrors + numberIndices;
-		while (sqrErrors != sqrErrorsEnd)
+		for (size_t n = 0; n < numberIndices; ++n)
 		{
-			summedError += Estimator::robustErrorSquare<tEstimator>(sqrErrors[*indices++], sqrSigma);
+			summedError += Estimator::robustErrorSquare<tEstimator>(sqrErrors[indices[n]], sqrSigma);
 		}
 	}
 
