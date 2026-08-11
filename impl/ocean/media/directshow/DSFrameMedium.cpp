@@ -566,7 +566,7 @@ void DSFrameMedium::onNewSample(IMediaSample* sample, const Timestamp timestamp,
 
 			if (NumericT<unsigned int>::isInsideValueRange(bytes))
 			{
-				if ((unsigned int)(bytes) <= recentFrameType_.frameTypeSize())
+				if ((unsigned int)(bytes) >= recentFrameType_.frameTypeSize())
 				{
 					constexpr unsigned int planePaddingElements = 0u;
 
