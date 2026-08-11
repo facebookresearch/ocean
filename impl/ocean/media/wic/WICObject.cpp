@@ -214,9 +214,9 @@ WICPixelFormatGUID WICObject::matchingPixelFormat(const FrameType::PixelFormat f
 
 bool WICObject::hasAlphaChannel(IWICImagingFactory* imagingFactor, IWICBitmapDecoder* bitmapDecoder, IWICBitmapFrameDecode* frameDecode)
 {
-	ocean_assert(imagingFactor && bitmapDecoder && frameDecode);
+	ocean_assert(imagingFactor != nullptr && bitmapDecoder != nullptr && frameDecode != nullptr);
 
-	bool noError = imagingFactor && bitmapDecoder;
+	bool noError = imagingFactor != nullptr && bitmapDecoder != nullptr && frameDecode != nullptr;
 
 	WICPixelFormatGUID format = GUID_NULL;
 	if (noError && S_OK != frameDecode->GetPixelFormat(&format))
@@ -379,9 +379,11 @@ Frame WICObject::loadFrameFromBitmapDecoder(IWICImagingFactory* imagingFactory, 
 	if (noError && frameCount >= 1u)
 	{
 		IWICBitmapFrameDecode* bitmapFrameDecode = nullptr;
-		if (noError && S_OK != bitmapDecoder->GetFrame(0u, &bitmapFrameDecode))
+		if (S_OK != bitmapDecoder->GetFrame(0u, &bitmapFrameDecode) || bitmapFrameDecode == nullptr)
 		{
-			noError = false;
+			// the decoder announced at least one frame, but the frame itself cannot be read
+
+			return Frame();
 		}
 
 		WICPixelFormatGUID wicPixelFormat = GUID_NULL;
