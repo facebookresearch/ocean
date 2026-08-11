@@ -1019,6 +1019,8 @@ AVCaptureDeviceFormat* AVFLiveVideo::bestMatchingCaptureDeviceFormat(AVCaptureDe
 			{
 				NSArray* frameRateRanges = [format videoSupportedFrameRateRanges];
 
+				bool frameRateIsSupported = false;
+
 				for (size_t frameRateIndex = 0; frameRateIndex < [frameRateRanges count]; ++frameRateIndex)
 				{
 					AVFrameRateRange* frameRateRange = [frameRateRanges objectAtIndex:frameRateIndex];
@@ -1028,10 +1030,17 @@ AVCaptureDeviceFormat* AVFLiveVideo::bestMatchingCaptureDeviceFormat(AVCaptureDe
 
 					if (minFrameRate <= targetFrameFrequency && targetFrameFrequency <= maxFrameRate)
 					{
-						explicitFrameRate = targetFrameFrequency;
+						frameRateIsSupported = true;
 						break;
 					}
 				}
+
+				if (!frameRateIsSupported)
+				{
+					continue;
+				}
+
+				explicitFrameRate = targetFrameFrequency;
 			}
 
 			Log::debug() << "AVFLiveVideo: Best matching capture device format with index " << nFormat << ": " << width << "x" << height << ", " << FrameType::translatePixelFormat(pixelFormat);
