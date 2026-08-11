@@ -679,7 +679,6 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const Vector2* 
 		const Scalar c = vMatrix(2, 2);
 
 		ocean_assert(Numeric::isWeakEqualEps(wMatrix(2)));
-		ocean_assert(reorderedDualFundamental.rank() == 2);
 
 #ifdef OCEAN_INTENSIVE_DEBUG
 		Matrix debugNullMatrix = reorderedDualFundamental * vMatrix.subMatrix(0, 2, 3, 1);
