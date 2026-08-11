@@ -545,9 +545,9 @@ bool IIOObject::writeFrameToImageDestination(CGImageDestinationRef imageDestinat
 		return false;
 	}
 
-	CFDataRef data = CFDataCreateWithBytesNoCopy(nullptr, targetFrame.constdata<uint8_t>(), targetFrame.size(), kCFAllocatorNull);
+	const ScopedCFDataRef data(CFDataCreateWithBytesNoCopy(nullptr, targetFrame.constdata<uint8_t>(), targetFrame.size(), kCFAllocatorNull));
 
-	const ScopedCGDataProviderRef dataProvider(CGDataProviderCreateWithCFData(data));
+	const ScopedCGDataProviderRef dataProvider(CGDataProviderCreateWithCFData(data.object()));
 
 	const unsigned int bitsPerDataType = targetFrame.bytesPerDataType() * 8u;
 	const unsigned int bitsPerPixel = targetFrame.planeBytesPerPixel(0u) * 8u;
@@ -560,7 +560,7 @@ bool IIOObject::writeFrameToImageDestination(CGImageDestinationRef imageDestinat
 		return false;
 	}
 
-	CFDictionaryRef optionsDictionary = nullptr;
+	ScopedCFDictionaryRef optionsDictionary;
 	CFStringRef key = nullptr;
 	ScopedCFNumberRef value;
 
@@ -568,10 +568,10 @@ bool IIOObject::writeFrameToImageDestination(CGImageDestinationRef imageDestinat
 	{
 		key = kCGImageDestinationLossyCompressionQuality;
 		value = ScopedCFNumberRef(CFNumberCreate(nullptr, kCFNumberFloat32Type, &properties.quality_));
-		optionsDictionary = CFDictionaryCreate(nullptr, (const void**)(&key), (const void**)(&value.object()), 1, nullptr, nullptr);
+		optionsDictionary = ScopedCFDictionaryRef(CFDictionaryCreate(nullptr, (const void**)(&key), (const void**)(&value.object()), 1, nullptr, nullptr));
 	}
 
-	CGImageDestinationAddImage(imageDestination, image.object(), optionsDictionary);
+	CGImageDestinationAddImage(imageDestination, image.object(), optionsDictionary.object());
 	return CGImageDestinationFinalize(imageDestination);
 }
 
