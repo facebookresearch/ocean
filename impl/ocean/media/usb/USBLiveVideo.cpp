@@ -184,6 +184,9 @@ USBLiveVideo::~USBLiveVideo()
 #ifdef OCEAN_PLATFORM_BUILD_ANDROID
 	permissionSubscription_.release();
 #endif
+
+	stopThreadExplicitly();
+
 	closeDevice();
 
 	ocean_assert(videoDevice_ == nullptr);
@@ -856,8 +859,6 @@ bool USBLiveVideo::closeDevice()
 	if (videoDevice_)
 	{
 		videoDevice_->stop();
-
-		stopThreadExplicitly();
 
 		videoDevice_ = nullptr;
 
