@@ -202,9 +202,9 @@ bool AMovieRecorder::lockBufferToFill(Frame& recorderFrame, const bool respectFr
 		return false;
 	}
 
-	AMediaFormat* inputMediaFormat = nativeMediaLibrary.AMediaCodec_getInputFormat(mediaCodec_);
+	const NativeMediaLibrary::ScopedAMediaFormat inputMediaFormat(nativeMediaLibrary.AMediaCodec_getInputFormat(mediaCodec_));
 
-	if (inputMediaFormat == nullptr)
+	if (!inputMediaFormat.isValid())
 	{
 		ocean_assert(false && "This should never happen!");
 		return false;
@@ -212,11 +212,11 @@ bool AMovieRecorder::lockBufferToFill(Frame& recorderFrame, const bool respectFr
 
 #ifdef OCEAN_INTENSIVE_DEBUG
 		Log::debug() << "Input buffer format for current sample:";
-		Log::debug() << nativeMediaLibrary.AMediaFormat_toString(inputMediaFormat);
+		Log::debug() << nativeMediaLibrary.AMediaFormat_toString(*inputMediaFormat);
 #endif
 
 	int32_t stride = 0;
-	nativeMediaLibrary.AMediaFormat_getInt32(inputMediaFormat, NativeMediaLibrary::AMEDIAFORMAT_KEY_STRIDE, &stride);
+	nativeMediaLibrary.AMediaFormat_getInt32(*inputMediaFormat, NativeMediaLibrary::AMEDIAFORMAT_KEY_STRIDE, &stride);
 
 	if (stride < int32_t(frameType_.width()))
 	{
@@ -225,7 +225,7 @@ bool AMovieRecorder::lockBufferToFill(Frame& recorderFrame, const bool respectFr
 	}
 
 	int32_t sliceHeight = 0;
-	nativeMediaLibrary.AMediaFormat_getInt32(inputMediaFormat, NativeMediaLibrary::AMEDIAFORMAT_KEY_SLICE_HEIGHT, &sliceHeight);
+	nativeMediaLibrary.AMediaFormat_getInt32(*inputMediaFormat, NativeMediaLibrary::AMEDIAFORMAT_KEY_SLICE_HEIGHT, &sliceHeight);
 
 	if (sliceHeight == 0)
 	{
