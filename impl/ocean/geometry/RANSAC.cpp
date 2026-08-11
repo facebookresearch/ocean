@@ -2745,8 +2745,8 @@ void RANSAC::geometricTransformForNonBijectiveCorrespondencesSubset(const Geomet
 	Vectors2 permutationLeftImagePoints;
 	Vectors2 permutationRightImagePoints;
 
-	std::vector<unsigned char> leftIndicesUsed(numberLeftImagePoints);
-	std::vector<unsigned char> rightIndicesUsed(numberRightImagePoints);
+	std::vector<uint8_t> leftIndicesUsed(numberLeftImagePoints);
+	std::vector<uint8_t> rightIndicesUsed(numberRightImagePoints);
 
 	for (unsigned int i = 0u; i < numberIterations; ++i)
 	{
@@ -2755,8 +2755,8 @@ void RANSAC::geometricTransformForNonBijectiveCorrespondencesSubset(const Geomet
 		permutationLeftImagePoints.clear();
 		permutationRightImagePoints.clear();
 
-		memset(leftIndicesUsed.data(), 0x00, leftIndicesUsed.size() * sizeof(unsigned char));
-		memset(rightIndicesUsed.data(), 0x00, rightIndicesUsed.size() * sizeof(unsigned char));
+		memset(leftIndicesUsed.data(), 0x00, leftIndicesUsed.size() * sizeof(uint8_t));
+		memset(rightIndicesUsed.data(), 0x00, rightIndicesUsed.size() * sizeof(uint8_t));
 
 		unsigned int searchIterations = 0u;
 
@@ -2793,6 +2793,10 @@ void RANSAC::geometricTransformForNonBijectiveCorrespondencesSubset(const Geomet
 		SquareMatrix3 candidateModel;
 		if (geometricTransformFunction(permutationLeftImagePoints.data(), permutationRightImagePoints.data(), testCandidates, candidateModel))
 		{
+			// the flags serve a second purpose below, keeping the inlier set bijective, so the correspondences of the minimal sample set need to compete for their indices like any other correspondence
+			memset(leftIndicesUsed.data(), 0x00, leftIndicesUsed.size() * sizeof(uint8_t));
+			memset(rightIndicesUsed.data(), 0x00, rightIndicesUsed.size() * sizeof(uint8_t));
+
 			Scalar squareErrors = 0;
 
 			for (size_t n = 0; n < numberCorrespondences; ++n)

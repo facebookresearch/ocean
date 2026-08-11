@@ -1061,7 +1061,7 @@ bool TestRANSAC::testHomographyMatrixForNonBijectiveCorrespondences(const double
 	RandomGenerator outerRandomGenerator;
 	Validation outerValidation(outerRandomGenerator);
 
-	for (const size_t correspondences : {20, 50, 100, 200})
+	for (const size_t correspondences : {8, 12, 20, 50, 100, 200})
 	{
 		Log::info() << " ";
 		Log::info() << "... with " << correspondences << " correspondences:";
@@ -1195,12 +1195,45 @@ bool TestRANSAC::testHomographyMatrixForNonBijectiveCorrespondences(const double
 					testCandidates = RandomI::random(randomGenerator, 4u, 8u);
 				}
 
-				Indices32 dummyIndices;
-				Indices32* usedIndices = RandomI::boolean(randomGenerator) ? &dummyIndices : nullptr;
+				constexpr Scalar squarePixelErrorThreshold = Scalar(1.5 * 1.5);
+
+				Indices32 usedIndices;
+				Indices32* optionalUsedIndices = RandomI::boolean(randomGenerator) ? &usedIndices : nullptr;
 
 				performance.start();
-					const bool result = Geometry::RANSAC::homographyMatrixForNonBijectiveCorrespondences(pointsLeft.data(), pointsLeft.size(), pointsRightNoised.data(), pointsRightNoised.size(), nonBijectiveCorrespondencesFaulty.data(), nonBijectiveCorrespondencesFaulty.size(), randomGenerator, right_H_left, testCandidates, refine, 80u, Scalar(1.5 * 1.5), usedIndices, useWorker ? &worker : nullptr, useSVD);
+					const bool result = Geometry::RANSAC::homographyMatrixForNonBijectiveCorrespondences(pointsLeft.data(), pointsLeft.size(), pointsRightNoised.data(), pointsRightNoised.size(), nonBijectiveCorrespondencesFaulty.data(), nonBijectiveCorrespondencesFaulty.size(), randomGenerator, right_H_left, testCandidates, refine, 80u, squarePixelErrorThreshold, optionalUsedIndices, useWorker ? &worker : nullptr, useSVD);
 				performance.stop();
+
+				if (result && optionalUsedIndices != nullptr)
+				{
+					// the resulting homography is the one the inlier set was selected with, so every correspondence it explains is expected to show up in that set - most notably the correspondences of the minimal sample set which created it
+
+					size_t explainedCorrespondences = 0;
+
+					// two correspondences can share a left or a right point, the inlier set keeps only the first of them, so the same greedy selection is applied here
+					std::vector<uint8_t> leftPointUsed(pointsLeft.size(), 0u);
+					std::vector<uint8_t> rightPointUsed(pointsRightNoised.size(), 0u);
+
+					for (const IndexPair32& correspondence : nonBijectiveCorrespondencesFaulty)
+					{
+						const Vector2& pointLeft = pointsLeft[correspondence.first];
+						const Vector2& pointRight = pointsRightNoised[correspondence.second];
+
+						Vector2 transformedPoint;
+						if (right_H_left.multiply(pointLeft, transformedPoint) && transformedPoint.sqrDistance(pointRight) < squarePixelErrorThreshold)
+						{
+							if (!leftPointUsed[correspondence.first] && !rightPointUsed[correspondence.second])
+							{
+								leftPointUsed[correspondence.first] = 1u;
+								rightPointUsed[correspondence.second] = 1u;
+
+								++explainedCorrespondences;
+							}
+						}
+					}
+
+					OCEAN_EXPECT_GREATER_EQUAL(outerValidation, usedIndices.size(), explainedCorrespondences);
+				}
 
 				if (result)
 				{
