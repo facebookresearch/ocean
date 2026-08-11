@@ -1491,7 +1491,7 @@ class NonLinearOptimizationCamera::CameraPosesOptimizationProvider : public NonL
 				ocean_assert(sqrErrors.size() == observations_);
 
 				// the model size is the number of columns in the jacobian row as so many parameters will be modified
-				return sqrErrors2robustErrors2<tEstimator>(sqrErrors, 8 + flippedCameras_T_world_.size() * 6, weightedErrors, (Vector2*)(weightVector.data()), transposedInvertedCovariances);
+				return sqrErrors2robustErrors2<tEstimator>(sqrErrors, numberActualCameraParameters_ + flippedCameras_T_world_.size() * 6, weightedErrors, (Vector2*)(weightVector.data()), transposedInvertedCovariances);
 			}
 		}
 
