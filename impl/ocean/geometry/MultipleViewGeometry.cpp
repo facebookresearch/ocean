@@ -69,7 +69,9 @@ bool MultipleViewGeometry::trifocalTensorNormalizedLinear(const Vector2* points1
 
 	StaticMatrix<Scalar, 3, 9> trifocalTensor3x9;
 	if (!trifocalTensorNormalizedLinear(points1, points2, points3, correspondences, trifocalTensor3x9.data()))
+	{
 		return false;
+	}
 
 	memcpy(trifocal[0].data(), trifocalTensor3x9.data(), sizeof(Scalar) * 9);
 	trifocal[0].transpose();
@@ -105,7 +107,9 @@ bool MultipleViewGeometry::trifocalTensorMinimizingError(const Vector2* points1,
 	Matrix trifocalTensor(27, 1);
 
 	if (!trifocalTensorNormalizedLinear(points1, points2, points3, correspondences, trifocalTensor.data(), &matrixA))
+	{
 		return false;
+	}
 
 
 	// error vector should have length 27, matrixA must be [27x27]
@@ -134,7 +138,9 @@ bool MultipleViewGeometry::trifocalTensorMinimizingError(const Vector2* points1,
 		// find two epipole e' and e'' from trifocal tensor
 		Vector3 epipole2, epipole3;
 		if (!epipoles<true>(trifocalTensor.data(),  trifocalTensor.data() + 9,  trifocalTensor.data() + 18, epipole2, epipole3))
+		{
 			return false;
+		}
 
 		// construct matrix E (27 x 18) such that t = Ea where t is the vector of entries of trifocal tensor, a is the vector representing entries of A and B, and where E expresses the linear relationship T_i(j, k) = a(j, i) * e''[k] - e'[j] * b(k, i)
 		Matrix matrixE(27u, 18u, false);
@@ -158,28 +164,36 @@ bool MultipleViewGeometry::trifocalTensorMinimizingError(const Vector2* points1,
 
 		Matrix u, w, v;
 		if (!matrixE.singularValueDecomposition(u, w, v))
+		{
 			return false;
+		}
 
 		const Matrix matrixEleftSingularVectors = u.subMatrix(0u, 0u, matrixE.rows(), rank);
 		const Matrix matrixAEleftSv = matrixA * matrixEleftSingularVectors;
 
 		Matrix _u, _w, _v;
 		if (!matrixAEleftSv.singularValueDecomposition(_u, _w, _v))
+		{
 			return false;
+		}
 
 		Matrix vectorX(rank, 1u);
 
 		for (unsigned int i = 0; i < rank; ++i)
+		{
 			vectorX(i) = _v(i, _v.columns() - 1);
+		}
 
 		trifocalTensor = matrixEleftSingularVectors * vectorX;
 
 #ifdef DO_ITERATION
-		Matrix errorsVector = iFlippedProjectionMatrixA * trifocalTensor; //vectorT = matrixE * vectorA;
+		Matrix errorsVector = flippedCameraA_P_world * trifocalTensor; //vectorT = matrixE * vectorA;
 		Scalar errorNorm = errorsVector.norm();
 
 		if ((errorNormPreviousIteration - errorNorm) < errorNormPreviousIteration * 0.001)
+		{
 			break;
+		}
 
 		errorNormPreviousIteration = errorNorm;
 #endif //DO_ITERATION
@@ -211,7 +225,7 @@ bool MultipleViewGeometry::trifocalTensorMinimizingError(const Vector2* points1,
 	return true;
 }
 
-bool MultipleViewGeometry::trifocalTensorIF(const Vector2* points1, const Vector2* points2, const Vector2* points3, const size_t correspondences, HomogenousMatrix4& iFlippedProjectionMatrix1, HomogenousMatrix4& iFlippedProjectionMatrix2, HomogenousMatrix4& iFlippedProjectionMatrix3, TrifocalTensor* trifocalTensor)
+bool MultipleViewGeometry::trifocalTensorIF(const Vector2* points1, const Vector2* points2, const Vector2* points3, const size_t correspondences, HomogenousMatrix4& flippedCamera1_P_world, HomogenousMatrix4& flippedCamera2_P_world, HomogenousMatrix4& flippedCamera3_P_world, TrifocalTensor* trifocalTensor)
 {
 	ocean_assert(points1 && points2 && points3);
 	ocean_assert(correspondences >= 7);
@@ -224,81 +238,107 @@ bool MultipleViewGeometry::trifocalTensorIF(const Vector2* points1, const Vector
 
 	// calculate trifocal tensor
 	if (!trifocalTensorNormalizedLinear(points1, points2, points3, correspondences, trifocal))
+	{
 		return false;
+	}
 
 	//calculate epipoles
-	Vector3 normedEpipoleIF2, normedEpipoleIF3;
-	if (!epipolesIF(trifocal, normedEpipoleIF2, normedEpipoleIF3))
+	Vector3 flippedCamera2NormedEpipole, flippedCamera3NormedEpipole;
+	if (!epipolesIF(trifocal, flippedCamera2NormedEpipole, flippedCamera3NormedEpipole))
+	{
 		return false;
+	}
 
 	//determine camera project matrices
-	iFlippedProjectionMatrix1 = HomogenousMatrix4(true);
-	if (!cameraProjectionMatricesIF(trifocal, normedEpipoleIF2, normedEpipoleIF3, iFlippedProjectionMatrix2, iFlippedProjectionMatrix3))
+	flippedCamera1_P_world = HomogenousMatrix4(true);
+	if (!cameraProjectionMatricesIF(trifocal, flippedCamera2NormedEpipole, flippedCamera3NormedEpipole, flippedCamera2_P_world, flippedCamera3_P_world))
+	{
 		return false;
+	}
 
 	if (trifocalTensor)
+	{
 		*trifocalTensor = trifocal;
+	}
 
 	return true;
 }
 
-bool MultipleViewGeometry::calibrateFromProjectionsMatricesIF(const ConstIndexedAccessor<HomogenousMatrix4>& iFlippedProjectionMatrices, const unsigned int imageWidth, const unsigned int imageHeight, SquareMatrix3& cameraIntrinsic, HomogenousMatrix4* posesIF)
+bool MultipleViewGeometry::calibrateFromProjectionsMatricesIF(const ConstIndexedAccessor<HomogenousMatrix4>& flippedCameras_P_world, const unsigned int imageWidth, const unsigned int imageHeight, SquareMatrix3& cameraIntrinsic, HomogenousMatrix4* flippedCameras_T_world)
 {
-	ocean_assert(imageWidth != 0u && imageHeight != 0u && posesIF);
+	ocean_assert(imageWidth != 0u && imageHeight != 0u && flippedCameras_T_world);
 
-	const size_t views = iFlippedProjectionMatrices.size();
+	const size_t views = flippedCameras_P_world.size();
 
 	ocean_assert(views >= 3);
 	if (views < 3)
+	{
 		return false;
+	}
 
 	SquareMatrix4 symQ;
-	if (!AutoCalibration::determineAbsoluteDualQuadricLinearIF(iFlippedProjectionMatrices, symQ, imageWidth, imageHeight))
+	if (!AutoCalibration::determineAbsoluteDualQuadricLinearIF(flippedCameras_P_world, symQ, imageWidth, imageHeight))
+	{
 		return false;
+	}
 
 	// estimate camera intrinsics
 	SquareMatrices3 intrinsics(views);
-	if (!AutoCalibration::intrinsicsFromAbsoluteDualQuadricIF(symQ, iFlippedProjectionMatrices, intrinsics.data()))
+	if (!AutoCalibration::intrinsicsFromAbsoluteDualQuadricIF(symQ, flippedCameras_P_world, intrinsics.data()))
+	{
 		return false;
+	}
 
 	// averaging intrinsics, **NOTE** simply avaraging may not be the best choice
 
 	cameraIntrinsic = intrinsics[0];
 	for (size_t i = 1; i < views; ++i)
+	{
 		cameraIntrinsic += intrinsics[i];
+	}
 
 	ocean_assert(!Numeric::isEqualEps(cameraIntrinsic(2, 2)));
 	if (Numeric::isEqualEps(cameraIntrinsic(2, 2)))
+	{
 		return false;
+	}
 
 	cameraIntrinsic *= Scalar(1) / cameraIntrinsic(2, 2);
 
 	// metric upgrade
-	HomogenousMatrices4 metricsIF(views);
-	if (!AutoCalibration::transformProjectiveToMetricIF(symQ, iFlippedProjectionMatrices, metricsIF.data()))
+	HomogenousMatrices4 metricFlippedCameras_P_world(views);
+	if (!AutoCalibration::transformProjectiveToMetricIF(symQ, flippedCameras_P_world, metricFlippedCameras_P_world.data()))
+	{
 		return false;
+	}
 
-	if (!AutoCalibration::metricProjectionMatricesToPosesIF(ConstArrayAccessor<HomogenousMatrix4>(metricsIF), cameraIntrinsic, posesIF))
+	if (!AutoCalibration::metricProjectionMatricesToPosesIF(ConstArrayAccessor<HomogenousMatrix4>(metricFlippedCameras_P_world), cameraIntrinsic, flippedCameras_T_world))
+	{
 		return false;
+	}
 
 	return true;
 }
 
-bool MultipleViewGeometry::calibrateFromProjectionsMatricesIF(const HomogenousMatrix4& iFlippedProjectionMatrix1, const HomogenousMatrix4& iFlippedProjectionMatrix2, const HomogenousMatrix4& iFlippedProjectionMatrix3, const unsigned int imageWidth, const unsigned int imageHeight, SquareMatrix3& cameraIntrinsics, HomogenousMatrix4& iFlippedPose1, HomogenousMatrix4& iFlippedPose2, HomogenousMatrix4& iFlippedPose3)
+bool MultipleViewGeometry::calibrateFromProjectionsMatricesIF(const HomogenousMatrix4& flippedCamera1_P_world, const HomogenousMatrix4& flippedCamera2_P_world, const HomogenousMatrix4& flippedCamera3_P_world, const unsigned int imageWidth, const unsigned int imageHeight, SquareMatrix3& cameraIntrinsics, HomogenousMatrix4& flippedCamera1_T_world, HomogenousMatrix4& flippedCamera2_T_world, HomogenousMatrix4& flippedCamera3_T_world)
 {
-	HomogenousMatrices4 iFlippedProjectionMatrices(3);
-	iFlippedProjectionMatrices[0] = iFlippedProjectionMatrix1;
-	iFlippedProjectionMatrices[1] = iFlippedProjectionMatrix2;
-	iFlippedProjectionMatrices[2] = iFlippedProjectionMatrix3;
+	HomogenousMatrices4 flippedCameras_P_world(3);
+	flippedCameras_P_world[0] = flippedCamera1_P_world;
+	flippedCameras_P_world[1] = flippedCamera2_P_world;
+	flippedCameras_P_world[2] = flippedCamera3_P_world;
 
 	SquareMatrix4 symQ;
-	if (!AutoCalibration::findCommonIntrinsicsFromProjectionMatricesIF(ConstArrayAccessor<HomogenousMatrix4>(iFlippedProjectionMatrices), imageWidth, imageHeight, cameraIntrinsics, &symQ))
+	if (!AutoCalibration::findCommonIntrinsicsFromProjectionMatricesIF(ConstArrayAccessor<HomogenousMatrix4>(flippedCameras_P_world), imageWidth, imageHeight, cameraIntrinsics, &symQ))
+	{
 		return false;
+	}
 
 	// estimate camera intrinsics
 	SquareMatrices3 matK(3);
-	if (!AutoCalibration::intrinsicsFromAbsoluteDualQuadricIF(symQ, ConstArrayAccessor<HomogenousMatrix4>(iFlippedProjectionMatrices), matK.data()))
+	if (!AutoCalibration::intrinsicsFromAbsoluteDualQuadricIF(symQ, ConstArrayAccessor<HomogenousMatrix4>(flippedCameras_P_world), matK.data()))
+	{
 		return false;
+	}
 
 	// averaging intrinsics, room for improvement
 	cameraIntrinsics = matK[0];
@@ -314,22 +354,26 @@ bool MultipleViewGeometry::calibrateFromProjectionsMatricesIF(const HomogenousMa
 	}
 
 	// metric upgrade
-	HomogenousMatrices4 metricsIF(3);
-	if (!AutoCalibration::transformProjectiveToMetricIF(symQ, ConstArrayAccessor<HomogenousMatrix4>(iFlippedProjectionMatrices), metricsIF.data()))
+	HomogenousMatrices4 metricFlippedCameras_P_world(3);
+	if (!AutoCalibration::transformProjectiveToMetricIF(symQ, ConstArrayAccessor<HomogenousMatrix4>(flippedCameras_P_world), metricFlippedCameras_P_world.data()))
+	{
 		return false;
+	}
 
-	HomogenousMatrices4 posesIF(3);
-	if (!AutoCalibration::metricProjectionMatricesToPosesIF(ConstArrayAccessor<HomogenousMatrix4>(metricsIF), cameraIntrinsics, posesIF.data()))
+	HomogenousMatrices4 flippedCameras_T_world(3);
+	if (!AutoCalibration::metricProjectionMatricesToPosesIF(ConstArrayAccessor<HomogenousMatrix4>(metricFlippedCameras_P_world), cameraIntrinsics, flippedCameras_T_world.data()))
+	{
 		return false;
+	}
 
-	iFlippedPose1 = posesIF[0];
-	iFlippedPose2 = posesIF[1];
-	iFlippedPose3 = posesIF[2];
+	flippedCamera1_T_world = flippedCameras_T_world[0];
+	flippedCamera2_T_world = flippedCameras_T_world[1];
+	flippedCamera3_T_world = flippedCameras_T_world[2];
 
 	return true;
 }
 
-bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const Vector2* points1, const Vector2* points2, const Vector2* points3, const size_t correspondences, HomogenousMatrix4& iFlippedProjectionMatrix1, HomogenousMatrix4& iFlippedProjectionMatrix2, HomogenousMatrix4& iFlippedProjectionMatrix3, const Scalar squaredSuccessThreshold, Scalar* squaredProjectionError)
+bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const Vector2* points1, const Vector2* points2, const Vector2* points3, const size_t correspondences, HomogenousMatrix4& flippedCamera1_P_world, HomogenousMatrix4& flippedCamera2_P_world, HomogenousMatrix4& flippedCamera3_P_world, const Scalar squaredSuccessThreshold, Scalar* squaredProjectionError)
 {
 	ocean_assert(points1 && points2 && points3);
 	ocean_assert(correspondences >= 6);
@@ -367,13 +411,17 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const Vector2* 
 		}
 
 		if (allValid)
+		{
 			break;
+		}
 
 		indexSet4NonCollinear.clear();
 		++iterations;
 
 		if (iterations > 20u)
+		{
 			return false;
+		}
 	}
 
 	ocean_assert(indexSet4NonCollinear.size() == 3);
@@ -390,7 +438,9 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const Vector2* 
 	}
 
 	if (indexSet4NonCollinear.size() != 4)
+	{
 		return false;
+	}
 
 	std::vector<Index32> twoPoints;
 	twoPoints.reserve(2);
@@ -430,10 +480,14 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const Vector2* 
 	{
 		const Vectors2 nonCollinearPoints = Subset::subset(points[iView], correspondences, indexSet4NonCollinear);
 		if (!calculateProjectiveBasisTransform(nonCollinearPoints[0], nonCollinearPoints[1], nonCollinearPoints[2], nonCollinearPoints[3], projectiveTransforms[iView]))
+		{
 			return false;
+		}
 
 		if (!projectiveTransforms[iView].invert(projectiveTransformsInv[iView]))
+		{
 			return false;
+		}
 		/*
 		 * e_k = projectiveTransforms * imagePoint_k
 		 * imagePoint_k = projectiveTransformsInv() * e_k
@@ -487,7 +541,9 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const Vector2* 
 	 */
 	Matrix uMatrix, wMatrix, vMatrix;
 	if (!dualFundamentals.singularValueDecomposition(uMatrix, wMatrix, vMatrix))
+	{
 		return false;
+	}
 
 	ocean_assert(Numeric::isWeakEqualEps(wMatrix(3)) && Numeric::isWeakEqualEps(wMatrix(4)));
 
@@ -550,7 +606,9 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const Vector2* 
 
 	unsigned int numberSolutions = Equation::solveCubic(a3, a2, a1, a0, solution[0], solution[1], solution[2]);
 	if (numberSolutions < 1u || numberSolutions == 2u)
+	{
 		return false;
+	}
 
 	for (unsigned int iSolution = 0; iSolution < numberSolutions; ++iSolution)
 	{
@@ -612,7 +670,9 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const Vector2* 
 #endif //OCEAN_INTENSIVE_DEBUG
 
 		if (!reorderedDualFundamental.singularValueDecomposition(uMatrix, wMatrix, vMatrix))
+		{
 			continue;
+		}
 
 		const Scalar a = vMatrix(0, 2);
 		const Scalar b = vMatrix(1, 2);
@@ -632,7 +692,9 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const Vector2* 
 		 */
 
 		if (!(Matrix(3, 3, dualFundamental.data())).singularValueDecomposition(uMatrix, wMatrix, vMatrix)) // SquareMatrix3 --> Matrix^Transpose
+		{
 			continue;
+		}
 
 		ocean_assert(Numeric::isWeakEqualEps(wMatrix(2)));
 
@@ -679,7 +741,9 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const Vector2* 
 		matrix(5, 3) = dc-da;
 
 		if (!matrix.singularValueDecomposition(uMatrix, wMatrix, vMatrix))
+		{
 			continue;
+		}
 
 		ocean_assert(Numeric::isWeakEqualEps(wMatrix(3)));
 
@@ -883,9 +947,9 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const Vector2* 
 			// select best candidates
 			if (backProjectionError < bestError)
 			{
-				iFlippedProjectionMatrix1 = candidatesProjectionMatrix[0];
-				iFlippedProjectionMatrix2 = candidatesProjectionMatrix[1];
-				iFlippedProjectionMatrix3 = candidatesProjectionMatrix[2];
+				flippedCamera1_P_world = candidatesProjectionMatrix[0];
+				flippedCamera2_P_world = candidatesProjectionMatrix[1];
+				flippedCamera3_P_world = candidatesProjectionMatrix[2];
 
 				bestError = backProjectionError;
 			}
@@ -902,24 +966,26 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const Vector2* 
 	return success;
 }
 
-bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const ConstIndexedAccessor<Vectors2>& imagePointsPerPose, NonconstIndexedAccessor<HomogenousMatrix4>* posesIF, const Scalar squaredSuccessThreshold, Scalar* squaredProjectionError)
+bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const ConstIndexedAccessor<Vectors2>& imagePointsPerPose, NonconstIndexedAccessor<HomogenousMatrix4>* flippedCameras_T_world, const Scalar squaredSuccessThreshold, Scalar* squaredProjectionError)
 {
 	const size_t views = imagePointsPerPose.size();
 
-	ScopedNonconstMemoryAccessor<HomogenousMatrix4> scopedPosesIF(posesIF, views);
-	ocean_assert(scopedPosesIF.size() == imagePointsPerPose.size());
+	ScopedNonconstMemoryAccessor<HomogenousMatrix4> scopedFlippedCameras_T_world(flippedCameras_T_world, views);
+	ocean_assert(scopedFlippedCameras_T_world.size() == imagePointsPerPose.size());
 
 	if (views < 3)
+	{
 		return false;
+	}
 	else if (views == 3)
 	{
-		HomogenousMatrix4 iFlippedProjectionMatrix1, iFlippedProjectionMatrix2, iFlippedProjectionMatrix3;
-		bool success = projectiveReconstructionFrom6PointsIF(&imagePointsPerPose[0][0], &imagePointsPerPose[1][0], &imagePointsPerPose[2][0], imagePointsPerPose[0].size(), iFlippedProjectionMatrix1, iFlippedProjectionMatrix2, iFlippedProjectionMatrix3, squaredSuccessThreshold, squaredProjectionError);
+		HomogenousMatrix4 flippedCamera1_P_world, flippedCamera2_P_world, flippedCamera3_P_world;
+		bool success = projectiveReconstructionFrom6PointsIF(&imagePointsPerPose[0][0], &imagePointsPerPose[1][0], &imagePointsPerPose[2][0], imagePointsPerPose[0].size(), flippedCamera1_P_world, flippedCamera2_P_world, flippedCamera3_P_world, squaredSuccessThreshold, squaredProjectionError);
 		if (success)
 		{
-			scopedPosesIF[0] = iFlippedProjectionMatrix1;
-			scopedPosesIF[1] = iFlippedProjectionMatrix2;
-			scopedPosesIF[2] = iFlippedProjectionMatrix3;
+			scopedFlippedCameras_T_world[0] = flippedCamera1_P_world;
+			scopedFlippedCameras_T_world[1] = flippedCamera2_P_world;
+			scopedFlippedCameras_T_world[2] = flippedCamera3_P_world;
 		}
 		return success;
 	}
@@ -959,13 +1025,17 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const ConstInde
 		}
 
 		if (allValid)
+		{
 			break;
+		}
 
 		indexSet4NonCollinear.clear();
 		++iterations;
 
 		if (iterations > 20u)
+		{
 			return false;
+		}
 	}
 
 	ocean_assert(indexSet4NonCollinear.size() == 3);
@@ -988,7 +1058,9 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const ConstInde
 	}
 
 	if (indexSet4NonCollinear.size() != 4)
+	{
 		return false;
+	}
 
 	std::vector<Index32> twoPoints;
 	twoPoints.reserve(2);
@@ -1034,10 +1106,14 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const ConstInde
 		 * imagePoint_k = projectiveTransformsInv * e_k
 		 */
 		if (!calculateProjectiveBasisTransform(nonCollinearPoints[0], nonCollinearPoints[1], nonCollinearPoints[2], nonCollinearPoints[3], projectiveTransforms[iView]))
+		{
 			return false;
+		}
 
 		if (!projectiveTransforms[iView].invert(projectiveTransformsInv[iView]))
+		{
 			return false;
+		}
 
 #ifdef OCEAN_INTENSIVE_DEBUG
 		Vectors3 standardProjectiveBasis;
@@ -1087,7 +1163,9 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const ConstInde
 	 */
 	Matrix uMatrix, wMatrix, vMatrix;
 	if (!dualFundamentals.singularValueDecomposition(uMatrix, wMatrix, vMatrix))
+	{
 		return false;
+	}
 
 #ifdef OCEAN_INTENSIVE_DEBUG
 	// this is too strict for noised data
@@ -1144,7 +1222,9 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const ConstInde
 	reorderedDualFundamental(2, 2) = dualFundamental(2, 1);
 
 	if (!reorderedDualFundamental.singularValueDecomposition(uMatrix, wMatrix, vMatrix))
+	{
 		return false;
+	}
 
 	const Scalar a = vMatrix(0, 2);
 	const Scalar b = vMatrix(1, 2);
@@ -1165,7 +1245,9 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const ConstInde
 		*/
 
 	if (!(Matrix(3, 3, dualFundamental.data())).singularValueDecomposition(uMatrix, wMatrix, vMatrix)) // SquareMatrix3 --> Matrix^Transpose
+	{
 		return false;
+	}
 
 #ifdef OCEAN_INTENSIVE_DEBUG
 	// this is too strict for noised data
@@ -1215,7 +1297,9 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const ConstInde
 	matrix(5, 3) = dc-da;
 
 	if (!matrix.singularValueDecomposition(uMatrix, wMatrix, vMatrix))
+	{
 		return false;
+	}
 
 #ifdef OCEAN_INTENSIVE_DEBUG
 	// this is too strict for noised data
@@ -1316,7 +1400,7 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const ConstInde
 		{
 			for (size_t iView = 0; iView < views; ++iView)
 			{
-				scopedPosesIF[iView] = candidatesProjectionMatrix[iView];
+				scopedFlippedCameras_T_world[iView] = candidatesProjectionMatrix[iView];
 			}
 
 			bestError = backProjectionError;
@@ -1333,17 +1417,17 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const ConstInde
 	return success;
 }
 
-bool MultipleViewGeometry::trifocalTensorFromProjectionMatrices(const HomogenousMatrix4& iFlippedProjectionMatrixB, const HomogenousMatrix4& iFlippedProjectionMatrixC, TrifocalTensor& trifocal)
+bool MultipleViewGeometry::trifocalTensorFromProjectionMatrices(const HomogenousMatrix4& flippedCameraB_P_world, const HomogenousMatrix4& flippedCameraC_P_world, TrifocalTensor& trifocal)
 {
 	/**
 	 * algorithm 15.1 from multiple view geometry (p.367)
 	 *T_i = b_i * c_4.t() - b_4 * c_i.t()
 	 */
 
-	const SquareMatrix3 matrixB = iFlippedProjectionMatrixB.rotationMatrix();
-	const Vector3 b4 = iFlippedProjectionMatrixB.translation();
-	const SquareMatrix3 matrixC = iFlippedProjectionMatrixC.rotationMatrix();
-	const Vector3 c4 = iFlippedProjectionMatrixC.translation();
+	const SquareMatrix3 matrixB = flippedCameraB_P_world.rotationMatrix();
+	const Vector3 b4 = flippedCameraB_P_world.translation();
+	const SquareMatrix3 matrixC = flippedCameraC_P_world.rotationMatrix();
+	const Vector3 c4 = flippedCameraC_P_world.translation();
 
 	const Vector3 b1 = matrixB.xAxis(); //1st col of matrixA
 	const Vector3 b2 = matrixB.yAxis();
@@ -1366,7 +1450,7 @@ bool MultipleViewGeometry::trifocalTensorFromProjectionMatrices(const Homogenous
 	return true;
 }
 
-bool MultipleViewGeometry::trifocalTensorFromProjectionMatrices(const HomogenousMatrix4& iFlippedProjectionMatrixA, const HomogenousMatrix4& iFlippedProjectionMatrixB, const HomogenousMatrix4& iFlippedProjectionMatrixC, TrifocalTensor& trifocal)
+bool MultipleViewGeometry::trifocalTensorFromProjectionMatrices(const HomogenousMatrix4& flippedCameraA_P_world, const HomogenousMatrix4& flippedCameraB_P_world, const HomogenousMatrix4& flippedCameraC_P_world, TrifocalTensor& trifocal)
 {
 	/*
 	 algorithm 17.12 from multiple view geometry (p.412)
@@ -1381,8 +1465,8 @@ bool MultipleViewGeometry::trifocalTensorFromProjectionMatrices(const Homogenous
 	{
 		for (unsigned int r = 0; r < 2; r++)
 		{
-			matrix1(r, c) = iFlippedProjectionMatrixA(r + 1, c); // row 1 is omitted
-			matrix3(r, c) = iFlippedProjectionMatrixA(r, c); // row 3 is omitted
+			matrix1(r, c) = flippedCameraA_P_world(r + 1, c); // row 1 is omitted
+			matrix3(r, c) = flippedCameraA_P_world(r, c); // row 3 is omitted
 		}
 	}
 
@@ -1391,7 +1475,7 @@ bool MultipleViewGeometry::trifocalTensorFromProjectionMatrices(const Homogenous
 		unsigned int row[2] = { 0, 2 };
 		for (unsigned int r = 0; r < 2; r++)
 		{
-			matrix2(r, c) = iFlippedProjectionMatrixA(row[r], c); // row 2 is omitted
+			matrix2(r, c) = flippedCameraA_P_world(row[r], c); // row 2 is omitted
 		}
 	}
 
@@ -1401,12 +1485,12 @@ bool MultipleViewGeometry::trifocalTensorFromProjectionMatrices(const Homogenous
 		{
 			for (unsigned int c = 0; c < 4; ++c)
 			{
-				matrix1(2, c) = iFlippedProjectionMatrixB(q, c);
-				matrix1(3, c) = iFlippedProjectionMatrixC(r, c);
-				matrix2(2, c) = iFlippedProjectionMatrixB(q, c);
-				matrix2(3, c) = iFlippedProjectionMatrixC(r, c);
-				matrix3(2, c) = iFlippedProjectionMatrixB(q, c);
-				matrix3(3, c) = iFlippedProjectionMatrixC(r, c);
+				matrix1(2, c) = flippedCameraB_P_world(q, c);
+				matrix1(3, c) = flippedCameraC_P_world(r, c);
+				matrix2(2, c) = flippedCameraB_P_world(q, c);
+				matrix2(3, c) = flippedCameraC_P_world(r, c);
+				matrix3(2, c) = flippedCameraB_P_world(q, c);
+				matrix3(3, c) = flippedCameraC_P_world(r, c);
 			}
 
 			trifocal[0](q, r) = matrix1.determinant();
@@ -1451,7 +1535,9 @@ bool MultipleViewGeometry::epipoles(const Scalar* const trifocal1, const Scalar*
 
 	Matrix u, w, v, q;
 	if (!t1.singularValueDecomposition(u, w, v))
+	{
 		return false;
+	}
 
 #ifdef OCEAN_INTENSIVE_DEBUG
 	// this is too strict. Check will fail on noisy data
@@ -1468,7 +1554,9 @@ bool MultipleViewGeometry::epipoles(const Scalar* const trifocal1, const Scalar*
 	const Matrix t2(3, 3, trifocal2);
 
 	if (!t2.singularValueDecomposition(u, w, v))
+	{
 		return false;
+	}
 
 #ifdef OCEAN_INTENSIVE_DEBUG
 	// this is too strict. Check will fail on noisy data
@@ -1485,7 +1573,9 @@ bool MultipleViewGeometry::epipoles(const Scalar* const trifocal1, const Scalar*
 	const Matrix t3(3, 3, trifocal3);
 
 	if (!t3.singularValueDecomposition(u, w, v))
+	{
 		return false;
+	}
 
 #ifdef OCEAN_INTENSIVE_DEBUG
 	// this is too strict. Check will fail on noisy data
@@ -1501,7 +1591,9 @@ bool MultipleViewGeometry::epipoles(const Scalar* const trifocal1, const Scalar*
 
 	// epipole2.t() * [u1 u2 u3] = [0 0 0]
 	if (!matrixU.qrDecomposition(q))
+	{
 		return false;
+	}
 
 	// last column is null-vector with unit norm
 	normedEpipole2[0] = tUseIF ? q(0, 2) : -q(0, 2);// actually y & z must be flipped, but only changing x is the same for normalized vectors
@@ -1518,7 +1610,9 @@ bool MultipleViewGeometry::epipoles(const Scalar* const trifocal1, const Scalar*
 
 	// epipole3.t() * [v1 v2 v3] = [0 0 0]
 	if (!matrixV.qrDecomposition(q))
+	{
 		return false;
+	}
 
 	normedEpipole3[0] = tUseIF ? q(0, 2) : -q(0, 2);// actually y & z must be flipped, but only changing x is the same for normalized vectors
 	normedEpipole3[1] = q(1, 2);
@@ -1534,7 +1628,7 @@ bool MultipleViewGeometry::epipoles(const Scalar* const trifocal1, const Scalar*
 	return true;
 }
 
-bool MultipleViewGeometry::fundamentalMatricesIF(const TrifocalTensor& trifocal, const Vector3& iFlippedEpipole2, const Vector3& iFlippedEpipole3, SquareMatrix3& fundamental21, SquareMatrix3& fundamental31)
+bool MultipleViewGeometry::fundamentalMatricesIF(const TrifocalTensor& trifocal, const Vector3& flippedCamera2Epipole, const Vector3& flippedCamera3Epipole, SquareMatrix3& fundamental21, SquareMatrix3& fundamental31)
 {
 	/**
 	 * algorithm 15.1 from multiple view geometry (p.375)
@@ -1545,26 +1639,26 @@ bool MultipleViewGeometry::fundamentalMatricesIF(const TrifocalTensor& trifocal,
 	 * [T_1, T_2, T_3] * e'' means  T_1 * e'', T_2 * e'', T_3 * e''
 	 */
 
-	const SquareMatrix3 epipole2Matrix = SquareMatrix3::skewSymmetricMatrix(iFlippedEpipole2);
+	const SquareMatrix3 epipole2Matrix = SquareMatrix3::skewSymmetricMatrix(flippedCamera2Epipole);
 
 	fundamental21 = SquareMatrix3(
-		epipole2Matrix * (trifocal[0] * iFlippedEpipole3),
-		epipole2Matrix * (trifocal[1] * iFlippedEpipole3),
-		epipole2Matrix * (trifocal[2] * iFlippedEpipole3)
+		epipole2Matrix * (trifocal[0] * flippedCamera3Epipole),
+		epipole2Matrix * (trifocal[1] * flippedCamera3Epipole),
+		epipole2Matrix * (trifocal[2] * flippedCamera3Epipole)
 	);
 
-	const SquareMatrix3 epipole3Matrix = SquareMatrix3::skewSymmetricMatrix(iFlippedEpipole3);
+	const SquareMatrix3 epipole3Matrix = SquareMatrix3::skewSymmetricMatrix(flippedCamera3Epipole);
 
 	fundamental31 = SquareMatrix3(
-		epipole3Matrix * (trifocal[0].transposed() * iFlippedEpipole2),
-		epipole3Matrix * (trifocal[1].transposed() * iFlippedEpipole2),
-		epipole3Matrix * (trifocal[2].transposed() * iFlippedEpipole2)
+		epipole3Matrix * (trifocal[0].transposed() * flippedCamera2Epipole),
+		epipole3Matrix * (trifocal[1].transposed() * flippedCamera2Epipole),
+		epipole3Matrix * (trifocal[2].transposed() * flippedCamera2Epipole)
 	);
 
 	return true;
 }
 
-bool MultipleViewGeometry::cameraProjectionMatricesIF(const TrifocalTensor& trifocal, const Vector3& iFlippedNormedEpipole2, const Vector3& iFlippedNormedEpipole3, HomogenousMatrix4& iFlippedProjectionMatrix2, HomogenousMatrix4& iFlippedProjectionMatrix3)
+bool MultipleViewGeometry::cameraProjectionMatricesIF(const TrifocalTensor& trifocal, const Vector3& flippedCamera2NormedEpipole, const Vector3& flippedCamera3NormedEpipole, HomogenousMatrix4& flippedCamera2_P_world, HomogenousMatrix4& flippedCamera3_P_world)
 {
 	/**
 	 * algorithm 15.1 from multiple view geometry (p.375)
@@ -1575,44 +1669,44 @@ bool MultipleViewGeometry::cameraProjectionMatricesIF(const TrifocalTensor& trif
 	 * [T_1, T_2, T_3] * e'' means  T_1 * e'', T_2 * e'', T_3 * e''
 	 */
 
-	ocean_assert(Numeric::isEqual(iFlippedNormedEpipole2.length(), 1));
-	ocean_assert(Numeric::isEqual(iFlippedNormedEpipole3.length(), 1));
+	ocean_assert(Numeric::isEqual(flippedCamera2NormedEpipole.length(), 1));
+	ocean_assert(Numeric::isEqual(flippedCamera3NormedEpipole.length(), 1));
 
 	const SquareMatrix3 P2_3x3(
-		trifocal[0] * iFlippedNormedEpipole3,
-		trifocal[1] * iFlippedNormedEpipole3,
-		trifocal[2] * iFlippedNormedEpipole3
+		trifocal[0] * flippedCamera3NormedEpipole,
+		trifocal[1] * flippedCamera3NormedEpipole,
+		trifocal[2] * flippedCamera3NormedEpipole
 	);
 
-	SquareMatrix3 e3e3t(iFlippedNormedEpipole3 * iFlippedNormedEpipole3[0], iFlippedNormedEpipole3 * iFlippedNormedEpipole3[1], iFlippedNormedEpipole3 * iFlippedNormedEpipole3[2]);
+	SquareMatrix3 e3e3t(flippedCamera3NormedEpipole * flippedCamera3NormedEpipole[0], flippedCamera3NormedEpipole * flippedCamera3NormedEpipole[1], flippedCamera3NormedEpipole * flippedCamera3NormedEpipole[2]);
 	e3e3t(0, 0) -= 1;
 	e3e3t(1, 1) -= 1;
 	e3e3t(2, 2) -= 1;
 
 #ifdef OCEAN_DEBUG
-	Matrix debugE3e3t = Matrix(3, 1, iFlippedNormedEpipole3.data()) * Matrix(1, 3, iFlippedNormedEpipole3.data()) - Matrix(3, 3, true);
+	Matrix debugE3e3t = Matrix(3, 1, flippedCamera3NormedEpipole.data()) * Matrix(1, 3, flippedCamera3NormedEpipole.data()) - Matrix(3, 3, true);
 	ocean_assert(debugE3e3t.isEqual(Matrix(3, 3, e3e3t.transposed().data()), Numeric::eps()));
 #endif
 
 	const SquareMatrix3 P3_3x3(
-		e3e3t * (trifocal[0].transposed() * iFlippedNormedEpipole2),
-		e3e3t * (trifocal[1].transposed() * iFlippedNormedEpipole2),
-		e3e3t * (trifocal[2].transposed() * iFlippedNormedEpipole2)
+		e3e3t * (trifocal[0].transposed() * flippedCamera2NormedEpipole),
+		e3e3t * (trifocal[1].transposed() * flippedCamera2NormedEpipole),
+		e3e3t * (trifocal[2].transposed() * flippedCamera2NormedEpipole)
 	);
 
-	iFlippedProjectionMatrix2.setRotation(P2_3x3);
-	iFlippedProjectionMatrix2.setTranslation(iFlippedNormedEpipole2);
-	iFlippedProjectionMatrix2(3, 0) = 0;
-	iFlippedProjectionMatrix2(3, 1) = 0;
-	iFlippedProjectionMatrix2(3, 2) = 0;
-	iFlippedProjectionMatrix2(3, 3) = 1;
+	flippedCamera2_P_world.setRotation(P2_3x3);
+	flippedCamera2_P_world.setTranslation(flippedCamera2NormedEpipole);
+	flippedCamera2_P_world(3, 0) = 0;
+	flippedCamera2_P_world(3, 1) = 0;
+	flippedCamera2_P_world(3, 2) = 0;
+	flippedCamera2_P_world(3, 3) = 1;
 
-	iFlippedProjectionMatrix3.setRotation(P3_3x3);
-	iFlippedProjectionMatrix3.setTranslation(iFlippedNormedEpipole3);
-	iFlippedProjectionMatrix3(3, 0) = 0;
-	iFlippedProjectionMatrix3(3, 1) = 0;
-	iFlippedProjectionMatrix3(3, 2) = 0;
-	iFlippedProjectionMatrix3(3, 3) = 1;
+	flippedCamera3_P_world.setRotation(P3_3x3);
+	flippedCamera3_P_world.setTranslation(flippedCamera3NormedEpipole);
+	flippedCamera3_P_world(3, 0) = 0;
+	flippedCamera3_P_world(3, 1) = 0;
+	flippedCamera3_P_world(3, 2) = 0;
+	flippedCamera3_P_world(3, 3) = 1;
 
 	return true;
 }
@@ -1691,11 +1785,15 @@ bool MultipleViewGeometry::trifocalTensorLinear(const Vector2* points1, const Ve
 	Matrix u_, w_, v_;
 
 	if (!matrix.singularValueDecomposition(u_, w_, v_))
+	{
 		return false;
+	}
 
 #ifdef OCEAN_DEBUG
 	for (unsigned int n = 1; n < w_.rows(); ++n)
+	{
 		ocean_assert(w_(n - 1) >= w_(n));
+	}
 
 	ocean_assert(v_.rows() == 27);
 #endif
@@ -1704,10 +1802,12 @@ bool MultipleViewGeometry::trifocalTensorLinear(const Vector2* points1, const Ve
 	--trifocal3x9;
 
 	for (unsigned int i = 0; i < 3; ++i)
+	{
 		for (unsigned int j = 0; j < 9; ++j)
 		{
 			*(++trifocal3x9) = v_(eigenVectorRow++, 26);
 		}
+	}
 
 #ifdef OCEAN_INTENSIVE_DEBUG
 	Matrix test = matrix * v_.subMatrix(0, 0, v_.rows(), 26);
@@ -1715,7 +1815,9 @@ bool MultipleViewGeometry::trifocalTensorLinear(const Vector2* points1, const Ve
 #endif //OCEAN_INTENSIVE_DEBUG
 
 	if (matrixA)
+	{
 		*matrixA = std::move(matrix);
+	}
 
 	return true;
 }
@@ -1760,7 +1862,9 @@ bool MultipleViewGeometry::trifocalTensorNormalizedLinear(const Vector2* points1
 
 	Scalar trifocalTensor3x9[27];
 	if (!trifocalTensorLinear(normalizationPoints1.data(), normalizationPoints2.data(), normalizationPoints3.data(), correspondences, trifocalTensor3x9, matrixA))
+	{
 		return false;
+	}
 
 	/**
 	 * IV. compute trifocal tensor corresponding to original data
@@ -1867,12 +1971,16 @@ bool MultipleViewGeometry::calculateProjectiveBasisTransform(const Vector2& imag
 
 	SquareMatrix3 invHomogenImagePoints123;
 	if (!homogenImagePoints123.invert(invHomogenImagePoints123))
+	{
 		return false;
+	}
 
 	const Vector3 scaleVector = invHomogenImagePoints123 * Vector3(imagePointForTargetPoint111, 1);
 	const SquareMatrix3 scaleMatrix(scaleVector);
 	if (!(homogenImagePoints123 * scaleMatrix).invert(baseTransformation))
+	{
 		return false;
+	}
 
 #ifdef OCEAN_INTENSIVE_DEBUG
 	{
@@ -1891,9 +1999,9 @@ bool MultipleViewGeometry::calculateProjectiveBasisTransform(const Vector2& imag
 	return true;
 }
 
-bool AutoCalibration::findCommonIntrinsicsFromProjectionMatricesIF(const ConstIndexedAccessor<HomogenousMatrix4>& iFlippedProjectionMatrices, SquareMatrix3& cameraIntrinsics, SquareMatrix4* Q, SquareMatrix3* omega)
+bool AutoCalibration::findCommonIntrinsicsFromProjectionMatricesIF(const ConstIndexedAccessor<HomogenousMatrix4>& flippedCameras_P_world, SquareMatrix3& cameraIntrinsics, SquareMatrix4* Q, SquareMatrix3* omega)
 {
-	size_t views = iFlippedProjectionMatrices.size();
+	size_t views = flippedCameras_P_world.size();
 
 	ocean_assert(views >= 3);
 
@@ -1919,11 +2027,11 @@ bool AutoCalibration::findCommonIntrinsicsFromProjectionMatricesIF(const ConstIn
 	Matrix linearSystem(noEquations, 10);
 	Scalar* linearSystemData = linearSystem.data();
 
-	const HomogenousMatrix4& Pj = iFlippedProjectionMatrices[0];
+	const HomogenousMatrix4& Pj = flippedCameras_P_world[0];
 
 	for (size_t i = 1; i < views; ++i)
 	{
-		const HomogenousMatrix4& Pi = iFlippedProjectionMatrices[i];
+		const HomogenousMatrix4& Pi = flippedCameras_P_world[i];
 		{
 			//  w*_i(0, 0) = w*_j(0, 0)
 			const Matrix wi = createLinearSystemForAbsoluteDualQuadric(0, 0, Pi);
@@ -1969,7 +2077,9 @@ bool AutoCalibration::findCommonIntrinsicsFromProjectionMatricesIF(const ConstIn
 	// solve for q
 	Matrix u, w, v;
 	if (!linearSystem.singularValueDecomposition(u, w, v))
+	{
 		return false;
+	}
 
 	SquareMatrix4 symmetricQ;
 	symmetricQ(0, 0) = v(0, 9);
@@ -1990,7 +2100,9 @@ bool AutoCalibration::findCommonIntrinsicsFromProjectionMatricesIF(const ConstIn
 	symmetricQ(3, 3) = v(9, 9);
 
 	if (Q)
+	{
 		*Q = symmetricQ;
+	}
 
 	Matrix Pt = Matrix(4, 3);
 	memcpy(Pt.data(), Pj.data(), sizeof(Scalar) * 3);
@@ -2002,22 +2114,28 @@ bool AutoCalibration::findCommonIntrinsicsFromProjectionMatricesIF(const ConstIn
 	const SquareMatrix3 conic(omegaMatrix.data(), true);
 
 	if (!upperTriangleCholeskyDecomposition(conic, cameraIntrinsics))
+	{
 		return false;
+	}
 
 	if (omega)
+	{
 		*omega = conic;
+	}
 
 	return true;
 }
 
-bool AutoCalibration::findCommonIntrinsicsFromProjectionMatricesIF(const ConstIndexedAccessor<HomogenousMatrix4>& iFlippedProjectionMatrices, const unsigned int imageWidth, const unsigned int imageHeight, SquareMatrix3& cameraIntrinsics, SquareMatrix4* Q, SquareMatrix3* omega)
+bool AutoCalibration::findCommonIntrinsicsFromProjectionMatricesIF(const ConstIndexedAccessor<HomogenousMatrix4>& flippedCameras_P_world, const unsigned int imageWidth, const unsigned int imageHeight, SquareMatrix3& cameraIntrinsics, SquareMatrix4* Q, SquareMatrix3* omega)
 {
-	ocean_assert(iFlippedProjectionMatrices.size() >= 3);
+	ocean_assert(flippedCameras_P_world.size() >= 3);
 
-	const size_t views = iFlippedProjectionMatrices.size();
+	const size_t views = flippedCameras_P_world.size();
 
 	if (views < 3)
+	{
 		return false;
+	}
 
 	/**
 	 * w* = (K * K^T) = P_i * Q* *P^T_i ==  P_j * Q* *P^T_j, for all i,j
@@ -2041,9 +2159,11 @@ bool AutoCalibration::findCommonIntrinsicsFromProjectionMatricesIF(const ConstIn
 	 * w*_i(0,0) - w*_j(1,1) = 0
 	 */
 
-	HomogenousMatrices4 normedProjectionsIF(views);
-	if (!transformProjectionsZeroPrinciplePoint(iFlippedProjectionMatrices, imageWidth, imageHeight, normedProjectionsIF.data()))
+	HomogenousMatrices4 normedFlippedCameras_P_world(views);
+	if (!transformProjectionsZeroPrinciplePoint(flippedCameras_P_world, imageWidth, imageHeight, normedFlippedCameras_P_world.data()))
+	{
 		return false;
+	}
 
 	// create linear system for solving Q* via A * q = 0
 	const size_t noEquations = views * 4 - 1;
@@ -2051,11 +2171,11 @@ bool AutoCalibration::findCommonIntrinsicsFromProjectionMatricesIF(const ConstIn
 	Matrix linearSystem(noEquations, 10);
 	Scalar* linearSystemData = linearSystem.data();
 
-	const HomogenousMatrix4& Pj = normedProjectionsIF[0];
+	const HomogenousMatrix4& Pj = normedFlippedCameras_P_world[0];
 
 	for (size_t i = 1; i < views; ++i)
 	{
-		const HomogenousMatrix4& Pi = normedProjectionsIF[i];
+		const HomogenousMatrix4& Pi = normedFlippedCameras_P_world[i];
 
 		//  w*_i(0,0) = w*_j(1,1)
 		const Matrix wi = createLinearSystemForAbsoluteDualQuadric(0, 0, Pi);
@@ -2069,7 +2189,7 @@ bool AutoCalibration::findCommonIntrinsicsFromProjectionMatricesIF(const ConstIn
 
 	for (size_t i = 0; i < views; ++i)
 	{
-		const HomogenousMatrix4& Pi = normedProjectionsIF[i];
+		const HomogenousMatrix4& Pi = normedFlippedCameras_P_world[i];
 
 		//  < P_i(2,:) * Q*, P_i(0,:) > = 0
 		const Matrix w02 = createLinearSystemForAbsoluteDualQuadric(0, 2, Pi);
@@ -2096,7 +2216,9 @@ bool AutoCalibration::findCommonIntrinsicsFromProjectionMatricesIF(const ConstIn
 	// solve for q
 	Matrix u, w, v;
 	if (!linearSystem.singularValueDecomposition(u, w, v))
+	{
 		return false;
+	}
 
 	SquareMatrix4 symmetricQ;
 	symmetricQ(0, 0) = v(0, 9);
@@ -2117,32 +2239,38 @@ bool AutoCalibration::findCommonIntrinsicsFromProjectionMatricesIF(const ConstIn
 	symmetricQ(3, 3) = v(9, 9);
 
 	if (Q)
+	{
 		*Q = symmetricQ;
+	}
 
 	Matrix Pt = Matrix(4, 3);
-	memcpy(Pt.data(), iFlippedProjectionMatrices[0].data(), sizeof(Scalar) * 3);
-	memcpy(Pt.data() + 3, iFlippedProjectionMatrices[0].data() + 4, sizeof(Scalar) * 3);
-	memcpy(Pt.data() + 6, iFlippedProjectionMatrices[0].data() + 8, sizeof(Scalar) * 3);
-	memcpy(Pt.data() + 9, iFlippedProjectionMatrices[0].data() + 12, sizeof(Scalar) * 3);
+	memcpy(Pt.data(), flippedCameras_P_world[0].data(), sizeof(Scalar) * 3);
+	memcpy(Pt.data() + 3, flippedCameras_P_world[0].data() + 4, sizeof(Scalar) * 3);
+	memcpy(Pt.data() + 6, flippedCameras_P_world[0].data() + 8, sizeof(Scalar) * 3);
+	memcpy(Pt.data() + 9, flippedCameras_P_world[0].data() + 12, sizeof(Scalar) * 3);
 
 	const Matrix omegaMatrix(Pt.transposedMultiply(Matrix(4, 4, symmetricQ.data())) * Pt);
 	const SquareMatrix3 conic(omegaMatrix.data(), true);
 
 	if (!upperTriangleCholeskyDecomposition(conic, cameraIntrinsics))
+	{
 		return false;
+	}
 
 	if (omega)
+	{
 		*omega = conic;
+	}
 
 	return true;
 }
 
-bool AutoCalibration::determineAbsoluteDualQuadricLinearIF(const ConstIndexedAccessor<HomogenousMatrix4>& iFlippedProjectionMatrices, SquareMatrix4& matrixQ, const unsigned int imageWidth, const unsigned int imageHeight, bool equalFxFy)
+bool AutoCalibration::determineAbsoluteDualQuadricLinearIF(const ConstIndexedAccessor<HomogenousMatrix4>& flippedCameras_P_world, SquareMatrix4& matrixQ, const unsigned int imageWidth, const unsigned int imageHeight, bool equalFxFy)
 {
-	ocean_assert(iFlippedProjectionMatrices.size() >= 3);
+	ocean_assert(flippedCameras_P_world.size() >= 3);
 	ocean_assert(imageWidth != 0u && imageHeight != 0u);
 
-	const size_t views = iFlippedProjectionMatrices.size();
+	const size_t views = flippedCameras_P_world.size();
 
 	/**
 	 * w*_i = (K_i * K^T_i) = P_i * Q* *P^T_i
@@ -2163,23 +2291,27 @@ bool AutoCalibration::determineAbsoluteDualQuadricLinearIF(const ConstIndexedAcc
 	 * w*(1, 0) = w*(0, 1) = [P_i * Q* * P^T_i](1, 0) = 0      ->      < P_i(1, :) * Q*,     P_i(0, :) >= 0
 	 */
 
-	HomogenousMatrices4 normedProjectionsIF(views);
-	if (!transformProjectionsZeroPrinciplePoint(iFlippedProjectionMatrices, imageWidth, imageHeight, normedProjectionsIF.data()))
+	HomogenousMatrices4 normedFlippedCameras_P_world(views);
+	if (!transformProjectionsZeroPrinciplePoint(flippedCameras_P_world, imageWidth, imageHeight, normedFlippedCameras_P_world.data()))
+	{
 		return false;
+	}
 
 	// create linear system for solving Q* via A * q = 0
 
 	size_t noEquations = 3 * views;
 
 	if (equalFxFy)
+	{
 		noEquations += views;
+	}
 
 	Matrix linearSystem(noEquations, 10);
 	Scalar* linearSystemData = linearSystem.data();
 
 	for (size_t i = 0; i < views; i++)
 	{
-		const HomogenousMatrix4& P = normedProjectionsIF[i];
+		const HomogenousMatrix4& P = normedFlippedCameras_P_world[i];
 
 		//  < P_i(2,:) * Q*, P_i(0,:) > = 0
 		const Matrix w02 = createLinearSystemForAbsoluteDualQuadric(0, 2, P);
@@ -2222,7 +2354,9 @@ bool AutoCalibration::determineAbsoluteDualQuadricLinearIF(const ConstIndexedAcc
 	// solve for q
 	Matrix u, w, v;
 	if (!linearSystem.singularValueDecomposition(u, w, v))
+	{
 		return false;
+	}
 
 	matrixQ(0, 0) = v(0, 9);
 	matrixQ(1, 0) = v(1, 9);
@@ -2244,49 +2378,55 @@ bool AutoCalibration::determineAbsoluteDualQuadricLinearIF(const ConstIndexedAcc
 	return true;
 }
 
-bool AutoCalibration::intrinsicsFromAbsoluteDualQuadricIF(const SquareMatrix4& symmetricQ, const ConstIndexedAccessor<HomogenousMatrix4>& iFlippedProjectionMatrices, SquareMatrix3* intrinsics)
+bool AutoCalibration::intrinsicsFromAbsoluteDualQuadricIF(const SquareMatrix4& symmetricQ, const ConstIndexedAccessor<HomogenousMatrix4>& flippedCameras_P_world, SquareMatrix3* intrinsics)
 {
 	ocean_assert(symmetricQ.isSymmetric(Numeric::weakEps()));
 	ocean_assert(intrinsics);
 
-	for (size_t i = 0; i < iFlippedProjectionMatrices.size(); i++)
+	for (size_t i = 0; i < flippedCameras_P_world.size(); i++)
 	{
-		const HomogenousMatrix4& projectionIF = iFlippedProjectionMatrices[i];
-		ocean_assert(projectionIF.isValid());
+		const HomogenousMatrix4& flippedCamera_P_world = flippedCameras_P_world[i];
+		ocean_assert(flippedCamera_P_world.isValid());
 
 		// P * Q * P^T = K * K^T
-		const SquareMatrix3 omega((SquareMatrix4&)projectionIF * symmetricQ * projectionIF.transposed());
+		const SquareMatrix3 omega((SquareMatrix4&)flippedCamera_P_world * symmetricQ * flippedCamera_P_world.transposed());
 
 		if (!upperTriangleCholeskyDecomposition(omega, intrinsics[i]))
+		{
 			return false;
+		}
 	}
 
 	return true;
 }
 
-bool AutoCalibration::transformProjectiveToMetricIF(const SquareMatrix4& Q, const ConstIndexedAccessor<HomogenousMatrix4>& iFlippedProjectionMatrices, HomogenousMatrix4* iFlippedMetricProjectionMatrices, SquareMatrix4* transformation)
+bool AutoCalibration::transformProjectiveToMetricIF(const SquareMatrix4& Q, const ConstIndexedAccessor<HomogenousMatrix4>& flippedCameras_P_world, HomogenousMatrix4* metricFlippedCameras_P_world, SquareMatrix4* transformation)
 {
-	ocean_assert(iFlippedMetricProjectionMatrices);
+	ocean_assert(metricFlippedCameras_P_world);
 
-	const size_t views = iFlippedProjectionMatrices.size();
+	const size_t views = flippedCameras_P_world.size();
 
 	SquareMatrix4 metricTransformation;
 	if (!getTransformProjectiveToMetricMatrix(Q, metricTransformation))
+	{
 		return false;
+	}
 
 	if (transformation)
+	{
 		*transformation = metricTransformation;
+	}
 
 	for (size_t j = 0; j < views; j++)
 	{
-		const HomogenousMatrix4& Pj = iFlippedProjectionMatrices[j];
+		const HomogenousMatrix4& Pj = flippedCameras_P_world[j];
 
 		SquareMatrix4 metricProj = SquareMatrix4(Pj) * metricTransformation;
 		metricProj(3, 0) = 0;
 		metricProj(3, 1) = 0;
 		metricProj(3, 2) = 0;
 		metricProj(3, 3) = 1;
-		iFlippedMetricProjectionMatrices[j] = HomogenousMatrix4(metricProj);
+		metricFlippedCameras_P_world[j] = HomogenousMatrix4(metricProj);
 
 #ifdef OCEAN_DEBUG
 		Matrix Pt = Matrix(4, 3);
@@ -2302,12 +2442,14 @@ bool AutoCalibration::transformProjectiveToMetricIF(const SquareMatrix4& Q, cons
 	return true;
 }
 
-bool AutoCalibration::metricProjectionMatricesToPosesIF(const ConstIndexedAccessor<HomogenousMatrix4>& metricProjectionsIF, const SquareMatrix3& intrinsic, HomogenousMatrix4* posesIF)
+bool AutoCalibration::metricProjectionMatricesToPosesIF(const ConstIndexedAccessor<HomogenousMatrix4>& metricFlippedCameras_P_world, const SquareMatrix3& intrinsic, HomogenousMatrix4* flippedCameras_T_world)
 {
-	if (metricProjectionsIF.isEmpty())
+	if (metricFlippedCameras_P_world.isEmpty())
+	{
 		return true;
+	}
 
-	ocean_assert(posesIF && !intrinsic.isSingular());
+	ocean_assert(flippedCameras_T_world && !intrinsic.isSingular());
 
 	/**
 	 * P = K * [R t]
@@ -2323,35 +2465,39 @@ bool AutoCalibration::metricProjectionMatricesToPosesIF(const ConstIndexedAccess
 
 	const HomogenousMatrix4 invInvIntrinsic4(invIntrinsic);
 
-	for (size_t i = 0; i < metricProjectionsIF.size(); i++)
+	for (size_t i = 0; i < metricFlippedCameras_P_world.size(); i++)
 	{
-		ocean_assert(metricProjectionsIF[i].isValid());
+		ocean_assert(metricFlippedCameras_P_world[i].isValid());
 
-		HomogenousMatrix4 poseIF(invInvIntrinsic4 * metricProjectionsIF[i]);
+		HomogenousMatrix4 flippedCamera_T_world(invInvIntrinsic4 * metricFlippedCameras_P_world[i]);
 
 		// now we have a pose with arbitrary scale, however we need a orthonormal base for the rotation matrix
 
-		const Scalar lengthX = poseIF.xAxis().length();
-		const Scalar lengthY = poseIF.yAxis().length();
-		const Scalar lengthZ = poseIF.zAxis().length();
+		const Scalar lengthX = flippedCamera_T_world.xAxis().length();
+		const Scalar lengthY = flippedCamera_T_world.yAxis().length();
+		const Scalar lengthZ = flippedCamera_T_world.zAxis().length();
 
 		const Scalar averageScale = (lengthX + lengthY + lengthZ) * Scalar(0.333333333333333333333333333);
 
 		if (Numeric::isEqualEps(averageScale))
+		{
 			return false;
+		}
 
 		const Scalar invAverageScale = Scalar(1) / averageScale;
 
 		for (unsigned int n = 0u; n < 15u; ++n)
-			poseIF[n] *= invAverageScale;
+		{
+			flippedCamera_T_world[n] *= invAverageScale;
+		}
 
 #ifdef OCEAN_DEBUG
 		{
-			ocean_assert(poseIF.isValid());
+			ocean_assert(flippedCamera_T_world.isValid());
 
-			const Vector3 xAxis = poseIF.xAxis();
-			const Vector3 yAxis = poseIF.yAxis();
-			const Vector3 zAxis = poseIF.zAxis();
+			const Vector3 xAxis = flippedCamera_T_world.xAxis();
+			const Vector3 yAxis = flippedCamera_T_world.yAxis();
+			const Vector3 zAxis = flippedCamera_T_world.zAxis();
 
 			const Scalar xLength = xAxis.length();
 			const Scalar yLength = yAxis.length();
@@ -2375,35 +2521,41 @@ bool AutoCalibration::metricProjectionMatricesToPosesIF(const ConstIndexedAccess
 		}
 #endif
 
-		posesIF[i] = poseIF;
+		flippedCameras_T_world[i] = flippedCamera_T_world;
 	}
 
 	return true;
 }
 
-bool AutoCalibration::transformProjectionsZeroPrinciplePoint(const ConstIndexedAccessor<HomogenousMatrix4>& iFlippedProjectionMatrices, const unsigned int imageWidth, const unsigned int imageHeight, HomogenousMatrix4* iFlippedNormalizedProjectionMatrices, SquareMatrix3* backTransformation)
+bool AutoCalibration::transformProjectionsZeroPrinciplePoint(const ConstIndexedAccessor<HomogenousMatrix4>& flippedCameras_P_world, const unsigned int imageWidth, const unsigned int imageHeight, HomogenousMatrix4* normalizedFlippedCameras_P_world, SquareMatrix3* backTransformation)
 {
-	ocean_assert(iFlippedProjectionMatrices.size() >= 1);
+	ocean_assert(flippedCameras_P_world.size() >= 1);
 	ocean_assert(imageWidth != 0u && imageHeight != 0u);
-	ocean_assert(iFlippedNormalizedProjectionMatrices);
+	ocean_assert(normalizedFlippedCameras_P_world);
 
-	const size_t views = iFlippedProjectionMatrices.size();
+	const size_t views = flippedCameras_P_world.size();
 	const unsigned int width_2 = imageWidth / 2u;
 	const unsigned int height_2 = imageHeight / 2u;
 
 	const SquareMatrix3 transformation(Scalar(imageWidth + imageHeight), 0, 0, 0, Scalar(imageWidth + imageHeight), 0, Scalar(width_2), Scalar(height_2), 1);
 
 	if (backTransformation)
+	{
 		*backTransformation = transformation;
+	}
 
 	SquareMatrix3 invTransformation;
 	if (!transformation.invert(invTransformation))
+	{
 		return false;
+	}
 
 	const HomogenousMatrix4 normalization(invTransformation);
 
 	for (size_t n = 0; n < views; n++)
-		iFlippedNormalizedProjectionMatrices[n] = normalization * iFlippedProjectionMatrices[n];
+	{
+		normalizedFlippedCameras_P_world[n] = normalization * flippedCameras_P_world[n];
+	}
 
 	return true;
 }
@@ -2422,13 +2574,17 @@ bool AutoCalibration::getTransformProjectiveToMetricMatrix(const SquareMatrix4& 
 	*/
 	Matrix eigenValues, eigenVectors;
 	if (!Matrix(4, 4, symmetricQ.data()).eigenSystem(eigenValues, eigenVectors))
+	{
 		return false;
+	}
 
 	std::multimap<Scalar, Index32> sort;
 	for (unsigned int i = 0u; i < 4u; i++)
 	{
 		if (eigenValues(i) < 0)
+		{
 			eigenValues(i) *= -1;
+		}
 
 		sort.insert(std::make_pair(Numeric::sqrt(eigenValues(i)), Index32(i)));
 	}
@@ -2472,30 +2628,46 @@ bool AutoCalibration::upperTriangleCholeskyDecomposition(const SquareMatrix3& om
 
 	Matrix flippedOmega(3, 3);
 	for (unsigned int r = 0; r < 3u; ++r)
+	{
 		for (unsigned int c = 0; c < 3u; ++c)
+		{
 			flippedOmega(r, c) = omega(2u - r, 2u - c);
+		}
+	}
 
 	Matrix flippedK;
 	if (!flippedOmega.choleskyDecomposition(flippedK))
+	{
 		return false;
+	}
 
 	for (unsigned int r = 0; r < 3u; ++r)
+	{
 		for (unsigned int c = 0; c < 3u; ++c)
+		{
 			cameraIntrinsic(r, c) = flippedK(2u - r, 2u - c);
+		}
+	}
 
 	// we resolve sign ambiguities assuming a positive diagonal
 
 	for (unsigned int c = 0u; c < 3u; ++c)
+	{
 		if (cameraIntrinsic(c, c) < 0)
 		{
 			for (unsigned int r = 0u; r < 3u; ++r)
+			{
 				cameraIntrinsic(r, c) *= -1;
+			}
 		}
+	}
 
 	// we finally normalize the intrinsic matrix w.r.t. the lower right element
 
 	if (Numeric::isEqualEps(cameraIntrinsic(2, 2)))
+	{
 		return false;
+	}
 
 #ifdef OCEAN_DEBUG
 	const SquareMatrix3 debugOmega = cameraIntrinsic * cameraIntrinsic.transposed();
@@ -2507,12 +2679,12 @@ bool AutoCalibration::upperTriangleCholeskyDecomposition(const SquareMatrix3& om
 	return true;
 }
 
-Matrix AutoCalibration::createLinearSystemForAbsoluteDualQuadric(const unsigned int omegaRowIndex, const unsigned int omegaColumnIndex, const HomogenousMatrix4& iFlippedProjectionMatrix)
+Matrix AutoCalibration::createLinearSystemForAbsoluteDualQuadric(const unsigned int omegaRowIndex, const unsigned int omegaColumnIndex, const HomogenousMatrix4& flippedCamera_P_world)
 {
 	ocean_assert(omegaRowIndex <= 2);
 	ocean_assert(omegaColumnIndex <= 2);
 
-	const HomogenousMatrix4& P = iFlippedProjectionMatrix;
+	const HomogenousMatrix4& P = flippedCamera_P_world;
 
 	Matrix linearSystem(1, 10);
 	linearSystem(0, 0) = P(omegaRowIndex, 0) * P(omegaColumnIndex, 0);
