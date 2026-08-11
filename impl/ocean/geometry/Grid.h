@@ -77,7 +77,7 @@ class OCEAN_GEOMETRY_EXPORT Grid
 		/**
 		 * Creates a new invalid grid element.
 		 */
-		inline Grid();
+		Grid() = default;
 
 		/**
 		 * Creates a new Grid by a plane2world transformation.
@@ -97,13 +97,13 @@ class OCEAN_GEOMETRY_EXPORT Grid
 		 * If the virtualGrid2plane transformation is set, the grid2plane transformation is set to the same matrix.
 		 * If the grid2plane transformation should be set, the virtualGrid2plane transformation can be set to the appropriate matrix.
 		 * @param pinholeCamera The pinhole camera profile to be applied
-		 * @param pose The pose to be applied
+		 * @param world_T_camera The camera pose to be applied, transforming camera to world
 		 * @param imagePoints The image points to adjust the bounding box, size must be four
 		 * @param plane2worldTransformation Transformation that transforms points defined in a coordinate system of the plane into points defined in the world coordinate system
 		 * @param virtualGrid2planeTransformation Optional transformation that transforms points defined in a coordinate system of the virtual grid into points defined in the plane coordinate system
 		 * @param clipBoundingBox Optional flag to clip the grid lower and upper grid corners by an image bounding box around the camera frame
 		 */
-		Grid(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Vectors2& imagePoints, const HomogenousMatrix4& plane2worldTransformation, const HomogenousMatrix4& virtualGrid2planeTransformation = HomogenousMatrix4(true), const bool clipBoundingBox = false);
+		Grid(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const Vectors2& imagePoints, const HomogenousMatrix4& plane2worldTransformation, const HomogenousMatrix4& virtualGrid2planeTransformation = HomogenousMatrix4(true), const bool clipBoundingBox = false);
 
 		/**
 		 * Creates a new Grid by four given image points using vanishing projection.
@@ -113,25 +113,25 @@ class OCEAN_GEOMETRY_EXPORT Grid
 		 * The grid coordinates are only used for determine the shear of the virtualGrid2plane transformation, the lower and upper grid corners are not adjust!
 		 * If no grid could be determined from the four image points, a invalid grid is create.
 		 * @param pinholeCamera The pinhole camera profile to be applied
-		 * @param pose The pose to be applied
+		 * @param world_T_camera The camera pose to be applied, transforming camera to world
 		 * @param imagePoints The four image points (must be in clockwise or counterclockwise order)
 		 * @param gridCoordinates Optional four grid coordinates (must be in clockwise or counterclockwise order)
 		 * @param previousPlane2worldTransformation Optional Transformation that transforms points defined in a coordinate system of the plane into points defined in the world coordinate system to adapt the plane translation
 		 * @param clipBoundingBox Optional flag to clip the grid lower and upper grid corners by an image bounding box around the camera frame
 		 */
-		Grid(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Vectors2& imagePoints, const Vector2* gridCoordinates = nullptr, const HomogenousMatrix4* previousPlane2worldTransformation = nullptr, const bool clipBoundingBox = false);
+		Grid(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const Vectors2& imagePoints, const Vector2* gridCoordinates = nullptr, const HomogenousMatrix4* previousPlane2worldTransformation = nullptr, const bool clipBoundingBox = false);
 
 		/**
 		 * Creates a new Grid by a given transformation that transforms points defined in a coordinate system of the plane into points defined in the world coordinate system.
 		 * The virtualGrid2plane transformation is adjusted by four given image points.
 		 * The virtual grid is sheared that the four points define a rectangle on the virtual grid in the best case.
 		 * @param pinholeCamera The pinhole camera profile to be applied
-		 * @param pose The pose to be applied
+		 * @param world_T_camera The camera pose to be applied, transforming camera to world
 		 * @param plane2worldTransformation Transformation that transforms points defined in a coordinate system of the plane into points defined in the world coordinate system
 		 * @param imagePoints The four image points (must be in clockwise or counterclockwise order)
 		 * @param clipBoundingBox Optional flag to clip the grid lower and upper grid corners by an image bounding box around the camera frame
 		 */
-		Grid(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const HomogenousMatrix4& plane2worldTransformation, const Vectors2& imagePoints, const bool clipBoundingBox = false);
+		Grid(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const HomogenousMatrix4& plane2worldTransformation, const Vectors2& imagePoints, const bool clipBoundingBox = false);
 
 		/**
 		 * Returns the transformation that transforms points defined in a coordinate system of the plane into points defined in the world coordinate system.
@@ -249,66 +249,66 @@ class OCEAN_GEOMETRY_EXPORT Grid
 		 * Top: -height * factor
 		 * Bottom: height + height * factor
 		 * @param pinholeCamera The pinhole camera profile to be applied
-		 * @param pose The pose to be applied
+		 * @param world_T_camera The camera pose to be applied, transforming camera to world
 		 * @param borderSizeFactor the factor for the width and height for the border around the camera frame, Range [0, infinity)
 		 * @param insideGridCoordinates Optional grid coordinates that must lie inside the new clipped grid
 		 */
-		void clipByImageBoundingBox(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Scalar borderSizeFactor = Scalar(2.0), const Vectors2& insideGridCoordinates = Vectors2());
+		void clipByImageBoundingBox(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const Scalar borderSizeFactor = Scalar(2.0), const Vectors2& insideGridCoordinates = Vectors2());
 
 		/**
 		 * Convert an point defined in a coordinate system of the camera image into an point on the plane defined in the world coordinate system.
 		 * The grid must be valid!
 		 * @param pinholeCamera The pinhole camera profile to be applied
-		 * @param pose The pose to be applied
+		 * @param world_T_camera The camera pose to be applied, transforming camera to world
 		 * @param imageCoordinate Image coordinate which will be converted
 		 * @param worldCoordinate resulting world coordinate, if the conversion was successful
 		 * @return True, if the conversion was successful
 		 */
-		bool image2world(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Vector2& imageCoordinate, Vector3& worldCoordinate) const;
+		bool image2world(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const Vector2& imageCoordinate, Vector3& worldCoordinate) const;
 
 		/**
 		 * Convert an point defined in a coordinate system of the camera image into an point on the plane defined in the plane coordinate system.
 		 * The grid must be valid!
 		 * @param pinholeCamera The pinhole camera profile to be applied
-		 * @param pose The pose to be applied
+		 * @param world_T_camera The camera pose to be applied, transforming camera to world
 		 * @param imageCoordinate Image coordinate which will be converted
 		 * @param planeCoordinate resulting plane coordinate, if the conversion was successful
 		 * @return True, if the conversion was successful
 		 */
-		bool image2plane(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Vector2& imageCoordinate, Vector3& planeCoordinate) const;
+		bool image2plane(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const Vector2& imageCoordinate, Vector3& planeCoordinate) const;
 
 		/**
 		 * Convert an point defined in a coordinate system of the camera image into an point on the plane defined in the grid coordinate system.
 		 * The grid must be valid!
 		 * @param pinholeCamera The pinhole camera profile to be applied
-		 * @param pose The pose to be applied
+		 * @param world_T_camera The camera pose to be applied, transforming camera to world
 		 * @param imageCoordinate Image coordinate which will be converted
 		 * @param gridCoordinate resulting grid coordinate, if the conversion was successful
 		 * @tparam tVirtual Indicate whether the virtual grid is used
 		 * @return True, if the conversion was successful
 		 */
 		template <bool tVirtual>
-		bool image2grid(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Vector2& imageCoordinate, Vector2& gridCoordinate) const;
+		bool image2grid(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const Vector2& imageCoordinate, Vector2& gridCoordinate) const;
 
 		/**
 		 * Convert an point on the plane defined in a coordinate system of the world into an point defined in the camera image coordinate system.
 		 * The grid must be valid!
 		 * @param pinholeCamera The pinhole camera profile to be applied
-		 * @param pose The pose to be applied
+		 * @param world_T_camera The camera pose to be applied, transforming camera to world
 		 * @param worldCoordinate World coordinate which will be converted
 		 * @return resulting image coordinate
 		 */
-		inline Vector2 world2image(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Vector3& worldCoordinate) const;
+		inline Vector2 world2image(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const Vector3& worldCoordinate) const;
 
 		/**
 		 * Convert an point on the plane defined in a coordinate system of the world into an point defined in the camera image coordinate system.
 		 * The grid must be valid!
 		 * @param pinholeCamera The pinhole camera profile to be applied
-		 * @param poseIF Inverted flipped pose to be applied
+		 * @param flippedCamera_T_world Inverted flipped pose to be applied
 		 * @param worldCoordinate World coordinate which will be converted
 		 * @return resulting image coordinate
 		 */
-		inline Vector2 world2imageIF(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& poseIF, const Vector3& worldCoordinate) const;
+		inline Vector2 world2imageIF(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& flippedCamera_T_world, const Vector3& worldCoordinate) const;
 
 		/**
 		 * Convert an point on the plane defined in a coordinate system of the world into an point defined in the plane coordinate system.
@@ -332,21 +332,21 @@ class OCEAN_GEOMETRY_EXPORT Grid
 		 * Convert an point on the plane defined in a coordinate system of the plane into an point defined in the camera image coordinate system.
 		 * The grid must be valid!
 		 * @param pinholeCamera The pinhole camera profile to be applied
-		 * @param pose The pose to be applied
+		 * @param world_T_camera The camera pose to be applied, transforming camera to world
 		 * @param planeCoordinate Plane coordinate which will be converted
 		 * @return resulting image coordinate
 		 */
-		inline Vector2 plane2image(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Vector3& planeCoordinate) const;
+		inline Vector2 plane2image(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const Vector3& planeCoordinate) const;
 
 		/**
 		 * Convert an point on the plane defined in a coordinate system of the plane into an point defined in the camera image coordinate system.
 		 * The grid must be valid!
 		 * @param pinholeCamera The pinhole camera profile to be applied
-		 * @param poseIF inverted flipped pose to be applied
+		 * @param flippedCamera_T_world inverted flipped pose to be applied
 		 * @param planeCoordinate Plane coordinate which will be converted
 		 * @return resulting image coordinate
 		 */
-		inline Vector2 plane2imageIF(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& poseIF, const Vector3& planeCoordinate) const;
+		inline Vector2 plane2imageIF(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& flippedCamera_T_world, const Vector3& planeCoordinate) const;
 
 		/**
 		 * Convert an point on the plane defined in a coordinate system of the plane into an point defined in the world coordinate system.
@@ -370,25 +370,25 @@ class OCEAN_GEOMETRY_EXPORT Grid
 		 * Convert an point on the plane defined in a coordinate system of the grid into an point defined in the camera image coordinate system.
 		 * The grid must be valid!
 		 * @param pinholeCamera The pinhole camera profile to be applied
-		 * @param pose The pose to be applied
+		 * @param world_T_camera The camera pose to be applied, transforming camera to world
 		 * @param gridCoordinate Grid coordinate which will be converted
 		 * @tparam tVirtual Indicate whether the virtual grid is used
 		 * @return resulting image coordinate
 		 */
 		template <bool tVirtual>
-		inline Vector2 grid2image(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Vector2& gridCoordinate) const;
+		inline Vector2 grid2image(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const Vector2& gridCoordinate) const;
 
 		/**
 		 * Convert an point on the plane defined in a coordinate system of the grid into an point defined in the camera image coordinate system.
 		 * The grid must be valid!
 		 * @param pinholeCamera The pinhole camera profile to be applied
-		 * @param poseIF Inverted flipped pose to be applied
+		 * @param flippedCamera_T_world Inverted flipped pose to be applied
 		 * @param gridCoordinate Grid coordinate which will be converted
 		 * @tparam tVirtual Indicate whether the virtual grid is used
 		 * @return resulting image coordinate
 		 */
 		template <bool tVirtual>
-		inline Vector2 grid2imageIF(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& poseIF, const Vector2& gridCoordinate) const;
+		inline Vector2 grid2imageIF(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& flippedCamera_T_world, const Vector2& gridCoordinate) const;
 
 		/**
 		 * Convert an point on the plane defined in a coordinate system of the grid into an point defined in the world coordinate system.
@@ -431,7 +431,7 @@ class OCEAN_GEOMETRY_EXPORT Grid
 		 * If no grid coordinates are given, the resulting virtualGrid2plane transformation equals to the grid2plane transformation.
 		 * If a previous plane2world transformation is given, the new one will be oriented at the same translation, otherwise the origin of the new plane2world transformation will be set to a distance of 1 from the camera.
 		 * @param pinholeCamera The pinhole camera profile to be applied
-		 * @param pose The pose to be applied
+		 * @param world_T_camera The camera pose to be applied, transforming camera to world
 		 * @param imagePoints The four image points to determine the transformations (must be in clockwise or counterclockwise order)
 		 * @param gridCoordinates Optional four grid coordinates (must be in clockwise or counterclockwise order)
 		 * @param previousPlane2worldTransformation Optional previous plane2world transformation
@@ -439,21 +439,21 @@ class OCEAN_GEOMETRY_EXPORT Grid
 		 * @param virtualGrid2planeTransformation Optional resulting virtualGrid2plane transformation
 		 * @return True, if the Transformations could be determined
 		 */
-		static bool determineVirtualGridTransformationsByFourImagePoints(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Vector2* imagePoints, const Vector2* gridCoordinates = nullptr, const HomogenousMatrix4* previousPlane2worldTransformation = nullptr, HomogenousMatrix4* plane2worldTransformation = nullptr, HomogenousMatrix4* virtualGrid2planeTransformation = nullptr);
+		static bool determineVirtualGridTransformationsByFourImagePoints(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const Vector2* imagePoints, const Vector2* gridCoordinates = nullptr, const HomogenousMatrix4* previousPlane2worldTransformation = nullptr, HomogenousMatrix4* plane2worldTransformation = nullptr, HomogenousMatrix4* virtualGrid2planeTransformation = nullptr);
 
 		/**
 		 * Determines a virtualGrid2plane transformation by a plane2world transformation and four given image points.
 		 * Furthermore an adjusted plane2world transformation is determined which is the previous plane2world transformation rotated around the plane normal
 		 * that the bisection of the x and y axis of the virtual and non virtual grid transformation have the same orientation.
 		 * @param pinholeCamera The pinhole camera profile to be applied
-		 * @param pose The pose to be applied
+		 * @param world_T_camera The camera pose to be applied, transforming camera to world
 		 * @param imagePoints The four image points to determine the transformations (must be in clockwise or counterclockwise order)
 		 * @param previousPlane2worldTransformation Previous plane2world transformation
 		 * @param plane2worldTransformation The new plane2world transformation that is a rotation of the previous plane2world transformation around the plane normal
 		 * @param virtualGrid2planeTransformation The determined virtualGrid2plane transformation
 		 * @return True, if succeeded
 		 */
-		static bool determineVirtualGridTransformationByPlane2WorldTransformation(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Vectors2& imagePoints, const HomogenousMatrix4& previousPlane2worldTransformation, HomogenousMatrix4& plane2worldTransformation, HomogenousMatrix4& virtualGrid2planeTransformation);
+		static bool determineVirtualGridTransformationByPlane2WorldTransformation(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const Vectors2& imagePoints, const HomogenousMatrix4& previousPlane2worldTransformation, HomogenousMatrix4& plane2worldTransformation, HomogenousMatrix4& virtualGrid2planeTransformation);
 
 		/**
 		 * Determine the nearest integer grid node from a given grid coordinate.
@@ -483,19 +483,19 @@ class OCEAN_GEOMETRY_EXPORT Grid
 
 		/**
 		 * Returns whether a given world coordinate is in front of the camera.
-		 * @param pose Current camera pose
+		 * @param world_T_camera Current camera pose, transforming camera to world
 		 * @param worldCoordinate World coordinate to be checked
 		 * @return True, if so
 		 */
-		static inline bool isInFrontOfCamera(const HomogenousMatrix4& pose, const Vector3& worldCoordinate);
+		static inline bool isInFrontOfCamera(const HomogenousMatrix4& world_T_camera, const Vector3& worldCoordinate);
 
 		/**
 		 * Returns whether a given world coordinate is in front of the camera.
-		 * @param poseIF Current inverted flipped camera pose
+		 * @param flippedCamera_T_world Current inverted flipped camera pose
 		 * @param worldCoordinate World coordinate to be checked
 		 * @return True, if so
 		 */
-		static inline bool isInFrontOfCameraIF(const HomogenousMatrix4& poseIF, const Vector3& worldCoordinate);
+		static inline bool isInFrontOfCameraIF(const HomogenousMatrix4& flippedCamera_T_world, const Vector3& worldCoordinate);
 
 	protected:
 
@@ -503,65 +503,55 @@ class OCEAN_GEOMETRY_EXPORT Grid
 		 * Adjust the lower and upper grid corner in x direction by a given finite image line that is a projected grid edge in x direction and a finite image line of an image bounding box edge that clips the grid.
 		 * Beware: The grid edge must be have a orientation of (1, 0) in grid coordinates
 		 * @param pinholeCamera The pinhole camera profile to be applied
-		 * @param pose The pose to be applied
+		 * @param world_T_camera The camera pose to be applied, transforming camera to world
 		 * @param gridBoundingBoxEdgeImageCoordinate The finite image line of a grid edge in x direction
 		 * @param imageBoundingBoxEdgeImageCoordinate The finite image line of image bounding box edge that clips the grid
 		 */
-		void adjustGridCornersInXDirectionByImageLines(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const FiniteLine2& gridBoundingBoxEdgeImageCoordinate, const FiniteLine2& imageBoundingBoxEdgeImageCoordinate);
+		void adjustGridCornersInXDirectionByImageLines(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const FiniteLine2& gridBoundingBoxEdgeImageCoordinate, const FiniteLine2& imageBoundingBoxEdgeImageCoordinate);
 
 		/**
 		 * Adjust the lower and upper grid corner in y direction by a given finite image line that is a projected grid edge in y direction and a finite image line of an image bounding box edge that clips the grid.
 		 * Beware: The grid edge must be have a orientation of (0, 1) in grid coordinates
 		 * @param pinholeCamera The pinhole camera profile to be applied
-		 * @param pose The pose to be applied
+		 * @param world_T_camera The camera pose to be applied, transforming camera to world
 		 * @param gridBoundingBoxEdgeImageCoordinate The finite image line of a grid edge in y direction
 		 * @param imageBoundingBoxEdgeImageCoordinate The finite image line of image bounding box edge that clips the grid
 		 */
-		void adjustGridCornersInYDirectionByImageLines(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const FiniteLine2& gridBoundingBoxEdgeImageCoordinate, const FiniteLine2& imageBoundingBoxEdgeImageCoordinate);
+		void adjustGridCornersInYDirectionByImageLines(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const FiniteLine2& gridBoundingBoxEdgeImageCoordinate, const FiniteLine2& imageBoundingBoxEdgeImageCoordinate);
 
 		/**
 		 * Clips a finite line in world coordinates, that the start and end point lie in front of the camera.
 		 * A binary search is determine the possible start and end point who are in front of the camera.
 		 * If both points lie behind the camera, the line is not adjusted.
-		 * @param poseIF Inverted flipped pose to be applied
+		 * @param flippedCamera_T_world Inverted flipped pose to be applied
 		 * @param lineToClip The finite line to clip
 		 * @param resultingLine The resulting clipped line if succeeded
 		 * @return True, if succeeded
 		 */
-		static bool clipWorldLineInFrontOfCameraBinarySearchIF(const HomogenousMatrix4& poseIF, const FiniteLine3& lineToClip, FiniteLine3& resultingLine);
+		static bool clipWorldLineInFrontOfCameraBinarySearchIF(const HomogenousMatrix4& flippedCamera_T_world, const FiniteLine3& lineToClip, FiniteLine3& resultingLine);
 
 	protected:
 
-		/// Transformation that transforms points defined in a coordinate system of the plane into points defined in the world coordinate system.
-		HomogenousMatrix4 worldTplane;
+		/// Transformation that transforms points defined in a coordinate system of the plane into points defined in the world coordinate system, invalid until set.
+		HomogenousMatrix4 world_T_plane_ = HomogenousMatrix4(false);
 
-		/// Transformation that transforms points defined in a coordinate system of the grid into points defined in the plane coordinate system.
-		HomogenousMatrix4 planeTgrid;
+		/// Transformation that transforms points defined in a coordinate system of the grid into points defined in the plane coordinate system, invalid until set.
+		HomogenousMatrix4 plane_T_grid_ = HomogenousMatrix4(false);
 
-		/// Transformation that transform points defined in a coordinate system of the virtual grid into points defined in the plane coordinate system.
-		HomogenousMatrix4 planeTvirtualGrid;
+		/// Transformation that transform points defined in a coordinate system of the virtual grid into points defined in the plane coordinate system, invalid until set.
+		HomogenousMatrix4 plane_T_virtualGrid_ = HomogenousMatrix4(false);
 
-		/// Lower grid corner of the visualization bounding box of the grid defined in the grid coordinate system.
-		Vector2 gridLowerCorner;
+		/// Lower grid corner of the visualization bounding box of the grid defined in the grid coordinate system, an empty box until set.
+		Vector2 gridLowerCorner_ = Vector2(1, 1);
 
-		/// Upper grid corner of the visualization bounding box of the grid defined in the grid coordinate system .
-		Vector2 gridUpperCorner;
+		/// Upper grid corner of the visualization bounding box of the grid defined in the grid coordinate system, an empty box until set.
+		Vector2 gridUpperCorner_ = Vector2(-1, -1);
 };
 
-inline Grid::Grid() :
-	worldTplane(false),
-	planeTgrid(false),
-	planeTvirtualGrid(false),
-	gridLowerCorner(1, 1),
-	gridUpperCorner(-1, -1)
-{
-	// nothing to do here
-}
-
 inline Grid::Grid(const HomogenousMatrix4& plane2worldTransformation, const HomogenousMatrix4& virtualGrid2planeTransformation, const Vector2& lowerCorner, const Vector2& upperCorner) :
-	worldTplane(plane2worldTransformation),
-	gridLowerCorner(lowerCorner),
-	gridUpperCorner(upperCorner)
+	world_T_plane_(plane2worldTransformation),
+	gridLowerCorner_(lowerCorner),
+	gridUpperCorner_(upperCorner)
 {
 	// sets the physical and virtual grid2plane transformation
 	setVirtualGrid2planeTransformation(virtualGrid2planeTransformation);
@@ -569,103 +559,105 @@ inline Grid::Grid(const HomogenousMatrix4& plane2worldTransformation, const Homo
 
 inline const HomogenousMatrix4& Grid::plane2worldTransformation() const
 {
-	return worldTplane;
+	return world_T_plane_;
 }
 
 inline const HomogenousMatrix4& Grid::grid2planeTransformation() const
 {
-	return planeTgrid;
+	return plane_T_grid_;
 }
 
 inline const HomogenousMatrix4& Grid::virtualGrid2planeTransformation() const
 {
-	return planeTvirtualGrid;
+	return plane_T_virtualGrid_;
 }
 
 inline HomogenousMatrix4 Grid::grid2worldTransformation() const
 {
-	return worldTplane * planeTgrid;
+	return world_T_plane_ * plane_T_grid_;
 }
 
 inline HomogenousMatrix4 Grid::virtualGrid2worldTransformation() const
 {
-	return worldTplane * planeTvirtualGrid;
+	return world_T_plane_ * plane_T_virtualGrid_;
 }
 
 inline const Vector2& Grid::lowerGridCorner() const
 {
-	return gridLowerCorner;
+	return gridLowerCorner_;
 }
 
 inline const Vector2& Grid::upperGridCorner() const
 {
-	return gridUpperCorner;
+	return gridUpperCorner_;
 }
 
 inline void Grid::setPlane2worldTransformation(const HomogenousMatrix4& newTransformation)
 {
 	ocean_assert(newTransformation.isValid());
 
-	worldTplane = newTransformation;
+	world_T_plane_ = newTransformation;
 }
 
 inline void Grid::setGrid2planeTransformation(const HomogenousMatrix4& newTransformation)
 {
 	ocean_assert(newTransformation.isValid());
 
-	planeTgrid = newTransformation;
-	planeTvirtualGrid = newTransformation;
+	plane_T_grid_ = newTransformation;
+	plane_T_virtualGrid_ = newTransformation;
 }
 
 inline void Grid::setLowerGridCorner(const Vector2& newCorner)
 {
-	gridLowerCorner = newCorner;
+	gridLowerCorner_ = newCorner;
 }
 
 inline void Grid::setUpperGridCorner(const Vector2& newCorner)
 {
-	gridUpperCorner = newCorner;
+	gridUpperCorner_ = newCorner;
 }
 
 template <bool tVirtual>
-bool Grid::image2grid(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Vector2& imageCoordinate, Vector2& gridCoordinate) const
+bool Grid::image2grid(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const Vector2& imageCoordinate, Vector2& gridCoordinate) const
 {
 	ocean_assert(isValid());
-	ocean_assert(pinholeCamera.isValid() && pose.isValid());
+	ocean_assert(pinholeCamera.isValid() && world_T_camera.isValid());
 
 	Vector3 planeCoordinate;
-	if (!image2plane(pinholeCamera, pose, imageCoordinate, planeCoordinate))
+	if (!image2plane(pinholeCamera, world_T_camera, imageCoordinate, planeCoordinate))
+	{
 		return false;
+	}
 
 	gridCoordinate = plane2grid<tVirtual>(planeCoordinate);
 
 	return true;
 }
 
-inline Vector2 Grid::world2image(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Vector3& worldCoordinate) const
+inline Vector2 Grid::world2image(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const Vector3& worldCoordinate) const
 {
 	ocean_assert(isValid());
-	ocean_assert(pinholeCamera.isValid() && pose.isValid());
-	//ocean_assert(Plane3(worldTplane).isInPlane(worldCoordinate, Numeric::eps()));
+	ocean_assert(pinholeCamera.isValid() && world_T_camera.isValid());
+	//ocean_assert(Plane3(world_T_plane_).isInPlane(worldCoordinate, Numeric::eps()));
 
-	return pinholeCamera.projectToImageDamped(pose, worldCoordinate, pinholeCamera.hasDistortionParameters());
+	return pinholeCamera.projectToImageDamped(world_T_camera, worldCoordinate, pinholeCamera.hasDistortionParameters());
 }
 
-inline Vector2 Grid::world2imageIF(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& poseIF, const Vector3& worldCoordinate) const
+inline Vector2 Grid::world2imageIF(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& flippedCamera_T_world, const Vector3& worldCoordinate) const
 {
 	ocean_assert(isValid());
-	ocean_assert(pinholeCamera.isValid() && poseIF.isValid());
-	//ocean_assert(Plane3(worldTplane).isInPlane(worldCoordinate, Numeric::eps()));
+	ocean_assert(pinholeCamera.isValid() && flippedCamera_T_world.isValid());
+	//ocean_assert(Plane3(world_T_plane_).isInPlane(worldCoordinate, Numeric::eps()));
 
-	return pinholeCamera.projectToImageDampedIF(poseIF, worldCoordinate, pinholeCamera.hasDistortionParameters());
+	return pinholeCamera.projectToImageDampedIF(flippedCamera_T_world, worldCoordinate, pinholeCamera.hasDistortionParameters());
 }
 
 inline Vector3 Grid::world2plane(const Vector3& worldCoordinate) const
 {
 	ocean_assert(isValid());
-	ocean_assert(Plane3(worldTplane).isInPlane(worldCoordinate, Numeric::eps()));
+	ocean_assert(Plane3(world_T_plane_).isInPlane(worldCoordinate, Numeric::eps()));
 
-	return worldTplane.inverted() * worldCoordinate;
+	return world_T_plane_.inverted() * worldCoordinate;
 }
 
 template <bool tVirtual>
@@ -676,27 +668,27 @@ inline Vector2 Grid::world2grid(const Vector3& worldCoordinate) const
 	return plane2grid<tVirtual>(world2plane(worldCoordinate));
 }
 
-inline Vector2 Grid::plane2image(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Vector3& planeCoordinate) const
+inline Vector2 Grid::plane2image(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const Vector3& planeCoordinate) const
 {
 	ocean_assert(isValid());
-	ocean_assert(pinholeCamera.isValid() && pose.isValid());
+	ocean_assert(pinholeCamera.isValid() && world_T_camera.isValid());
 
-	return world2image(pinholeCamera, pose, plane2world(planeCoordinate));
+	return world2image(pinholeCamera, world_T_camera, plane2world(planeCoordinate));
 }
 
-inline Vector2 Grid::plane2imageIF(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& poseIF, const Vector3& planeCoordinate) const
+inline Vector2 Grid::plane2imageIF(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& flippedCamera_T_world, const Vector3& planeCoordinate) const
 {
 	ocean_assert(isValid());
-	ocean_assert(pinholeCamera.isValid() && poseIF.isValid());
+	ocean_assert(pinholeCamera.isValid() && flippedCamera_T_world.isValid());
 
-	return world2imageIF(pinholeCamera, poseIF, plane2world(planeCoordinate));
+	return world2imageIF(pinholeCamera, flippedCamera_T_world, plane2world(planeCoordinate));
 }
 
 inline Vector3 Grid::plane2world(const Vector3& planeCoordinate) const
 {
 	ocean_assert(isValid());
 
-	return worldTplane * planeCoordinate;
+	return world_T_plane_ * planeCoordinate;
 }
 
 template <bool tVirtual>
@@ -704,28 +696,28 @@ inline Vector2 Grid::plane2grid(const Vector3& planeCoordinate) const
 {
 	ocean_assert(isValid());
 
-	const Vector3 gridCoordinate = tVirtual ? planeTvirtualGrid.inverted() * planeCoordinate : planeTgrid.inverted() * planeCoordinate;
+	const Vector3 gridCoordinate = tVirtual ? plane_T_virtualGrid_.inverted() * planeCoordinate : plane_T_grid_.inverted() * planeCoordinate;
 	//ocean_assert(Numeric::isEqualEps(gridCoordinate.z()));
 
 	return Vector2(gridCoordinate.x(), gridCoordinate.y());
 }
 
 template <bool tVirtual>
-inline Vector2 Grid::grid2image(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Vector2& gridCoordinate) const
+inline Vector2 Grid::grid2image(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const Vector2& gridCoordinate) const
 {
 	ocean_assert(isValid());
-	ocean_assert(pinholeCamera.isValid() && pose.isValid());
+	ocean_assert(pinholeCamera.isValid() && world_T_camera.isValid());
 
-	return world2image(pinholeCamera, pose, grid2world<tVirtual>(gridCoordinate));
+	return world2image(pinholeCamera, world_T_camera, grid2world<tVirtual>(gridCoordinate));
 }
 
 template <bool tVirtual>
-inline Vector2 Grid::grid2imageIF(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& poseIF, const Vector2& gridCoordinate) const
+inline Vector2 Grid::grid2imageIF(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& flippedCamera_T_world, const Vector2& gridCoordinate) const
 {
 	ocean_assert(isValid());
-	ocean_assert(pinholeCamera.isValid() && poseIF.isValid());
+	ocean_assert(pinholeCamera.isValid() && flippedCamera_T_world.isValid());
 
-	return world2imageIF(pinholeCamera, poseIF, grid2world<tVirtual>(gridCoordinate));
+	return world2imageIF(pinholeCamera, flippedCamera_T_world, grid2world<tVirtual>(gridCoordinate));
 }
 
 template <bool tVirtual>
@@ -742,15 +734,19 @@ inline Vector3 Grid::grid2plane(const Vector2& gridCoordinate) const
 	ocean_assert(isValid());
 
 	if constexpr (tVirtual)
-		return planeTvirtualGrid * Vector3(gridCoordinate, 0);
+	{
+		return plane_T_virtualGrid_ * Vector3(gridCoordinate, 0);
+	}
 	else
-		return planeTgrid * Vector3(gridCoordinate, 0);
+	{
+		return plane_T_grid_ * Vector3(gridCoordinate, 0);
+	}
 }
 
 inline bool Grid::operator==(const Grid& grid) const
 {
-	return worldTplane == grid.worldTplane && planeTgrid == grid.planeTgrid && planeTvirtualGrid == grid.planeTvirtualGrid
-		&& gridLowerCorner == grid.gridLowerCorner && gridUpperCorner == grid.gridUpperCorner;
+	return world_T_plane_ == grid.world_T_plane_ && plane_T_grid_ == grid.plane_T_grid_ && plane_T_virtualGrid_ == grid.plane_T_virtualGrid_
+		&& gridLowerCorner_ == grid.gridLowerCorner_ && gridUpperCorner_ == grid.gridUpperCorner_;
 }
 
 inline bool Grid::operator!=(const Grid& grid) const
@@ -768,14 +764,14 @@ inline bool Grid::hasTransformationShearComponent(const HomogenousMatrix4& trans
 	return !transformation.xAxis().isOrthogonal(transformation.yAxis());
 }
 
-inline bool Grid::isInFrontOfCamera(const HomogenousMatrix4& pose, const Vector3& worldCoordinate)
+inline bool Grid::isInFrontOfCamera(const HomogenousMatrix4& world_T_camera, const Vector3& worldCoordinate)
 {
-	return isInFrontOfCameraIF(PinholeCamera::standard2InvertedFlipped(pose), worldCoordinate);
+	return isInFrontOfCameraIF(PinholeCamera::standard2InvertedFlipped(world_T_camera), worldCoordinate);
 }
 
-inline bool Grid::isInFrontOfCameraIF(const HomogenousMatrix4& poseIF, const Vector3& worldCoordinate)
+inline bool Grid::isInFrontOfCameraIF(const HomogenousMatrix4& flippedCamera_T_world, const Vector3& worldCoordinate)
 {
-	return (poseIF * worldCoordinate).z() > Scalar(0.0001);
+	return (flippedCamera_T_world * worldCoordinate).z() > Scalar(0.0001);
 }
 
 }

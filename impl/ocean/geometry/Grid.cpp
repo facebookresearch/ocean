@@ -16,19 +16,21 @@ namespace Ocean
 namespace Geometry
 {
 
-Grid::Grid(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Vectors2& imagePoints, const HomogenousMatrix4& plane2worldTransformation, const HomogenousMatrix4& virtualGrid2planeTransformation, const bool clipBoundingBox) :
-	worldTplane(plane2worldTransformation),
-	gridLowerCorner(Vector2(-0.5, -0.5)),
-	gridUpperCorner(Vector2(0.5, 0.5))
+Grid::Grid(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const Vectors2& imagePoints, const HomogenousMatrix4& plane2worldTransformation, const HomogenousMatrix4& virtualGrid2planeTransformation, const bool clipBoundingBox) :
+	world_T_plane_(plane2worldTransformation),
+	gridLowerCorner_(Vector2(-0.5, -0.5)),
+	gridUpperCorner_(Vector2(0.5, 0.5))
 {
 	// sets the physical and virtual grid2plane transformation
 	setVirtualGrid2planeTransformation(virtualGrid2planeTransformation);
 
-	ocean_assert(pinholeCamera.isValid() && pose.isValid());
+	ocean_assert(pinholeCamera.isValid() && world_T_camera.isValid());
 	ocean_assert(imagePoints.size() == 4);
 
 	if (!plane2worldTransformation.isValid() || !virtualGrid2planeTransformation.isValid() || !Geometry::Utilities::isPolygonConvex(imagePoints.data(), imagePoints.size()))
+	{
 		return;
+	}
 
 	Box2 boundingBox(Vector2(0, 0), Vector2(0, 0));
 
@@ -36,15 +38,19 @@ Grid::Grid(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, co
 	for (unsigned int i = 0u; i < 4u; ++i)
 	{
 		Vector2 gridCoordinate;
-		if (!image2grid<true>(pinholeCamera, pose, imagePoints[i], gridCoordinate))
+		if (!image2grid<true>(pinholeCamera, world_T_camera, imagePoints[i], gridCoordinate))
+		{
 			return;
+		}
 
 		gridCoordinates[i] = gridCoordinate;
 	}
 
 	Scalar borderSize = 0;
 	for (unsigned int i = 0u; i < 4u; ++i)
+	{
 		borderSize += gridCoordinates[(i + 1u) % 4u].distance(gridCoordinates[i]);
+	}
 
 	// average half distance between two image points
 	borderSize /= Scalar(8);
@@ -57,24 +63,26 @@ Grid::Grid(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, co
 		boundingBox += gridCoordinates[i] + Vector2(0, -1) * borderSize;
 	}
 
-	gridLowerCorner = boundingBox.lower();
-	gridUpperCorner = boundingBox.higher();
+	gridLowerCorner_ = boundingBox.lower();
+	gridUpperCorner_ = boundingBox.higher();
 
 	if (clipBoundingBox)
-		clipByImageBoundingBox(pinholeCamera, pose);
+	{
+		clipByImageBoundingBox(pinholeCamera, world_T_camera);
+	}
 
 	ocean_assert(isValid());
 }
 
-Grid::Grid(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Vectors2& imagePoints, const Vector2* gridCoordinates, const HomogenousMatrix4* previousPlane2worldTransformation, const bool clipBoundingBox)
+Grid::Grid(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const Vectors2& imagePoints, const Vector2* gridCoordinates, const HomogenousMatrix4* previousPlane2worldTransformation, const bool clipBoundingBox)
 {
-	ocean_assert(pinholeCamera.isValid() && pose.isValid());
+	ocean_assert(pinholeCamera.isValid() && world_T_camera.isValid());
 	ocean_assert(imagePoints.size() == 4);
 
 	HomogenousMatrix4 newPlane2worldTransformation(true);
 	HomogenousMatrix4 newVirtualGrid2planeTransformation(true);
 
-	if (!determineVirtualGridTransformationsByFourImagePoints(pinholeCamera, pose, imagePoints.data(), gridCoordinates, previousPlane2worldTransformation, &newPlane2worldTransformation, gridCoordinates ? &newVirtualGrid2planeTransformation : nullptr))
+	if (!determineVirtualGridTransformationsByFourImagePoints(pinholeCamera, world_T_camera, imagePoints.data(), gridCoordinates, previousPlane2worldTransformation, &newPlane2worldTransformation, gridCoordinates ? &newVirtualGrid2planeTransformation : nullptr))
 	{
 		// we could not determine a plane2world transformation from the given four image points
 		*this = Grid();
@@ -98,12 +106,14 @@ Grid::Grid(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, co
 
 	Vector2 centerImagePoint;
 	if (!diagonal0.intersection(diagonal1, centerImagePoint))
+	{
 		centerImagePoint = Geometry::Utilities::meanImagePoint(ConstTemplateArrayAccessor<Vector2>(imagePoints));
+	}
 
 	Vector3 centerOfMassWorldCoordinate;
 
 	const Vector2 undistortedImageCoordinate = pinholeCamera.undistortDamped(centerImagePoint);
-	const Line3 ray = pinholeCamera.ray(undistortedImageCoordinate, pose);
+	const Line3 ray = pinholeCamera.ray(undistortedImageCoordinate, world_T_camera);
 
 	if (Plane3(newPlane2worldTransformation).intersection(ray, centerOfMassWorldCoordinate))
 	{
@@ -114,21 +124,23 @@ Grid::Grid(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, co
 	*this = Grid(newPlane2worldTransformation, newVirtualGrid2planeTransformation);
 
 	if (clipBoundingBox)
-		clipByImageBoundingBox(pinholeCamera, pose);
+	{
+		clipByImageBoundingBox(pinholeCamera, world_T_camera);
+	}
 
 	ocean_assert(isValid());
 }
 
-Grid::Grid(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const HomogenousMatrix4& plane2worldTransformation, const Vectors2& imagePoints, const bool clipBoundingBox)
+Grid::Grid(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const HomogenousMatrix4& plane2worldTransformation, const Vectors2& imagePoints, const bool clipBoundingBox)
 {
-	ocean_assert(pinholeCamera.isValid() && pose.isValid());
+	ocean_assert(pinholeCamera.isValid() && world_T_camera.isValid());
 	ocean_assert(plane2worldTransformation.isValid());
 	ocean_assert(imagePoints.size() == 4);
 
 	HomogenousMatrix4 newPlane2worldTransformation(true);
 	HomogenousMatrix4 newVirtualGrid2planeTransformation(true);
 
-	if (!determineVirtualGridTransformationByPlane2WorldTransformation(pinholeCamera, pose, imagePoints, plane2worldTransformation, newPlane2worldTransformation, newVirtualGrid2planeTransformation))
+	if (!determineVirtualGridTransformationByPlane2WorldTransformation(pinholeCamera, world_T_camera, imagePoints, plane2worldTransformation, newPlane2worldTransformation, newVirtualGrid2planeTransformation))
 	{
 		// we could not determine a virtual grid transformation from the given four image points
 		*this = Grid();
@@ -138,7 +150,9 @@ Grid::Grid(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, co
 	*this = Grid(newPlane2worldTransformation, newVirtualGrid2planeTransformation);
 
 	if (clipBoundingBox)
-		clipByImageBoundingBox(pinholeCamera, pose);
+	{
+		clipByImageBoundingBox(pinholeCamera, world_T_camera);
+	}
 
 	ocean_assert(isValid());
 }
@@ -149,21 +163,23 @@ HomogenousMatrix4 Grid::virtualPlane2worldTransformation() const
 
 	// we assign the possible shear of the virtual grid to the plane transformation
 
-	const Vector3 normalizedVirtualGridXAxis = planeTvirtualGrid.xAxis().normalizedOrZero();
-	const Vector3 normalizedVirtualGridYAxis = planeTvirtualGrid.yAxis().normalizedOrZero();
+	const Vector3 normalizedVirtualGridXAxis = plane_T_virtualGrid_.xAxis().normalizedOrZero();
+	const Vector3 normalizedVirtualGridYAxis = plane_T_virtualGrid_.yAxis().normalizedOrZero();
 
 	if (Numeric::isEqualEps(normalizedVirtualGridXAxis * normalizedVirtualGridYAxis))
-		return worldTplane;
+	{
+		return world_T_plane_;
+	}
 
 	Vector3 virtualGridHalfAxis = normalizedVirtualGridXAxis + normalizedVirtualGridYAxis;
 	if (!virtualGridHalfAxis.normalize())
 	{
 		ocean_assert(false && "This must never happen!");
-		return worldTplane;
+		return world_T_plane_;
 	}
 
-	const Vector3 previousXAxis = worldTplane.xAxis();
-	const Vector3 previousYAxis = worldTplane.yAxis();
+	const Vector3 previousXAxis = world_T_plane_.xAxis();
+	const Vector3 previousYAxis = world_T_plane_.yAxis();
 
 	const Scalar previousXAxisLength = previousXAxis.length();
 	const Scalar previousYAxisLength = previousYAxis.length();
@@ -171,22 +187,22 @@ HomogenousMatrix4 Grid::virtualPlane2worldTransformation() const
 	if (Numeric::isEqualEps(previousXAxisLength) || Numeric::isEqualEps(previousYAxisLength))
 	{
 		ocean_assert(false && "This must never happen!");
-		return worldTplane;
+		return world_T_plane_;
 	}
 
 	Vector3 newHalfAxis = previousXAxis / previousXAxisLength + previousYAxis / previousYAxisLength;
 	if (!newHalfAxis.normalize())
 	{
 		ocean_assert(false && "This must never happen!");
-		return worldTplane;
+		return world_T_plane_;
 	}
 
-	const Vector3 newZAxis = worldTplane.zAxis();
+	const Vector3 newZAxis = world_T_plane_.zAxis();
 
 	const Vector3 newXAxis = (Rotation(newZAxis, -virtualGridHalfAxis.angle(normalizedVirtualGridXAxis)) * newHalfAxis) * previousXAxisLength;
 	const Vector3 newYAxis = (Rotation(newZAxis, virtualGridHalfAxis.angle(normalizedVirtualGridYAxis)) * newHalfAxis) * previousYAxisLength;
 
-	return HomogenousMatrix4(newXAxis, newYAxis, newZAxis, worldTplane.translation());
+	return HomogenousMatrix4(newXAxis, newYAxis, newZAxis, world_T_plane_.translation());
 }
 
 bool Grid::setVirtualGrid2planeTransformation(const HomogenousMatrix4& newTransformation)
@@ -195,79 +211,85 @@ bool Grid::setVirtualGrid2planeTransformation(const HomogenousMatrix4& newTransf
 
 	if (!newTransformation.isValid() || newTransformation.xAxis().isParallel(newTransformation.yAxis())
 		|| !newTransformation.xAxis().isOrthogonal(newTransformation.zAxis()) || !newTransformation.yAxis().isOrthogonal(newTransformation.zAxis()))
+	{
 		return false;
+	}
 
-	planeTvirtualGrid = newTransformation;
+	plane_T_virtualGrid_ = newTransformation;
 
-	planeTgrid = HomogenousMatrix4(planeTvirtualGrid.translation());
+	plane_T_grid_ = HomogenousMatrix4(plane_T_virtualGrid_.translation());
 
 	// we set the scale of the physical plane2grid transformation to the average of the x and y scale of the virtual transformation
-	const Scalar scale = (planeTvirtualGrid.scale().x() + planeTvirtualGrid.scale().y()) * Scalar(0.5);
-	planeTgrid.applyScale(Vector3(scale, scale, scale));
+	const Scalar scale = (plane_T_virtualGrid_.scale().x() + plane_T_virtualGrid_.scale().y()) * Scalar(0.5);
+	plane_T_grid_.applyScale(Vector3(scale, scale, scale));
 
 	return true;
 }
 
 bool Grid::isValid() const
 {
-	return worldTplane.isValid() && worldTplane.xAxis().isOrthogonal(worldTplane.yAxis()) && worldTplane.xAxis().isOrthogonal(worldTplane.zAxis()) && worldTplane.yAxis().isOrthogonal(worldTplane.zAxis())
-		&& planeTgrid.isValid() && planeTgrid.xAxis().isOrthogonal(planeTgrid.yAxis()) && planeTgrid.xAxis().isOrthogonal(planeTgrid.zAxis()) && planeTgrid.yAxis().isOrthogonal(planeTgrid.zAxis())
-		&& planeTvirtualGrid.isValid() && !planeTvirtualGrid.xAxis().isParallel(planeTvirtualGrid.yAxis()) && planeTvirtualGrid.xAxis().isOrthogonal(planeTvirtualGrid.zAxis()) && planeTvirtualGrid.yAxis().isOrthogonal(planeTvirtualGrid.zAxis())
-		&& gridLowerCorner.x() < gridUpperCorner.x() && gridLowerCorner.y() < gridUpperCorner.y();
+	return world_T_plane_.isValid() && world_T_plane_.xAxis().isOrthogonal(world_T_plane_.yAxis()) && world_T_plane_.xAxis().isOrthogonal(world_T_plane_.zAxis()) && world_T_plane_.yAxis().isOrthogonal(world_T_plane_.zAxis())
+		&& plane_T_grid_.isValid() && plane_T_grid_.xAxis().isOrthogonal(plane_T_grid_.yAxis()) && plane_T_grid_.xAxis().isOrthogonal(plane_T_grid_.zAxis()) && plane_T_grid_.yAxis().isOrthogonal(plane_T_grid_.zAxis())
+		&& plane_T_virtualGrid_.isValid() && !plane_T_virtualGrid_.xAxis().isParallel(plane_T_virtualGrid_.yAxis()) && plane_T_virtualGrid_.xAxis().isOrthogonal(plane_T_virtualGrid_.zAxis()) && plane_T_virtualGrid_.yAxis().isOrthogonal(plane_T_virtualGrid_.zAxis())
+		&& gridLowerCorner_.x() < gridUpperCorner_.x() && gridLowerCorner_.y() < gridUpperCorner_.y();
 }
 
 void Grid::setInvalid()
 {
-	worldTplane = HomogenousMatrix4(false);
-	planeTgrid = HomogenousMatrix4(false);
-	planeTvirtualGrid = HomogenousMatrix4(false);
+	world_T_plane_ = HomogenousMatrix4(false);
+	plane_T_grid_ = HomogenousMatrix4(false);
+	plane_T_virtualGrid_ = HomogenousMatrix4(false);
 
-	gridLowerCorner = Vector2(1, 1);
-	gridUpperCorner = Vector2(-1, -1);
+	gridLowerCorner_ = Vector2(1, 1);
+	gridUpperCorner_ = Vector2(-1, -1);
 }
 
 bool Grid::areVirtualAndPhysicalGridIdentical() const
 {
-	const Vector3 differenceXAxis = planeTgrid.xAxis().normalizedOrZero() - planeTvirtualGrid.xAxis().normalizedOrZero();
-	const Vector3 differenceYAxis = planeTgrid.yAxis().normalizedOrZero() - planeTvirtualGrid.yAxis().normalizedOrZero();
+	const Vector3 differenceXAxis = plane_T_grid_.xAxis().normalizedOrZero() - plane_T_virtualGrid_.xAxis().normalizedOrZero();
+	const Vector3 differenceYAxis = plane_T_grid_.yAxis().normalizedOrZero() - plane_T_virtualGrid_.yAxis().normalizedOrZero();
 
 	return Numeric::isWeakEqualEps(differenceXAxis.x()) && Numeric::isWeakEqualEps(differenceXAxis.y()) && Numeric::isWeakEqualEps(differenceXAxis.z()) &&
 		Numeric::isWeakEqualEps(differenceYAxis.x()) && Numeric::isWeakEqualEps(differenceYAxis.y()) && Numeric::isWeakEqualEps(differenceYAxis.z());
 }
 
-bool Grid::image2world(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Vector2& imageCoordinate, Vector3& worldCoordinate) const
+bool Grid::image2world(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const Vector2& imageCoordinate, Vector3& worldCoordinate) const
 {
 	ocean_assert(isValid());
-	ocean_assert(pinholeCamera.isValid() && pose.isValid());
+	ocean_assert(pinholeCamera.isValid() && world_T_camera.isValid());
 
 	const Vector2 undistortedImageCoordinate = pinholeCamera.undistortDamped(imageCoordinate);
-	const Line3 ray = pinholeCamera.ray(undistortedImageCoordinate, pose);
+	const Line3 ray = pinholeCamera.ray(undistortedImageCoordinate, world_T_camera);
 
-	if (Plane3(worldTplane).intersection(ray, worldCoordinate))
+	if (Plane3(world_T_plane_).intersection(ray, worldCoordinate))
+	{
 		return true;
+	}
 
 	return false;
 }
 
-bool Grid::image2plane(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Vector2& imageCoordinate, Vector3& planeCoordinate) const
+bool Grid::image2plane(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const Vector2& imageCoordinate, Vector3& planeCoordinate) const
 {
 	ocean_assert(isValid());
-	ocean_assert(pinholeCamera.isValid() && pose.isValid());
+	ocean_assert(pinholeCamera.isValid() && world_T_camera.isValid());
 
 	Vector3 worldCoordinate;
-	if (!image2world(pinholeCamera, pose, imageCoordinate, worldCoordinate))
+	if (!image2world(pinholeCamera, world_T_camera, imageCoordinate, worldCoordinate))
+	{
 		return false;
+	}
 
 	planeCoordinate = world2plane(worldCoordinate);
 
 	return true;
 }
 
-void Grid::clipByImageBoundingBox(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Scalar borderSizeFactor, const Vectors2& insideGridCoordinates)
+void Grid::clipByImageBoundingBox(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const Scalar borderSizeFactor, const Vectors2& insideGridCoordinates)
 {
-	ocean_assert(pinholeCamera.isValid() && pose.isValid());
+	ocean_assert(pinholeCamera.isValid() && world_T_camera.isValid());
 
-	const HomogenousMatrix4 poseIF(PinholeCamera::standard2InvertedFlipped(pose));
+	const HomogenousMatrix4 flippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_camera));
 
 	const Scalar borderWidth = Scalar(pinholeCamera.width()) * borderSizeFactor;
 	const Scalar borderHeight = Scalar(pinholeCamera.height()) * borderSizeFactor;
@@ -291,10 +313,10 @@ void Grid::clipByImageBoundingBox(const PinholeCamera& pinholeCamera, const Homo
 	*/
 	const Vector3 cornersWorldCoordinates[4] =
 	{
-		grid2world<true>(Vector2(gridLowerCorner.x(), gridUpperCorner.y())),
-		grid2world<true>(gridUpperCorner),
-		grid2world<true>(Vector2(gridUpperCorner.x(), gridLowerCorner.y())),
-		grid2world<true>(gridLowerCorner)
+		grid2world<true>(Vector2(gridLowerCorner_.x(), gridUpperCorner_.y())),
+		grid2world<true>(gridUpperCorner_),
+		grid2world<true>(Vector2(gridUpperCorner_.x(), gridLowerCorner_.y())),
+		grid2world<true>(gridLowerCorner_)
 	};
 
 	/*
@@ -317,24 +339,26 @@ void Grid::clipByImageBoundingBox(const PinholeCamera& pinholeCamera, const Homo
 	for (unsigned int i = 0u; i < 4u; ++i)
 	{
 		FiniteLine3 clippedLine;
-		if (clipWorldLineInFrontOfCameraBinarySearchIF(poseIF, edgesWorldCoordinates[i], clippedLine))
-			edgesImageCoordinates[i] = FiniteLine2(world2imageIF(pinholeCamera, poseIF, clippedLine.point0()), world2imageIF(pinholeCamera, poseIF, clippedLine.point1()));
+		if (clipWorldLineInFrontOfCameraBinarySearchIF(flippedCamera_T_world, edgesWorldCoordinates[i], clippedLine))
+		{
+			edgesImageCoordinates[i] = FiniteLine2(world2imageIF(pinholeCamera, flippedCamera_T_world, clippedLine.point0()), world2imageIF(pinholeCamera, flippedCamera_T_world, clippedLine.point1()));
+		}
 	}
 
 	for (unsigned int i = 0u; i < 2u; ++i)
 	{
-		adjustGridCornersInXDirectionByImageLines(pinholeCamera, pose, edgesImageCoordinates[i], boundingBoxTopEdge);
-		adjustGridCornersInXDirectionByImageLines(pinholeCamera, pose, edgesImageCoordinates[i], boundingBoxRightEdge);
-		adjustGridCornersInXDirectionByImageLines(pinholeCamera, pose, edgesImageCoordinates[i], boundingBoxBottomEdge);
-		adjustGridCornersInXDirectionByImageLines(pinholeCamera, pose, edgesImageCoordinates[i], boundingBoxLeftEdge);
+		adjustGridCornersInXDirectionByImageLines(pinholeCamera, world_T_camera, edgesImageCoordinates[i], boundingBoxTopEdge);
+		adjustGridCornersInXDirectionByImageLines(pinholeCamera, world_T_camera, edgesImageCoordinates[i], boundingBoxRightEdge);
+		adjustGridCornersInXDirectionByImageLines(pinholeCamera, world_T_camera, edgesImageCoordinates[i], boundingBoxBottomEdge);
+		adjustGridCornersInXDirectionByImageLines(pinholeCamera, world_T_camera, edgesImageCoordinates[i], boundingBoxLeftEdge);
 	}
 
 	for (unsigned int i = 2u; i < 4u; ++i)
 	{
-		adjustGridCornersInYDirectionByImageLines(pinholeCamera, pose, edgesImageCoordinates[i], boundingBoxTopEdge);
-		adjustGridCornersInYDirectionByImageLines(pinholeCamera, pose, edgesImageCoordinates[i], boundingBoxRightEdge);
-		adjustGridCornersInYDirectionByImageLines(pinholeCamera, pose, edgesImageCoordinates[i], boundingBoxBottomEdge);
-		adjustGridCornersInYDirectionByImageLines(pinholeCamera, pose, edgesImageCoordinates[i], boundingBoxLeftEdge);
+		adjustGridCornersInYDirectionByImageLines(pinholeCamera, world_T_camera, edgesImageCoordinates[i], boundingBoxTopEdge);
+		adjustGridCornersInYDirectionByImageLines(pinholeCamera, world_T_camera, edgesImageCoordinates[i], boundingBoxRightEdge);
+		adjustGridCornersInYDirectionByImageLines(pinholeCamera, world_T_camera, edgesImageCoordinates[i], boundingBoxBottomEdge);
+		adjustGridCornersInYDirectionByImageLines(pinholeCamera, world_T_camera, edgesImageCoordinates[i], boundingBoxLeftEdge);
 	}
 
 	if (insideGridCoordinates.size() > 0)
@@ -342,47 +366,61 @@ void Grid::clipByImageBoundingBox(const PinholeCamera& pinholeCamera, const Homo
 		// if we have given grid coordinates, we must extend the determined grid bounding box to ensure
 		// that all given coordinates lie inside the grid
 
-		Box2 gridBoundingBox(gridLowerCorner, gridUpperCorner);
+		Box2 gridBoundingBox(gridLowerCorner_, gridUpperCorner_);
 
 		for (size_t i = 0; i < insideGridCoordinates.size(); ++i)
+		{
 			gridBoundingBox += insideGridCoordinates[i];
+		}
 
-		gridLowerCorner = gridBoundingBox.lower();
-		gridUpperCorner = gridBoundingBox.higher();
+		gridLowerCorner_ = gridBoundingBox.lower();
+		gridUpperCorner_ = gridBoundingBox.higher();
 	}
 }
 
-bool Grid::determineVirtualGridTransformationsByFourImagePoints(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Vector2* imagePoints, const Vector2* gridCoordinates, const HomogenousMatrix4* previousPlane2worldTransformation, HomogenousMatrix4* plane2worldTransformation, HomogenousMatrix4* virtualGrid2planeTransformation)
+bool Grid::determineVirtualGridTransformationsByFourImagePoints(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const Vector2* imagePoints, const Vector2* gridCoordinates, const HomogenousMatrix4* previousPlane2worldTransformation, HomogenousMatrix4* plane2worldTransformation, HomogenousMatrix4* virtualGrid2planeTransformation)
 {
-	ocean_assert(pinholeCamera.isValid() && pose.isValid());
+	ocean_assert(pinholeCamera.isValid() && world_T_camera.isValid());
 	ocean_assert(imagePoints);
 	ocean_assert((virtualGrid2planeTransformation && gridCoordinates) || (!virtualGrid2planeTransformation && !gridCoordinates));
 
 	if (!Geometry::Utilities::isPolygonConvex(imagePoints, 4))
+	{
 		return false;
+	}
 
 	// we determine the normal of the plane in the coordinate system of the camera's pose
 	Vector3 planeNormal;
 	if (!Geometry::VanishingProjection::planeNormal(pinholeCamera, imagePoints, pinholeCamera.hasDistortionParameters(), planeNormal))
+	{
 		return false;
+	}
 
-	HomogenousMatrix4 invPose(pose);
+	HomogenousMatrix4 invPose(world_T_camera);
 
 	if (!invPose.invert())
+	{
 		return false;
+	}
 
 	// we need the normal of the plane in the world coordinate system
 	planeNormal = invPose.transposed() * planeNormal;
 	if (!planeNormal.normalize())
+	{
 		return false;
+	}
 
 	// we check whether the direction of the plane normal must be inverted
 	Line3 imagePointRays[4];
 	for (unsigned int i = 0u; i < 4u; ++i)
-		imagePointRays[i] = pinholeCamera.ray(pinholeCamera.undistortDamped(imagePoints[i]), pose);
+	{
+		imagePointRays[i] = pinholeCamera.ray(pinholeCamera.undistortDamped(imagePoints[i]), world_T_camera);
+	}
 
 	if (imagePointRays[0].direction() * planeNormal > 0 && imagePointRays[1].direction() * planeNormal > 0 && imagePointRays[2].direction() * planeNormal > 0 && imagePointRays[3].direction() * planeNormal > 0)
+	{
 		planeNormal = -planeNormal;
+	}
 
 	Vector3 pointOnPlane;
 	if (previousPlane2worldTransformation)
@@ -399,9 +437,11 @@ bool Grid::determineVirtualGridTransformationsByFourImagePoints(const PinholeCam
 
 		Vector2 centerImagePoint;
 		if (!diagonal0.intersection(diagonal1, centerImagePoint))
+		{
 			centerImagePoint = Geometry::Utilities::meanImagePoint(ConstTemplateArrayAccessor<Vector2>(imagePoints, 4));
+		}
 
-		const Line3 rayCenterImagePoint = pinholeCamera.ray(pinholeCamera.undistortDamped(centerImagePoint), pose);
+		const Line3 rayCenterImagePoint = pinholeCamera.ray(pinholeCamera.undistortDamped(centerImagePoint), world_T_camera);
 
 		pointOnPlane = rayCenterImagePoint.point(1);
 	}
@@ -409,11 +449,13 @@ bool Grid::determineVirtualGridTransformationsByFourImagePoints(const PinholeCam
 	const Plane3 plane(pointOnPlane, planeNormal);
 
 	Indices32 frontObjectPointIndices;
-	const Vectors3 rectanglePointsWorldCoordinates = Geometry::Utilities::backProjectImagePointsDamped(pinholeCamera, pose, plane, imagePoints, 4u, true, &frontObjectPointIndices);
+	const Vectors3 rectanglePointsWorldCoordinates = Geometry::Utilities::backProjectImagePointsDamped(pinholeCamera, world_T_camera, plane, imagePoints, 4u, true, &frontObjectPointIndices);
 
 	// we need all back-projected object points in front of the camera
 	if (frontObjectPointIndices.size() != 4)
+	{
 		return false;
+	}
 
 	if (plane2worldTransformation || virtualGrid2planeTransformation)
 	{
@@ -421,7 +463,9 @@ bool Grid::determineVirtualGridTransformationsByFourImagePoints(const PinholeCam
 		Vector3 direction12 = rectanglePointsWorldCoordinates[2] - rectanglePointsWorldCoordinates[1];
 
 		if (!direction01.normalize() || !direction12.normalize())
+		{
 			return false;
+		}
 
 		const Vector3 yAxis = (-direction12.cross(planeNormal));
 
@@ -437,23 +481,31 @@ bool Grid::determineVirtualGridTransformationsByFourImagePoints(const PinholeCam
 				&& gridCoordinates[2] != gridCoordinates[3]);
 
 			if (!Geometry::Utilities::isPolygonConvex(gridCoordinates, 4))
+			{
 				return false;
+			}
 
 			HomogenousMatrix4 invNewWorldTplane(newWorldTplane);
 
 			if (!invNewWorldTplane.invert())
+			{
 				return false;
+			}
 
 			Vector3 virtualXAxis = invNewWorldTplane * (newWorldTplane.translation() + direction12);
 			Vector3 virtualYAxis = invNewWorldTplane * (newWorldTplane.translation() - direction01);
 
 			if (!virtualXAxis.normalize() || !virtualYAxis.normalize())
+			{
 				return false;
+			}
 
 			Vector3 bisectingLineVirtualPlane = (virtualXAxis + virtualYAxis);
 
 			if (!bisectingLineVirtualPlane.normalize())
+			{
 				return false;
+			}
 
 			// we rotate the plane2world transformation that the vector (1, 1) is equal to the bisecting line of the x and y axis of the virtual grid
 			const Rotation rot(Vector3(1, 1, 0).normalizedOrZero(), bisectingLineVirtualPlane);
@@ -465,7 +517,9 @@ bool Grid::determineVirtualGridTransformationsByFourImagePoints(const PinholeCam
 			invNewWorldTplane = newWorldTplane;
 
 			if (!invNewWorldTplane.invert() || !invNewPlaneTvirtualGrid.invert())
+			{
 				return false;
+			}
 
 			const HomogenousMatrix4 newWorldTplaneI = invNewWorldTplane;
 			const HomogenousMatrix4 newPlaneTvirtualGridI = invNewPlaneTvirtualGrid;
@@ -474,11 +528,13 @@ bool Grid::determineVirtualGridTransformationsByFourImagePoints(const PinholeCam
 			for (unsigned int i = 0u; i < 4u; ++i)
 			{
 				const Vector2 undistortedImageCoordinate = pinholeCamera.undistortDamped(imagePoints[i]);
-				const Line3 ray = pinholeCamera.ray(undistortedImageCoordinate, pose);
+				const Line3 ray = pinholeCamera.ray(undistortedImageCoordinate, world_T_camera);
 
 				Vector3 worldCoordinate;
 				if (!Plane3(newWorldTplane).intersection(ray, worldCoordinate))
+				{
 					return false;
+				}
 
 				newGridCoordinates[i] = (newPlaneTvirtualGridI * (newWorldTplaneI * worldCoordinate)).xy();
 			}
@@ -490,7 +546,9 @@ bool Grid::determineVirtualGridTransformationsByFourImagePoints(const PinholeCam
 			const Scalar currentLengthR2 = (newGridCoordinates[3] - newGridCoordinates[0]).length();
 
 			if (Numeric::isEqualEps(previousLengthR1) || Numeric::isEqualEps(previousLengthR2) || Numeric::isEqualEps(currentLengthR1) || Numeric::isEqualEps(currentLengthR2))
+			{
 				return false;
+			}
 
 			const Scalar scaleR1 = currentLengthR2 / previousLengthR2;
 			const Scalar scaleR2 = currentLengthR1 / previousLengthR1;
@@ -499,26 +557,32 @@ bool Grid::determineVirtualGridTransformationsByFourImagePoints(const PinholeCam
 		}
 
 		if (plane2worldTransformation)
+		{
 			*plane2worldTransformation = newWorldTplane;
+		}
 	}
 
 	return true;
 }
 
-bool Grid::determineVirtualGridTransformationByPlane2WorldTransformation(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Vectors2& imagePoints, const HomogenousMatrix4& previousPlane2worldTransformation, HomogenousMatrix4& plane2worldTransformation, HomogenousMatrix4& virtualGrid2planeTransformation)
+bool Grid::determineVirtualGridTransformationByPlane2WorldTransformation(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const Vectors2& imagePoints, const HomogenousMatrix4& previousPlane2worldTransformation, HomogenousMatrix4& plane2worldTransformation, HomogenousMatrix4& virtualGrid2planeTransformation)
 {
-	ocean_assert(pinholeCamera.isValid() && pose.isValid());
+	ocean_assert(pinholeCamera.isValid() && world_T_camera.isValid());
 	ocean_assert(imagePoints.size() == 4);
 
 	if (!Geometry::Utilities::isPolygonConvex(imagePoints.data(), imagePoints.size()))
+	{
 		return false;
+	}
 
 	Indices32 frontObjectPointIndices;
-	const Vectors3 rectanglePointsWorldCoordinates = Geometry::Utilities::backProjectImagePointsDamped(pinholeCamera, pose, Plane3(previousPlane2worldTransformation), imagePoints.data(), 4u, true, &frontObjectPointIndices);
+	const Vectors3 rectanglePointsWorldCoordinates = Geometry::Utilities::backProjectImagePointsDamped(pinholeCamera, world_T_camera, Plane3(previousPlane2worldTransformation), imagePoints.data(), 4u, true, &frontObjectPointIndices);
 
 	// we need all back-projected object points in front of the camera
 	if (frontObjectPointIndices.size() != 4)
+	{
 		return false;
+	}
 
 	Vector3 direction10 = rectanglePointsWorldCoordinates[0] - rectanglePointsWorldCoordinates[1];
 	Vector3 direction23 = rectanglePointsWorldCoordinates[3] - rectanglePointsWorldCoordinates[2];
@@ -527,29 +591,39 @@ bool Grid::determineVirtualGridTransformationByPlane2WorldTransformation(const P
 	Vector3 direction03 = rectanglePointsWorldCoordinates[3] - rectanglePointsWorldCoordinates[0];
 
 	if (!direction10.normalize() || !direction23.normalize() || !direction12.normalize() || !direction03.normalize())
+	{
 		return false;
+	}
 
 	Vector3 bisectingLineXDirection = direction12 + direction03;
 	Vector3 bisectingLineYDirection = direction10 + direction23;
 
 	if (!bisectingLineXDirection.normalize() || !bisectingLineYDirection.normalize())
+	{
 		return false;
+	}
 
 	HomogenousMatrix4 invNewWorldTplane(previousPlane2worldTransformation);
 
 	if (!invNewWorldTplane.invert())
+	{
 		return false;
+	}
 
 	Vector3 virtualXAxis = invNewWorldTplane * (previousPlane2worldTransformation.translation() + bisectingLineXDirection);
 	Vector3 virtualYAxis = invNewWorldTplane * (previousPlane2worldTransformation.translation() + bisectingLineYDirection);
 
 	if (!virtualXAxis.normalize() || !virtualYAxis.normalize())
+	{
 		return false;
+	}
 
 	Vector3 bisectingLineVirtualPlane = (virtualXAxis + virtualYAxis);
 
 	if (!bisectingLineVirtualPlane.normalize())
+	{
 		return false;
+	}
 
 	// we rotate the plane2world transformation that the vector (1, 1) is equal to the bisecting line of the x and y axis of the virtual grid
 	const Rotation rot(Vector3(1, 1, 0).normalizedOrZero(), bisectingLineVirtualPlane);
@@ -572,12 +646,16 @@ bool Grid::determineTransformationWithoutShearComponent(const HomogenousMatrix4&
 	Vector3 yDirection = transformationWithShearComponent * Vector3(0, 1, 0) - transformationWithShearComponent.translation();
 
 	if (!xDirection.normalize() || !yDirection.normalize())
+	{
 		return false;
+	}
 
 	Vector3 bisectingLine = xDirection + yDirection;
 
 	if (!bisectingLine.normalize())
+	{
 		return false;
+	}
 
 	const Rotation rot(Vector3(1, 1, 0).normalized(), bisectingLine);
 
@@ -586,7 +664,9 @@ bool Grid::determineTransformationWithoutShearComponent(const HomogenousMatrix4&
 	Vector3 zAxis(transformationWithShearComponent.zAxis());
 
 	if (!zAxis.normalize())
+	{
 		return false;
+	}
 
 	const Rotation rotNormal(newTransformation.zAxis(), zAxis);
 
@@ -599,55 +679,67 @@ bool Grid::determineTransformationWithoutShearComponent(const HomogenousMatrix4&
 	return true;
 }
 
-void Grid::adjustGridCornersInXDirectionByImageLines(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const FiniteLine2& gridBoundingBoxEdgeImageCoordinate, const FiniteLine2& imageBoundingBoxEdgeImageCoordinate)
+void Grid::adjustGridCornersInXDirectionByImageLines(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const FiniteLine2& gridBoundingBoxEdgeImageCoordinate, const FiniteLine2& imageBoundingBoxEdgeImageCoordinate)
 {
 	ocean_assert(imageBoundingBoxEdgeImageCoordinate.isValid());
 
 	if (!gridBoundingBoxEdgeImageCoordinate.isValid())
+	{
 		return;
+	}
 
 	Vector2 intersectionPoint;
 	if (gridBoundingBoxEdgeImageCoordinate.intersection(imageBoundingBoxEdgeImageCoordinate, intersectionPoint))
 	{
 		Vector2 intersectionGridCoordinate;
-		if (image2grid<true>(pinholeCamera, pose, intersectionPoint, intersectionGridCoordinate))
+		if (image2grid<true>(pinholeCamera, world_T_camera, intersectionPoint, intersectionGridCoordinate))
 		{
 			if (gridBoundingBoxEdgeImageCoordinate.direction() * imageBoundingBoxEdgeImageCoordinate.direction().perpendicular() > Numeric::eps())
-				gridLowerCorner.x() = std::max(gridLowerCorner.x(), intersectionGridCoordinate.x());
+			{
+				gridLowerCorner_.x() = std::max(gridLowerCorner_.x(), intersectionGridCoordinate.x());
+			}
 			else
-				gridUpperCorner.x() = std::min(gridUpperCorner.x(), intersectionGridCoordinate.x());
+			{
+				gridUpperCorner_.x() = std::min(gridUpperCorner_.x(), intersectionGridCoordinate.x());
+			}
 		}
 	}
 }
 
-void Grid::adjustGridCornersInYDirectionByImageLines(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const FiniteLine2& gridBoundingBoxEdgeImageCoordinate, const FiniteLine2& imageBoundingBoxEdgeImageCoordinate)
+void Grid::adjustGridCornersInYDirectionByImageLines(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const FiniteLine2& gridBoundingBoxEdgeImageCoordinate, const FiniteLine2& imageBoundingBoxEdgeImageCoordinate)
 {
 	ocean_assert(imageBoundingBoxEdgeImageCoordinate.isValid());
 
 	if (!gridBoundingBoxEdgeImageCoordinate.isValid())
+	{
 		return;
+	}
 
 	Vector2 intersectionPoint;
 	if (gridBoundingBoxEdgeImageCoordinate.intersection(imageBoundingBoxEdgeImageCoordinate, intersectionPoint))
 	{
 		Vector2 intersectionGridCoordinate;
-		if (image2grid<true>(pinholeCamera, pose, intersectionPoint, intersectionGridCoordinate))
+		if (image2grid<true>(pinholeCamera, world_T_camera, intersectionPoint, intersectionGridCoordinate))
 		{
 			if (gridBoundingBoxEdgeImageCoordinate.direction() * imageBoundingBoxEdgeImageCoordinate.direction().perpendicular() > Numeric::eps())
-				gridLowerCorner.y() = std::max(gridLowerCorner.y(), intersectionGridCoordinate.y());
+			{
+				gridLowerCorner_.y() = std::max(gridLowerCorner_.y(), intersectionGridCoordinate.y());
+			}
 			else
-				gridUpperCorner.y() = std::min(gridUpperCorner.y(), intersectionGridCoordinate.y());
+			{
+				gridUpperCorner_.y() = std::min(gridUpperCorner_.y(), intersectionGridCoordinate.y());
+			}
 		}
 	}
 }
 
-bool Grid::clipWorldLineInFrontOfCameraBinarySearchIF(const HomogenousMatrix4& poseIF, const FiniteLine3& lineToClip, FiniteLine3& resultingLine)
+bool Grid::clipWorldLineInFrontOfCameraBinarySearchIF(const HomogenousMatrix4& flippedCamera_T_world, const FiniteLine3& lineToClip, FiniteLine3& resultingLine)
 {
-	ocean_assert(poseIF.isValid());
+	ocean_assert(flippedCamera_T_world.isValid());
 	ocean_assert(lineToClip.isValid());
 
-	const bool point0InFront = isInFrontOfCameraIF(poseIF, lineToClip.point0());
-	const bool point1InFront = isInFrontOfCameraIF(poseIF, lineToClip.point1());
+	const bool point0InFront = isInFrontOfCameraIF(flippedCamera_T_world, lineToClip.point0());
+	const bool point1InFront = isInFrontOfCameraIF(flippedCamera_T_world, lineToClip.point1());
 
 	if (point0InFront && point1InFront)
 	{
@@ -656,7 +748,9 @@ bool Grid::clipWorldLineInFrontOfCameraBinarySearchIF(const HomogenousMatrix4& p
 	}
 
 	if (!point0InFront && !point1InFront)
+	{
 		return false;
+	}
 
 	Vector3 testPoint0 = point0InFront ? lineToClip.point0() : lineToClip.point1();
 	Vector3 testPoint1 = point0InFront ? lineToClip.point1() : lineToClip.point0();
@@ -666,19 +760,27 @@ bool Grid::clipWorldLineInFrontOfCameraBinarySearchIF(const HomogenousMatrix4& p
 		Vector3 test((testPoint0 + testPoint1) * Scalar(0.5));
 
 		// check whether the test point is in front of the camera
-		if (isInFrontOfCameraIF(poseIF, test))
+		if (isInFrontOfCameraIF(flippedCamera_T_world, test))
+		{
 			testPoint0 = test;
+		}
 		else
+		{
 			testPoint1 = test;
+		}
 	}
 
 	Vector3 clippedPoint((testPoint0 + testPoint1) * Scalar(0.5));
 
-	if (!isInFrontOfCameraIF(poseIF, clippedPoint))
+	if (!isInFrontOfCameraIF(flippedCamera_T_world, clippedPoint))
+	{
 		return false;
+	}
 
 	if (point0InFront)
+	{
 		resultingLine = FiniteLine3(lineToClip.point0(), clippedPoint);
+	}
 	else
 	{
 		ocean_assert(point1InFront);
