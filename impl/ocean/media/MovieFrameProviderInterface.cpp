@@ -86,6 +86,13 @@ void MovieFrameProviderInterface::frameCacheRequest(const unsigned int index, co
 {
 	const ScopedLock scopedLock(lock_);
 
+	ocean_assert(movieFrameProvider_);
+
+	if (movieFrameProvider_.isNull())
+	{
+		return;
+	}
+
 	const unsigned int actualFrames = movieFrameProvider_->actualFrameNumber();
 	ocean_assert(index <= actualFrames);
 
@@ -219,7 +226,7 @@ void MovieFrameProviderInterface::onScheduler()
 		unsigned int number = (unsigned int)(-1);
 
 		TemporaryScopedLock temporaryScopedLock(lock_);
-			if (movieFrameProvider_->frameNumber() != 0u)
+			if (movieFrameProvider_ && movieFrameProvider_->frameNumber() != 0u)
 			{
 				number = movieFrameProvider_->frameNumber();
 				asynchronousFrameNumber_ = false;
@@ -239,7 +246,7 @@ void MovieFrameProviderInterface::onScheduler()
 		FrameType frameType;
 
 		TemporaryScopedLock temporaryScopedLock(lock_);
-			if (movieFrameProvider_->frameNumber() != 0u)
+			if (movieFrameProvider_ && movieFrameProvider_->frameNumber() != 0u)
 			{
 				frameType = movieFrameProvider_->frameType();
 				ocean_assert(frameType.isValid());
