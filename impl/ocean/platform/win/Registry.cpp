@@ -382,41 +382,38 @@ Registry::Names Registry::value(const HKEY key, const std::string& name, const N
 		return defaultValue;
 	}
 
+	const std::wstring wideName(String::toWString(name));
+
 	DWORD type = 0;
 	DWORD size = 0;
 
-	const bool result = RegQueryValueEx(key, String::toWString(name).c_str(), 0, &type, nullptr, &size) == ERROR_SUCCESS;
-
-	if (result && type == REG_MULTI_SZ && size > 0)
+	if (RegQueryValueEx(key, wideName.c_str(), 0, &type, nullptr, &size) != ERROR_SUCCESS || type != REG_MULTI_SZ || size == 0)
 	{
-		std::vector<wchar_t> buffer(size);
-
-		if (RegQueryValueEx(key, String::toWString(name).c_str(), 0, nullptr, (BYTE*)(buffer.data()), &size) == ERROR_SUCCESS)
-		{
-			Names resultValue;
-
-			wchar_t* pointer = buffer.data();
-
-			while (true)
-			{
-				if (pointer[0] == L'\0')
-				{
-					break;
-				}
-
-				ocean_assert(wcslen(pointer) < size);
-
-				std::wstring newValue(pointer);
-				resultValue.push_back(String::toAString(newValue));
-
-				pointer += newValue.length() + 1;
-			}
-
-			return resultValue;
-		}
+		return defaultValue;
 	}
 
-	return defaultValue;
+	std::vector<wchar_t> buffer(size / sizeof(wchar_t) + 2, L'\0');
+
+	if (RegQueryValueEx(key, wideName.c_str(), 0, &type, (BYTE*)(buffer.data()), &size) != ERROR_SUCCESS || type != REG_MULTI_SZ)
+	{
+		return defaultValue;
+	}
+
+	Names resultValue;
+
+	const wchar_t* pointer = buffer.data();
+	const wchar_t* const end = buffer.data() + buffer.size() - 1;
+
+	while (pointer < end && pointer[0] != L'\0')
+	{
+		const size_t length = wcsnlen(pointer, size_t(end - pointer));
+
+		resultValue.push_back(String::toAString(std::wstring(pointer, length)));
+
+		pointer += length + 1;
+	}
+
+	return resultValue;
 }
 
 Registry::Names Registry::values(const RootType root, const std::string& path)
