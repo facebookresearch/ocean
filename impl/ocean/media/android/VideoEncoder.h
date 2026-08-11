@@ -361,6 +361,15 @@ class VideoEncoder
 		 */
 		static Frame frameFromBuffer(const unsigned int width, const unsigned int height, uint8_t* const buffer, size_t size, const int32_t androidFormat, const int32_t androidColorRange);
 
+		/**
+		 * Translates the color format and color range the codec reports for its input into the corresponding pixel format.
+		 * The function accepts the YUV420 formats `frameFromBuffer()` can lay out, and rejects everything else.
+		 * @param androidFormat The Android MediaCodec color format constant
+		 * @param androidColorRange The Android MediaFormat color range constant
+		 * @return The resulting pixel format, FORMAT_UNDEFINED if the codec's format is not supported
+		 */
+		static FrameType::PixelFormat encoderPixelFormat(const int32_t androidFormat, const int32_t androidColorRange);
+
 	protected:
 
 		/// The subscription for the native media library.

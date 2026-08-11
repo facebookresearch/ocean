@@ -252,6 +252,27 @@ bool VideoEncoder::pushFrame(const Frame& frame, const uint64_t presentationTime
 		return false;
 	}
 
+	// everything which does not depend on the codec's buffer is checked before the buffer is dequeued, a dequeued buffer cannot be handed back to the codec without submitting it as a frame
+
+	const FrameType::PixelFormat targetPixelFormat = encoderPixelFormat(expectedColorFormat, colorRange);
+
+	if (targetPixelFormat == FrameType::FORMAT_UNDEFINED)
+	{
+		return false;
+	}
+
+	if (frame.width() % 2u != 0u || frame.height() % 2u != 0u)
+	{
+		ocean_assert(false && "Width and height must be even for YUV420 formats");
+		return false;
+	}
+
+	if (!CV::FrameConverter::Comfort::isSupported(frame.frameType(), targetPixelFormat, FrameType::ORIGIN_UPPER_LEFT))
+	{
+		Log::error() << "VideoEncoder: Cannot convert the provided frame " << frame.width() << "x" << frame.height() << ", " << FrameType::translatePixelFormat(frame.pixelFormat()) << " to the encoder pixel format " << FrameType::translatePixelFormat(targetPixelFormat);
+		return false;
+	}
+
 	const int64_t timeoutUs = Timestamp::seconds2microseconds(0.5);
 	const ssize_t inputBufferIndex = nativeMediaLibrary.AMediaCodec_dequeueInputBuffer(*encoder_, timeoutUs);
 
@@ -361,22 +382,34 @@ void VideoEncoder::release()
 	}
 }
 
-Frame VideoEncoder::frameFromBuffer(const unsigned int width, const unsigned int height, uint8_t* const buffer, size_t size, const int32_t androidFormat, const int32_t androidColorRange)
+FrameType::PixelFormat VideoEncoder::encoderPixelFormat(const int32_t androidFormat, const int32_t androidColorRange)
 {
-	ocean_assert(width != 0u && height != 0u);
-	ocean_assert(buffer != nullptr && size > 0);
-
 	const FrameType::PixelFormat pixelFormat = PixelFormats::androidMediaCodecColorFormatToPixelFormat(PixelFormats::AndroidMediaCodecColorFormat(androidFormat), PixelFormats::AndroidMediaFormatColorRange(androidColorRange));
 
 	ocean_assert(pixelFormat != FrameType::FORMAT_UNDEFINED);
 	if (pixelFormat == FrameType::FORMAT_UNDEFINED)
 	{
-		return Frame();
+		return FrameType::FORMAT_UNDEFINED;
 	}
 
 	if (pixelFormat != FrameType::FORMAT_Y_U_V12_LIMITED_RANGE && pixelFormat != FrameType::FORMAT_Y_U_V12_FULL_RANGE && pixelFormat != FrameType::FORMAT_Y_UV12_LIMITED_RANGE && pixelFormat != FrameType::FORMAT_Y_UV12_FULL_RANGE)
 	{
 		Log::error() << "VideoEncoder: Unsupported pixel format: " << FrameType::translatePixelFormat(pixelFormat);
+		return FrameType::FORMAT_UNDEFINED;
+	}
+
+	return pixelFormat;
+}
+
+Frame VideoEncoder::frameFromBuffer(const unsigned int width, const unsigned int height, uint8_t* const buffer, size_t size, const int32_t androidFormat, const int32_t androidColorRange)
+{
+	ocean_assert(width != 0u && height != 0u);
+	ocean_assert(buffer != nullptr && size > 0);
+
+	const FrameType::PixelFormat pixelFormat = encoderPixelFormat(androidFormat, androidColorRange);
+
+	if (pixelFormat == FrameType::FORMAT_UNDEFINED)
+	{
 		return Frame();
 	}
 
