@@ -338,31 +338,28 @@ std::string Registry::value(const HKEY key, const std::string& name, const std::
 		return defaultValue;
 	}
 
+	const std::wstring wideName(String::toWString(name));
+
 	DWORD type = 0;
 	DWORD size = 0;
-	std::wstring resultValue(String::toWString(defaultValue));
 
-	const bool result = RegQueryValueEx(key, String::toWString(name).c_str(), 0, &type, nullptr, &size) == ERROR_SUCCESS;
-
-	if (result && type == REG_SZ)
+	if (RegQueryValueEx(key, wideName.c_str(), 0, &type, nullptr, &size) != ERROR_SUCCESS || type != REG_SZ || size == 0)
 	{
-		if (size <= 1)
-		{
-			resultValue = std::wstring();
-		}
-		else
-		{
-			resultValue.resize(size);
-
-			size <<= 1;
-			RegQueryValueEx(key, String::toWString(name).c_str(), 0, nullptr, (BYTE*)resultValue.c_str(), &size);
-			size >>= 1;
-
-			resultValue.resize(size - 1);
-		}
+		return defaultValue;
 	}
 
-	return String::toAString(resultValue);
+	// a REG_SZ value does not need to be null terminated, so the buffer has room for a terminator
+
+	std::vector<wchar_t> buffer(size / sizeof(wchar_t) + 2, L'\0');
+
+	DWORD bufferSize = DWORD((buffer.size() - 1) * sizeof(wchar_t));
+
+	if (RegQueryValueEx(key, wideName.c_str(), 0, &type, (BYTE*)(buffer.data()), &bufferSize) != ERROR_SUCCESS || type != REG_SZ)
+	{
+		return defaultValue;
+	}
+
+	return String::toAString(std::wstring(buffer.data(), wcsnlen(buffer.data(), buffer.size() - 1)));
 }
 
 Registry::Names Registry::value(const RootType root, const std::string& path, const std::string& name, const Names& defaultValue)
@@ -432,16 +429,34 @@ Registry::Names Registry::values(const RootType root, const std::string& path)
 
 Registry::Names Registry::values(const HKEY key)
 {
-	unsigned int index = 0;
-	wchar_t valueName[1024];
-	DWORD valueNameSize = 1023;
+	if (key == nullptr)
+	{
+		return Names();
+	}
+
+	DWORD maximalValueNameLength = 0;
+
+	if (RegQueryInfoKey(key, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, &maximalValueNameLength, nullptr, nullptr, nullptr) != ERROR_SUCCESS)
+	{
+		return Names();
+	}
+
+	// the reported length does not include the terminating null character
+
+	std::vector<wchar_t> valueName(size_t(maximalValueNameLength) + 1, L'\0');
+
 	Names names;
 
-	while (RegEnumValue(key, DWORD(index), valueName, &valueNameSize, 0, nullptr, nullptr, nullptr) == ERROR_SUCCESS)
+	for (DWORD index = 0u; true; ++index)
 	{
-		names.push_back(String::toAString(valueName));
-		valueNameSize = 1023;
-		++index;
+		DWORD valueNameSize = DWORD(valueName.size());
+
+		if (RegEnumValue(key, index, valueName.data(), &valueNameSize, 0, nullptr, nullptr, nullptr) != ERROR_SUCCESS)
+		{
+			break;
+		}
+
+		names.push_back(String::toAString(std::wstring(valueName.data(), valueNameSize)));
 	}
 
 	return names;
@@ -463,16 +478,34 @@ Registry::Names Registry::keys(const RootType root, const std::string& path)
 
 Registry::Names Registry::keys(const HKEY key)
 {
-	unsigned int index = 0;
-	wchar_t valueName[256];
-	DWORD valueNameSize = 255;
+	if (key == nullptr)
+	{
+		return Names();
+	}
+
+	DWORD maximalKeyNameLength = 0;
+
+	if (RegQueryInfoKey(key, nullptr, nullptr, nullptr, nullptr, &maximalKeyNameLength, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr) != ERROR_SUCCESS)
+	{
+		return Names();
+	}
+
+	// the reported length does not include the terminating null character
+
+	std::vector<wchar_t> keyName(size_t(maximalKeyNameLength) + 1, L'\0');
+
 	Names names;
 
-	while (RegEnumKeyEx(key, DWORD(index), valueName, &valueNameSize, 0, nullptr, nullptr, nullptr) == ERROR_SUCCESS)
+	for (DWORD index = 0u; true; ++index)
 	{
-		names.push_back(String::toAString(valueName));
-		valueNameSize = 255;
-		++index;
+		DWORD keyNameSize = DWORD(keyName.size());
+
+		if (RegEnumKeyEx(key, index, keyName.data(), &keyNameSize, 0, nullptr, nullptr, nullptr) != ERROR_SUCCESS)
+		{
+			break;
+		}
+
+		names.push_back(String::toAString(std::wstring(keyName.data(), keyNameSize)));
 	}
 
 	return names;
