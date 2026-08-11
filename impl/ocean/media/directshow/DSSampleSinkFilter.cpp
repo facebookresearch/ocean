@@ -175,25 +175,27 @@ DSSampleSinkFilter::DSSampleSinkFilter(const std::wstring& filterName, const Sam
 {
 	ocean_assert(callback);
 
-	HRESULT result;
-	inputPin_ = ScopedDSInputPin(new DSInputPin(L"Input pin", &result, this, callback));
-	inputPin_->AddRef();
+	HRESULT result = S_OK;
+
+	inputPin_ = std::make_unique<DSInputPin>(L"Input pin", &result, this, callback);
+
+	ocean_assert(result == S_OK);
 }
 
 DSSampleSinkFilter::~DSSampleSinkFilter()
 {
-	// The input pin must not be released
+	// nothing to do here
 }
 
 bool DSSampleSinkFilter::specifyMediaType(const AM_MEDIA_TYPE& mediaType)
 {
-	ocean_assert(inputPin_.isValid());
+	ocean_assert(inputPin_);
 	return inputPin_->specifyMediaType(mediaType);
 }
 
 bool DSSampleSinkFilter::establishedMediaType(DSMediaType& mediaType)
 {
-	ocean_assert(inputPin_.isValid());
+	ocean_assert(inputPin_);
 
 	mediaType = DSMediaType(inputPin_->m_mt);
 
@@ -202,13 +204,13 @@ bool DSSampleSinkFilter::establishedMediaType(DSMediaType& mediaType)
 
 bool DSSampleSinkFilter::respectPlaybackTime() const
 {
-	ocean_assert(inputPin_.isValid());
+	ocean_assert(inputPin_);
 	return inputPin_->respectPlaybackTime();
 }
 
 bool DSSampleSinkFilter::setRespectPlaybackTime(const bool state)
 {
-	ocean_assert(inputPin_.isValid());
+	ocean_assert(inputPin_);
 	return inputPin_->setRespectPlaybackTime(state);
 }
 
@@ -221,8 +223,8 @@ CBasePin* DSSampleSinkFilter::GetPin(int n)
 {
 	if (n == 0)
 	{
-		ocean_assert(inputPin_.isValid());
-		return *inputPin_;
+		ocean_assert(inputPin_);
+		return inputPin_.get();
 	}
 
 	return nullptr;

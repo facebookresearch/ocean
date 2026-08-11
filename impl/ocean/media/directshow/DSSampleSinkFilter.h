@@ -21,6 +21,8 @@ DISABLE_WARNINGS_BEGIN
 	#include <streams.h>
 DISABLE_WARNINGS_END
 
+#include <memory>
+
 namespace Ocean
 {
 
@@ -158,11 +160,17 @@ class OCEAN_MEDIA_DS_EXPORT DSSampleSinkFilter : public CBaseFilter
 		};
 
 		/**
-		 * Definition of a scoped object holding an DSInputPin object.
-		 * The wrapped DSInputPin object will be released automatically once the scoped object does not exist anymore.
+		 * Definition of a unique pointer holding a DSInputPin object.
+		 * The pin is owned by the filter it belongs to, and it is deleted, not released, once the owning filter is destroyed.
+		 *
+		 * A filter deriving from `CBaseFilter` directly owns the pins it exposes. `CBaseFilter` keeps no pin list of its own, it only asks the subclass for a pin through `GetPin()`, so nothing else will ever free the pin and the filter has to do it itself.
+		 * This is the opposite of a filter deriving from `CSource`, where each `CSourceStream` registers itself at the filter on construction and `~CSource` deletes the registered pins, so that such a filter must neither delete nor release its pins, see `DSSampleSourceFilter::outputPin_`.
+		 *
+		 * The pin must not be released, even though it is a COM object. `CBasePin::NonDelegatingAddRef()` and `CBasePin::NonDelegatingRelease()` do not maintain a reference count for the pin, they forward to the reference count of the owning filter.
+		 * Calling `Release()` on the pin therefore does not free the pin, it decrements the filter, and doing so while the filter is being destroyed takes its count to zero a second time and re-enters `delete this`.
 		 * @ingroup mediads
 		 */
-		using ScopedDSInputPin = ScopeDirectShowObject<DSInputPin>;
+		using UniqueDSInputPin = std::unique_ptr<DSInputPin>;
 
 	public:
 
@@ -222,7 +230,7 @@ class OCEAN_MEDIA_DS_EXPORT DSSampleSinkFilter : public CBaseFilter
 	protected:
 
 		/// Input pin of the filter
-		ScopedDSInputPin inputPin_;
+		UniqueDSInputPin inputPin_;
 
 		/// Critical section for interfaces
 		CCritSec interfaceLock_;

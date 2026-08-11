@@ -171,13 +171,6 @@ class OCEAN_MEDIA_DS_EXPORT DSSampleSourceFilter : public CSource
 #endif
 		};
 
-		/**
-		 * Definition of a scoped object holding an DSOutputPin object.
-		 * The wrapped DSOutputPin object will be released automatically once the scoped object does not exist anymore.
-		 * @ingroup mediads
-		 */
-		using ScopedDSOutputPin = ScopeDirectShowObject<DSOutputPin>;
-
 	public:
 
 		/**
@@ -237,8 +230,17 @@ class OCEAN_MEDIA_DS_EXPORT DSSampleSourceFilter : public CSource
 
 	protected:
 
-		/// Source filter output pin
-		ScopedDSOutputPin outputPin_;
+		/**
+		 * Output pin of the filter, the pin is neither deleted nor released by this filter.
+		 *
+		 * A filter deriving from `CSource` does not own the pins it exposes in the sense that it has to free them explicitly, `CSource` frees them itself.
+		 * The constructor of `CSourceStream` registers the pin at the `CSource` filter it is created for, and `~CSource` deletes every registered pin, so deleting the pin here as well would be a double delete.
+		 * This is the opposite of a filter deriving from `CBaseFilter` directly, which keeps no pin list of its own and therefore has to delete its pins, see `DSSampleSinkFilter::UniqueDSInputPin`.
+		 *
+		 * The pin must not be released either, even though it is a COM object. `CBasePin::NonDelegatingAddRef()` and `CBasePin::NonDelegatingRelease()` do not maintain a reference count for the pin, they forward to the reference count of the owning filter.
+		 * Calling `Release()` on the pin therefore does not free the pin, it decrements the filter, and doing so while the filter is being destroyed takes its count to zero a second time and re-enters `delete this`.
+		 */
+		DSOutputPin* outputPin_ = nullptr;
 };
 
 inline FILTER_STATE DSSampleSourceFilter::filterState() const

@@ -207,26 +207,28 @@ STDMETHODIMP DSSampleSourceFilter::DSOutputPin::Notify(IBaseFilter * /*pSender*/
 DSSampleSourceFilter::DSSampleSourceFilter(IUnknown* unknown) :
 	CSource(L"Ocean sample source filter", unknown, __uuidof(CLSID_DSOceanSampleSourceFilter))
 {
-	HRESULT result;
+	HRESULT result = S_OK;
 
-	outputPin_ = ScopedDSOutputPin(new DSOutputPin(this, &result));
+	outputPin_ = new DSOutputPin(this, &result);
+
+	ocean_assert(result == S_OK);
 }
 
 DSSampleSourceFilter::~DSSampleSourceFilter()
 {
-	/// the output pin must not be released explicitly
+	// nothing to do here
 }
 
 bool DSSampleSourceFilter::lockBufferToFill(void*& buffer, size_t& size, const bool respectFrameFrequency)
 {
-	ocean_assert(outputPin_.isValid());
+	ocean_assert(outputPin_ != nullptr);
 
 	return outputPin_->lockBufferToFill(buffer, size, respectFrameFrequency);
 }
 
 void DSSampleSourceFilter::unlockBufferToFill(const size_t size)
 {
-	ocean_assert(outputPin_.isValid());
+	ocean_assert(outputPin_ != nullptr);
 
 	outputPin_->unlockBufferToFill(size);
 }
@@ -310,7 +312,7 @@ bool DSSampleSourceFilter::setFormat(const std::string& compression, const Frame
 			mediaType.SetSubtype(&format);
 		}
 
-		ocean_assert(outputPin_.isValid());
+		ocean_assert(outputPin_ != nullptr);
 		return outputPin_->specifyMediaType(mediaType, frequency);
 	}
 	catch (const OceanException& exception)
