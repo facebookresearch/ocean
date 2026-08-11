@@ -613,6 +613,11 @@ bool WICObject::writeFrameToBitmapDecoder(IWICImagingFactory* imagingFactory, IW
 			{
 				noError = false;
 			}
+
+			if (palette)
+			{
+				palette->Release();
+			}
 		}
 		else if (result != S_OK)
 		{
@@ -638,6 +643,11 @@ bool WICObject::writeFrameToBitmapDecoder(IWICImagingFactory* imagingFactory, IW
 	if (bitmapFrameEncode)
 	{
 		bitmapFrameEncode->Release();
+	}
+
+	if (bitmapEncoderInfo)
+	{
+		bitmapEncoderInfo->Release();
 	}
 
 	if (hasBeenConverted)
