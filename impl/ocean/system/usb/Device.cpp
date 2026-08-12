@@ -240,8 +240,8 @@ Device::ScopedSubscription Device::detachKernelDriver(const int interfaceIndex, 
 
 	const ScopedLock scopedLock(lock_);
 
-	ocean_assert(isValid());
-	if (!isValid())
+	ocean_assert(isValid() && isOpen());
+	if (!isValid() || !isOpen())
 	{
 		return ScopedSubscription();
 	}
@@ -290,8 +290,8 @@ Device::ScopedSubscription Device::claimInterface(const int interfaceIndex)
 
 	const ScopedLock scopedLock(lock_);
 
-	ocean_assert(isValid());
-	if (!isValid())
+	ocean_assert(isValid() && isOpen());
+	if (!isValid() || !isOpen())
 	{
 		return ScopedSubscription();
 	}
@@ -419,15 +419,19 @@ void Device::reattachKernelDriver(const int interfaceIndex)
 		{
 			detachedInterfaceUsageMap_.erase(iUsage);
 
-			const int attachResult = libusb_attach_kernel_driver(usbDeviceHandle_, interfaceIndex);
+			ocean_assert(isOpen());
+			if (isOpen())
+			{
+				const int attachResult = libusb_attach_kernel_driver(usbDeviceHandle_, interfaceIndex);
 
-			if (attachResult == 0)
-			{
-				Log::debug() << "Re-attached kernel driver for interface " << interfaceIndex;
-			}
-			else
-			{
-				Log::error() << "Failed to re-attach kernel driver for interface " << interfaceIndex << ", error: " << libusb_error_name(attachResult);
+				if (attachResult == 0)
+				{
+					Log::debug() << "Re-attached kernel driver for interface " << interfaceIndex;
+				}
+				else
+				{
+					Log::error() << "Failed to re-attach kernel driver for interface " << interfaceIndex << ", error: " << libusb_error_name(attachResult);
+				}
 			}
 		}
 	}
@@ -454,15 +458,19 @@ void Device::releaseInterface(const int interfaceIndex)
 		{
 			claimedInterfaceUsageMap_.erase(iUsage);
 
-			const int releaseResult = libusb_release_interface(usbDeviceHandle_, interfaceIndex);
+			ocean_assert(isOpen());
+			if (isOpen())
+			{
+				const int releaseResult = libusb_release_interface(usbDeviceHandle_, interfaceIndex);
 
-			if (releaseResult == 0)
-			{
-				Log::debug() << "Released claimed interface " << interfaceIndex;
-			}
-			else
-			{
-				Log::error() << "Failed to re-attach kernel driver for interface " << interfaceIndex << ", error " << libusb_error_name(releaseResult);
+				if (releaseResult == 0)
+				{
+					Log::debug() << "Released claimed interface " << interfaceIndex;
+				}
+				else
+				{
+					Log::error() << "Failed to release claimed interface " << interfaceIndex << ", error: " << libusb_error_name(releaseResult);
+				}
 			}
 		}
 	}

@@ -1446,8 +1446,11 @@ VideoDevice::~VideoDevice()
 
 bool VideoDevice::initializeControlInterface()
 {
-	ocean_assert(Device::isValid() && videoControlInterface_.isValid() && videoStreamingInterface_.isValid());
-	if (!Device::isValid() || !videoControlInterface_.isValid() || !videoStreamingInterface_.isValid())
+	// the device handle is handed to libusb several times below, libusb does not validate it and dereferences it right away
+
+	ocean_assert(Device::isValid() && Device::isOpen() && videoControlInterface_.isValid() && videoStreamingInterface_.isValid());
+
+	if (!Device::isValid() || !Device::isOpen() || !videoControlInterface_.isValid() || !videoStreamingInterface_.isValid())
 	{
 		return false;
 	}

@@ -180,16 +180,22 @@ class OCEAN_SYSTEM_USB_EXPORT Device
 
 		/**
 		 * Detaches the kernel driver for the device.
+		 * The device needs to be open before the kernel driver can be detached.<br>
+		 * libusb does not validate the device handle and dereferences it right away, so a device which is not open would crash instead of returning an error.
 		 * @param interfaceIndex The index of the interface for which the kernel driver will be detached
 		 * @param driverWasNotActive Optional resulting information why the resulting subscription object may be invalid; True, in case no kernel driver was active (may indicate that there was no need to detach the driver)
 		 * @return The scoped subscription object which will keep the driver detached as long as the subscription object exists, an invalid subscription in case of an error
+		 * @see isOpen().
 		 */
 		[[nodiscard]] ScopedSubscription detachKernelDriver(const int interfaceIndex, bool* driverWasNotActive = nullptr);
 
 		/**
 		 * Claims an interface of the device.
+		 * The device needs to be open before an interface can be claimed.<br>
+		 * libusb does not validate the device handle and dereferences it right away, so a device which is not open would crash instead of returning an error.
 		 * @param interfaceIndex The index of the interface to claim
 		 * @return The scoped subscription object which will keep the interface claimed as long as the subscription object exists, an invalid subscription in case of an error
+		 * @see isOpen().
 		 */
 		[[nodiscard]] ScopedSubscription claimInterface(const int interfaceIndex);
 
