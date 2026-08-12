@@ -21,6 +21,8 @@ import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbInterface;
 import android.hardware.usb.UsbManager;
 
+import android.os.Build;
+
 import android.util.Log;
 
 import java.lang.String;
@@ -72,7 +74,17 @@ public class OceanUSBManager
 		if (initialize())
 		{
 			IntentFilter filter = new IntentFilter(intentUSBPermissionAction_);
-			context.registerReceiver(usbReciever_, filter);
+
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+			{
+				// the permission broadcast is sent by this app to itself, so the receiver must not be exported
+				// apps targeting API 34 and higher have to say so explicitly, otherwise registerReceiver() throws
+				context.registerReceiver(usbReciever_, filter, Context.RECEIVER_NOT_EXPORTED);
+			}
+			else
+			{
+				context.registerReceiver(usbReciever_, filter);
+			}
 
 			context_ = context;
 
@@ -278,7 +290,16 @@ public class OceanUSBManager
 			return false;
 		}
 
-		PendingIntent permissionIntent = PendingIntent.getBroadcast(staticManager_.context_, 0, new Intent(staticManager_.intentUSBPermissionAction_), PendingIntent.FLAG_MUTABLE);
+		Intent permissionAction = new Intent(staticManager_.intentUSBPermissionAction_);
+
+		// the broadcast has to be explicit, apps targeting API 34 and higher cannot create a mutable PendingIntent from an implicit Intent
+		// the intent has to stay mutable, the system fills in the device and the result of the request
+		permissionAction.setPackage(staticManager_.context_.getPackageName());
+
+		// FLAG_MUTABLE only exists from API 31, before that a PendingIntent was mutable anyway
+		final int mutableFlag = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ? PendingIntent.FLAG_MUTABLE : 0;
+
+		PendingIntent permissionIntent = PendingIntent.getBroadcast(staticManager_.context_, 0, permissionAction, mutableFlag);
 
 		staticManager_.usbManager_.requestPermission(usbDevice, permissionIntent);
 
