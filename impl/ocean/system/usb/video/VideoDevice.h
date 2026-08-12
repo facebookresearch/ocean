@@ -109,6 +109,14 @@ class OCEAN_SYSTEM_USB_VIDEO_EXPORT VideoDevice : public Device
 				Timestamp determineCaptureTimestamp() const;
 
 				/**
+				 * Returns whether a payload delay is plausible.
+				 * The delay corrects the host timestamp, an implausible delay would move the timestamp further than the correction is worth.
+				 * @param sPayloadDelay The delay to check, in seconds
+				 * @return True, if so
+				 */
+				static bool isPlausiblePayloadDelay(const double sPayloadDelay);
+
+				/**
 				 * Returns the buffer of this sample.
 				 * @return The sample's buffer
 				 */

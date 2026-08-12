@@ -1129,14 +1129,39 @@ VideoDevice::Sample::Sample(const size_t capacity, const uint8_t descriptorForma
 	ocean_assert(dwClockFrequency_ != 0u);
 }
 
+bool VideoDevice::Sample::isPlausiblePayloadDelay(const double sPayloadDelay)
+{
+	// a device which reports its presentation time and its source clock in different clock domains produces a delay of many seconds, which would move the timestamp further than the correction is worth
+	// the real delay is a few frame intervals, one second is deliberately far above that because the frame interval is not available here, so this rejects the broken devices rather than validating the good ones
+
+	constexpr double maxPayloadDelay = 1.0;
+
+	// the source clock is sampled at arbitrary SOF boundaries, so a conformant device can latch it just before the presentation time and report a marginally negative delay
+
+	constexpr double minPayloadDelay = -0.001;
+
+	return sPayloadDelay >= minPayloadDelay && sPayloadDelay <= maxPayloadDelay;
+}
+
 Timestamp VideoDevice::Sample::determineCaptureTimestamp() const
 {
 	ocean_assert(dwClockFrequency_ != 0u);
 
-	if (nextDeviceTimeIndex_ == 0 || captureDeviceTime_ == uint64_t(-1))
+	if (nextDeviceTimeIndex_ == 0)
 	{
-		// the sample did not deliver any time/clock information
+		// the sample did not deliver any payload timing at all, so there is not even a host timestamp to fall back to
+
 		return Timestamp(false);
+	}
+
+	if (captureDeviceTime_ == uint64_t(-1))
+	{
+		// the payload arrived but the device never reported when it captured the sample, the host timestamp of the first payload is still the best answer
+		// returning an invalid timestamp here would send the caller to its own 'now', which is read on a different thread and would step backwards against the samples which do carry a capture time
+
+		ocean_assert(payloadHostTimestamps_[0].isValid());
+
+		return payloadHostTimestamps_[0];
 	}
 
 	uint64_t captureDeviceTime = captureDeviceTime_;
@@ -1163,7 +1188,15 @@ Timestamp VideoDevice::Sample::determineCaptureTimestamp() const
 
 		const double sPayloadDelay = double(payloadDelay) / double(dwClockFrequency_);
 
-		return payloadHostTimestamps_[0] - sPayloadDelay;
+		if (!isPlausiblePayloadDelay(sPayloadDelay))
+		{
+			// the delay is unusable, the host timestamp of the first payload is not
+			// an invalid timestamp would send the caller to its own 'now', which lies a full frame assembly and queue behind this one
+
+			return payloadHostTimestamps_[0];
+		}
+
+		return payloadHostTimestamps_[0] - (sPayloadDelay > 0.0 ? sPayloadDelay : 0.0);
 	}
 	else
 	{
@@ -1195,8 +1228,13 @@ Timestamp VideoDevice::Sample::determineCaptureTimestamp() const
 		const double sPayloadDelayFirst = double(payloadDelayFirst) / double(dwClockFrequency_);
 		const double sPayloadDelayLast = double(payloadDelayLast) / double(dwClockFrequency_);
 
-		const double hostTimestampFirst = double(payloadHostTimestamps_[0] - sPayloadDelayFirst);
-		const double hostTimestampLast = double(payloadHostTimestamps_[1] - sPayloadDelayLast);
+		if (!isPlausiblePayloadDelay(sPayloadDelayFirst) || !isPlausiblePayloadDelay(sPayloadDelayLast))
+		{
+			return payloadHostTimestamps_[0];
+		}
+
+		const double hostTimestampFirst = double(payloadHostTimestamps_[0] - (sPayloadDelayFirst > 0.0 ? sPayloadDelayFirst : 0.0));
+		const double hostTimestampLast = double(payloadHostTimestamps_[1] - (sPayloadDelayLast > 0.0 ? sPayloadDelayLast : 0.0));
 		ocean_assert(hostTimestampLast - hostTimestampFirst <= 1.0);
 
 		return Timestamp((hostTimestampFirst + hostTimestampLast) * 0.5);
