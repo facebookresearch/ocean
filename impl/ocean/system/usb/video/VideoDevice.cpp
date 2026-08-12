@@ -1152,8 +1152,12 @@ Timestamp VideoDevice::Sample::determineCaptureTimestamp() const
 
 		unwrapTimestamps(captureDeviceTime, payloadDeviceTime);
 
-		ocean_assert(captureDeviceTime <= uint32_t(uint32_t(-1)) * 2ull);
-		ocean_assert(payloadDeviceTime <= uint32_t(uint32_t(-1)) * 2ull);
+		// the unwrap adds 2^32 to a time which is at most 2^32 - 1, so 2^33 - 1 is the largest value which can come out of it
+
+		constexpr uint64_t maximalUnwrappedDeviceTime = (1ull << 33ull) - 1ull;
+
+		ocean_assert(captureDeviceTime <= maximalUnwrappedDeviceTime);
+		ocean_assert_and_suppress_unused(payloadDeviceTime <= maximalUnwrappedDeviceTime, maximalUnwrappedDeviceTime);
 
 		const int64_t payloadDelay = int64_t(payloadDeviceTime) - int64_t(captureDeviceTime); // we expect a positive delay as the sample should have been captured before the payload arrived
 
@@ -1178,7 +1182,9 @@ Timestamp VideoDevice::Sample::determineCaptureTimestamp() const
 		if (unwrapTimestamps(captureDeviceTime, payloadDeviceTimeFirst) == 1)
 		{
 			// the payload time needed to be wrapped, which means we also need to wrap the last payload time
-			payloadDeviceTimeLast += uint64_t(uint32_t(-1));
+			constexpr uint64_t wraparound32 = 1ull << 32ull;
+
+			payloadDeviceTimeLast += wraparound32;
 		}
 
 		ocean_assert(payloadDeviceTimeFirst <= payloadDeviceTimeLast);
@@ -1333,6 +1339,9 @@ int VideoDevice::Sample::unwrapTimestamps(uint64_t& timestampA, uint64_t& timest
 
 	constexpr uint64_t maxTimeDifference = 1ull << 31ull;
 
+	// the timestamps are 32 bit counters, so they wrap around at 2^32
+	constexpr uint64_t wraparound32 = 1ull << 32ull;
+
 	int indexWrapped = -1;
 
 	if (timestampA < timestampB)
@@ -1346,7 +1355,7 @@ int VideoDevice::Sample::unwrapTimestamps(uint64_t& timestampA, uint64_t& timest
 			// [---A---------------------------------B----]
 
 			// timestamp A was wrapped around 2^32 (it's actually behind the timestamp B, so unwrapping it
-			timestampA += uint64_t(uint32_t(-1));
+			timestampA += wraparound32;
 
 			//  0                                   2^32-1
 			// [-------------------------------------B----|---A--------------------------------------]
@@ -1360,7 +1369,7 @@ int VideoDevice::Sample::unwrapTimestamps(uint64_t& timestampA, uint64_t& timest
 	{
 		if (timestampA - timestampB> maxTimeDifference)
 		{
-			timestampB += uint64_t(uint32_t(-1));
+			timestampB += wraparound32;
 
 			ocean_assert(timestampB - timestampA < maxTimeDifference);
 
