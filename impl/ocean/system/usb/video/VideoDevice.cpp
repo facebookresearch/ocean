@@ -140,6 +140,20 @@ bool VideoDevice::VideoControl::executeVideoControlCommit(libusb_device_handle* 
 	return executeControl(usbDeviceHandle, bmRequestType, bRequest, wValue, wIndex, (uint8_t*)(&copyVideoControl), videoControlSize);
 }
 
+bool VideoDevice::VideoControl::proposeVideoControlProbe(libusb_device_handle* usbDeviceHandle, const uint8_t interfaceIndex, const VideoControl& videoControl, const size_t videoControlSize)
+{
+	VideoControl copyVideoControl(videoControl);
+
+	// host to device, entity id and interface
+
+	constexpr uint8_t bmRequestType = 0b00100001u;
+
+	constexpr uint16_t wValue = uint16_t(VS_PROBE_CONTROL) << 8u;
+	const uint16_t wIndex = uint16_t(interfaceIndex);
+
+	return executeControl(usbDeviceHandle, bmRequestType, RC_SET_CUR, wValue, wIndex, (uint8_t*)(&copyVideoControl), videoControlSize);
+}
+
 bool VideoDevice::VideoControl::executeVideoControlProbe(libusb_device_handle* usbDeviceHandle, const uint8_t interfaceIndex, VideoControl& videoControl, const size_t videoControlSize, const uint8_t bRequest)
 {
 	// bmRequestType:          wIndex
@@ -1830,7 +1844,13 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 			commitVideoControl.bFrameIndex_ = priorityTriple.second();
 			commitVideoControl.dwFrameInterval_ = priorityTriple.third();
 
-			if (VideoControl::executeVideoControlCommit(usbDeviceHandle_, streamingInterfaceIndex, commitVideoControl, controlBufferSize))
+			// UVC negotiates in three steps
+			// the host proposes the format with SET_CUR(PROBE), the device answers with GET_CUR(PROBE) and fills in 'dwMaxVideoFrameSize', 'dwMaxPayloadTransferSize' and 'dwClockFrequency',
+			// and only then the host commits exactly what the device agreed to
+			// committing a control which the device has not filled in first makes a strict camera stall the request
+
+			if (VideoControl::proposeVideoControlProbe(usbDeviceHandle_, streamingInterfaceIndex, commitVideoControl, controlBufferSize)
+					&& VideoControl::executeVideoControlProbe(usbDeviceHandle_, streamingInterfaceIndex, commitVideoControl, controlBufferSize))
 			{
 
 #ifdef OCEAN_INTENSIVE_DEBUG
@@ -1839,8 +1859,25 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 				Log::debug() << " ";
 #endif
 
-				VideoControl probeVideoControl;
-				if (VideoControl::executeVideoControlProbe(usbDeviceHandle_, streamingInterfaceIndex, probeVideoControl, controlBufferSize))
+				// the device answered into 'commitVideoControl' and the commit has to carry what it agreed to
+				// an index of zero is not a valid one-based descriptor index though, some webcams answer with one, and committing it would commit the device to nothing
+
+				if (commitVideoControl.bFormatIndex_ == 0u || commitVideoControl.bFrameIndex_ == 0u)
+				{
+					Log::warning() << "VideoDevice: The device answered the probe with format index " << int(commitVideoControl.bFormatIndex_) << " and frame index " << int(commitVideoControl.bFrameIndex_) << ", committing the requested indices instead";
+
+					commitVideoControl.bFormatIndex_ = priorityTriple.first();
+					commitVideoControl.bFrameIndex_ = priorityTriple.second();
+				}
+				else if (commitVideoControl.bFormatIndex_ != priorityTriple.first() || commitVideoControl.bFrameIndex_ != priorityTriple.second())
+				{
+					Log::warning() << "VideoDevice: Requested format index " << int(priorityTriple.first()) << " and frame index " << int(priorityTriple.second())
+						<< ", the device selected " << int(commitVideoControl.bFormatIndex_) << " and " << int(commitVideoControl.bFrameIndex_);
+				}
+
+				const VideoControl& probeVideoControl = commitVideoControl;
+
+				if (VideoControl::executeVideoControlCommit(usbDeviceHandle_, streamingInterfaceIndex, commitVideoControl, controlBufferSize))
 				{
 #ifdef OCEAN_INTENSIVE_DEBUG
 					Log::debug() << " ";
@@ -1856,14 +1893,14 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 					dwMaxPayloadTransferSize = probeVideoControl.dwMaxPayloadTransferSize_;
 					dwMaxVideoFrameSize = probeVideoControl.dwMaxVideoFrameSize_;
 
-					// some webcams return an invalid format/frame in the probe, so we use the commit values instead
-					// further some cameras return an invalid probe 'dwMaxVideoFrameSize' value when using uncompressed video frames (e.g., BRIO 301), so that we always re-calculate the frame size manually for uncompressed video streams
+					// everything below is derived from the indices which were committed, so the geometry, the buffer size and the decoder cannot disagree with the stream the device was told to deliver
+					// some cameras return an invalid probe 'dwMaxVideoFrameSize' value when using uncompressed video frames (e.g., BRIO 301), so that we always re-calculate the frame size manually for uncompressed video streams
 
 					unsigned int priorityWidth = 0u;
 					unsigned int priorityHeight = 0u;
 					FrameType::PixelFormat priorityPixelFormat = FrameType::FORMAT_UNDEFINED;
 					VSFrameBasedVideoFormatDescriptor::EncodingFormat priorityEncodingFormat = VSFrameBasedVideoFormatDescriptor::EF_INVALID;
-					const DeviceStreamType priorityDeviceStreamType = extractStreamProperties(priorityTriple.first(), priorityTriple.second(), priorityWidth, priorityHeight, priorityPixelFormat, priorityEncodingFormat);
+					const DeviceStreamType priorityDeviceStreamType = extractStreamProperties(commitVideoControl.bFormatIndex_, commitVideoControl.bFrameIndex_, priorityWidth, priorityHeight, priorityPixelFormat, priorityEncodingFormat);
 
 					if (priorityDeviceStreamType == DST_UNCOMPRESSED)
 					{
@@ -1894,14 +1931,16 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 				}
 				else
 				{
-					Log::error() << "Failed to receive probe video control";
+					Log::error() << "Failed to commit video control";
+
+					Log::debug() << "The commit was: " << commitVideoControl.toString();
 				}
 			}
 			else
 			{
-				Log::error() << "Failed to commit video control";
+				Log::error() << "Failed to negotiate the video control";
 
-				Log::debug() << "The commit was: " << commitVideoControl.toString();
+				Log::debug() << "The proposal was: " << commitVideoControl.toString();
 			}
 		}
 		else

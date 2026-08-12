@@ -592,6 +592,17 @@ class OCEAN_SYSTEM_USB_VIDEO_EXPORT VideoDevice : public Device
 				 */
 				static bool executeVideoControlProbe(libusb_device_handle* usbDeviceHandle, const uint8_t interfaceIndex, VideoControl& videoControl, const size_t videoControlSize, const uint8_t bRequest = RC_GET_CUR);
 
+				/**
+				 * Proposes a video control to the device, the first step of the UVC stream negotiation.
+				 * The device answers with executeVideoControlProbe(), which reports the parameters it is willing to use.
+				 * @param usbDeviceHandle The handle of the USB device to which the request will be sent
+				 * @param interfaceIndex The index of the interface to which the control request will be sent
+				 * @param videoControl The control to be proposed, must be valid
+				 * @param videoControlSize The size of the control to be sent, in bytes, either 26 or 34
+				 * @return True, if succeeded
+				 */
+				static bool proposeVideoControlProbe(libusb_device_handle* usbDeviceHandle, const uint8_t interfaceIndex, const VideoControl& videoControl, const size_t videoControlSize);
+
 			public:
 
 				/**
