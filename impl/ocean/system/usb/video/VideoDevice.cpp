@@ -2039,17 +2039,24 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 
 	Log::debug() << "VideoDevice: Starting " << numberTransferBuffers << " streaming transfers";
 
-	for (unsigned int transferIndex = 0u; transferIndex < numberTransferBuffers; ++transferIndex)
 	{
-		const int submitResult = libusb_submit_transfer(*streamingTransfers_[transferIndex]);
+		const ScopedLock scopedTransferLock(transferLock_);
 
-		if (submitResult != 0)
+		// the flag has to be set before the transfers are submitted
+		// a transfer completing early would otherwise see a stopped device, retire itself, and be lost for the rest of the stream
+
+		isStarted_ = true;
+
+		for (unsigned int transferIndex = 0u; transferIndex < numberTransferBuffers; ++transferIndex)
 		{
-			Log::debug() << "Failed to submit transfer " << transferIndex << ": " << submitResult << ", " << libusb_error_name(submitResult);
+			const int submitResult = libusb_submit_transfer(*streamingTransfers_[transferIndex]);
+
+			if (submitResult != 0)
+			{
+				Log::debug() << "Failed to submit transfer " << transferIndex << ": " << submitResult << ", " << libusb_error_name(submitResult);
+			}
 		}
 	}
-
-	isStarted_ = true;
 
 	return true;
 }
@@ -2078,24 +2085,28 @@ bool VideoDevice::stop()
 
 		ocean_assert(isValid());
 
-	temporaryScopedLock.release();
-
-	{
-		const ScopedLock scopedTransferLock(transferLock_);
-
-		for (ScopedTransfer& transfer : streamingTransfers_)
 		{
-			if (transfer.isValid())
-			{
-				const int cancelResult = libusb_cancel_transfer(*transfer);
+			const ScopedLock scopedTransferLock(transferLock_);
 
-				if (cancelResult != 0)
+			// the transfer callback reads this flag under 'transferLock_'
+			// it has to be cleared before the transfers are cancelled, otherwise a transfer completing in between re-submits itself behind the cancel and outlives the wait below
+			isStarted_ = false;
+
+			for (ScopedTransfer& transfer : streamingTransfers_)
+			{
+				if (transfer.isValid())
 				{
-					Log::info() << "Failed to cancel transfer: " << libusb_error_name(cancelResult);
+					const int cancelResult = libusb_cancel_transfer(*transfer);
+
+					if (cancelResult != 0)
+					{
+						Log::info() << "Failed to cancel transfer: " << libusb_error_name(cancelResult);
+					}
 				}
 			}
 		}
-	}
+
+	temporaryScopedLock.release();
 
 	{
 		// releasing remaining samples
@@ -2112,14 +2123,10 @@ bool VideoDevice::stop()
 	{
 		const ScopedLock scopedLock(lock_);
 
-		isStarted_ = false;
-
 		activeDescriptorFormatIndex_ = 0u;
 		activeDescriptorFrameIndex_ = 0u;
 		activeClockFrequency_ = 0u;
 		maximalSampleSize_ = 0u;
-
-		claimedVideoStreamInterfaceSubscription_.release();
 	}
 
 	// now, we need to wait until all transfers are finished
@@ -2146,6 +2153,14 @@ bool VideoDevice::stop()
 		}
 
 		Thread::sleep(1u);
+	}
+
+	{
+		// the interface has to stay claimed until the transfers are done
+
+		const ScopedLock scopedLock(lock_);
+
+		claimedVideoStreamInterfaceSubscription_.release();
 	}
 
 	return true;
@@ -2699,7 +2714,7 @@ bool VideoDevice::libStatusCallback(libusb_transfer& usbTransfer)
 	return resubmit;
 }
 
-bool VideoDevice::libusbStreamCallback(libusb_transfer& usbTransfer)
+void VideoDevice::libusbStreamCallback(libusb_transfer& usbTransfer)
 {
 	const ScopedLock scopedTransferLock(transferLock_);
 
@@ -2756,6 +2771,21 @@ bool VideoDevice::libusbStreamCallback(libusb_transfer& usbTransfer)
 		}
 	}
 
+	if (resubmit)
+	{
+		// the transfer is re-submitted while the lock is still held
+		// otherwise stop() could run its cancel loop between this decision and the submission, and this transfer would come back to life behind the cancel
+
+		const int submitResult = libusb_submit_transfer(&usbTransfer);
+
+		if (submitResult != LIBUSB_SUCCESS)
+		{
+			Log::info() << "Failed to re-submit streaming transfer: " << libusb_error_name(submitResult);
+
+			resubmit = false;
+		}
+	}
+
 	if (!resubmit)
 	{
 		// we release transfer objects which will not be re-submitted so that we know when all transfers have finished (e.g., when the device stops)
@@ -2776,8 +2806,6 @@ bool VideoDevice::libusbStreamCallback(libusb_transfer& usbTransfer)
 			transferIndexMap_.erase(iTransfer);
 		}
 	}
-
-	return resubmit;
 }
 
 std::string VideoDevice::translateDeviceStreamType(const DeviceStreamType deviceStreamType)
@@ -2826,10 +2854,7 @@ void VideoDevice::libusbStreamCallback(libusb_transfer* usbTransfer)
 		VideoDevice* videoDevice = reinterpret_cast<VideoDevice*>(usbTransfer->user_data);
 		ocean_assert(videoDevice != nullptr);
 
-		if (videoDevice->libusbStreamCallback(*usbTransfer))
-		{
-			libusb_submit_transfer(usbTransfer);
-		}
+		videoDevice->libusbStreamCallback(*usbTransfer);
 	}
 }
 

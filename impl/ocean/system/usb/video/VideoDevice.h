@@ -1277,10 +1277,10 @@ class OCEAN_SYSTEM_USB_VIDEO_EXPORT VideoDevice : public Device
 
 		/**
 		 * Libusb stream transfer callback function.
+		 * The transfer is re-submitted from within this function, while the transfer lock is still held.
 		 * @param usbTransfer The transfer object which has been completed, failed, or canceled.
-		 * @return True, the transfer should be resubmitted
 		 */
-		bool libusbStreamCallback(libusb_transfer& usbTransfer);
+		void libusbStreamCallback(libusb_transfer& usbTransfer);
 
 		/**
 		 * Static libusb status transfer callback function.
