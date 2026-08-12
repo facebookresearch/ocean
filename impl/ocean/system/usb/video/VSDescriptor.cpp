@@ -518,6 +518,28 @@ VSFrameBasedVideoFormatDescriptor::EncodingFormat VSFrameBasedVideoFormatDescrip
 		return EF_H264;
 	}
 
+	/*
+	 *  H E V C
+	 * 48455643-0000-1000-8000-00AA00389B71
+	 */
+	constexpr std::array<uint8_t, 16> guid_hevc = createGUID<0x48455643u, 0x0000u, 0x1000, 0x8000, 0x00AA00389B71u>();
+
+	if (memcmp(guidFormat, guid_hevc.data(), guid_hevc.size()) == 0)
+	{
+		return EF_H265;
+	}
+
+	/*
+	 *  H 2 6 5
+	 * 48323635-0000-1000-8000-00AA00389B71
+	 */
+	constexpr std::array<uint8_t, 16> guid_h265 = createGUID<0x48323635u, 0x0000u, 0x1000, 0x8000, 0x00AA00389B71u>();
+
+	if (memcmp(guidFormat, guid_h265.data(), guid_h265.size()) == 0)
+	{
+		return EF_H265;
+	}
+
 	return EF_INVALID;
 }
 
