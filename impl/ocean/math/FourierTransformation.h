@@ -750,6 +750,9 @@ void FourierTransformation::elementwiseMultiplication2(const T* complexSourceA, 
 template <typename TComplex, bool tComplexConjugateA, bool tComplexConjugateB, typename TIntermediate>
 void FourierTransformation::elementwiseMultiplicationCCS(const TComplex* sourceA, const TComplex* sourceB, TComplex* target, const unsigned int width, const unsigned int height, const unsigned int horizontalPaddingSourceAElements, const unsigned int horizontalPaddingSourceBElements, const unsigned int horizontalPaddingTargetElements)
 {
+	static_assert(std::is_same<TComplex, float>::value || std::is_same<TComplex, double>::value, "Invalid data type!");
+	static_assert(std::is_same<TIntermediate, float>::value || std::is_same<TIntermediate, double>::value, "Invalid data type!");
+
 	ocean_assert(sourceA && sourceB && target);
 	ocean_assert(width != 0u && height != 0u);
 
@@ -757,112 +760,76 @@ void FourierTransformation::elementwiseMultiplicationCCS(const TComplex* sourceA
 	const size_t sourceBStrideElements = width + horizontalPaddingSourceBElements;
 	const size_t targetStrideElements = width + horizontalPaddingTargetElements;
 
-	const bool isOneDimensionalData = width == 1u || height == 1u;
+	const unsigned int lastRowIndex = height - 1u;
+	const unsigned int lastColumnIndex = width - 1u;
+	const bool isWidthEven = width % 2u == 0u;
+	const bool isHeightEven = height % 2u == 0u;
 
-	if (isOneDimensionalData)
+	// Left-most column
+	target[0] = (TComplex)((TIntermediate)sourceA[0] * (TIntermediate)sourceB[0]);
+
+	for (unsigned int row = 1u; row < lastRowIndex; row += 2u)
 	{
-		const size_t stepA = width == 1u ? sourceAStrideElements : 1;
-		const size_t stepB = width == 1u ? sourceBStrideElements : 1;
-		const size_t stepTarget = width == 1u ? targetStrideElements : 1;
+		const TIntermediate realA = (TIntermediate)sourceA[row * sourceAStrideElements];
+		const TIntermediate imaginaryA = (TIntermediate)(tComplexConjugateA ? -sourceA[(row + 1u) * sourceAStrideElements] : sourceA[(row + 1u) * sourceAStrideElements]);
 
-		// First element
-		target[0] = (TComplex)((TIntermediate)sourceA[0] * (TIntermediate)sourceB[0]);
+		const TIntermediate realB = (TIntermediate)sourceB[row * sourceBStrideElements];
+		const TIntermediate imaginaryB = (TIntermediate)(tComplexConjugateB ? -sourceB[(row + 1u) * sourceBStrideElements] : sourceB[(row + 1u) * sourceBStrideElements]);
 
-		// Middle elements
-		const unsigned int elementsCount = std::max(width, height);
-		const unsigned int lastElement = elementsCount - 1u;
-
-		for (unsigned int j = 1u; j + 1u < elementsCount; j += 2u)
-		{
-			const TIntermediate realA = (TIntermediate)sourceA[j * stepA];
-			const TIntermediate imaginaryA = (TIntermediate)(tComplexConjugateA ? -sourceA[(j + 1u) * stepA] : sourceA[(j + 1u) * stepA]);
-
-			const TIntermediate realB = (TIntermediate)sourceB[j * stepB];
-			const TIntermediate imaginaryB = (TIntermediate)(tComplexConjugateB ? -sourceB[(j + 1u) * stepB] : sourceB[(j + 1u) * stepB]);
-
-			target[j * stepTarget] = (TComplex)((realA * realB) - (imaginaryA * imaginaryB));
-			target[(j + 1u) * stepTarget] = (TComplex)((imaginaryA * realB) + (realA * imaginaryB));
-		}
-
-		// Last element
-		if (elementsCount % 2u == 0u)
-		{
-			target[lastElement * stepTarget] = (TComplex)((TIntermediate)sourceA[lastElement * stepA] * (TIntermediate)sourceB[lastElement * stepB]);
-		}
+		target[row * targetStrideElements] = (TComplex)((realA * realB) - (imaginaryA * imaginaryB));
+		target[(row + 1u) * targetStrideElements] = (TComplex)((imaginaryA * realB) + (realA * imaginaryB));
 	}
-	else
-	{
-		const unsigned int lastRowIndex = height - 1u;
-		const unsigned int lastColumnIndex = width - 1u;
-		const bool isWidthEven = width % 2u == 0u;
-		const bool isHeightEven = height % 2u == 0u;
 
-		// Left-most column
-		target[0] = (TComplex)((TIntermediate)sourceA[0] * (TIntermediate)sourceB[0]);
+	// Bottom-left element, if height is even
+	if (isHeightEven)
+	{
+		target[lastRowIndex * targetStrideElements] = (TComplex)((TIntermediate)sourceA[lastRowIndex * sourceAStrideElements] * (TIntermediate)sourceB[lastRowIndex * sourceBStrideElements]);
+	}
+
+	// Right-most column, if width is even
+	if (isWidthEven)
+	{
+		target[lastColumnIndex] = (TComplex)((TIntermediate)sourceA[lastColumnIndex] * (TIntermediate)sourceB[lastColumnIndex]);
 
 		for (unsigned int row = 1u; row < lastRowIndex; row += 2u)
 		{
-			const TIntermediate realA = (TIntermediate)sourceA[row * sourceAStrideElements];
-			const TIntermediate imaginaryA = (TIntermediate)(tComplexConjugateA ? -sourceA[(row + 1u) * sourceAStrideElements] : sourceA[(row + 1u) * sourceAStrideElements]);
+			const TIntermediate realA = (TIntermediate)sourceA[row * sourceAStrideElements + lastColumnIndex];
+			const TIntermediate imaginaryA = (TIntermediate)(tComplexConjugateA ? -sourceA[(row + 1u) * sourceAStrideElements + lastColumnIndex] : sourceA[(row + 1u) * sourceAStrideElements + lastColumnIndex]);
 
-			const TIntermediate realB = (TIntermediate)sourceB[row * sourceBStrideElements];
-			const TIntermediate imaginaryB = (TIntermediate)(tComplexConjugateB ? -sourceB[(row + 1u) * sourceBStrideElements] : sourceB[(row + 1u) * sourceBStrideElements]);
+			const TIntermediate realB = (TIntermediate)sourceB[row * sourceBStrideElements + lastColumnIndex];
+			const TIntermediate imaginaryB = (TIntermediate)(tComplexConjugateB ? -sourceB[(row + 1u) * sourceBStrideElements + lastColumnIndex] : sourceB[(row + 1u) * sourceBStrideElements + lastColumnIndex]);
 
-			target[row * targetStrideElements] = (TComplex)((realA * realB) - (imaginaryA * imaginaryB));
-			target[(row + 1u) * targetStrideElements] = (TComplex)((imaginaryA * realB) + (realA * imaginaryB));
+			target[row * targetStrideElements + lastColumnIndex] = (TComplex)((realA * realB) - (imaginaryA * imaginaryB));
+			target[(row + 1u) * targetStrideElements + lastColumnIndex] = (TComplex)((imaginaryA * realB) + (realA * imaginaryB));
 		}
 
-		// Bottom-left element, if height is even
+		// Bottom-right element, if height is even
 		if (isHeightEven)
 		{
-			target[lastRowIndex * targetStrideElements] = (TComplex)((TIntermediate)sourceA[lastRowIndex * sourceAStrideElements] * (TIntermediate)sourceB[lastRowIndex * sourceBStrideElements]);
+			target[lastRowIndex * targetStrideElements + lastColumnIndex] = (TComplex)((TIntermediate)sourceA[lastRowIndex * sourceAStrideElements + lastColumnIndex] * (TIntermediate)sourceB[lastRowIndex * sourceBStrideElements + lastColumnIndex]);
 		}
+	}
 
-		// Right-most column, if width is even
-		if (isWidthEven)
+	// Middle columns
+	const unsigned int columnEnd = width - (isWidthEven ? 1u : 0u);
+
+	for (unsigned int row = 0u; row < height; ++row)
+	{
+		for (unsigned int column = 1u; column < columnEnd; column += 2u)
 		{
-			target[lastColumnIndex] = sourceA[lastColumnIndex] * sourceB[lastColumnIndex];
+			const TIntermediate realA = (TIntermediate)sourceA[column];
+			const TIntermediate imaginaryA = (TIntermediate)(tComplexConjugateA ? -sourceA[column + 1u] : sourceA[column + 1u]);
 
-			for (unsigned int row = 1u; row < lastRowIndex; row += 2u)
-			{
-				const TIntermediate realA = (TIntermediate)sourceA[row * sourceAStrideElements + lastColumnIndex];
-				const TIntermediate imaginaryA = (TIntermediate)(tComplexConjugateA ? -sourceA[(row + 1u) * sourceAStrideElements + lastColumnIndex] : sourceA[(row + 1u) * sourceAStrideElements + lastColumnIndex]);
+			const TIntermediate realB = (TIntermediate)sourceB[column];
+			const TIntermediate imaginaryB = (TIntermediate)(tComplexConjugateB ? -sourceB[column + 1u] : sourceB[column + 1u]);
 
-				const TIntermediate realB = (TIntermediate)sourceB[row * sourceBStrideElements + lastColumnIndex];
-				const TIntermediate imaginaryB = (TIntermediate)(tComplexConjugateB ? -sourceB[(row + 1u) * sourceBStrideElements + lastColumnIndex] : sourceB[(row + 1u) * sourceBStrideElements + lastColumnIndex]);
-
-				target[row * targetStrideElements + lastColumnIndex] = (TComplex)((realA * realB) - (imaginaryA * imaginaryB));
-				target[(row + 1u) * targetStrideElements + lastColumnIndex] = (TComplex)((imaginaryA * realB) + (realA * imaginaryB));
-			}
-
-			// Bottom-right element, if height is even
-			if (isHeightEven)
-			{
-				target[lastRowIndex * targetStrideElements + lastColumnIndex] = (TComplex)((TIntermediate)sourceA[lastRowIndex * sourceAStrideElements + lastColumnIndex] * (TIntermediate)sourceB[lastRowIndex * sourceBStrideElements + lastColumnIndex]);
-			}
+			target[column] = (TComplex)((realA * realB) - (imaginaryA * imaginaryB));
+			target[column + 1u] = (TComplex)((imaginaryA * realB) + (realA * imaginaryB));
 		}
 
-		// Middle columns
-		const unsigned int columnEnd = width - (isWidthEven ? 1u : 0u);
-
-		for (unsigned int row = 0u; row < height; ++row)
-		{
-			for (unsigned int column = 1u; column < columnEnd; column += 2u)
-			{
-				const TIntermediate realA = (TIntermediate)sourceA[column];
-				const TIntermediate imaginaryA = (TIntermediate)(tComplexConjugateA ? -sourceA[column + 1u] : sourceA[column + 1u]);
-
-				const TIntermediate realB = (TIntermediate)sourceB[column];
-				const TIntermediate imaginaryB = (TIntermediate)(tComplexConjugateB ? -sourceB[column + 1u] : sourceB[column + 1u]);
-
-				target[column] = (TComplex)((realA * realB) - (imaginaryA * imaginaryB));
-				target[column + 1u] = (TComplex)((imaginaryA * realB) + (realA * imaginaryB));
-			}
-
-			sourceA += sourceAStrideElements;
-			sourceB += sourceBStrideElements;
-			target += targetStrideElements;
-		}
+		sourceA += sourceAStrideElements;
+		sourceB += sourceBStrideElements;
+		target += targetStrideElements;
 	}
 }
 
