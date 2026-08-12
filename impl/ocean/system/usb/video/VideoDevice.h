@@ -1391,6 +1391,9 @@ class OCEAN_SYSTEM_USB_VIDEO_EXPORT VideoDevice : public Device
 		/// The buffer the interrupt transfer is writing into, one per device.
 		uint8_t interruptTransferBuffer_[64] = {};
 
+		/// The lock for the stream and interrupt transfers, declared before everything it guards.
+		Lock transferLock_;
+
 		/// The streaming transfer objects.
 		ScopedTransfers streamingTransfers_;
 
@@ -1400,14 +1403,14 @@ class OCEAN_SYSTEM_USB_VIDEO_EXPORT VideoDevice : public Device
 		/// The memory for the individual streaming transfer objects.
 		std::vector<Memory> streamingTransferMemories_;
 
-		/// The lock for the stream and interrupt transfers.
-		Lock transferLock_;
-
 		/// True, if the video device has an active stream which has been started.
 		bool isStarted_ = false;
 
 		/// True, if the video device is currently stopping
 		bool isStopping_ = false;
+
+		/// The lock for the samples, declared before everything it guards.
+		Lock samplesLock_;
 
 		/// The currently active sample which is receiving sample data from the device (but not yet filled).
 		SharedSample activeSample_;
@@ -1417,9 +1420,6 @@ class OCEAN_SYSTEM_USB_VIDEO_EXPORT VideoDevice : public Device
 
 		/// The reusable samples which waiting to be filled.
 		Samples reusableSamples_;
-
-		/// The lock for the samples.
-		Lock samplesLock_;
 
 		/// Reusable buffer pointers to extract buffers from USB transfers.
 		BufferPointers reusableBufferPointers_;
