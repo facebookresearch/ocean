@@ -1096,8 +1096,10 @@ VideoDevice::PayloadHeader::PayloadHeader(const uint8_t* buffer, const size_t si
 	{
 		if (variableOffset + sizeof(dwPresentationTime_) > availableSize)
 		{
-			// setting the error bit
-			bmHeaderInfo_ |= 0b01000000u;
+			// setting the error bit, and clearing the two presence bits
+			// neither field was read, so they have to read as absent rather than as a zero time which the caller would take for a real one
+
+			bmHeaderInfo_ = (bmHeaderInfo_ & ~0b00001100u) | 0b01000000u;
 			return;
 		}
 
@@ -1109,8 +1111,9 @@ VideoDevice::PayloadHeader::PayloadHeader(const uint8_t* buffer, const size_t si
 	{
 		if (variableOffset + sizeof(scrSourceClock_) > availableSize)
 		{
-			// setting the error bit
-			bmHeaderInfo_ |= 0b01000000u;
+			// setting the error bit, and clearing the presence bit of the field which was not read
+
+			bmHeaderInfo_ = (bmHeaderInfo_ & ~0b00001000u) | 0b01000000u;
 			return;
 		}
 

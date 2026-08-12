@@ -1097,7 +1097,7 @@ class OCEAN_SYSTEM_USB_VIDEO_EXPORT VideoDevice : public Device
 				 * The most-significant 5 bits (D47..D43) are reserved, and must be set to zero.
 				 * The maximum interval between Payload Headers containing SCR values is 100ms, or the video frame interval, whichever is greater. Shorter intervals are permitted.
 				 */
-				uint8_t scrSourceClock_[6];
+				uint8_t scrSourceClock_[6] = {};
 		};
 
 	public:
