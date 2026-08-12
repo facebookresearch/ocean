@@ -62,7 +62,12 @@ ClusteringSpectral::ClusteringSpectral(const Matrix& affinityMatrix, const unsig
 		}
 
 		ocean_assert(squaredsum > Numeric::eps());
-		// squaredsum is always greater 0
+
+		if (squaredsum <= Numeric::eps())
+		{
+			// the row is zero, there is nothing to normalize and dividing would turn it into NaN
+			continue;
+		}
 
 		squaredsum = Scalar(1) / Numeric::sqrt(squaredsum);
 
@@ -313,9 +318,9 @@ Matrix ClusteringSpectral::determineSymmetricLaplacianMatrix(const Matrix& affin
 		}
 
 		ocean_assert(sum > Numeric::eps());
-		// sum is always greater 0
 
-		diagonalVectorInvert[0][i] = Scalar(1) / Numeric::sqrt(sum);
+		// an element which is connected to nothing has a zero row sum, zero keeps the Laplacian finite and leaves that element isolated instead of turning the matrix into NaN
+		diagonalVectorInvert[0][i] = sum > Numeric::eps() ? Scalar(1) / Numeric::sqrt(sum) : Scalar(0);
 	}
 
 	Matrix laplacian(size, size);
