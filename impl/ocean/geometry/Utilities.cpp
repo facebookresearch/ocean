@@ -803,6 +803,11 @@ bool Utilities::intersectConvexPolygons(const Vector2* vertices0, const size_t s
 
 		const FiniteLine2 clippingLine(vertices0[i], vertices0[(i + 1) % size0]);
 
+		// Sutherland-Hodgman clips against the infinite line carrying the clipping edge, not against the edge itself
+		// a crossing which happens to fall on an endpoint of the edge, as it does when the overlap has a corner on a vertex of the clipping polygon, is not an intersection of the two segments and would otherwise abort the whole function
+
+		const Line2 clippingInfiniteLine(clippingLine.point0(), clippingLine.direction());
+
 		Vector2 firstPoint = verticesToCheck.back();
 		bool firstPointInside = clippingLine.isLeftOfLine(firstPoint) == insideIsLeftHalfPlane;
 
@@ -816,7 +821,7 @@ bool Utilities::intersectConvexPolygons(const Vector2* vertices0, const size_t s
 				if (!firstPointInside)
 				{
 					Vector2 intersectionPoint;
-					if (!clippingLine.intersection(FiniteLine2(firstPoint, secondPoint), intersectionPoint))
+					if (!FiniteLine2(firstPoint, secondPoint).intersection(clippingInfiniteLine, intersectionPoint))
 					{
 						return false;
 					}
@@ -829,7 +834,7 @@ bool Utilities::intersectConvexPolygons(const Vector2* vertices0, const size_t s
 			else if (firstPointInside)
 			{
 				Vector2 intersectionPoint;
-				if (!clippingLine.intersection(FiniteLine2(firstPoint, secondPoint), intersectionPoint))
+				if (!FiniteLine2(firstPoint, secondPoint).intersection(clippingInfiniteLine, intersectionPoint))
 				{
 					return false;
 				}

@@ -570,6 +570,43 @@ bool TestUtilities::testIntersectConvexPolygons(const double testDuration)
 			}
 		}
 
+		// two squares overlapping in a corner quadrant, so that a corner of the overlap coincides with a vertex of the clipping polygon
+		// the crossing then falls on an endpoint of a clipping edge, which is not an intersection of the two edges as segments
+
+		{
+			const Vectors2 square0 = {Vector2(0, 0), Vector2(2, 0), Vector2(2, 2), Vector2(0, 2)};
+			const Vectors2 square1 = {Vector2(1, 1), Vector2(3, 1), Vector2(3, 3), Vector2(1, 3)};
+
+			Vectors2 intersection;
+
+			if (Geometry::Utilities::intersectConvexPolygons(square0, square1, intersection))
+			{
+				OCEAN_EXPECT_TRUE(validation, Numeric::isWeakEqual(Numeric::abs(Geometry::Utilities::computePolygonArea(intersection)), Scalar(1)));
+			}
+			else
+			{
+				OCEAN_SET_FAILED(validation);
+			}
+		}
+
+		// the same configuration with the roles of the two polygons swapped
+
+		{
+			const Vectors2 square0 = {Vector2(1, 1), Vector2(3, 1), Vector2(3, 3), Vector2(1, 3)};
+			const Vectors2 square1 = {Vector2(0, 0), Vector2(2, 0), Vector2(2, 2), Vector2(0, 2)};
+
+			Vectors2 intersection;
+
+			if (Geometry::Utilities::intersectConvexPolygons(square0, square1, intersection))
+			{
+				OCEAN_EXPECT_TRUE(validation, Numeric::isWeakEqual(Numeric::abs(Geometry::Utilities::computePolygonArea(intersection)), Scalar(1)));
+			}
+			else
+			{
+				OCEAN_SET_FAILED(validation);
+			}
+		}
+
 		// a square overlapping a band of another square, the intersection is that band
 
 		{
