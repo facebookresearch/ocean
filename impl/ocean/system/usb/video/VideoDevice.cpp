@@ -1377,19 +1377,6 @@ int VideoDevice::Sample::unwrapTimestamps(uint64_t& timestampA, uint64_t& timest
 		}
 	}
 
-#ifdef OCEAN_DEBUG
-	if (timestampA < timestampB)
-	{
-		const uint64_t difference = timestampB - timestampA;
-		ocean_assert(difference < maxTimeDifference / 10ull);
-	}
-	else
-	{
-		const uint64_t difference = timestampA - timestampB;
-		ocean_assert(difference < maxTimeDifference / 10ull);
-	}
-#endif
-
 	return indexWrapped;
 }
 
