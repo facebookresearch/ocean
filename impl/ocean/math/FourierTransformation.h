@@ -362,6 +362,9 @@ class OCEAN_MATH_EXPORT FourierTransformation
 		 *     R_{0} & R_{1} & I_{1} & R_{2} & \cdots & I_{L-1} & R_{L} & I_{L}
 		 * \end{bmatrix}\in\mathbb{R}^{l}\f]
 		 *
+		 * A one-dimensional spectrum can be stored as a single row or as a single column.
+		 * In a single row the elements are contiguous and the padding follows behind them, in a single column consecutive elements are one row stride apart.
+		 *
 		 * The input data is expected to be in the CCS-packed format. The output is guaranteed to be in the CCS-packed format.
 		 *
 		 * More resources about the complex conjugate-symmetric format:
@@ -375,9 +378,9 @@ class OCEAN_MATH_EXPORT FourierTransformation
 		 * @param target The pointer of the targt spectrum receiving the elementwise multiplication result, must be valid
 		 * @param width The width of the input and output spectra, with range [1, infinity)
 		 * @param height The height of the input and output spectra, with range [1, infinity)
-		 * @param horizontalPaddingSourceAElements Optional horizontal padding at the end of each row of the first source specturm (number of complex elements), with range [0, infinity)
-		 * @param horizontalPaddingSourceBElements Optional horizontal padding at the end of each row of the second source specturm (number of complex elements), with range [0, infinity)
-		 * @param horizontalPaddingTargetElements Optional horizontal padding at the end of each row of the target specturm (number of complex elements), with range [0, infinity)
+		 * @param horizontalPaddingSourceAElements Optional horizontal padding at the end of each row of the first source specturm, in elements with respect to `T` (not `complex<T>`), with range [0, infinity)
+		 * @param horizontalPaddingSourceBElements Optional horizontal padding at the end of each row of the second source specturm, in elements with respect to `T` (not `complex<T>`), with range [0, infinity)
+		 * @param horizontalPaddingTargetElements Optional horizontal padding at the end of each row of the target specturm, in elements with respect to `T` (not `complex<T>`), with range [0, infinity)
 		 * @tparam TComplex Type of the real and imaginary parts of the complex numbers
 		 * @tparam tComplexConjugateA If true, the conjugated values of `sourceA` will be used in the multiplication, otherwise they will be used as is
 		 * @tparam tComplexConjugateB If true, the conjugated values of `sourceB` will be used in the multiplication, otherwise they will be used as is
@@ -743,6 +746,10 @@ void FourierTransformation::elementwiseMultiplicationCCS(const TComplex* sourceA
 
 	if (isOneDimensionalData)
 	{
+		const size_t stepA = width == 1u ? sourceAStrideElements : 1;
+		const size_t stepB = width == 1u ? sourceBStrideElements : 1;
+		const size_t stepTarget = width == 1u ? targetStrideElements : 1;
+
 		// First element
 		target[0] = (TComplex)((TIntermediate)sourceA[0] * (TIntermediate)sourceB[0]);
 
@@ -752,20 +759,20 @@ void FourierTransformation::elementwiseMultiplicationCCS(const TComplex* sourceA
 
 		for (unsigned int j = 1u; j + 1u < elementsCount; j += 2u)
 		{
-			const TIntermediate realA = (TIntermediate)sourceA[j];
-			const TIntermediate imaginaryA = (TIntermediate)(tComplexConjugateA ? -sourceA[j + 1u] : sourceA[j + 1u]);
+			const TIntermediate realA = (TIntermediate)sourceA[j * stepA];
+			const TIntermediate imaginaryA = (TIntermediate)(tComplexConjugateA ? -sourceA[(j + 1u) * stepA] : sourceA[(j + 1u) * stepA]);
 
-			const TIntermediate realB = (TIntermediate)sourceB[j];
-			const TIntermediate imaginaryB = (TIntermediate)(tComplexConjugateB ? -sourceB[j + 1u] : sourceB[j + 1u]);
+			const TIntermediate realB = (TIntermediate)sourceB[j * stepB];
+			const TIntermediate imaginaryB = (TIntermediate)(tComplexConjugateB ? -sourceB[(j + 1u) * stepB] : sourceB[(j + 1u) * stepB]);
 
-			target[j] = (TComplex)((realA * realB) - (imaginaryA * imaginaryB));
-			target[j + 1u] = (TComplex)((imaginaryA * realB) + (realA * imaginaryB));
+			target[j * stepTarget] = (TComplex)((realA * realB) - (imaginaryA * imaginaryB));
+			target[(j + 1u) * stepTarget] = (TComplex)((imaginaryA * realB) + (realA * imaginaryB));
 		}
 
 		// Last element
 		if (elementsCount % 2u == 0u)
 		{
-			target[lastElement] = (TComplex)((TIntermediate)sourceA[lastElement] * (TIntermediate)sourceB[lastElement]);
+			target[lastElement * stepTarget] = (TComplex)((TIntermediate)sourceA[lastElement * stepA] * (TIntermediate)sourceB[lastElement * stepB]);
 		}
 	}
 	else

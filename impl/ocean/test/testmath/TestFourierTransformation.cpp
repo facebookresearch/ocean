@@ -497,12 +497,9 @@ bool TestFourierTransformation::testElementwiseMultiplicationCCS(const double te
 				break;
 		}
 
-		// the one-dimensional code path addresses the elements without applying the stride, so a spectrum stored in a single column must not have any padding
-		const bool allowPadding = width != 1u || height == 1u;
-
-		const unsigned int paddingSourceA = allowPadding ? RandomI::random(randomGenerator, 0u, 16u) : 0u;
-		const unsigned int paddingSourceB = allowPadding ? RandomI::random(randomGenerator, 0u, 16u) : 0u;
-		const unsigned int paddingTarget = allowPadding ? RandomI::random(randomGenerator, 0u, 16u) : 0u;
+		const unsigned int paddingSourceA = RandomI::random(randomGenerator, 0u, 16u);
+		const unsigned int paddingSourceB = RandomI::random(randomGenerator, 0u, 16u);
+		const unsigned int paddingTarget = RandomI::random(randomGenerator, 0u, 16u);
 
 		std::vector<T> sourceA((width + paddingSourceA) * height + guardElements);
 		std::vector<T> sourceB((width + paddingSourceB) * height + guardElements);
@@ -610,6 +607,36 @@ bool TestFourierTransformation::testElementwiseMultiplicationCCS(const double te
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
+
+	{
+		// a fixed vector for a spectrum stored in a single column, verified by hand so that this case does not depend on ccsSpectrumValues()
+		// four elements with two elements of padding per row, so the spectrum sits at the offsets 0, 3, 6 and 9
+		// CCS packs [dc, real, imaginary, nyquist], so the middle pair is one complex number: (2+3i) * (10+10i) = -10+50i
+
+		// the two buffers use distinct fillers, so that a value read from the padding cannot be mistaken for a spectrum value
+		constexpr T paddingSourceA = T(-2);
+		constexpr T paddingSourceB = T(-3);
+		constexpr T untouched = T(-1);
+
+		const std::vector<T> sourceA = {T(1), paddingSourceA, paddingSourceA, T(2), paddingSourceA, paddingSourceA, T(3), paddingSourceA, paddingSourceA, T(4), paddingSourceA, paddingSourceA};
+		const std::vector<T> sourceB = {T(10), paddingSourceB, paddingSourceB, T(10), paddingSourceB, paddingSourceB, T(10), paddingSourceB, paddingSourceB, T(10), paddingSourceB, paddingSourceB};
+
+		const std::vector<T> expected = {T(10), untouched, untouched, T(-10), untouched, untouched, T(50), untouched, untouched, T(40), untouched, untouched};
+
+		std::vector<T> target(expected.size(), untouched);
+
+		FourierTransformation::elementwiseMultiplicationCCS<T, false, false>(sourceA.data(), sourceB.data(), target.data(), 1u /*width*/, 4u /*height*/, 2u, 2u, 2u);
+
+		for (size_t n = 0; n < expected.size(); ++n)
+		{
+			if (target[n] != expected[n])
+			{
+				Log::error() << "Offset " << n << ": expected " << double(expected[n]) << ", got " << double(target[n]);
+			}
+
+			OCEAN_EXPECT_EQUAL(validation, target[n], expected[n]);
+		}
+	}
 
 	Log::info() << "Validation: " << validation;
 
@@ -750,16 +777,19 @@ IndexPairs32 TestFourierTransformation::ccsSpectrumValues(const unsigned int wid
 
 		const unsigned int elements = std::max(width, height);
 
+		// the layout of a one-dimensional spectrum is defined by elementwiseMultiplicationCCS(), see FourierTransformation.h
+		const unsigned int step = width == 1u ? strideElements : 1u;
+
 		values.emplace_back(0u, invalidIndex);
 
 		for (Index32 element = 1u; element + 1u < elements; element += 2u)
 		{
-			values.emplace_back(element, element + 1u);
+			values.emplace_back(element * step, (element + 1u) * step);
 		}
 
 		if (elements % 2u == 0u)
 		{
-			values.emplace_back(elements - 1u, invalidIndex);
+			values.emplace_back((elements - 1u) * step, invalidIndex);
 		}
 
 		return values;
