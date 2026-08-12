@@ -731,7 +731,7 @@ inline bool SquareMatrixT2<T>::invert(SquareMatrixT2<T>& invertedMatrix) const
 
 			if (absolusteAverageEnergy <= 1)
 			{
-				ocean_assert_accuracy(!"This should never happen!");
+				ocean_assert_accuracy(false && "This should never happen!");
 			}
 			else
 			{

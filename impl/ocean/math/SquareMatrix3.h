@@ -1257,7 +1257,7 @@ bool SquareMatrixT3<T>::invert(SquareMatrixT3<T>& invertedMatrix) const
 			T absoluteAverageEnergy = 0;
 			for (unsigned int n = 0u; n < 9u; ++n)
 			{
-				absoluteAverageEnergy += NumericT<T>::abs(values[n]);
+				absoluteAverageEnergy += NumericT<T>::abs(values_[n]);
 			}
 
 			absoluteAverageEnergy *= T(0.111111111111111111); // 1 / 9
@@ -1266,7 +1266,7 @@ bool SquareMatrixT3<T>::invert(SquareMatrixT3<T>& invertedMatrix) const
 
 			if (absoluteAverageEnergy <= 1)
 			{
-				ocean_assert_accuracy(!"This should never happen!");
+				ocean_assert_accuracy(false && "This should never happen!");
 			}
 			else
 			{

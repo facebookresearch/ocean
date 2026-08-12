@@ -725,7 +725,9 @@ bool MatrixT<T>::solve(const T* b, T* x) const
 	}
 
 #ifdef OCEAN_INTENSIVE_DEBUG
-	static_assert(OCEAN_DEBUG != 0, "Invalid debug state!");
+	#ifndef OCEAN_DEBUG
+		#error OCEAN_INTENSIVE_DEBUG needs OCEAN_DEBUG, the verification below relies on ocean_assert
+	#endif
 
 	if (!std::is_same<T, float>::value)
 	{
