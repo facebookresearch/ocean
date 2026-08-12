@@ -1256,6 +1256,12 @@ class OCEAN_SYSTEM_USB_VIDEO_EXPORT VideoDevice : public Device
 		bool parseInterfaces();
 
 		/**
+		 * Releases everything start() has created before it failed.
+		 * Needs to be called with 'lock_' locked.
+		 */
+		void releaseStartedStream();
+
+		/**
 		 * Parses a video interface of this device.
 		 * @param interfaceDescriptor The libusb interface descriptor of a video interface to parse, with bInterfaceClass == LIBUSB_CLASS_VIDEO
 		 * @return True, if succeeded
@@ -1344,6 +1350,9 @@ class OCEAN_SYSTEM_USB_VIDEO_EXPORT VideoDevice : public Device
 
 		/// The transfer object for interrupts.
 		ScopedTransfer interruptTransfer_;
+
+		/// The buffer the interrupt transfer is writing into, one per device.
+		uint8_t interruptTransferBuffer_[64] = {};
 
 		/// The streaming transfer objects.
 		ScopedTransfers streamingTransfers_;

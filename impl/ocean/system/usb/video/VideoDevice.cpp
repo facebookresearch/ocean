@@ -1515,8 +1515,7 @@ bool VideoDevice::initializeControlInterface()
 
 		interruptTransfer_ = ScopedTransfer(libusb_alloc_transfer(0));
 
-		static uint8_t buffer[64];
-		libusb_fill_interrupt_transfer(*interruptTransfer_, usbDeviceHandle_, videoControlInterface_.bEndpointAddress_, buffer, sizeof(buffer), libStatusCallback, this, 0u);
+		libusb_fill_interrupt_transfer(*interruptTransfer_, usbDeviceHandle_, videoControlInterface_.bEndpointAddress_, interruptTransferBuffer_, sizeof(interruptTransferBuffer_), libStatusCallback, this, 0u);
 
 		const int submitResult = libusb_submit_transfer(*interruptTransfer_);
 
@@ -1908,7 +1907,7 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 	{
 		Log::error() << "No valid stream found";
 
-		claimedVideoStreamInterfaceSubscription_.release();
+		releaseStartedStream();
 		return false;
 	}
 
@@ -1916,7 +1915,7 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 	{
 		Log::error() << "Unknown maximal payload size";
 
-		claimedVideoStreamInterfaceSubscription_.release();
+		releaseStartedStream();
 		return false;
 	}
 
@@ -1929,7 +1928,7 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 	{
 		Log::error() << "The device clock is unknown";
 
-		claimedVideoStreamInterfaceSubscription_.release();
+		releaseStartedStream();
 		return false;
 	}
 
@@ -1972,6 +1971,8 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 		if (altsettingIndex < 0 || altsettingIndex >= interface.num_altsetting)
 		{
 			Log::error() << "VideoDevice: Failed to determine isochronous transfer layout";
+
+			releaseStartedStream();
 			return false;
 		}
 
@@ -1987,12 +1988,16 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 		if (altsettingResult != LIBUSB_SUCCESS)
 		{
 			Log::error() << "Failed to set altsetting";
+
+			releaseStartedStream();
 			return false;
 		}
 
 		if (!NumericT<int>::isInsideValueRange(transferSize) || !NumericT<int>::isInsideValueRange(packetsPerTransfer) || !NumericT<int>::isInsideValueRange(bytesPerPacket))
 		{
 			ocean_assert(false && "This should never happen!");
+
+			releaseStartedStream();
 			return false;
 		}
 
@@ -2059,6 +2064,23 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 	}
 
 	return true;
+}
+
+void VideoDevice::releaseStartedStream()
+{
+	{
+		const ScopedLock scopedSamplesLock(samplesLock_);
+
+		activeSample_ = nullptr;
+		reusableSamples_.clear();
+	}
+
+	activeDescriptorFormatIndex_ = 0u;
+	activeDescriptorFrameIndex_ = 0u;
+	activeClockFrequency_ = 0u;
+	maximalSampleSize_ = 0u;
+
+	claimedVideoStreamInterfaceSubscription_.release();
 }
 
 bool VideoDevice::stop()
