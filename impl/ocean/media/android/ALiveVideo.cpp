@@ -645,6 +645,11 @@ bool ALiveVideo::stop()
 	releaseImageReader();
 	releaseCamera();
 
+	// set here in addition to onSessionClosed(), which arrives too late to stop a following start() from skipping the new session
+
+	startTimestamp_.toInvalid();
+	stopTimestamp_.toNow();
+
 	return true;
 }
 
