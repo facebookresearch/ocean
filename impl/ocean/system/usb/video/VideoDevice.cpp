@@ -1797,6 +1797,29 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 		return true;
 	}
 
+	// a previous stop() which timed out leaves the transfers outstanding and the interface claimed
+	// libusb owns a transfer for exactly as long as it has an entry in 'transferIndexMap_', so that map, and not the vectors, decides whether the leftovers may be touched
+
+	// no assert, a stop() which timed out leaves exactly this state behind and the caller is entitled to try again
+
+	{
+		const ScopedLock scopedTransferLock(transferLock_);
+
+		if (!transferIndexMap_.empty())
+		{
+			Log::error() << "VideoDevice: The previous stream is still finishing, the device cannot be started again yet";
+
+			return false;
+		}
+
+		// every late callback has run, so whatever a timed-out stop() left behind can be freed now
+
+		streamingTransfers_.clear();
+		streamingTransferMemories_.clear();
+	}
+
+	claimedVideoStreamInterfaceSubscription_.release();
+
 	ocean_assert(videoStreamingInterface_.isValid());
 
 	const uint8_t streamingInterfaceIndex = videoStreamingInterface_.bInterfaceIndex_;
@@ -2064,10 +2087,7 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 		reusableSamples_.emplace_back(std::make_shared<Sample>(maximalSampleSize_, activeDescriptorFormatIndex_, activeDescriptorFrameIndex_, activeClockFrequency_));
 	}
 
-	ocean_assert(streamingTransfers_.empty());
-	ocean_assert(streamingTransferMemories_.empty());
-	streamingTransfers_.clear();
-	streamingTransferMemories_.clear();
+	ocean_assert(streamingTransfers_.empty() && streamingTransferMemories_.empty());
 
 	ocean_assert(streamingInterfaceIndex < usbConfigDescriptor_->bNumInterfaces);
 	const libusb_interface& interface = usbConfigDescriptor_->interface[streamingInterfaceIndex];
@@ -2163,6 +2183,8 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 
 	Log::debug() << "VideoDevice: Starting " << numberTransferBuffers << " streaming transfers";
 
+	bool noTransferSubmitted = false;
+
 	{
 		const ScopedLock scopedTransferLock(transferLock_);
 
@@ -2171,15 +2193,59 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 
 		isStarted_ = true;
 
+		size_t submittedTransfers = 0;
+		int lastSubmitError = 0;
+
 		for (unsigned int transferIndex = 0u; transferIndex < numberTransferBuffers; ++transferIndex)
 		{
 			const int submitResult = libusb_submit_transfer(*streamingTransfers_[transferIndex]);
 
-			if (submitResult != 0)
+			if (submitResult == 0)
 			{
-				Log::debug() << "Failed to submit transfer " << transferIndex << ": " << submitResult << ", " << libusb_error_name(submitResult);
+				++submittedTransfers;
+			}
+			else
+			{
+				if (lastSubmitError == 0)
+				{
+					lastSubmitError = submitResult;
+				}
+
+				// libusb never took ownership of this transfer, so its callback will never run
+				// the entry has to go now, stop() waits until the map is empty and would wait forever otherwise
+
+				transferIndexMap_.erase(*streamingTransfers_[transferIndex]);
 			}
 		}
+
+		if (submittedTransfers == 0)
+		{
+			isStarted_ = false;
+
+			// libusb owns none of the transfers, so all of them can be freed right here
+			// they have to go, start() must not leave the state behind which it refuses to run on
+
+			streamingTransfers_.clear();
+			streamingTransferMemories_.clear();
+
+			noTransferSubmitted = true;
+		}
+
+		if (submittedTransfers != size_t(numberTransferBuffers))
+		{
+			// one line per transfer would be up to one hundred messages per start(), the count and the first error say the same thing
+
+			Log::warning() << "VideoDevice: Only " << submittedTransfers << " of " << numberTransferBuffers << " streaming transfers could be submitted, first error: " << libusb_error_name(lastSubmitError);
+		}
+	}
+
+	if (noTransferSubmitted)
+	{
+		Log::error() << "VideoDevice: Not a single streaming transfer could be submitted";
+
+		releaseStartedStream();
+
+		return false;
 	}
 
 	return true;
@@ -2217,10 +2283,13 @@ bool VideoDevice::stop()
 			return false;
 		}
 
-		if (!isStarted_)
+		if (!isStarted_ && streamingTransfers_.empty() && streamingTransferMemories_.empty() && !claimedVideoStreamInterfaceSubscription_)
 		{
 			return true;
 		}
+
+		// a stop() whose drain timed out cleared 'isStarted_' but left the rest behind
+		// falling through lets a second call finish the job once libusb has reaped the transfers, instead of reporting a success which never happened
 
 		const ScopedValueT<bool> scopedIsStopping(isStopping_, false /*delayedValue*/, true /*immediateValue*/);
 
@@ -2289,8 +2358,12 @@ bool VideoDevice::stop()
 
 		if (startTimestamp.hasTimePassed(5.0))
 		{
-			Log::warning() << "Failed to waite for transfers to finish";
-			break;
+			Log::error() << "VideoDevice: The transfers did not finish within five seconds, the device stays claimed and cannot be started again";
+
+			// the transfers are deliberately left alive, libusb may still be writing into them
+			// stop() reports the failure so that the caller does not treat the device as ready for another start()
+
+			return false;
 		}
 
 		Thread::sleep(1u);
