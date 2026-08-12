@@ -670,7 +670,8 @@ void FourierTransformation::shiftHalfDimension2(T* data, unsigned int width, con
 			memcpy(data + y * width, tmp + (y + height_2 + extraY) * width + width_2 + extraX, width_2 * sizeof(T));
 
 			// bottom left to top right
-			memcpy(data + y * width + width_2 + extraX, tmp + (y + height_2 + extraY) * width, (width_2 + extraX) * sizeof(T));
+			// the destination column is 'width_2' and not 'width_2 + extraX', the target of a shift by 'width_2' is the second half of the row which starts there
+			memcpy(data + y * width + width_2, tmp + (y + height_2 + extraY) * width, (width_2 + extraX) * sizeof(T));
 		}
 
 		ocean_assert(data[shiftCenter(height) * width + shiftCenter(width)] == tmp[0]);

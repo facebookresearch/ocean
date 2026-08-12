@@ -71,6 +71,17 @@ bool TestFourierTransformation::test(const double testDuration, const TestSelect
 		Log::info() << " ";
 	}
 
+	if (selector.shouldRun("shifthalfdimension2"))
+	{
+		testResult = testShiftHalfDimension2<float>(testDuration);
+		Log::info() << " ";
+		testResult = testShiftHalfDimension2<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
 	if (selector.shouldRun("elementwisedivision2"))
 	{
 		testResult = testElementwiseDivision2<float>(testDuration);
@@ -135,6 +146,16 @@ TEST(TestFourierTransformation, ElementwiseDivision2Float)
 TEST(TestFourierTransformation, ElementwiseDivision2Double)
 {
 	EXPECT_TRUE(TestFourierTransformation::testElementwiseDivision2<double>(GTEST_TEST_DURATION));
+}
+
+TEST(TestFourierTransformation, ShiftHalfDimension2Float)
+{
+	EXPECT_TRUE(TestFourierTransformation::testShiftHalfDimension2<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestFourierTransformation, ShiftHalfDimension2Double)
+{
+	EXPECT_TRUE(TestFourierTransformation::testShiftHalfDimension2<double>(GTEST_TEST_DURATION));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -751,6 +772,56 @@ bool TestFourierTransformation::testElementwiseDivision2(const double testDurati
 					ocean_assert(false && "Invalid padding memory!");
 					return false;
 				}
+			}
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+template <typename T>
+bool TestFourierTransformation::testShiftHalfDimension2(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Shift-half-dimension test for " << TypeNamer::name<T>() << ":";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		// both odd and even dimensions matter, the in-place function takes a different branch for each
+
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 17u);
+		const unsigned int height = RandomI::random(randomGenerator, 1u, 17u);
+
+		std::vector<T> data(size_t(width) * size_t(height));
+
+		for (size_t n = 0; n < data.size(); ++n)
+		{
+			data[n] = T(n + 1);
+		}
+
+		const std::vector<T> source(data);
+
+		FourierTransformation::shiftHalfDimension2<T>(data.data(), width, height);
+
+		// the shift moves every element by half the width and half the height, wrapping around at the border
+
+		for (unsigned int y = 0u; y < height; ++y)
+		{
+			for (unsigned int x = 0u; x < width; ++x)
+			{
+				const unsigned int targetX = (x + width / 2u) % width;
+				const unsigned int targetY = (y + height / 2u) % height;
+
+				OCEAN_EXPECT_EQUAL(validation, data[targetY * width + targetX], source[y * width + x]);
 			}
 		}
 	}
