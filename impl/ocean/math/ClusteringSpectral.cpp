@@ -78,7 +78,7 @@ ClusteringSpectral::ClusteringSpectral(const Matrix& affinityMatrix, const unsig
 	}
 }
 
-std::vector<Indices32> ClusteringSpectral::clusterRotation(const unsigned int iterations, const Scalar convergenceThreshold)
+std::vector<Indices32> ClusteringSpectral::clusterRotation(RandomGenerator& randomGenerator, const unsigned int iterations, const Scalar convergenceThreshold)
 {
 	std::vector<Indices32> clusters;
 	size_t numberCluster = reducedEigenvectors.columns();
@@ -90,7 +90,7 @@ std::vector<Indices32> ClusteringSpectral::clusterRotation(const unsigned int it
 	// random itialize, but unique 1 in each column
 	for (size_t c = 0; c < size; c++)
 	{
-		unsigned int oneIndex = RandomI::random((unsigned int)(matrixGtranspose.rows()) - 1u);
+		const unsigned int oneIndex = RandomI::random(randomGenerator, (unsigned int)(matrixGtranspose.rows()) - 1u);
 		matrixGtranspose[oneIndex][c] = Scalar(1);
 	}
 

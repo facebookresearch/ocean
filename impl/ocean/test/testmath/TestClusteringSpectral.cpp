@@ -92,7 +92,7 @@ bool TestClusteringSpectral::testSeparatedGroups(const double testDuration)
 
 		for (unsigned int nAttempt = 0u; nAttempt < attempts && !groupsRecovered; ++nAttempt)
 		{
-			groupsRecovered = clustersMatchGroups(clusteringSpectral.clusterRotation(), groupIndices, numberGroups);
+			groupsRecovered = clustersMatchGroups(clusteringSpectral.clusterRotation(randomGenerator), groupIndices, numberGroups);
 		}
 
 		OCEAN_EXPECT_TRUE(validation, groupsRecovered);

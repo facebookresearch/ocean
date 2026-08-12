@@ -11,6 +11,8 @@
 #include "ocean/math/Math.h"
 #include "ocean/math/Matrix.h"
 
+#include "ocean/base/RandomGenerator.h"
+
 namespace Ocean
 {
 
@@ -32,11 +34,13 @@ class ClusteringSpectral
 		/**
 		 * Performances the actual clustering.
 		 * The algorithm is implemented according to "Huang et al. Spectral rotation versus K-means in spectral clustering. AAAI'13".
+		 * The initial cluster assignment is drawn at random and the algorithm does not restart, so a single call can settle in a local optimum and two calls can disagree.
+		 * @param randomGenerator The random generator used to draw the initial assignment, so that a caller can reproduce a result and can run several attempts
 		 * @param iterations Upper limit of iterations to be performed  [1, infinity)
 		 * @param convergenceThreshold Differential threshold used as convergence criteria  (0, infinity)
 		 * @return Indices of cluster elements (number of cluster was given in constructor)
 		 */
-		std::vector<Indices32> clusterRotation(const unsigned int iterations = 100u, const Scalar convergenceThreshold = Scalar(0.0001));
+		std::vector<Indices32> clusterRotation(RandomGenerator& randomGenerator, const unsigned int iterations = 100u, const Scalar convergenceThreshold = Scalar(0.0001));
 
 	protected:
 
