@@ -1584,6 +1584,13 @@ bool VideoDevice::initializeControlInterface()
 
 		interruptTransfer_ = ScopedTransfer(libusb_alloc_transfer(0));
 
+		if (!interruptTransfer_.isValid())
+		{
+			Log::error() << "VideoDevice: Failed to allocate the interrupt transfer";
+
+			return false;
+		}
+
 		libusb_fill_interrupt_transfer(*interruptTransfer_, usbDeviceHandle_, videoControlInterface_.bEndpointAddress_, interruptTransferBuffer_, sizeof(interruptTransferBuffer_), libStatusCallback, this, 0u);
 
 		const int submitResult = libusb_submit_transfer(*interruptTransfer_);
@@ -2185,6 +2192,21 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 
 			Memory memory(transferSize);
 
+			if (transfer == nullptr || memory.isNull())
+			{
+				// nothing has been submitted yet, so libusb owns none of the transfers allocated so far and all of them can be freed
+
+				Log::error() << "VideoDevice: Failed to allocate streaming transfer " << transferIndex << " of " << numberTransferBuffers;
+
+				libusb_free_transfer(transfer);
+
+				streamingTransfers_.clear();
+				streamingTransferMemories_.clear();
+
+				releaseStartedStream();
+				return false;
+			}
+
 			libusb_fill_iso_transfer(transfer, usbDeviceHandle_, endpointAddress, (unsigned char*)(memory.data()), int(transferSize), int(packetsPerTransfer), libusbStreamCallback, this, 5000);
 
 			libusb_set_iso_packet_lengths(transfer, (unsigned int)(bytesPerPacket));
@@ -2202,6 +2224,19 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 			libusb_transfer* transfer = libusb_alloc_transfer(0);
 
 			Memory memory(dwMaxPayloadTransferSize);
+
+			if (transfer == nullptr || memory.isNull())
+			{
+				Log::error() << "VideoDevice: Failed to allocate streaming transfer " << transferIndex << " of " << numberTransferBuffers;
+
+				libusb_free_transfer(transfer);
+
+				streamingTransfers_.clear();
+				streamingTransferMemories_.clear();
+
+				releaseStartedStream();
+				return false;
+			}
 
 			libusb_fill_bulk_transfer(transfer, usbDeviceHandle_, endpointAddress, (unsigned char*)(memory.data()), dwMaxPayloadTransferSize, libusbStreamCallback, this, 5000);
 
