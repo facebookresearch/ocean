@@ -57,9 +57,9 @@ Manager::Manager()
 		libusb_set_log_cb(context.usbContext(), libLogCallback, LIBUSB_LOG_CB_CONTEXT);
 
 		context_ = std::make_shared<Context>(std::move(context));
-	}
 
-	startThread();
+		startThread();
+	}
 }
 
 Manager::~Manager()
