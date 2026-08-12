@@ -1935,11 +1935,11 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 
 	maximalSampleSize_ = size_t(dwMaxVideoFrameSize);
 
-	ocean_assert(activeSample_ == nullptr);
-	activeSample_ = std::make_shared<Sample>(maximalSampleSize_, activeDescriptorFormatIndex_, activeDescriptorFrameIndex_, activeClockFrequency_);
-
 	{
 		const ScopedLock scopedSamplesLock(samplesLock_);
+
+		ocean_assert(activeSample_ == nullptr);
+		activeSample_ = std::make_shared<Sample>(maximalSampleSize_, activeDescriptorFormatIndex_, activeDescriptorFrameIndex_, activeClockFrequency_);
 
 		// let's add a second sample for double buffering (addtional samples will be added on demand)
 		ocean_assert(reusableSamples_.empty());
@@ -2098,6 +2098,18 @@ bool VideoDevice::stop()
 	}
 
 	{
+		// releasing remaining samples
+
+		const ScopedLock scopedLock(samplesLock_);
+
+		// the transfer callback may still be running, it will stop filling the active sample as soon as the sample is gone, so the sample has to go before the stream configuration below is reset
+		activeSample_ = nullptr;
+
+		sampleQueue_ = SampleQueue();
+		reusableSamples_.clear();
+	}
+
+	{
 		const ScopedLock scopedLock(lock_);
 
 		isStarted_ = false;
@@ -2107,18 +2119,7 @@ bool VideoDevice::stop()
 		activeClockFrequency_ = 0u;
 		maximalSampleSize_ = 0u;
 
-		activeSample_ = nullptr;
-
 		claimedVideoStreamInterfaceSubscription_.release();
-	}
-
-	{
-		// releasing remaining samples
-
-		const ScopedLock scopedLock(samplesLock_);
-
-		sampleQueue_ = SampleQueue();
-		reusableSamples_.clear();
 	}
 
 	// now, we need to wait until all transfers are finished
@@ -2596,9 +2597,16 @@ void VideoDevice::processPayload(const BufferPointers& bufferPointers)
 
 		const size_t payloadSize = size - payloadHeader.bHeaderLength_;
 
+		const ScopedLock scopedLock(samplesLock_);
+
+		if (!activeSample_)
+		{
+			// stop() has been called in the meantime, the remaining payload of this transfer is not needed anymore
+			return;
+		}
+
 		if (payloadSize > 0) // we skip buffers with zero payload (hopefully, we don't miss an important information from the header (e.g., timestamp)
 		{
-			ocean_assert(activeSample_);
 			if (!activeSample_->append(payloadHeader, data + payloadHeader.bHeaderLength_, payloadSize))
 			{
 				ocean_assert(false && "Failed to append payload");
@@ -2609,8 +2617,6 @@ void VideoDevice::processPayload(const BufferPointers& bufferPointers)
 		// however, buffers with empty payload may still indicate the end of the sample
 		if (payloadHeader.isEndOfFrame() && activeSample_->size() != 0)
 		{
-			const ScopedLock scopedLock(samplesLock_);
-
 			sampleQueue_.push(std::move(activeSample_));
 
 			while (sampleQueue_.size() > maximalSampleQueueSize_)
