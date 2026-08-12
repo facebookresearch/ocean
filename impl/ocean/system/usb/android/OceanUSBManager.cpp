@@ -303,8 +303,8 @@ OceanUSBManager::ScopedPermissionSubscription OceanUSBManager::requestPermission
 	{
 		if (permissionCallbackWasValid)
 		{
-			// we remove the permission callback function again as it would never be called
-			permissionCallbackMap_.erase(deviceName);
+			// we remove the permission callback function again as it would never be called, the device may have further requests pending
+			releasePermissionRequest(DevicePair(uniqueRequestId, deviceName));
 		}
 
 		return ScopedPermissionSubscription();
