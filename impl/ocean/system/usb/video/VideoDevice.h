@@ -156,6 +156,16 @@ class OCEAN_SYSTEM_USB_VIDEO_EXPORT VideoDevice : public Device
 				 */
 				void reset();
 
+				/**
+				 * Adopts the stream a pooled sample is reused for.
+				 * A sample outlives the stream it was created for, and its clock scales the timestamps while its descriptor indices select the decoder, so both have to follow the stream it is handed to.
+				 * @param descriptorFormatIndex The video format index of the stream now delivering this sample, must be valid
+				 * @param descriptorFrameIndex The video frame index of the stream now delivering this sample, must be valid
+				 * @param dwClockFrequency The clock frequency of the stream now delivering this sample, in Hz, with range [1, infinity)
+				 * @param capacity The maximal capacity the stream needs, in bytes, with range [0, infinity)
+				 */
+				void adoptStream(const uint8_t descriptorFormatIndex, const uint8_t descriptorFrameIndex, const uint32_t dwClockFrequency, const size_t capacity);
+
 			protected:
 
 				/**

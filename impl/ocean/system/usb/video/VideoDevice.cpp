@@ -1374,6 +1374,21 @@ void VideoDevice::Sample::reset()
 	nextDeviceTimeIndex_ = 0;
 }
 
+void VideoDevice::Sample::adoptStream(const uint8_t descriptorFormatIndex, const uint8_t descriptorFrameIndex, const uint32_t dwClockFrequency, const size_t capacity)
+{
+	ocean_assert(descriptorFormatIndex != 0u && descriptorFrameIndex != 0u);
+	ocean_assert(dwClockFrequency != 0u);
+
+	descriptorFormatIndex_ = descriptorFormatIndex;
+	descriptorFrameIndex_ = descriptorFrameIndex;
+	dwClockFrequency_ = dwClockFrequency;
+
+	if (buffer_.size() < capacity)
+	{
+		buffer_.resize(capacity);
+	}
+}
+
 int VideoDevice::Sample::unwrapTimestamps(uint64_t& timestampA, uint64_t& timestampB)
 {
 	// timestamp A and timestamp B need to be reasonable close together (<<<< ~2^31)
@@ -2128,8 +2143,10 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 		ocean_assert(activeSample_ == nullptr);
 		activeSample_ = std::make_shared<Sample>(maximalSampleSize_, activeDescriptorFormatIndex_, activeDescriptorFrameIndex_, activeClockFrequency_);
 
+		// a sample handed back after the previous stop() lands in the pool, so it may not be empty here
+		reusableSamples_.clear();
+
 		// let's add a second sample for double buffering (addtional samples will be added on demand)
-		ocean_assert(reusableSamples_.empty());
 		reusableSamples_.emplace_back(std::make_shared<Sample>(maximalSampleSize_, activeDescriptorFormatIndex_, activeDescriptorFrameIndex_, activeClockFrequency_));
 	}
 
@@ -2939,6 +2956,10 @@ void VideoDevice::processPayload(const BufferPointers& bufferPointers)
 				ocean_assert(activeSample_);
 
 				reusableSamples_.pop_back();
+
+				// stop() empties the pool, but a sample handed back after that lands in it, so a reused sample may still carry the clock and the descriptor indices of an earlier stream
+
+				activeSample_->adoptStream(activeDescriptorFormatIndex_, activeDescriptorFrameIndex_, activeClockFrequency_, maximalSampleSize_);
 
 				continue;
 			}
