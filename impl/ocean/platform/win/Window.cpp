@@ -33,7 +33,7 @@ Window::Window(HINSTANCE applicationInstance, const std::wstring& name, const HW
 
 Window::~Window()
 {
-	if (handle())
+	if (holdsClassReference_)
 	{
 		const ScopedLock scopedLock(classMapLock());
 
@@ -80,6 +80,8 @@ bool Window::initialize(const HICON icon, const std::string& windowClass)
 		}
 
 		++iClass->second;
+
+		holdsClassReference_ = true;
 	}
 
 	if (!createWindow())
@@ -255,14 +257,15 @@ bool Window::createWindow()
 	modifyWindowStyle(windowStyle, windowX, windowY, windowWidth, windowHeight);
 
 	handle_ = CreateWindow(className_.c_str(), name_.c_str(), windowStyle, windowX, windowY, windowWidth, windowHeight, parentHandle_, nullptr, applicationInstance_, nullptr);
-	dc_ = GetDC(handle_);
-
-	SetWindowLongPtr(handle_, GWLP_USERDATA, (LONG_PTR)this);
 
 	if (handle_ == nullptr)
 	{
 		return false;
 	}
+
+	dc_ = GetDC(handle_);
+
+	SetWindowLongPtr(handle_, GWLP_USERDATA, (LONG_PTR)this);
 
 	return true;
 }

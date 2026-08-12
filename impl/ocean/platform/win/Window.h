@@ -368,6 +368,9 @@ class OCEAN_PLATFORM_WIN_EXPORT Window
 		/// Window class name.
 		std::wstring className_;
 
+		/// True, if this window holds a reference in the window class map.
+		bool holdsClassReference_ = false;
+
 		/// Application instance.
 		HINSTANCE applicationInstance_ = nullptr;
 
