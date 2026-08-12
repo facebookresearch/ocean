@@ -980,6 +980,26 @@ void USBLiveVideo::threadRun()
 				{
 					deviceStreamType = videoDevice_->extractStreamProperties(sample->descriptorFormatIndex(), sample->descriptorFrameIndex(), width, height, pixelFormat, encodingFormat);
 
+#ifdef OCEAN_DEBUG
+
+					// reported here rather than below, a failing decoder resets the stream type and the stream the device offered is what a reader needs to see
+					// a pixel format exists only for an uncompressed stream, an encoding format only for a frame based stream
+
+					std::string sampleStreamDetails;
+
+					if (deviceStreamType == VideoDevice::DST_UNCOMPRESSED)
+					{
+						sampleStreamDetails = ", pixel format " + FrameType::translatePixelFormat(pixelFormat);
+					}
+					else if (deviceStreamType == VideoDevice::DST_FRAME_BASED)
+					{
+						sampleStreamDetails = ", encoding " + VSFrameBasedVideoFormatDescriptor::translateEncodingFormat(encodingFormat);
+					}
+
+					Log::debug() << "USBLiveVideo: Handling " << VideoDevice::translateDeviceStreamType(deviceStreamType) << " samples, " << width << "x" << height << sampleStreamDetails;
+
+#endif // OCEAN_DEBUG
+
 					if (deviceStreamType == VideoDevice::DST_FRAME_BASED)
 					{
 						const std::string mime = mimeFromEncodingFormat(encodingFormat);

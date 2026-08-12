@@ -1961,6 +1961,34 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 					activeDescriptorFormatIndex_ = commitVideoControl.bFormatIndex_;
 					activeDescriptorFrameIndex_ = commitVideoControl.bFrameIndex_;
 
+#ifdef OCEAN_DEBUG
+
+					// reported after the frame size correction above, and with the indices which are actually used, so the log matches the stream which is about to run
+
+					// a pixel format exists only for an uncompressed stream, an encoding format only for a frame based stream, reporting the other one would only print 'undefined'
+
+					std::string priorityStreamDetails;
+
+					if (priorityDeviceStreamType == DST_UNCOMPRESSED)
+					{
+						priorityStreamDetails = ", pixel format " + FrameType::translatePixelFormat(priorityPixelFormat);
+					}
+					else if (priorityDeviceStreamType == DST_FRAME_BASED)
+					{
+						priorityStreamDetails = ", encoding " + VSFrameBasedVideoFormatDescriptor::translateEncodingFormat(priorityEncodingFormat);
+					}
+
+					Log::debug() << "VideoDevice: Streaming " << translateDeviceStreamType(priorityDeviceStreamType) << " " << priorityWidth << "x" << priorityHeight
+						<< " at " << (probeVideoControl.dwFrameInterval_ != 0u ? 10000000.0 / double(probeVideoControl.dwFrameInterval_) : 0.0) << " fps"
+						<< priorityStreamDetails;
+
+					Log::debug() << "VideoDevice: Format index " << int(activeDescriptorFormatIndex_) << ", frame index " << int(activeDescriptorFrameIndex_)
+						<< ", maximal frame size " << dwMaxVideoFrameSize << " bytes"
+						<< ", maximal payload transfer size " << probeVideoControl.dwMaxPayloadTransferSize_ << " bytes"
+						<< ", clock frequency " << probeVideoControl.dwClockFrequency_ << " Hz reported by the device";
+
+#endif // OCEAN_DEBUG
+
 					break;
 				}
 				else
