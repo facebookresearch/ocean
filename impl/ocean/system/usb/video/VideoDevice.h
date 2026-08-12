@@ -549,9 +549,13 @@ class OCEAN_SYSTEM_USB_VIDEO_EXPORT VideoDevice : public Device
 				 * @param wIndex The index parameter
 				 * @param buffer The control buffer, must be valid
 				 * @param size The size of the control buffer, in bytes, with range [1, infinity)
+				 * @param timeout The time the device is given to answer, in milliseconds, with range [1, infinity)
 				 * @return True, if succeeded
+				 *
+				 * A timeout of zero would mean 'wait forever' in libusb, which is why the default is a real value.
+				 * The default matches the five seconds USB 2.0 allows a device for a request with a data stage, cameras take that long for controls which reconfigure the sensor.
 				 */
-				static bool executeControl(libusb_device_handle* usbDeviceHandle, const uint8_t bmRequestType, const uint8_t bRequest, const uint16_t wValue, const uint16_t wIndex, void* buffer, const size_t size);
+				static bool executeControl(libusb_device_handle* usbDeviceHandle, const uint8_t bmRequestType, const uint8_t bRequest, const uint16_t wValue, const uint16_t wIndex, void* buffer, const size_t size, const unsigned int timeout = 5000u);
 		};
 
 		/**
@@ -571,6 +575,10 @@ class OCEAN_SYSTEM_USB_VIDEO_EXPORT VideoDevice : public Device
 		class OCEAN_SYSTEM_USB_VIDEO_EXPORT VideoControl : public Control
 		{
 			public:
+
+				/// The time a device is given to answer a single negotiation request, in milliseconds.
+				/// Shorter than the default of executeControl(), the negotiation is retried and start() has to stay inside the five second waits around it.
+				static constexpr unsigned int negotiationTimeout_ = 1000u;
 
 				/**
 				 * Returns a string with the content of this object.

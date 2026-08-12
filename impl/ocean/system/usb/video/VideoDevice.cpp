@@ -25,13 +25,13 @@ namespace USB
 namespace Video
 {
 
-bool VideoDevice::Control::executeControl(libusb_device_handle* usbDeviceHandle, const uint8_t bmRequestType, const uint8_t bRequest, const uint16_t wValue, const uint16_t wIndex, void* buffer, const size_t size)
+bool VideoDevice::Control::executeControl(libusb_device_handle* usbDeviceHandle, const uint8_t bmRequestType, const uint8_t bRequest, const uint16_t wValue, const uint16_t wIndex, void* buffer, const size_t size, const unsigned int timeout)
 {
 	ocean_assert(usbDeviceHandle != nullptr);
 	ocean_assert(buffer != nullptr);
 	ocean_assert(size >= 1);
 
-	const int result = libusb_control_transfer(usbDeviceHandle, bmRequestType, bRequest, wValue, wIndex, (unsigned char*)(buffer), uint16_t(size), 0u);
+	const int result = libusb_control_transfer(usbDeviceHandle, bmRequestType, bRequest, wValue, wIndex, (unsigned char*)(buffer), uint16_t(size), timeout);
 
 	if (result != int(size))
 	{
@@ -137,7 +137,7 @@ bool VideoDevice::VideoControl::executeVideoControlCommit(libusb_device_handle* 
 	constexpr uint16_t wValue = uint16_t(VS_COMMIT_CONTROL) << 8u;
 	const uint16_t wIndex = uint16_t(interfaceIndex);
 
-	return executeControl(usbDeviceHandle, bmRequestType, bRequest, wValue, wIndex, (uint8_t*)(&copyVideoControl), videoControlSize);
+	return executeControl(usbDeviceHandle, bmRequestType, bRequest, wValue, wIndex, (uint8_t*)(&copyVideoControl), videoControlSize, negotiationTimeout_);
 }
 
 bool VideoDevice::VideoControl::proposeVideoControlProbe(libusb_device_handle* usbDeviceHandle, const uint8_t interfaceIndex, const VideoControl& videoControl, const size_t videoControlSize)
@@ -151,7 +151,7 @@ bool VideoDevice::VideoControl::proposeVideoControlProbe(libusb_device_handle* u
 	constexpr uint16_t wValue = uint16_t(VS_PROBE_CONTROL) << 8u;
 	const uint16_t wIndex = uint16_t(interfaceIndex);
 
-	return executeControl(usbDeviceHandle, bmRequestType, RC_SET_CUR, wValue, wIndex, (uint8_t*)(&copyVideoControl), videoControlSize);
+	return executeControl(usbDeviceHandle, bmRequestType, RC_SET_CUR, wValue, wIndex, (uint8_t*)(&copyVideoControl), videoControlSize, negotiationTimeout_);
 }
 
 bool VideoDevice::VideoControl::executeVideoControlProbe(libusb_device_handle* usbDeviceHandle, const uint8_t interfaceIndex, VideoControl& videoControl, const size_t videoControlSize, const uint8_t bRequest)
@@ -165,7 +165,7 @@ bool VideoDevice::VideoControl::executeVideoControlProbe(libusb_device_handle* u
 	constexpr uint16_t wValue = uint16_t(VS_PROBE_CONTROL) << 8u;
 	const uint16_t wIndex = uint16_t(interfaceIndex);
 
-	return executeControl(usbDeviceHandle, bmRequestType, bRequest, wValue, wIndex, (uint8_t*)(&videoControl), videoControlSize);
+	return executeControl(usbDeviceHandle, bmRequestType, bRequest, wValue, wIndex, (uint8_t*)(&videoControl), videoControlSize, negotiationTimeout_);
 }
 
 bool VideoDevice::CameraTerminalControl::getFocusAuto(libusb_device_handle* usbDeviceHandle, const uint8_t terminalId, const uint8_t interfaceIndex, const RequestCode requestCode, bool& value)
@@ -1851,6 +1851,13 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 	FrameType::PixelFormat pixelFormat = preferredPixelFormat;
 	VSFrameBasedVideoFormatDescriptor::EncodingFormat encodingFormat = preferredEncodingFormat;
 
+	// every wait in this class is five seconds and this whole function runs under 'lock_', so the negotiation including its retries has to finish well inside that
+	// the budget has to leave room for one request which is already in flight when it expires, and it has to exceed one pass of the loop below or the relaxation pass could never run
+
+	constexpr double maximalNegotiationDuration = 2.5;
+
+	const Timestamp negotiationTimestamp(true);
+
 	while (true)
 	{
 		const VideoStreamingInterface::PriorityMap priorityMap = videoStreamingInterface_.findBestMatchingStream(preferredWidth, preferredHeight, preferredFrameRate, deviceStreamType, pixelFormat, encodingFormat);
@@ -1894,20 +1901,44 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 			}
 #endif
 
-			VideoControl commitVideoControl;
+			VideoControl proposedVideoControl;
 
-			commitVideoControl.bmHint_ = 1u << 0u; // try to prioritize dwFrameInterval
-			commitVideoControl.bFormatIndex_ = priorityTriple.first();
-			commitVideoControl.bFrameIndex_ = priorityTriple.second();
-			commitVideoControl.dwFrameInterval_ = priorityTriple.third();
+			proposedVideoControl.bmHint_ = 1u << 0u; // try to prioritize dwFrameInterval
+			proposedVideoControl.bFormatIndex_ = priorityTriple.first();
+			proposedVideoControl.bFrameIndex_ = priorityTriple.second();
+			proposedVideoControl.dwFrameInterval_ = priorityTriple.third();
 
 			// UVC negotiates in three steps
 			// the host proposes the format with SET_CUR(PROBE), the device answers with GET_CUR(PROBE) and fills in 'dwMaxVideoFrameSize', 'dwMaxPayloadTransferSize' and 'dwClockFrequency',
 			// and only then the host commits exactly what the device agreed to
 			// committing a control which the device has not filled in first makes a strict camera stall the request
 
-			if (VideoControl::proposeVideoControlProbe(usbDeviceHandle_, streamingInterfaceIndex, commitVideoControl, controlBufferSize)
-					&& VideoControl::executeVideoControlProbe(usbDeviceHandle_, streamingInterfaceIndex, commitVideoControl, controlBufferSize))
+			VideoControl commitVideoControl;
+
+			bool negotiatedVideoControl = false;
+
+			// a control transfer can fail with a transient IO error, so the negotiation is retried before the entire start() is given up
+			// every attempt starts from the untouched proposal, GET_CUR(PROBE) writes its answer into the control it is given
+
+			for (unsigned int nAttempt = 0u; !negotiatedVideoControl && nAttempt < 2u; ++nAttempt)
+			{
+				if (negotiationTimestamp.hasTimePassed(maximalNegotiationDuration))
+				{
+					break;
+				}
+
+				if (nAttempt != 0u)
+				{
+					Thread::sleep(20u);
+				}
+
+				commitVideoControl = proposedVideoControl;
+
+				negotiatedVideoControl = VideoControl::proposeVideoControlProbe(usbDeviceHandle_, streamingInterfaceIndex, commitVideoControl, controlBufferSize)
+											&& VideoControl::executeVideoControlProbe(usbDeviceHandle_, streamingInterfaceIndex, commitVideoControl, controlBufferSize);
+			}
+
+			if (negotiatedVideoControl && !negotiationTimestamp.hasTimePassed(maximalNegotiationDuration))
 			{
 
 #ifdef OCEAN_INTENSIVE_DEBUG
@@ -2034,6 +2065,11 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 		}
 
 		if (deviceStreamType == DST_INVALID && pixelFormat == FrameType::FORMAT_UNDEFINED && encodingFormat == VSFrameBasedVideoFormatDescriptor::EF_INVALID)
+		{
+			break;
+		}
+
+		if (negotiationTimestamp.hasTimePassed(maximalNegotiationDuration))
 		{
 			break;
 		}
