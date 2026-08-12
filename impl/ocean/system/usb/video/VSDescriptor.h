@@ -11,6 +11,7 @@
 #include "ocean/system/usb/video/Video.h"
 
 #include "ocean/base/Frame.h"
+#include "ocean/base/Messenger.h"
 
 #include "ocean/system/usb/Descriptor.h"
 
@@ -1125,11 +1126,33 @@ Indices32 VSDescriptor::frameIntervals(const TDescriptor& descriptor, std::vecto
 		}
 		else
 		{
-			// the accumulator is 64 bit, so that the last step cannot wrap back into the range
+			// a device is free to announce a range and a step which imply an absurd number of intervals, e.g. the entire 32 bit range in steps of one
+			// the descriptor is only checked for its length, so the count has to be bounded here or the vector grows until the allocation fails
 
-			for (uint64_t frameInterval = descriptor.dwMinFrameInterval_; frameInterval <= uint64_t(descriptor.dwMaxFrameInterval_); frameInterval += descriptor.dwFrameIntervalStep_)
+			constexpr uint64_t maximalFrameIntervals = 1024ull;
+
+			const uint64_t range = uint64_t(descriptor.dwMaxFrameInterval_) - uint64_t(descriptor.dwMinFrameInterval_);
+			const uint64_t numberFrameIntervals = range / uint64_t(descriptor.dwFrameIntervalStep_) + 1ull;
+
+			if (numberFrameIntervals > maximalFrameIntervals)
 			{
-				result.emplace_back(Index32(frameInterval));
+				Log::warning() << "VSDescriptor: The device announces " << numberFrameIntervals << " continuous frame intervals, only the boundaries are used";
+
+				result.emplace_back(descriptor.dwMinFrameInterval_);
+
+				if (descriptor.dwMaxFrameInterval_ != descriptor.dwMinFrameInterval_)
+				{
+					result.emplace_back(descriptor.dwMaxFrameInterval_);
+				}
+			}
+			else
+			{
+				// the accumulator is 64 bit, so that the last step cannot wrap back into the range
+
+				for (uint64_t frameInterval = descriptor.dwMinFrameInterval_; frameInterval <= uint64_t(descriptor.dwMaxFrameInterval_); frameInterval += descriptor.dwFrameIntervalStep_)
+				{
+					result.emplace_back(Index32(frameInterval));
+				}
 			}
 		}
 	}
