@@ -1072,16 +1072,34 @@ VideoDevice::PayloadHeader::PayloadHeader(const uint8_t* buffer, const size_t si
 	bHeaderLength_ = buffer[0];
 	bmHeaderInfo_ = buffer[1];
 
+	// the optional fields are announced by the header info bits, the device is free to announce more than the packet actually carries
+
+	const size_t availableSize = std::min(size_t(bHeaderLength_), size);
+
 	size_t variableOffset = 2;
 
 	if (hasPresentationTime())
 	{
+		if (variableOffset + sizeof(dwPresentationTime_) > availableSize)
+		{
+			// setting the error bit
+			bmHeaderInfo_ |= 0b01000000u;
+			return;
+		}
+
 		memcpy(&dwPresentationTime_, buffer + variableOffset, sizeof(dwPresentationTime_));
 		variableOffset += sizeof(dwPresentationTime_);
 	}
 
 	if (hasSourceClockReference())
 	{
+		if (variableOffset + sizeof(scrSourceClock_) > availableSize)
+		{
+			// setting the error bit
+			bmHeaderInfo_ |= 0b01000000u;
+			return;
+		}
+
 		memcpy(&scrSourceClock_, buffer + variableOffset, sizeof(scrSourceClock_));
 		variableOffset += sizeof(scrSourceClock_);
 	}
