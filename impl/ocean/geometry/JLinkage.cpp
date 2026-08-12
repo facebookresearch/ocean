@@ -342,7 +342,7 @@ bool JLinkage::fitLines(const Vector2* imagePoints, const size_t pointCount, con
 		lines = buildingMinimalSampleSetLine(imagePoints, pointCount, pointForInitialModels, testCandidates);
 	}
 
-	const size_t modelCounts = lines.size();
+	size_t modelCounts = lines.size();
 
 	if (modelCounts == 0)
 	{
@@ -351,6 +351,8 @@ bool JLinkage::fitLines(const Vector2* imagePoints, const size_t pointCount, con
 		{
 			lines.push_back(globalLine);
 		}
+
+		modelCounts = lines.size();
 	}
 
 	// determining consensus/ preference set matrix
