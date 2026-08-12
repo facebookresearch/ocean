@@ -574,7 +574,9 @@ inline void FourierTransformation::scalarToComplex(const TScalar* source, std::c
 	ocean_assert(source && target);
 
 	for (size_t n = 0; n < number; ++n)
+	{
 		target[n] = Complex(source[n], 0);
+	}
 }
 
 template <typename TComplex, typename TScalar>
@@ -583,7 +585,9 @@ inline void FourierTransformation::realToScalar(const std::complex<TComplex>* so
 	ocean_assert(source && target);
 
 	for (size_t n = 0; n < number; ++n)
+	{
 		target[n] = source[n].real();
+	}
 }
 
 template <typename TComplex, typename TScalar>
@@ -592,7 +596,9 @@ inline void FourierTransformation::imaginaryToScalar(const std::complex<TComplex
 	ocean_assert(source && target);
 
 	for (size_t n = 0; n < number; ++n)
+	{
 		target[n] = source[n].imag();
+	}
 }
 
 template <typename TComplex, typename TScalar>
@@ -601,7 +607,9 @@ inline void FourierTransformation::complexToMagnitude(const std::complex<TComple
 	ocean_assert(source && target);
 
 	for (size_t n = 0; n < number; ++n)
+	{
 		target[n] = std::abs(source[n]);
+	}
 }
 
 template <typename T>
@@ -615,8 +623,12 @@ void FourierTransformation::shiftHalfDimension2(const T* source, unsigned int wi
 	const unsigned int height2 = height / 2u;
 
 	for (unsigned int y = 0u; y < height; ++y)
+	{
 		for (unsigned int x = 0u; x < width; ++x)
+		{
 			target[((y + height2) % height) * width + ((x + width2) % width)] = *source++;
+		}
+	}
 }
 
 template <typename T>
@@ -631,6 +643,7 @@ void FourierTransformation::shiftHalfDimension2(T* data, unsigned int width, con
 		const unsigned int height_2 = height / 2u;
 
 		for (unsigned int y = 0u; y < height_2; ++y)
+		{
 			for (unsigned int x = 0u; x < width_2; ++x)
 			{
 				// swap top left with bottom right
@@ -639,6 +652,7 @@ void FourierTransformation::shiftHalfDimension2(T* data, unsigned int width, con
 				// swap bottom left with top right
 				std::swap(data[(y + height_2) * width + x], data[y * width + x + width_2]);
 			}
+		}
 	}
 	else
 	{
