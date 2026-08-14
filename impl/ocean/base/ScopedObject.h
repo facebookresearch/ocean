@@ -116,16 +116,6 @@ class ScopedObjectT
 		 */
 		ScopedObjectT<T, TReleaseValue, TReleaseFunction>& operator=(ScopedObjectT<T, TReleaseValue, TReleaseFunction>&& scopedObject) noexcept;
 
-#ifdef OCEAN_ENABLE_CAST_OPERATOR_FOR_SCOPED_OBJECT
-
-		/**
-		 * Returns the wrapped object.
-		 * @return The wrapped object
-		 */
-		operator const T&() const;
-
-#endif // OCEAN_ENABLE_CAST_OPERATOR_FOR_SCOPED_OBJECT
-
 	protected:
 
 		/**
@@ -256,16 +246,6 @@ class ScopedObjectCompileTimeT
 		 * @return Reference to this object
 		 */
 		ScopedObjectCompileTimeT<T, TReleaseValue, TReleaseReturn, tReleaseFunction, tExpectedReturnValue, tCheckReturnValue, tInvalidValue>& operator=(ScopedObjectCompileTimeT<T, TReleaseValue, TReleaseReturn, tReleaseFunction, tExpectedReturnValue, tCheckReturnValue, tInvalidValue>&& scopedObject) noexcept;
-
-#ifdef OCEAN_ENABLE_CAST_OPERATOR_FOR_SCOPED_OBJECT
-
-		/**
-		 * Returns the wrapped object.
-		 * @return The wrapped object
-		 */
-		operator const T&() const;
-
-#endif // OCEAN_ENABLE_CAST_OPERATOR_FOR_SCOPED_OBJECT
 
 	protected:
 
@@ -404,16 +384,6 @@ ScopedObjectT<T, TReleaseValue, TReleaseFunction>& ScopedObjectT<T, TReleaseValu
 	return *this;
 }
 
-#ifdef OCEAN_ENABLE_CAST_OPERATOR_FOR_SCOPED_OBJECT
-
-template <typename T, typename TReleaseValue, typename TReleaseFunction>
-ScopedObjectT<T, TReleaseValue, TReleaseFunction>::operator const T&() const
-{
-	return object_;
-}
-
-#endif
-
 template <typename T, typename TReleaseValue, typename TReleaseReturn, TReleaseReturn (*tReleaseFunction)(TReleaseValue), typename NotVoidTyper<TReleaseReturn>::Type tExpectedReturnValue, bool tCheckReturnValue, T tInvalidValue>
 ScopedObjectCompileTimeT<T, TReleaseValue, TReleaseReturn, tReleaseFunction, tExpectedReturnValue, tCheckReturnValue, tInvalidValue>::ScopedObjectCompileTimeT(ScopedObjectCompileTimeT<T, TReleaseValue, TReleaseReturn, tReleaseFunction, tExpectedReturnValue, tCheckReturnValue, tInvalidValue>&& scopedObject) noexcept
 {
@@ -539,16 +509,6 @@ ScopedObjectCompileTimeT<T, TReleaseValue, TReleaseReturn, tReleaseFunction, tEx
 
 	return *this;
 }
-
-#ifdef OCEAN_ENABLE_CAST_OPERATOR_FOR_SCOPED_OBJECT
-
-template <typename T, typename TReleaseValue, typename TReleaseReturn, TReleaseReturn (*tReleaseFunction)(TReleaseValue), typename NotVoidTyper<TReleaseReturn>::Type tExpectedReturnValue, bool tCheckReturnValue, T tInvalidValue>
-ScopedObjectCompileTimeT<T, TReleaseValue, TReleaseReturn, tReleaseFunction, tExpectedReturnValue, tCheckReturnValue, tInvalidValue>::operator const T&() const
-{
-	return object_;
-}
-
-#endif
 
 }
 
