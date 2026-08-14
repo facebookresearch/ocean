@@ -435,70 +435,70 @@ bool Utilities::manifestVersion(JavaVM* javaVM, jobject activity, int& versionCo
 		return false;
 	}
 
-	jmethodID getPackageNameMethodId = scopedJNIEnvironment.jniEnv()->GetMethodID(*activityClass, "getPackageName", "()Ljava/lang/String;");
+	jmethodID getPackageNameMethodId = getMethodId(*scopedJNIEnvironment.jniEnv(), *activityClass, "getPackageName", "()Ljava/lang/String;");
 
 	if (getPackageNameMethodId == nullptr)
 	{
 		return false;
 	}
 
-	jmethodID getPackageManagerMethodId =  scopedJNIEnvironment.jniEnv()->GetMethodID(*activityClass, "getPackageManager", "()Landroid/content/pm/PackageManager;");
+	jmethodID getPackageManagerMethodId = getMethodId(*scopedJNIEnvironment.jniEnv(), *activityClass, "getPackageManager", "()Landroid/content/pm/PackageManager;");
 
 	if (getPackageManagerMethodId == nullptr)
 	{
 		return false;
 	}
 
-	const ScopedJClass javaClassPackageManager(scopedJNIEnvironment, scopedJNIEnvironment.jniEnv()->FindClass("android/content/pm/PackageManager"));
+	const ScopedJClass javaClassPackageManager(findClass(*scopedJNIEnvironment.jniEnv(), "android/content/pm/PackageManager"));
 
 	if (!javaClassPackageManager.isValid())
 	{
 		return false;
 	}
 
-	jmethodID getPackageInfoMethodId = scopedJNIEnvironment.jniEnv()->GetMethodID(*javaClassPackageManager, "getPackageInfo", "(Ljava/lang/String;I)Landroid/content/pm/PackageInfo;");
+	jmethodID getPackageInfoMethodId = getMethodId(*scopedJNIEnvironment.jniEnv(), *javaClassPackageManager, "getPackageInfo", "(Ljava/lang/String;I)Landroid/content/pm/PackageInfo;");
 
 	if (getPackageInfoMethodId == nullptr)
 	{
 		return false;
 	}
 
-	const ScopedJClass javaClassPackageInfo(scopedJNIEnvironment, scopedJNIEnvironment.jniEnv()->FindClass("android/content/pm/PackageInfo"));
+	const ScopedJClass javaClassPackageInfo(findClass(*scopedJNIEnvironment.jniEnv(), "android/content/pm/PackageInfo"));
 
 	if (!javaClassPackageInfo.isValid())
 	{
 		return false;
 	}
 
-	const jfieldID versionCodeFieldId = scopedJNIEnvironment.jniEnv()->GetFieldID(*javaClassPackageInfo, "versionCode", "I");
+	const jfieldID versionCodeFieldId = getFieldId(*scopedJNIEnvironment.jniEnv(), *javaClassPackageInfo, "versionCode", "I");
 
 	if (versionCodeFieldId == nullptr)
 	{
 		return false;
 	}
 
-	const jfieldID versionNameFieldId = scopedJNIEnvironment.jniEnv()->GetFieldID(*javaClassPackageInfo, "versionName", "Ljava/lang/String;");
+	const jfieldID versionNameFieldId = getFieldId(*scopedJNIEnvironment.jniEnv(), *javaClassPackageInfo, "versionName", "Ljava/lang/String;");
 
 	if (versionNameFieldId == nullptr)
 	{
 		return false;
 	}
 
-	const ScopedJString packageName(scopedJNIEnvironment, (jstring)scopedJNIEnvironment.jniEnv()->CallObjectMethod(activity, getPackageNameMethodId));
+	const ScopedJString packageName(callObjectMethod<jstring>(*scopedJNIEnvironment.jniEnv(), activity, getPackageNameMethodId));
 
 	if (!packageName.isValid())
 	{
 		return false;
 	}
 
-	const ScopedJObject packageManager(scopedJNIEnvironment, scopedJNIEnvironment.jniEnv()->CallObjectMethod(activity, getPackageManagerMethodId));
+	const ScopedJObject packageManager(callObjectMethod(*scopedJNIEnvironment.jniEnv(), activity, getPackageManagerMethodId));
 
 	if (!packageManager.isValid())
 	{
 		return false;
 	}
 
-	const ScopedJObject packageInfo(scopedJNIEnvironment, scopedJNIEnvironment.jniEnv()->CallObjectMethod(*packageManager, getPackageInfoMethodId, *packageName, 0x0));
+	const ScopedJObject packageInfo(callObjectMethod(*scopedJNIEnvironment.jniEnv(), *packageManager, getPackageInfoMethodId, *packageName, 0x0));
 
 	if (!packageInfo.isValid())
 	{
@@ -545,44 +545,44 @@ bool Utilities::manifestSdkVersions(JNIEnv* env, jobject activity, unsigned int&
 	// PackageManager packageManager = getActivity().getPackageManager();
 	// String packageName = packageManager.getPackageName()
 	// ApplicationInfo applicationInfo = getActivity().getApplicationInfo(packageName, 0);
-	jmethodID jGetPackageNameMethodId = env->GetMethodID(*jActivityClass, "getPackageName", "()Ljava/lang/String;");
-	jmethodID jGetPackageManagerMethodId =  env->GetMethodID(*jActivityClass, "getPackageManager", "()Landroid/content/pm/PackageManager;");
+	jmethodID jGetPackageNameMethodId = getMethodId(*env, *jActivityClass, "getPackageName", "()Ljava/lang/String;");
+	jmethodID jGetPackageManagerMethodId = getMethodId(*env, *jActivityClass, "getPackageManager", "()Landroid/content/pm/PackageManager;");
 
 	if (jGetPackageNameMethodId == nullptr || jGetPackageManagerMethodId == nullptr)
 	{
 		return false;
 	}
 
-	const ScopedJClass jPackageManagerClass(*env, env->FindClass("android/content/pm/PackageManager"));
-	const ScopedJClass jApplicationInfoClass(*env, env->FindClass("android/content/pm/ApplicationInfo"));
+	const ScopedJClass jPackageManagerClass(findClass(*env, "android/content/pm/PackageManager"));
+	const ScopedJClass jApplicationInfoClass(findClass(*env, "android/content/pm/ApplicationInfo"));
 
 	if (!jPackageManagerClass.isValid() || !jApplicationInfoClass.isValid())
 	{
 		return false;
 	}
 
-	const ScopedJObject jPackageManagerObject(*env, env->CallObjectMethod(activity, jGetPackageManagerMethodId));
+	const ScopedJObject jPackageManagerObject(callObjectMethod(*env, activity, jGetPackageManagerMethodId));
 
 	if (!jPackageManagerObject.isValid())
 	{
 		return false;
 	}
 
-	jmethodID jGetApplicationInfoMethodId = env->GetMethodID(*jPackageManagerClass, "getApplicationInfo", "(Ljava/lang/String;I)Landroid/content/pm/ApplicationInfo;");
+	jmethodID jGetApplicationInfoMethodId = getMethodId(*env, *jPackageManagerClass, "getApplicationInfo", "(Ljava/lang/String;I)Landroid/content/pm/ApplicationInfo;");
 
 	if (jGetApplicationInfoMethodId == nullptr)
 	{
 		return false;
 	}
 
-	const ScopedJString jPackageNameString(*env, (jstring)env->CallObjectMethod(activity, jGetPackageNameMethodId));
+	const ScopedJString jPackageNameString(callObjectMethod<jstring>(*env, activity, jGetPackageNameMethodId));
 
 	if (!jPackageNameString.isValid())
 	{
 		return false;
 	}
 
-	const ScopedJObject jApplicationInfoObject(*env, env->CallObjectMethod(*jPackageManagerObject, jGetApplicationInfoMethodId, *jPackageNameString, 0x0));
+	const ScopedJObject jApplicationInfoObject(callObjectMethod(*env, *jPackageManagerObject, jGetApplicationInfoMethodId, *jPackageNameString, 0x0));
 
 	if (!jApplicationInfoObject.isValid())
 	{
@@ -591,8 +591,8 @@ bool Utilities::manifestSdkVersions(JNIEnv* env, jobject activity, unsigned int&
 
 	// int minSdkVersion = applicationInfo.minSdkVersion;
 	// int targetSdkVersion = applicationInfo.targetSdkVersion;
-	jfieldID jMinSdkVersionFieldId = env->GetFieldID(*jApplicationInfoClass, "minSdkVersion", "I");
-	jfieldID jTargetSdkVersionFieldId = env->GetFieldID(*jApplicationInfoClass, "targetSdkVersion", "I");
+	jfieldID jMinSdkVersionFieldId = getFieldId(*env, *jApplicationInfoClass, "minSdkVersion", "I");
+	jfieldID jTargetSdkVersionFieldId = getFieldId(*env, *jApplicationInfoClass, "targetSdkVersion", "I");
 
 	if (jMinSdkVersionFieldId == nullptr || jTargetSdkVersionFieldId == nullptr)
 	{
@@ -618,14 +618,14 @@ bool Utilities::androidReleaseVersion(JNIEnv* env, std::string& version)
 {
 	ocean_assert(env != nullptr);
 
-	const ScopedJClass jVersionClass(*env, env->FindClass("android/os/Build$VERSION"));
+	const ScopedJClass jVersionClass(findClass(*env, "android/os/Build$VERSION"));
 
 	if (!jVersionClass)
 	{
 		return false;
 	}
 
-	jfieldID jReleaseField = env->GetStaticFieldID(*jVersionClass, "RELEASE", "Ljava/lang/String;");
+	jfieldID jReleaseField = getStaticFieldId(*env, *jVersionClass, "RELEASE", "Ljava/lang/String;");
 
 	if (jReleaseField == nullptr)
 	{
@@ -648,14 +648,14 @@ bool Utilities::androidSdkVersion(JNIEnv* env, unsigned int& version)
 {
 	ocean_assert(env != nullptr);
 
-	const ScopedJClass jVersionClass(*env, env->FindClass("android/os/Build$VERSION"));
+	const ScopedJClass jVersionClass(findClass(*env, "android/os/Build$VERSION"));
 
 	if (!jVersionClass)
 	{
 		return false;
 	}
 
-	jfieldID jSdkIntField = env->GetStaticFieldID(*jVersionClass, "SDK_INT", "I");
+	jfieldID jSdkIntField = getStaticFieldId(*env, *jVersionClass, "SDK_INT", "I");
 
 	if (jSdkIntField == nullptr)
 	{
@@ -696,14 +696,14 @@ bool Utilities::deviceBrand(JNIEnv* env, std::string& brand)
 {
 	ocean_assert(env != nullptr);
 
-	const ScopedJClass javaClassBuild(*env, env->FindClass("android/os/Build"));
+	const ScopedJClass javaClassBuild(findClass(*env, "android/os/Build"));
 
 	if (!javaClassBuild.isValid())
 	{
 		return false;
 	}
 
-	jfieldID fieldId = env->GetStaticFieldID(*javaClassBuild, "BRAND", "Ljava/lang/String;");
+	jfieldID fieldId = getStaticFieldId(*env, *javaClassBuild, "BRAND", "Ljava/lang/String;");
 
 	if (fieldId == nullptr)
 	{
@@ -726,14 +726,14 @@ bool Utilities::deviceModel(JNIEnv* env, std::string& model)
 {
 	ocean_assert(env != nullptr);
 
-	const ScopedJClass javaClassBuild(*env, env->FindClass("android/os/Build"));
+	const ScopedJClass javaClassBuild(findClass(*env, "android/os/Build"));
 
 	if (!javaClassBuild.isValid())
 	{
 		return false;
 	}
 
-	jfieldID fieldId = env->GetStaticFieldID(*javaClassBuild, "MODEL", "Ljava/lang/String;");
+	jfieldID fieldId = getStaticFieldId(*env, *javaClassBuild, "MODEL", "Ljava/lang/String;");
 
 	if (fieldId == nullptr)
 	{
