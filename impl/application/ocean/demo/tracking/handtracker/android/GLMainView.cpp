@@ -87,11 +87,11 @@ void GLMainView::initializeHandTracker(const std::string& inputMedium, const std
 	{
 		Log::debug() << "Valid JNI environment";
 
-		Platform::Android::ScopedJClass activityClass(*env, env->FindClass("com/meta/ocean/app/demo/tracking/handtracker/android/HandTrackerActivity"));
+		Platform::Android::ScopedJClass activityClass(Platform::Android::Utilities::findClass(*env, "com/meta/ocean/app/demo/tracking/handtracker/android/HandTrackerActivity"));
 
 		if (activityClass)
 		{
-			jMethodId_ = env->GetStaticMethodID(*activityClass, "processImage", "(Landroid/graphics/Bitmap;)Ljava/lang/String;");
+			jMethodId_ = Platform::Android::Utilities::getStaticMethodId(*env, *activityClass, "processImage", "(Landroid/graphics/Bitmap;)Ljava/lang/String;");
 
 			if (jMethodId_ == nullptr)
 			{
@@ -212,7 +212,7 @@ void GLMainView::threadRun()
 
 					if (bitmap)
 					{
-						const Platform::Android::ScopedJString result(*env, jstring(env->CallStaticObjectMethod(*jActivityClass_, jMethodId_, *bitmap)));
+						const Platform::Android::ScopedJString result(Platform::Android::Utilities::callStaticObjectMethod<jstring>(*env, *jActivityClass_, jMethodId_, *bitmap));
 
 						if (result)
 						{
