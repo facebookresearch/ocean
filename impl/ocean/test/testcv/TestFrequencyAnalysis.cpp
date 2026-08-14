@@ -19,8 +19,10 @@
 #include "ocean/cv/FrequencyAnalysis.h"
 
 #include "ocean/math/Complex.h"
+#include "ocean/math/FourierTransformation.h"
 #include "ocean/math/Numeric.h"
 
+#include <algorithm>
 #include <vector>
 
 namespace Ocean
@@ -186,6 +188,18 @@ FrameType::PixelFormat randomPixelFormat(RandomGenerator& randomGenerator)
 	if (sel == 0u) return FrameType::FORMAT_Y8;
 	if (sel == 1u) return FrameType::FORMAT_RGB24;
 	return FrameType::FORMAT_RGBA32;
+}
+
+/**
+ * Returns an absolute error bound for a theoretically-zero DFT component.
+ * Forward-transform roundoff scales with the input L1 norm, which is the DC
+ * magnitude for a constant non-negative input. NumericT<T>::eps() supplies
+ * Ocean's precision-specific relative comparison budget.
+ */
+template <typename T>
+T constantSpectrumComponentTolerance(const T expectedDC)
+{
+	return std::max(T(1), NumericT<T>::abs(expectedDC)) * NumericT<T>::eps();
 }
 
 } // namespace
@@ -487,6 +501,26 @@ bool TestFrequencyAnalysis::testConstantInputSpectrumStress(const double testDur
 	RandomGenerator randomGenerator;
 	Validation validation(randomGenerator);
 
+	// Exercise the single-precision implementation deterministically, including on
+	// hosts where Ocean's default Scalar is double.
+	{
+		constexpr unsigned int width = 20u;
+		constexpr unsigned int height = 23u;
+		constexpr float value = 255.0f;
+
+		std::vector<float> spatial(width * height, value);
+		std::vector<float> frequencies(width * height * 2u);
+		FourierTransformation::spatialToFrequency2<float>(spatial.data(), width, height, frequencies.data());
+
+		constexpr float expectedDC = float(width * height) * value;
+		const float componentTolerance = constantSpectrumComponentTolerance(expectedDC);
+		for (size_t n = 1u; n < size_t(width * height); ++n)
+		{
+			OCEAN_EXPECT_TRUE(validation, NumericF::abs(frequencies[n * 2u + 0u]) <= componentTolerance);
+			OCEAN_EXPECT_TRUE(validation, NumericF::abs(frequencies[n * 2u + 1u]) <= componentTolerance);
+		}
+	}
+
 	const Timestamp startTimestamp(true);
 	do
 	{
@@ -513,6 +547,7 @@ bool TestFrequencyAnalysis::testConstantInputSpectrumStress(const double testDur
 			// DC == width * height * value (real, imag ~0)
 			const Complex dc = frequencies[c * channelStride + 0u];
 			const Scalar expectedDC = Scalar(width) * Scalar(height) * Scalar(value);
+			const Scalar componentTolerance = constantSpectrumComponentTolerance(expectedDC);
 
 			OCEAN_EXPECT_TRUE(validation, Numeric::abs(dc.real() - expectedDC) <= tolerance + Numeric::abs(expectedDC) * Scalar(1e-5));
 			OCEAN_EXPECT_TRUE(validation, Numeric::abs(dc.imag()) <= tolerance);
@@ -521,8 +556,8 @@ bool TestFrequencyAnalysis::testConstantInputSpectrumStress(const double testDur
 			for (unsigned int k = 1u; k < channelStride; ++k)
 			{
 				const Complex& f = frequencies[c * channelStride + k];
-				OCEAN_EXPECT_TRUE(validation, Numeric::abs(f.real()) <= tolerance);
-				OCEAN_EXPECT_TRUE(validation, Numeric::abs(f.imag()) <= tolerance);
+				OCEAN_EXPECT_TRUE(validation, Numeric::abs(f.real()) <= componentTolerance);
+				OCEAN_EXPECT_TRUE(validation, Numeric::abs(f.imag()) <= componentTolerance);
 			}
 		}
 	}
