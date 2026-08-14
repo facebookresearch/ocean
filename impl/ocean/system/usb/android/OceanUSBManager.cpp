@@ -52,6 +52,7 @@ std::string OceanUSBManager::DeviceDescriptor::toString() const
 bool OceanUSBManager::initialize(JNIEnv* jniEnv)
 {
 	ocean_assert(jniEnv != nullptr);
+	ocean_assert(jniEnv->ExceptionCheck() == JNI_FALSE);
 
 	if (jniEnv == nullptr)
 	{
@@ -89,6 +90,7 @@ bool OceanUSBManager::isInitialized()
 bool OceanUSBManager::enumerateDevices(JNIEnv* jniEnv, DeviceDescriptors& deviceDescriptors, const unsigned int deviceClass)
 {
 	ocean_assert(jniEnv != nullptr);
+	ocean_assert(jniEnv->ExceptionCheck() == JNI_FALSE);
 	if (jniEnv == nullptr)
 	{
 		return false;
@@ -218,6 +220,7 @@ bool OceanUSBManager::enumerateDevices(JNIEnv* jniEnv, DeviceDescriptors& device
 bool OceanUSBManager::hasPermission(JNIEnv* jniEnv, const std::string& deviceName, bool& permissionGranted)
 {
 	ocean_assert(jniEnv != nullptr);
+	ocean_assert(jniEnv->ExceptionCheck() == JNI_FALSE);
 	if (jniEnv == nullptr)
 	{
 		return false;
@@ -268,6 +271,7 @@ bool OceanUSBManager::hasPermission(JNIEnv* jniEnv, const std::string& deviceNam
 OceanUSBManager::ScopedPermissionSubscription OceanUSBManager::requestPermission(JNIEnv* jniEnv, const std::string& deviceName, PermissionCallback permissionCallback)
 {
 	ocean_assert(jniEnv != nullptr);
+	ocean_assert(jniEnv->ExceptionCheck() == JNI_FALSE);
 	if (jniEnv == nullptr)
 	{
 		return ScopedPermissionSubscription();
@@ -326,6 +330,7 @@ OceanUSBManager::ScopedPermissionSubscription OceanUSBManager::requestPermission
 bool OceanUSBManager::openDevice(JNIEnv* jniEnv, const std::string& deviceName, int64_t& fileDescriptor)
 {
 	ocean_assert(jniEnv != nullptr);
+	ocean_assert(jniEnv->ExceptionCheck() == JNI_FALSE);
 	if (jniEnv == nullptr)
 	{
 		return false;
@@ -370,6 +375,7 @@ bool OceanUSBManager::openDevice(JNIEnv* jniEnv, const std::string& deviceName, 
 bool OceanUSBManager::closeDevice(JNIEnv* jniEnv, const std::string& deviceName)
 {
 	ocean_assert(jniEnv != nullptr);
+	ocean_assert(jniEnv->ExceptionCheck() == JNI_FALSE);
 	if (jniEnv == nullptr)
 	{
 		return false;

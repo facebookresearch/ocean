@@ -32,6 +32,8 @@ bool Permission::hasPermission(JavaVM* javaVM, jobject activity, const std::stri
 		return false;
 	}
 
+	ocean_assert(scopedJNIEnvironment.jniEnv()->ExceptionCheck() == JNI_FALSE);
+
 	const std::string androidPermission = translate ? translatePermission(scopedJNIEnvironment.jniEnv(), permission) : permission;
 
 	JNIEnv& jniEnvironment = *scopedJNIEnvironment.jniEnv();
@@ -105,6 +107,8 @@ bool Permission::requestPermissions(JavaVM* javaVM, jobject activity, const Stri
 		return false;
 	}
 
+	ocean_assert(scopedJNIEnvironment.jniEnv()->ExceptionCheck() == JNI_FALSE);
+
 	JNIEnv& jniEnvironment = *scopedJNIEnvironment.jniEnv();
 
 	const ScopedJClass javaClassString(Utilities::findClass(jniEnvironment, "java/lang/String"));
@@ -157,6 +161,7 @@ bool Permission::requestPermissions(JavaVM* javaVM, jobject activity, const Stri
 std::string Permission::translatePermission(JNIEnv* jniEnv, const std::string& permission)
 {
 	ocean_assert(jniEnv != nullptr);
+	ocean_assert(jniEnv->ExceptionCheck() == JNI_FALSE);
 	ocean_assert(!permission.empty());
 
 	const ScopedJClass javaClassManifestPermission(Utilities::findClass(*jniEnv, "android/Manifest$permission"));

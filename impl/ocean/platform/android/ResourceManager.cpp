@@ -315,6 +315,7 @@ bool ResourceManager::doesAssetDirectoryExist(const std::string& assetDirectoryN
 bool ResourceManager::externalFilesDirectory(JNIEnv* env, jobject activity, std::string& externalDirectoryName, const ExternalDirectoryType externalDirectoryType)
 {
 	ocean_assert(env != nullptr && activity != nullptr);
+	ocean_assert(env->ExceptionCheck() == JNI_FALSE);
 
 	const ScopedJClass jRootActivityClass(*env, env->GetObjectClass(activity));
 

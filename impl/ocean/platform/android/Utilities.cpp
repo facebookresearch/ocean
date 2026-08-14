@@ -176,6 +176,7 @@ std::string Utilities::toAString(JNIEnv* env, jstring javaString)
 	}
 
 	ocean_assert(env != nullptr);
+	ocean_assert(env->ExceptionCheck() == JNI_FALSE);
 
 	jboolean isCopy = false;
 	const char* stringPointer = env->GetStringUTFChars(javaString, &isCopy);
@@ -193,6 +194,7 @@ std::string Utilities::toAString(JNIEnv* env, jstring javaString)
 jstring Utilities::toJavaString(JNIEnv* env, const std::string& stdString)
 {
 	ocean_assert(env != nullptr);
+	ocean_assert(env->ExceptionCheck() == JNI_FALSE);
 
 	return env->NewStringUTF(stdString.c_str());
 }
@@ -200,6 +202,7 @@ jstring Utilities::toJavaString(JNIEnv* env, const std::string& stdString)
 jobjectArray Utilities::toJavaStringArray(JNIEnv* env, const Strings& strings)
 {
 	ocean_assert(env != nullptr);
+	ocean_assert(env->ExceptionCheck() == JNI_FALSE);
 
 	const ScopedJClass javaClassString(findClass(*env, "java/lang/String"));
 
@@ -230,6 +233,7 @@ jobjectArray Utilities::toJavaStringArray(JNIEnv* env, const Strings& strings)
 bool Utilities::toVector(JNIEnv* env, jobject javaStringList, Strings& strings)
 {
 	ocean_assert(env != nullptr);
+	ocean_assert(env->ExceptionCheck() == JNI_FALSE);
 	ocean_assert(javaStringList != nullptr);
 
 	const ScopedJClass javaClassList(findClass(*env, "java/util/List"));
@@ -287,6 +291,7 @@ bool Utilities::toVector(JNIEnv* env, jobject javaStringList, Strings& strings)
 bool Utilities::toVector(JNIEnv* env, jobject javaIntegerList, std::vector<int>& values)
 {
 	ocean_assert(env != nullptr);
+	ocean_assert(env->ExceptionCheck() == JNI_FALSE);
 	ocean_assert(javaIntegerList != nullptr);
 
 	const ScopedJClass javaClassList(findClass(*env, "java/util/List"));
@@ -363,6 +368,7 @@ bool Utilities::toVector(JNIEnv* env, jobject javaIntegerList, std::vector<int>&
 bool Utilities::className(JNIEnv* env, jobject object, std::string& name)
 {
 	ocean_assert(env != nullptr);
+	ocean_assert(env->ExceptionCheck() == JNI_FALSE);
 	ocean_assert(object != nullptr);
 
 	const ScopedJClass objectClass(*env, env->GetObjectClass(object));
@@ -427,6 +433,8 @@ bool Utilities::manifestVersion(JavaVM* javaVM, jobject activity, int& versionCo
 	{
 		return false;
 	}
+
+	ocean_assert(scopedJNIEnvironment.jniEnv()->ExceptionCheck() == JNI_FALSE);
 
 	const ScopedJClass activityClass(scopedJNIEnvironment, scopedJNIEnvironment.jniEnv()->GetObjectClass(activity));
 
@@ -529,6 +537,7 @@ bool Utilities::manifestVersionCode(JavaVM* javaVM, jobject activity, int& versi
 bool Utilities::manifestSdkVersions(JNIEnv* env, jobject activity, unsigned int& minSdkVersion, unsigned int& targetSdkVersion)
 {
 	ocean_assert(env != nullptr && activity != nullptr);
+	ocean_assert(env->ExceptionCheck() == JNI_FALSE);
 
 	if (env == nullptr || activity == nullptr)
 	{
@@ -617,6 +626,7 @@ bool Utilities::manifestSdkVersions(JNIEnv* env, jobject activity, unsigned int&
 bool Utilities::androidReleaseVersion(JNIEnv* env, std::string& version)
 {
 	ocean_assert(env != nullptr);
+	ocean_assert(env->ExceptionCheck() == JNI_FALSE);
 
 	const ScopedJClass jVersionClass(findClass(*env, "android/os/Build$VERSION"));
 
@@ -647,6 +657,7 @@ bool Utilities::androidReleaseVersion(JNIEnv* env, std::string& version)
 bool Utilities::androidSdkVersion(JNIEnv* env, unsigned int& version)
 {
 	ocean_assert(env != nullptr);
+	ocean_assert(env->ExceptionCheck() == JNI_FALSE);
 
 	const ScopedJClass jVersionClass(findClass(*env, "android/os/Build$VERSION"));
 
@@ -695,6 +706,7 @@ bool Utilities::systemPropertyValue(const std::string& name, std::string& value)
 bool Utilities::deviceBrand(JNIEnv* env, std::string& brand)
 {
 	ocean_assert(env != nullptr);
+	ocean_assert(env->ExceptionCheck() == JNI_FALSE);
 
 	const ScopedJClass javaClassBuild(findClass(*env, "android/os/Build"));
 
@@ -725,6 +737,7 @@ bool Utilities::deviceBrand(JNIEnv* env, std::string& brand)
 bool Utilities::deviceModel(JNIEnv* env, std::string& model)
 {
 	ocean_assert(env != nullptr);
+	ocean_assert(env->ExceptionCheck() == JNI_FALSE);
 
 	const ScopedJClass javaClassBuild(findClass(*env, "android/os/Build"));
 
@@ -782,6 +795,7 @@ bool Utilities::determinePackageName(std::string& packageName)
 bool Utilities::sendIntentToComponent(JNIEnv* env, jobject activity, const std::string &packageName, const std::string &className, const std::string &extraText)
 {
 	ocean_assert(env != nullptr && activity != nullptr);
+	ocean_assert(env->ExceptionCheck() == JNI_FALSE);
 	ocean_assert(!packageName.empty() && !className.empty());
 	ocean_assert(!extraText.empty());
 
@@ -881,6 +895,7 @@ bool Utilities::sendIntentToComponent(JNIEnv* env, jobject activity, const std::
 bool Utilities::startActivity(JNIEnv* env, jobject rootActivity, const std::string& activityClassName)
 {
 	ocean_assert(env != nullptr && rootActivity != nullptr);
+	ocean_assert(env->ExceptionCheck() == JNI_FALSE);
 	ocean_assert(!activityClassName.empty());
 
 	const ScopedJClass jRootActivityClass(*env, env->GetObjectClass(rootActivity));
@@ -933,6 +948,7 @@ bool Utilities::startActivity(JNIEnv* env, jobject rootActivity, const std::stri
 bool Utilities::connectToWifi(JNIEnv* env, jobject activity, const std::string& ssid, const std::string& password)
 {
 	ocean_assert(env != nullptr && activity != nullptr);
+	ocean_assert(env->ExceptionCheck() == JNI_FALSE);
 	ocean_assert(!ssid.empty() &&!password.empty());
 
 	unsigned int minSdkVersion = 0u;
@@ -1194,6 +1210,7 @@ bool Utilities::connectToWifi(JNIEnv* env, jobject activity, const std::string& 
 bool Utilities::sendIntentToConnectToWifi(JNIEnv* env, jobject activity, const std::string& ssid, const std::string& password)
 {
 	ocean_assert(env != nullptr && activity != nullptr);
+	ocean_assert(env->ExceptionCheck() == JNI_FALSE);
 	ocean_assert(!ssid.empty() &&!password.empty());
 
 	unsigned int minSdkVersion = 0u;
@@ -1426,6 +1443,7 @@ bool Utilities::sendIntentToConnectToWifi(JNIEnv* env, jobject activity, const s
 bool Utilities::currentWifiSsid(JNIEnv* env, jobject activity, std::string& ssid)
 {
 	ocean_assert(env != nullptr && activity != nullptr);
+	ocean_assert(env->ExceptionCheck() == JNI_FALSE);
 
 	unsigned int minSdkVersion = 0u;
 	unsigned int targetSdkVersion = 0u;
@@ -1593,6 +1611,7 @@ bool Utilities::currentWifiSsid(JNIEnv* env, jobject activity, std::string& ssid
 bool Utilities::triggerVibration(JNIEnv* env, jobject activity, unsigned int intensity, const unsigned int duration)
 {
 	ocean_assert(env != nullptr && activity != nullptr);
+	ocean_assert(env->ExceptionCheck() == JNI_FALSE);
 	ocean_assert(intensity <= 2u);
 	ocean_assert(duration >= 1u);
 
@@ -1733,6 +1752,7 @@ bool Utilities::triggerVibration(JNIEnv* env, jobject activity, unsigned int int
 bool Utilities::displayRefreshRate(JNIEnv* env, jobject activity, float& refreshRateHz)
 {
 	ocean_assert(env != nullptr && activity != nullptr);
+	ocean_assert(env->ExceptionCheck() == JNI_FALSE);
 
 	if (env == nullptr || activity == nullptr)
 	{

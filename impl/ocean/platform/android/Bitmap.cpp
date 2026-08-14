@@ -22,6 +22,7 @@ namespace Android
 Frame Bitmap::toFrame(JNIEnv* env, jobject bitmap, const bool copyData)
 {
 	ocean_assert(env != nullptr && bitmap != nullptr);
+	ocean_assert(env->ExceptionCheck() == JNI_FALSE);
 	if (env == nullptr || bitmap == nullptr)
 	{
 		return Frame();
@@ -73,6 +74,7 @@ Frame Bitmap::toFrame(JNIEnv* env, jobject bitmap, const bool copyData)
 ScopedJObject Bitmap::toBitmap(JNIEnv* env, const Frame& rgbaFrame)
 {
 	ocean_assert(env != nullptr && rgbaFrame.isValid());
+	ocean_assert(env->ExceptionCheck() == JNI_FALSE);
 	if (env == nullptr || !rgbaFrame.isValid())
 	{
 		return ScopedJObject();
