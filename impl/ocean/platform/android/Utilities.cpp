@@ -1441,16 +1441,16 @@ bool Utilities::currentWifiSsid(JNIEnv* env, jobject activity, std::string& ssid
 	// 	/* no active network connection */
 	// }
 
-	const ScopedJClass jContextClass(*env, env->FindClass("android/content/Context"));
-	const ScopedJClass jConnectivityManagerClass(*env, env->FindClass("android/net/ConnectivityManager"));
-	const ScopedJClass jNetworkInfoClass(*env, env->FindClass("android/net/NetworkInfo"));
+	const ScopedJClass jContextClass(findClass(*env, "android/content/Context"));
+	const ScopedJClass jConnectivityManagerClass(findClass(*env, "android/net/ConnectivityManager"));
+	const ScopedJClass jNetworkInfoClass(findClass(*env, "android/net/NetworkInfo"));
 
 	if (!jContextClass || !jConnectivityManagerClass || !jNetworkInfoClass)
 	{
 		return false;
 	}
 
-	jfieldID jConnectivityServiceFieldId = env->GetStaticFieldID(*jContextClass, "CONNECTIVITY_SERVICE", "Ljava/lang/String;");
+	jfieldID jConnectivityServiceFieldId = getStaticFieldId(*env, *jContextClass, "CONNECTIVITY_SERVICE", "Ljava/lang/String;");
 
 	if (jConnectivityServiceFieldId == nullptr)
 	{
@@ -1464,28 +1464,28 @@ bool Utilities::currentWifiSsid(JNIEnv* env, jobject activity, std::string& ssid
 		return false;
 	}
 
-	jmethodID jGetSystemServiceMethodId = env->GetMethodID(*jContextClass, "getSystemService", "(Ljava/lang/String;)Ljava/lang/Object;");
+	jmethodID jGetSystemServiceMethodId = getMethodId(*env, *jContextClass, "getSystemService", "(Ljava/lang/String;)Ljava/lang/Object;");
 
 	if (jGetSystemServiceMethodId == nullptr)
 	{
 		return false;
 	}
 
-	const ScopedJObject jConnectivityManagerObject(*env, env->CallObjectMethod(activity, jGetSystemServiceMethodId, *jConnectivityServiceString));
+	const ScopedJObject jConnectivityManagerObject(callObjectMethod(*env, activity, jGetSystemServiceMethodId, *jConnectivityServiceString));
 
 	if (!jConnectivityManagerObject)
 	{
 		return false;
 	}
 
-	jmethodID jGetActiveNetworkInfoMethodId = env->GetMethodID(*jConnectivityManagerClass, "getActiveNetworkInfo", "()Landroid/net/NetworkInfo;");
+	jmethodID jGetActiveNetworkInfoMethodId = getMethodId(*env, *jConnectivityManagerClass, "getActiveNetworkInfo", "()Landroid/net/NetworkInfo;");
 
 	if (jGetActiveNetworkInfoMethodId == nullptr)
 	{
 		return false;
 	}
 
-	const ScopedJObject jNetworkInfoObject(*env, env->CallObjectMethod(*jConnectivityManagerObject, jGetActiveNetworkInfoMethodId));
+	const ScopedJObject jNetworkInfoObject(callObjectMethod(*env, *jConnectivityManagerObject, jGetActiveNetworkInfoMethodId));
 
 	if (!jNetworkInfoObject)
 	{
@@ -1503,29 +1503,36 @@ bool Utilities::currentWifiSsid(JNIEnv* env, jobject activity, std::string& ssid
 	//         ssid = wifiInfo.getSSID();
 	//     }
 	// }
-	jmethodID jIsConnectedMethodId = env->GetMethodID(*jNetworkInfoClass, "isConnected", "()Z");
+	jmethodID jIsConnectedMethodId = getMethodId(*env, *jNetworkInfoClass, "isConnected", "()Z");
 
 	if (jIsConnectedMethodId == nullptr)
 	{
 		return false;
 	}
 
-	if (!env->CallBooleanMethod(*jNetworkInfoObject, jIsConnectedMethodId))
+	bool isConnected = false;
+
+	if (!callBooleanMethod(*env, *jNetworkInfoObject, jIsConnectedMethodId, isConnected))
+	{
+		return false;
+	}
+
+	if (!isConnected)
 	{
 		// No active network connection
 		ssid = "";
 		return true;
 	}
 
-	const ScopedJClass jWifiManagerClass(*env, env->FindClass("android/net/wifi/WifiManager"));
-	const ScopedJClass jWifiInfoClass(*env, env->FindClass("android/net/wifi/WifiInfo"));
+	const ScopedJClass jWifiManagerClass(findClass(*env, "android/net/wifi/WifiManager"));
+	const ScopedJClass jWifiInfoClass(findClass(*env, "android/net/wifi/WifiInfo"));
 
 	if (!jWifiManagerClass || !jWifiInfoClass)
 	{
 		return false;
 	}
 
-	jfieldID jWifiServiceFieldId = env->GetStaticFieldID(*jContextClass, "WIFI_SERVICE", "Ljava/lang/String;");
+	jfieldID jWifiServiceFieldId = getStaticFieldId(*env, *jContextClass, "WIFI_SERVICE", "Ljava/lang/String;");
 
 	if (jWifiServiceFieldId == nullptr)
 	{
@@ -1539,29 +1546,29 @@ bool Utilities::currentWifiSsid(JNIEnv* env, jobject activity, std::string& ssid
 		return false;
 	}
 
-	const ScopedJObject jWifiManagerObject(*env, env->CallObjectMethod(activity, jGetSystemServiceMethodId, *jWifiServiceString));
+	const ScopedJObject jWifiManagerObject(callObjectMethod(*env, activity, jGetSystemServiceMethodId, *jWifiServiceString));
 
 	if (!jWifiManagerObject)
 	{
 		return false;
 	}
 
-	jmethodID jGetConnectionInfoMethodId = env->GetMethodID(*jWifiManagerClass, "getConnectionInfo", "()Landroid/net/wifi/WifiInfo;");
-	jmethodID jGetSsidMethodId = env->GetMethodID(*jWifiInfoClass, "getSSID", "()Ljava/lang/String;");
+	jmethodID jGetConnectionInfoMethodId = getMethodId(*env, *jWifiManagerClass, "getConnectionInfo", "()Landroid/net/wifi/WifiInfo;");
+	jmethodID jGetSsidMethodId = getMethodId(*env, *jWifiInfoClass, "getSSID", "()Ljava/lang/String;");
 
 	if (jGetConnectionInfoMethodId == nullptr || jGetSsidMethodId == nullptr)
 	{
 		return false;
 	}
 
-	const ScopedJObject jWifiInfoObject(*env, env->CallObjectMethod(*jWifiManagerObject, jGetConnectionInfoMethodId));
+	const ScopedJObject jWifiInfoObject(callObjectMethod(*env, *jWifiManagerObject, jGetConnectionInfoMethodId));
 
 	if (!jWifiInfoObject)
 	{
 		return false;
 	}
 
-	const ScopedJString jSsidString(*env, (jstring)(env->CallObjectMethod(*jWifiInfoObject, jGetSsidMethodId)));
+	const ScopedJString jSsidString(callObjectMethod<jstring>(*env, *jWifiInfoObject, jGetSsidMethodId));
 
 	if (!jSsidString.isValid())
 	{
