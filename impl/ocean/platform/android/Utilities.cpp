@@ -201,11 +201,27 @@ jobjectArray Utilities::toJavaStringArray(JNIEnv* env, const Strings& strings)
 {
 	ocean_assert(env != nullptr);
 
-	jobjectArray result = env->NewObjectArray(strings.size(), env->FindClass("java/lang/String"), env->NewStringUTF(""));
+	const ScopedJClass javaClassString(findClass(*env, "java/lang/String"));
+
+	if (!javaClassString)
+	{
+		return nullptr;
+	}
+
+	const ScopedJString emptyString(*env, env->NewStringUTF(""));
+
+	jobjectArray result = env->NewObjectArray(jsize(strings.size()), *javaClassString, *emptyString);
+
+	if (result == nullptr)
+	{
+		return nullptr;
+	}
 
 	for (size_t n = 0; n < strings.size(); ++n)
 	{
-		env->SetObjectArrayElement(result, n, env->NewStringUTF(strings[n].c_str()));
+		const ScopedJString javaString(*env, env->NewStringUTF(strings[n].c_str()));
+
+		env->SetObjectArrayElement(result, jsize(n), *javaString);
 	}
 
 	return result;
@@ -216,21 +232,21 @@ bool Utilities::toVector(JNIEnv* env, jobject javaStringList, Strings& strings)
 	ocean_assert(env != nullptr);
 	ocean_assert(javaStringList != nullptr);
 
-	const ScopedJClass javaClassList(*env, env->FindClass("java/util/List"));
+	const ScopedJClass javaClassList(findClass(*env, "java/util/List"));
 
 	if (!javaClassList)
 	{
 		return false;
 	}
 
-	const jmethodID functionId = env->GetMethodID(*javaClassList, "toArray", "()[Ljava/lang/Object;");
+	const jmethodID functionId = getMethodId(*env, *javaClassList, "toArray", "()[Ljava/lang/Object;");
 
 	if (functionId == nullptr)
 	{
 		return false;
 	}
 
-	const ScopedJObjectArray javaArray(*env, (jobjectArray)(env->CallObjectMethod(javaStringList, functionId)));
+	const ScopedJObjectArray javaArray(callObjectMethod<jobjectArray>(*env, javaStringList, functionId));
 
 	if (!javaArray)
 	{
@@ -273,21 +289,21 @@ bool Utilities::toVector(JNIEnv* env, jobject javaIntegerList, std::vector<int>&
 	ocean_assert(env != nullptr);
 	ocean_assert(javaIntegerList != nullptr);
 
-	const ScopedJClass javaClassList(*env, env->FindClass("java/util/List"));
+	const ScopedJClass javaClassList(findClass(*env, "java/util/List"));
 
 	if (!javaClassList.isValid())
 	{
 		return false;
 	}
 
-	const jmethodID functionIdToArray = env->GetMethodID(*javaClassList, "toArray", "()[Ljava/lang/Object;");
+	const jmethodID functionIdToArray = getMethodId(*env, *javaClassList, "toArray", "()[Ljava/lang/Object;");
 
 	if (functionIdToArray == nullptr)
 	{
 		return false;
 	}
 
-	const ScopedJObjectArray javaArray(*env, (jobjectArray)(env->CallObjectMethod(javaIntegerList, functionIdToArray)));
+	const ScopedJObjectArray javaArray(callObjectMethod<jobjectArray>(*env, javaIntegerList, functionIdToArray));
 
 	if (!javaArray)
 	{
@@ -308,14 +324,14 @@ bool Utilities::toVector(JNIEnv* env, jobject javaIntegerList, std::vector<int>&
 		return true;
 	}
 
-	const ScopedJClass javaClassInteger(*env, env->FindClass("java/lang/Integer"));
+	const ScopedJClass javaClassInteger(findClass(*env, "java/lang/Integer"));
 
 	if (!javaClassInteger)
 	{
 		return false;
 	}
 
-	const jmethodID jFunctionIdIntValue = env->GetMethodID(*javaClassInteger, "intValue", "()I");
+	const jmethodID jFunctionIdIntValue = getMethodId(*env, *javaClassInteger, "intValue", "()I");
 
 	if (jFunctionIdIntValue == nullptr)
 	{
@@ -324,14 +340,21 @@ bool Utilities::toVector(JNIEnv* env, jobject javaIntegerList, std::vector<int>&
 
 	for (jsize n = 0; n < size; ++n)
 	{
-		const ScopedJObject javaObject(*env, (jstring)(env->GetObjectArrayElement(*javaArray, n)));
+		const ScopedJObject javaObject(*env, env->GetObjectArrayElement(*javaArray, n));
 
 		if (!javaObject)
 		{
 			return false;
 		}
 
-		values.emplace_back(env->CallIntMethod(*javaObject, jFunctionIdIntValue));
+		int32_t value = 0;
+
+		if (!callIntMethod(*env, *javaObject, jFunctionIdIntValue, value))
+		{
+			return false;
+		}
+
+		values.emplace_back(value);
 	}
 
 	return true;
@@ -349,14 +372,14 @@ bool Utilities::className(JNIEnv* env, jobject object, std::string& name)
 		return false;
 	}
 
-	jmethodID getClassMethodId =  env->GetMethodID(*objectClass, "getClass", "()Ljava/lang/Class;");
+	const jmethodID getClassMethodId = getMethodId(*env, *objectClass, "getClass", "()Ljava/lang/Class;");
 
 	if (getClassMethodId == nullptr)
 	{
 		return false;
 	}
 
-	const ScopedJObject classObject(*env, env->CallObjectMethod(object, getClassMethodId));
+	const ScopedJObject classObject(callObjectMethod(*env, object, getClassMethodId));
 
 	if (!classObject.isValid())
 	{
@@ -370,14 +393,14 @@ bool Utilities::className(JNIEnv* env, jobject object, std::string& name)
 		return false;
 	}
 
-	jmethodID getNameMethodId =  env->GetMethodID(*classDescriptor, "getName", "()Ljava/lang/String;");
+	const jmethodID getNameMethodId = getMethodId(*env, *classDescriptor, "getName", "()Ljava/lang/String;");
 
 	if (getNameMethodId == nullptr)
 	{
 		return false;
 	}
 
-	const ScopedJString constructorName(*env, (jstring)env->CallObjectMethod(*classObject, getNameMethodId));
+	const ScopedJString constructorName(callObjectMethod<jstring>(*env, *classObject, getNameMethodId));
 
 	if (!constructorName.isValid())
 	{
