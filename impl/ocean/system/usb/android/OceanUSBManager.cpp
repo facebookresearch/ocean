@@ -66,7 +66,7 @@ bool OceanUSBManager::initialize(JNIEnv* jniEnv)
 		return true;
 	}
 
-	ScopedJClass javaClass(*jniEnv, jniEnv->FindClass("com/meta/ocean/system/usb/android/OceanUSBManager"));
+	ScopedJClass javaClass(AndroidUtilities::findClass(*jniEnv, "com/meta/ocean/system/usb/android/OceanUSBManager"));
 
 	if (!javaClass)
 	{
@@ -101,7 +101,7 @@ bool OceanUSBManager::enumerateDevices(JNIEnv* jniEnv, DeviceDescriptors& device
 		return false;
 	}
 
-	const jmethodID functionId = jniEnv->GetStaticMethodID(*javaClassOceanUSBManager_, "enumerateDevices", "(I)Ljava/util/List;");
+	const jmethodID functionId = AndroidUtilities::getStaticMethodId(*jniEnv, *javaClassOceanUSBManager_, "enumerateDevices", "(I)Ljava/util/List;");
 
 	if (functionId == nullptr)
 	{
@@ -115,7 +115,7 @@ bool OceanUSBManager::enumerateDevices(JNIEnv* jniEnv, DeviceDescriptors& device
 		deviceClassInt = int(deviceClass);
 	}
 
-	const ScopedJObject resultList(*jniEnv, jniEnv->CallStaticObjectMethod(*javaClassOceanUSBManager_, functionId, deviceClassInt));
+	const ScopedJObject resultList(AndroidUtilities::callStaticObjectMethod(*jniEnv, *javaClassOceanUSBManager_, functionId, deviceClassInt));
 
 	if (!resultList)
 	{
@@ -128,9 +128,9 @@ bool OceanUSBManager::enumerateDevices(JNIEnv* jniEnv, DeviceDescriptors& device
 		return false;
 	}
 
-	const jmethodID functionIdGetProductName = jniEnv->GetStaticMethodID(*javaClassOceanUSBManager_, "getProductName", "(Ljava/lang/String;)Ljava/lang/String;");
-	const jmethodID functionIdGetManufacturerName = jniEnv->GetStaticMethodID(*javaClassOceanUSBManager_, "getManufacturerName", "(Ljava/lang/String;)Ljava/lang/String;");
-	const jmethodID functionIdGetProductDetails = jniEnv->GetStaticMethodID(*javaClassOceanUSBManager_, "getProductDetails","(Ljava/lang/String;)Ljava/util/List;");
+	const jmethodID functionIdGetProductName = AndroidUtilities::getStaticMethodId(*jniEnv, *javaClassOceanUSBManager_, "getProductName", "(Ljava/lang/String;)Ljava/lang/String;");
+	const jmethodID functionIdGetManufacturerName = AndroidUtilities::getStaticMethodId(*jniEnv, *javaClassOceanUSBManager_, "getManufacturerName", "(Ljava/lang/String;)Ljava/lang/String;");
+	const jmethodID functionIdGetProductDetails = AndroidUtilities::getStaticMethodId(*jniEnv, *javaClassOceanUSBManager_, "getProductDetails", "(Ljava/lang/String;)Ljava/util/List;");
 
 	if (functionIdGetProductName == nullptr || functionIdGetManufacturerName == nullptr || functionIdGetProductDetails == nullptr)
 	{
@@ -144,9 +144,9 @@ bool OceanUSBManager::enumerateDevices(JNIEnv* jniEnv, DeviceDescriptors& device
 		const ScopedJString jDeviceName(*jniEnv, AndroidUtilities::toJavaString(jniEnv, deviceName));
 		ocean_assert(jDeviceName);
 
-		const ScopedJString jManufacturerName(*jniEnv, jstring(jniEnv->CallStaticObjectMethod(*javaClassOceanUSBManager_, functionIdGetManufacturerName, jobject(*jDeviceName))));
-		const ScopedJString jProductName(*jniEnv, jstring(jniEnv->CallStaticObjectMethod(*javaClassOceanUSBManager_, functionIdGetProductName, jobject(*jDeviceName))));
-		const ScopedJString jProductDetails(*jniEnv, jstring(jniEnv->CallStaticObjectMethod(*javaClassOceanUSBManager_, functionIdGetProductDetails, jobject(*jDeviceName))));
+		const ScopedJString jManufacturerName(AndroidUtilities::callStaticObjectMethod<jstring>(*jniEnv, *javaClassOceanUSBManager_, functionIdGetManufacturerName, jobject(*jDeviceName)));
+		const ScopedJString jProductName(AndroidUtilities::callStaticObjectMethod<jstring>(*jniEnv, *javaClassOceanUSBManager_, functionIdGetProductName, jobject(*jDeviceName)));
+		const ScopedJString jProductDetails(AndroidUtilities::callStaticObjectMethod<jstring>(*jniEnv, *javaClassOceanUSBManager_, functionIdGetProductDetails, jobject(*jDeviceName)));
 
 		if (!jProductDetails)
 		{
@@ -230,7 +230,7 @@ bool OceanUSBManager::hasPermission(JNIEnv* jniEnv, const std::string& deviceNam
 		return false;
 	}
 
-	const jmethodID functionId = jniEnv->GetStaticMethodID(*javaClassOceanUSBManager_, "hasPermission", "(Ljava/lang/String;)I");
+	const jmethodID functionId = AndroidUtilities::getStaticMethodId(*jniEnv, *javaClassOceanUSBManager_, "hasPermission", "(Ljava/lang/String;)I");
 
 	if (functionId == nullptr)
 	{
@@ -240,7 +240,14 @@ bool OceanUSBManager::hasPermission(JNIEnv* jniEnv, const std::string& deviceNam
 	const ScopedJString jDeviceName(*jniEnv, AndroidUtilities::toJavaString(jniEnv, deviceName));
 	ocean_assert(jDeviceName);
 
-	const jint result = jniEnv->CallStaticIntMethod(*javaClassOceanUSBManager_, functionId, jobject(*jDeviceName));
+	// a thrown exception makes the call return 0, which is the value for a denied permission, so that the result must not be interpreted before the call is known to have succeeded
+
+	int32_t result = 0;
+
+	if (!AndroidUtilities::callStaticIntMethod(*jniEnv, *javaClassOceanUSBManager_, functionId, result, jobject(*jDeviceName)))
+	{
+		return false;
+	}
 
 	if (result == 1)
 	{
@@ -273,7 +280,7 @@ OceanUSBManager::ScopedPermissionSubscription OceanUSBManager::requestPermission
 		return ScopedPermissionSubscription();
 	}
 
-	const jmethodID functionId = jniEnv->GetStaticMethodID(*javaClassOceanUSBManager_, "requestPermission", "(Ljava/lang/String;)Z");
+	const jmethodID functionId = AndroidUtilities::getStaticMethodId(*jniEnv, *javaClassOceanUSBManager_, "requestPermission", "(Ljava/lang/String;)Z");
 
 	if (functionId == nullptr)
 	{
@@ -300,7 +307,9 @@ OceanUSBManager::ScopedPermissionSubscription OceanUSBManager::requestPermission
 		iPermission->second.emplace_back(uniqueRequestId, std::move(permissionCallback));
 	}
 
-	if (!jniEnv->CallStaticBooleanMethod(*javaClassOceanUSBManager_, functionId, jobject(*jDeviceName)))
+	bool requestSucceeded = false;
+
+	if (!AndroidUtilities::callStaticBooleanMethod(*jniEnv, *javaClassOceanUSBManager_, functionId, requestSucceeded, jobject(*jDeviceName)) || !requestSucceeded)
 	{
 		if (permissionCallbackWasValid)
 		{
@@ -329,7 +338,7 @@ bool OceanUSBManager::openDevice(JNIEnv* jniEnv, const std::string& deviceName, 
 		return false;
 	}
 
-	const jmethodID functionId = jniEnv->GetStaticMethodID(*javaClassOceanUSBManager_, "openDevice", "(Ljava/lang/String;)I");
+	const jmethodID functionId = AndroidUtilities::getStaticMethodId(*jniEnv, *javaClassOceanUSBManager_, "openDevice", "(Ljava/lang/String;)I");
 
 	if (functionId == nullptr)
 	{
@@ -339,7 +348,14 @@ bool OceanUSBManager::openDevice(JNIEnv* jniEnv, const std::string& deviceName, 
 	const ScopedJString jDeviceName(*jniEnv, AndroidUtilities::toJavaString(jniEnv, deviceName));
 	ocean_assert(jDeviceName);
 
-	const jint result = jniEnv->CallStaticIntMethod(*javaClassOceanUSBManager_, functionId, jobject(*jDeviceName));
+	// a thrown exception makes the call return 0, which is neither the error value -1 nor a valid file descriptor, so that the result must not be interpreted before the call is known to have succeeded
+
+	int32_t result = 0;
+
+	if (!AndroidUtilities::callStaticIntMethod(*jniEnv, *javaClassOceanUSBManager_, functionId, result, jobject(*jDeviceName)))
+	{
+		return false;
+	}
 
 	if (result == -1)
 	{
@@ -366,7 +382,7 @@ bool OceanUSBManager::closeDevice(JNIEnv* jniEnv, const std::string& deviceName)
 		return false;
 	}
 
-	const jmethodID functionId = jniEnv->GetStaticMethodID(*javaClassOceanUSBManager_, "closeDevice", "(Ljava/lang/String;)Z");
+	const jmethodID functionId = AndroidUtilities::getStaticMethodId(*jniEnv, *javaClassOceanUSBManager_, "closeDevice", "(Ljava/lang/String;)Z");
 
 	if (functionId == nullptr)
 	{
@@ -376,7 +392,14 @@ bool OceanUSBManager::closeDevice(JNIEnv* jniEnv, const std::string& deviceName)
 	const ScopedJString jDeviceName(*jniEnv, AndroidUtilities::toJavaString(jniEnv, deviceName));
 	ocean_assert(jDeviceName);
 
-	return jniEnv->CallStaticBooleanMethod(*javaClassOceanUSBManager_, functionId, jobject(*jDeviceName));
+	bool closeSucceeded = false;
+
+	if (!AndroidUtilities::callStaticBooleanMethod(*jniEnv, *javaClassOceanUSBManager_, functionId, closeSucceeded, jobject(*jDeviceName)))
+	{
+		return false;
+	}
+
+	return closeSucceeded;
 }
 
 void OceanUSBManager::onDevicePermission(const std::string& deviceName, bool granted)
