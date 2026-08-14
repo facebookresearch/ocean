@@ -58,7 +58,7 @@ bool ResourceManager::initialize(JavaVM* javaVM, jobject activity, AAssetManager
 	}
 	else
 	{
-		const ScopedJClass activityClass(scopedJNIEnvironment, scopedJNIEnvironment.jniEnv()->GetObjectClass(activity));
+		const ScopedJClass activityClass(scopedJNIEnvironment, scopedJNIEnvironment->GetObjectClass(activity));
 
 		if (!activityClass.isValid())
 		{

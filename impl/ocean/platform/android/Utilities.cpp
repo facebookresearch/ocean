@@ -434,9 +434,9 @@ bool Utilities::manifestVersion(JavaVM* javaVM, jobject activity, int& versionCo
 		return false;
 	}
 
-	ocean_assert(scopedJNIEnvironment.jniEnv()->ExceptionCheck() == JNI_FALSE);
+	ocean_assert(scopedJNIEnvironment->ExceptionCheck() == JNI_FALSE);
 
-	const ScopedJClass activityClass(scopedJNIEnvironment, scopedJNIEnvironment.jniEnv()->GetObjectClass(activity));
+	const ScopedJClass activityClass(scopedJNIEnvironment, scopedJNIEnvironment->GetObjectClass(activity));
 
 	if (!activityClass.isValid())
 	{
@@ -513,9 +513,9 @@ bool Utilities::manifestVersion(JavaVM* javaVM, jobject activity, int& versionCo
 		return false;
 	}
 
-	versionCode = scopedJNIEnvironment.jniEnv()->GetIntField(*packageInfo, versionCodeFieldId);
+	versionCode = scopedJNIEnvironment->GetIntField(*packageInfo, versionCodeFieldId);
 
-	const ScopedJString versionNameFieldValue(scopedJNIEnvironment, (jstring)(scopedJNIEnvironment.jniEnv()->GetObjectField(*packageInfo, versionNameFieldId)));
+	const ScopedJString versionNameFieldValue(scopedJNIEnvironment, (jstring)(scopedJNIEnvironment->GetObjectField(*packageInfo, versionNameFieldId)));
 
 	if (!versionNameFieldValue)
 	{
