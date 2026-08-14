@@ -1369,7 +1369,6 @@ bool Utilities::currentWifiSsid(JNIEnv* env, jobject activity, std::string& ssid
 
 	// The SSID will will be returned surrounded by double quotation marks (e.g. "metaguest"). Otherwise, it is returned as a string of hex digits.
 	const std::string paddedSsid = toAString(env, jSsidString);
-	ocean_assert(!paddedSsid.empty());
 
 	if (paddedSsid.size() >= 2 && paddedSsid.front() == '"' && paddedSsid.back() == '"')
 	{
@@ -1379,8 +1378,6 @@ bool Utilities::currentWifiSsid(JNIEnv* env, jobject activity, std::string& ssid
 	{
 		ssid = paddedSsid;
 	}
-
-	ocean_assert(!ssid.empty());
 
 	return true;
 }
