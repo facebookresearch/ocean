@@ -10,6 +10,22 @@
 namespace Ocean
 {
 
+#ifdef OCEAN_DEBUG
+
+namespace
+{
+
+bool hasAccurateRotation(const Rotation& rotation, const Vector3& reference, const Vector3& offset)
+{
+	const VectorD3 rotatedReference(rotation * reference);
+
+	return NumericD::rad2deg(rotatedReference.angle(VectorD3(offset))) <= 0.001;
+}
+
+}
+
+#endif // OCEAN_DEBUG
+
 SphericalExponentialMap::SphericalExponentialMap(const Vector3& reference, const Vector3& offset)
 {
 	ocean_assert(Numeric::isEqual(reference.length(), 1));
@@ -42,7 +58,7 @@ SphericalExponentialMap::SphericalExponentialMap(const Vector3& reference, const
 			// we have no rotation between both vectors
 			mapRotationAxis = Vector2(0, 0);
 
-			ocean_assert(Numeric::rad2deg((rotation() * reference).angle(offset)) <= 0.001);
+			ocean_assert(hasAccurateRotation(rotation(), reference, offset));
 		}
 		else
 		{
@@ -60,50 +76,52 @@ SphericalExponentialMap::SphericalExponentialMap(const Vector3& reference, const
 
 			mapRotationAxis = Vector2(axis[0], axis[2]) * Numeric::pi();
 
-			ocean_assert(Numeric::rad2deg((rotation() * reference).angle(offset)) <= 0.001);
+			ocean_assert(hasAccurateRotation(rotation(), reference, offset));
 		}
 	}
 	else
 	{
-		const Vector3 bisect(reference + offset);
-		ocean_assert(!bisect.isNull() && Numeric::isEqualEps(bisect * normal));
-
-		/// the normal of the plane rop
-		const Vector3 planeNormal(bisect.cross(normal));
+		// For unit vectors, the equal-distance plane has normal reference - offset; computing it directly avoids cancellation near anti-parallel inputs.
+		const Vector3 planeNormal(reference - offset);
 		ocean_assert(!planeNormal.isNull());
 
 		/// the rotation axis lying in rop and lying in xzp
 		Vector3 axis(planeNormal.cross(Vector3(0, 1, 0)));
-		ocean_assert(!axis.isNull());
-		axis.normalize();
+
+		if (!axis.normalize())
+		{
+			// reference and offset differ only along the y-axis, so that their shared projection into the X-Z plane is the rotation axis
+			axis = Vector3(reference[0] + offset[0], 0, reference[2] + offset[2]);
+			axis.normalize();
+			ocean_assert(axis.isUnit());
+		}
 
 		ocean_assert(Numeric::isEqual(Numeric::rad2deg(reference.angle(axis)), Numeric::rad2deg(offset.angle(axis)), Scalar(0.001)));
 		ocean_assert(Numeric::isEqualEps(axis[1]));
 
 		const Vector3 pReference(axis.cross(reference).cross(axis));
 		const Vector3 pOffset(axis.cross(offset.cross(axis)));
+		const Vector3 pCross(pReference.cross(pOffset));
 
-		const Scalar angle = pReference.angle(pOffset);
+		const Scalar angle = Numeric::atan2(pCross.length(), pReference * pOffset);
 		ocean_assert(Numeric::isNotEqualEps(angle));
 
-		if (pReference.cross(pOffset) * axis < 0)
+		if (pCross * axis < 0)
 		{
 			axis = -axis;
 		}
 
 #ifdef OCEAN_DEBUG
-		Rotation debugRotation(axis, angle);
-		const Vector3 rOffset = debugRotation * reference;
-		const Scalar debugAngle = Numeric::rad2deg(rOffset.angle(offset));
-		ocean_assert(debugAngle <= 0.001);
+		const Rotation debugRotation(axis, angle);
+		ocean_assert(hasAccurateRotation(debugRotation, reference, offset));
 #endif
 
 		mapRotationAxis = Vector2(axis[0], axis[2]) * angle;
 
-		ocean_assert(Numeric::rad2deg((rotation() * reference).angle(offset)) <= 0.001);
+		ocean_assert(hasAccurateRotation(rotation(), reference, offset));
 	}
 
-	ocean_assert(Numeric::rad2deg((rotation() * reference).angle(offset)) <= 0.001);
+	ocean_assert(hasAccurateRotation(rotation(), reference, offset));
 }
 
 }

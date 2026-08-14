@@ -71,6 +71,24 @@ bool TestSphericalExponentialMap::testConstructorFromVectors(const double testDu
 		OCEAN_EXPECT_TRUE(validation, verifyRotation(SphericalExponentialMap(offset, reference), offset, reference));
 	}
 
+	{
+		// the vectors differ only along the y-axis, so that their rotation axis is underdetermined by the plane intersection
+
+		const Vector3 reference(Vector3(Scalar(0.6), Scalar(0.8), 0).normalized());
+		const Vector3 offset(Vector3(Scalar(0.6), Scalar(-0.8), 0).normalized());
+
+		OCEAN_EXPECT_TRUE(validation, verifyRotation(SphericalExponentialMap(reference, offset), reference, offset));
+	}
+
+	{
+		// the projected vectors are nearly anti-parallel, for which inverse cosine loses precision in single precision
+
+		const Vector3 reference(Vector3(Scalar(-0.7858555317), Scalar(-0.6534635425), Scalar(-0.2285202742)).normalized());
+		const Vector3 offset(Vector3(Scalar(0.6944842339), Scalar(0.6908613443), Scalar(-0.5166417956)).normalized());
+
+		OCEAN_EXPECT_TRUE(validation, verifyRotation(SphericalExponentialMap(reference, offset), reference, offset));
+	}
+
 	const Timestamp startTimestamp(true);
 
 	do
@@ -115,9 +133,9 @@ bool TestSphericalExponentialMap::verifyRotation(const SphericalExponentialMap& 
 {
 	ocean_assert(Numeric::isEqual(reference.length(), 1) && Numeric::isEqual(offset.length(), 1));
 
-	const Vector3 rotatedReference(sphericalExponentialMap.rotation() * reference);
+	const VectorD3 rotatedReference(sphericalExponentialMap.rotation() * reference);
 
-	return rotatedReference.isEqual(offset, Numeric::weakEps());
+	return NumericD::rad2deg(rotatedReference.angle(VectorD3(offset))) <= 0.001;
 }
 
 }
