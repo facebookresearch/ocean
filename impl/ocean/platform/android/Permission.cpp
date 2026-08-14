@@ -34,44 +34,53 @@ bool Permission::hasPermission(JavaVM* javaVM, jobject activity, const std::stri
 
 	const std::string androidPermission = translate ? translatePermission(scopedJNIEnvironment.jniEnv(), permission) : permission;
 
-	const ScopedJClass javaClassPackageManager(scopedJNIEnvironment, scopedJNIEnvironment.jniEnv()->FindClass("android/content/pm/PackageManager"));
+	JNIEnv& jniEnvironment = *scopedJNIEnvironment.jniEnv();
+
+	const ScopedJClass javaClassPackageManager(Utilities::findClass(jniEnvironment, "android/content/pm/PackageManager"));
 
 	if (!javaClassPackageManager.isValid())
 	{
 		return false;
 	}
 
-	jfieldID fieldId = scopedJNIEnvironment.jniEnv()->GetStaticFieldID(*javaClassPackageManager, "PERMISSION_GRANTED", "I");
+	const jfieldID fieldId = Utilities::getStaticFieldId(jniEnvironment, *javaClassPackageManager, "PERMISSION_GRANTED", "I");
 
 	if (fieldId == nullptr)
 	{
 		return false;
 	}
 
-	const jint permissionGrantedValue = scopedJNIEnvironment.jniEnv()->GetStaticIntField(*javaClassPackageManager, fieldId);
+	const jint permissionGrantedValue = jniEnvironment.GetStaticIntField(*javaClassPackageManager, fieldId);
 
-	const ScopedJClass javaClassContext(scopedJNIEnvironment, scopedJNIEnvironment.jniEnv()->FindClass("android/content/Context"));
+	const ScopedJClass javaClassContext(Utilities::findClass(jniEnvironment, "android/content/Context"));
 
 	if (!javaClassContext.isValid())
 	{
 		return false;
 	}
 
-	jmethodID methodId = scopedJNIEnvironment.jniEnv()->GetMethodID(*javaClassContext, "checkSelfPermission", "(Ljava/lang/String;)I");
+	const jmethodID methodId = Utilities::getMethodId(jniEnvironment, *javaClassContext, "checkSelfPermission", "(Ljava/lang/String;)I");
 
 	if (methodId == nullptr)
 	{
 		return false;
 	}
 
-	const ScopedJString jStringAndroidPermission(scopedJNIEnvironment, Utilities::toJavaString(scopedJNIEnvironment.jniEnv(), androidPermission));
+	const ScopedJString jStringAndroidPermission(jniEnvironment, Utilities::toJavaString(&jniEnvironment, androidPermission));
 
 	if (!jStringAndroidPermission.isValid())
 	{
 		return false;
 	}
 
-	const jint permissionResult = scopedJNIEnvironment.jniEnv()->CallIntMethod(activity, methodId, *jStringAndroidPermission);
+	// a thrown exception makes checkSelfPermission() return 0, which is the value of PERMISSION_GRANTED, so that the result must not be interpreted before the call is known to have succeeded
+
+	int32_t permissionResult = 0;
+
+	if (!Utilities::callIntMethod(jniEnvironment, activity, methodId, permissionResult, *jStringAndroidPermission))
+	{
+		return false;
+	}
 
 	state = permissionResult == permissionGrantedValue;
 
@@ -96,7 +105,18 @@ bool Permission::requestPermissions(JavaVM* javaVM, jobject activity, const Stri
 		return false;
 	}
 
-	const ScopedJObjectArray permissionArray (scopedJNIEnvironment, scopedJNIEnvironment.jniEnv()->NewObjectArray(jsize(permissions.size()), scopedJNIEnvironment.jniEnv()->FindClass("java/lang/String"), scopedJNIEnvironment.jniEnv()->NewStringUTF("")));
+	JNIEnv& jniEnvironment = *scopedJNIEnvironment.jniEnv();
+
+	const ScopedJClass javaClassString(Utilities::findClass(jniEnvironment, "java/lang/String"));
+
+	if (!javaClassString.isValid())
+	{
+		return false;
+	}
+
+	const ScopedJString emptyString(jniEnvironment, jniEnvironment.NewStringUTF(""));
+
+	const ScopedJObjectArray permissionArray(jniEnvironment, jniEnvironment.NewObjectArray(jsize(permissions.size()), *javaClassString, *emptyString));
 
 	if (!permissionArray.isValid())
 	{
@@ -105,33 +125,33 @@ bool Permission::requestPermissions(JavaVM* javaVM, jobject activity, const Stri
 
 	for (size_t n = 0; n < permissions.size(); ++n)
 	{
-		const std::string androidPermission = translate ? translatePermission(scopedJNIEnvironment.jniEnv(), permissions[n]) : permissions[n];
+		const std::string androidPermission = translate ? translatePermission(&jniEnvironment, permissions[n]) : permissions[n];
 
 		if (androidPermission.empty())
 		{
 			return false;
 		}
 
-		scopedJNIEnvironment.jniEnv()->SetObjectArrayElement(*permissionArray, jsize(n), Utilities::toJavaString(scopedJNIEnvironment.jniEnv(), androidPermission));
+		const ScopedJString jStringAndroidPermission(jniEnvironment, Utilities::toJavaString(&jniEnvironment, androidPermission));
+
+		jniEnvironment.SetObjectArrayElement(*permissionArray, jsize(n), *jStringAndroidPermission);
 	}
 
-	const ScopedJClass javaClassActivity(scopedJNIEnvironment, scopedJNIEnvironment.jniEnv()->FindClass("android/app/Activity"));
+	const ScopedJClass javaClassActivity(Utilities::findClass(jniEnvironment, "android/app/Activity"));
 
 	if (!javaClassActivity.isValid())
 	{
 		return false;
 	}
 
-	jmethodID methodId = scopedJNIEnvironment.jniEnv()->GetMethodID(*javaClassActivity, "requestPermissions", "([Ljava/lang/String;I)V");
+	const jmethodID methodId = Utilities::getMethodId(jniEnvironment, *javaClassActivity, "requestPermissions", "([Ljava/lang/String;I)V");
 
 	if (methodId == nullptr)
 	{
 		return false;
 	}
 
-	scopedJNIEnvironment.jniEnv()->CallVoidMethod(activity, methodId, *permissionArray, 0);
-
-	return true;
+	return Utilities::callVoidMethod(jniEnvironment, activity, methodId, *permissionArray, 0);
 }
 
 std::string Permission::translatePermission(JNIEnv* jniEnv, const std::string& permission)
@@ -139,28 +159,28 @@ std::string Permission::translatePermission(JNIEnv* jniEnv, const std::string& p
 	ocean_assert(jniEnv != nullptr);
 	ocean_assert(!permission.empty());
 
-	jclass javaClassManifestPermission = jniEnv->FindClass("android/Manifest$permission");
+	const ScopedJClass javaClassManifestPermission(Utilities::findClass(*jniEnv, "android/Manifest$permission"));
 
-	if (javaClassManifestPermission == nullptr)
+	if (!javaClassManifestPermission.isValid())
 	{
 		return std::string();
 	}
 
-	jfieldID fieldId = jniEnv->GetStaticFieldID(javaClassManifestPermission, permission.c_str(), "Ljava/lang/String;");
+	const jfieldID fieldId = Utilities::getStaticFieldId(*jniEnv, *javaClassManifestPermission, permission, "Ljava/lang/String;");
 
 	if (fieldId == nullptr)
 	{
 		return std::string();
 	}
 
-	jstring fieldValue = (jstring)(jniEnv->GetStaticObjectField(javaClassManifestPermission, fieldId));
+	const ScopedJString fieldValue(*jniEnv, jstring(jniEnv->GetStaticObjectField(*javaClassManifestPermission, fieldId)));
 
-	if (fieldValue == nullptr)
+	if (!fieldValue.isValid())
 	{
 		return std::string();
 	}
 
-	return Utilities::toAString(jniEnv, fieldValue);
+	return Utilities::toAString(jniEnv, *fieldValue);
 }
 
 }
