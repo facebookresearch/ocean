@@ -1596,14 +1596,14 @@ bool Utilities::triggerVibration(JNIEnv* env, jobject activity, unsigned int int
 	ocean_assert(intensity <= 2u);
 	ocean_assert(duration >= 1u);
 
-	const ScopedJClass jContextClass(*env, env->FindClass("android/content/Context"));
+	const ScopedJClass jContextClass(findClass(*env, "android/content/Context"));
 
 	if (!jContextClass.isValid())
 	{
 		return false;
 	}
 
-	const jfieldID jVibratorServiceFieldId = env->GetStaticFieldID(*jContextClass, "VIBRATOR_SERVICE", "Ljava/lang/String;");
+	const jfieldID jVibratorServiceFieldId = getStaticFieldId(*env, *jContextClass, "VIBRATOR_SERVICE", "Ljava/lang/String;");
 
 	if (jVibratorServiceFieldId == nullptr)
 	{
@@ -1619,35 +1619,40 @@ bool Utilities::triggerVibration(JNIEnv* env, jobject activity, unsigned int int
 		return false;
 	}
 
-    jmethodID jGetSystemServiceMethodId = env->GetMethodID(*jActivityClass, "getSystemService", "(Ljava/lang/String;)Ljava/lang/Object;");
+    jmethodID jGetSystemServiceMethodId = getMethodId(*env, *jActivityClass, "getSystemService", "(Ljava/lang/String;)Ljava/lang/Object;");
 
 	if (jGetSystemServiceMethodId == nullptr)
 	{
 		return false;
 	}
 
-	const ScopedJObject jVibratorServiceObject(*env, env->CallObjectMethod(activity, jGetSystemServiceMethodId, *jVibratorServiceString));
+	const ScopedJObject jVibratorServiceObject(callObjectMethod(*env, activity, jGetSystemServiceMethodId, *jVibratorServiceString));
 
 	if (!jVibratorServiceObject)
 	{
 		return false;
 	}
 
-	const ScopedJClass jVibratorClass(*env, env->FindClass("android/os/Vibrator"));
+	const ScopedJClass jVibratorClass(findClass(*env, "android/os/Vibrator"));
 
 	if (!jVibratorClass)
 	{
 		return false;
 	}
 
-	const jmethodID jHasVibratorMethodId = env->GetMethodID(*jVibratorClass, "hasVibrator", "()Z");
+	const jmethodID jHasVibratorMethodId = getMethodId(*env, *jVibratorClass, "hasVibrator", "()Z");
 
 	if (jHasVibratorMethodId == nullptr)
 	{
 		return false;
 	}
 
-	const bool hasVibrator = env->CallBooleanMethod(*jVibratorServiceObject, jHasVibratorMethodId);
+	bool hasVibrator = false;
+
+	if (!callBooleanMethod(*env, *jVibratorServiceObject, jHasVibratorMethodId, hasVibrator))
+	{
+		return false;
+	}
 
 	if (!hasVibrator)
 	{
@@ -1663,14 +1668,14 @@ bool Utilities::triggerVibration(JNIEnv* env, jobject activity, unsigned int int
 
     if (version >= 26u)
 	{
-		const ScopedJClass jVibrationEffectClass(*env, env->FindClass("android/os/VibrationEffect"));
+		const ScopedJClass jVibrationEffectClass(findClass(*env, "android/os/VibrationEffect"));
 
 		if (!jVibrationEffectClass)
 		{
 			return false;
 		}
 
-        const jmethodID jCreateOneShotMethodId = env->GetStaticMethodID(*jVibrationEffectClass, "createOneShot", "(JI)Landroid/os/VibrationEffect;");
+        const jmethodID jCreateOneShotMethodId = getStaticMethodId(*env, *jVibrationEffectClass, "createOneShot", "(JI)Landroid/os/VibrationEffect;");
 
 		if (jCreateOneShotMethodId == nullptr)
 		{
@@ -1688,32 +1693,38 @@ bool Utilities::triggerVibration(JNIEnv* env, jobject activity, unsigned int int
 			amplitude = 100;
 		}
 
-		const ScopedJObject jVibrationEffectObject(*env, env->CallStaticObjectMethod(*jVibrationEffectClass, jCreateOneShotMethodId, jlong(duration), amplitude));
+		const ScopedJObject jVibrationEffectObject(callStaticObjectMethod(*env, *jVibrationEffectClass, jCreateOneShotMethodId, jlong(duration), amplitude));
 
 		if (!jVibrationEffectObject)
 		{
 			return false;
 		}
 
-		const jmethodID jVibrateMethodId = env->GetMethodID(*jVibratorClass, "vibrate", "(Landroid/os/VibrationEffect;)V");
+		const jmethodID jVibrateMethodId = getMethodId(*env, *jVibratorClass, "vibrate", "(Landroid/os/VibrationEffect;)V");
 
 		if (jVibrateMethodId == nullptr)
 		{
 			return false;
 		}
 
-		env->CallVoidMethod(*jVibratorServiceObject, jVibrateMethodId, *jVibrationEffectObject);
+		if (!callVoidMethod(*env, *jVibratorServiceObject, jVibrateMethodId, *jVibrationEffectObject))
+		{
+			return false;
+		}
     }
 	else
 	{
-    	const jmethodID jVibrateMethodId = env->GetMethodID(*jVibratorClass, "vibrate", "(J)V");
+    	const jmethodID jVibrateMethodId = getMethodId(*env, *jVibratorClass, "vibrate", "(J)V");
 
 		if (jVibrateMethodId == nullptr)
 		{
 			return false;
 		}
 
-        env->CallVoidMethod(*jVibratorServiceObject, jVibrateMethodId, jlong(duration));
+		if (!callVoidMethod(*env, *jVibratorServiceObject, jVibrateMethodId, jlong(duration)))
+		{
+			return false;
+		}
     }
 
 	return true;
@@ -1749,26 +1760,26 @@ bool Utilities::displayRefreshRate(JNIEnv* env, jobject activity, float& refresh
 			return false;
 		}
 
-		jmethodID jGetDisplayMethodId = env->GetMethodID(*jActivityClass, "getDisplay", "()Landroid/view/Display;");
+		jmethodID jGetDisplayMethodId = getMethodId(*env, *jActivityClass, "getDisplay", "()Landroid/view/Display;");
 
 		if (jGetDisplayMethodId == nullptr)
 		{
 			return false;
 		}
 
-		jDisplayObject = ScopedJObject(*env, env->CallObjectMethod(activity, jGetDisplayMethodId));
+		jDisplayObject = ScopedJObject(callObjectMethod(*env, activity, jGetDisplayMethodId));
 	}
 	else
 	{
 		// API < 30: Use WindowManager.getDefaultDisplay()
-		const ScopedJClass jContextClass(*env, env->FindClass("android/content/Context"));
+		const ScopedJClass jContextClass(findClass(*env, "android/content/Context"));
 
 		if (!jContextClass.isValid())
 		{
 			return false;
 		}
 
-		jfieldID jWindowServiceFieldId = env->GetStaticFieldID(*jContextClass, "WINDOW_SERVICE", "Ljava/lang/String;");
+		jfieldID jWindowServiceFieldId = getStaticFieldId(*env, *jContextClass, "WINDOW_SERVICE", "Ljava/lang/String;");
 
 		if (jWindowServiceFieldId == nullptr)
 		{
@@ -1782,35 +1793,35 @@ bool Utilities::displayRefreshRate(JNIEnv* env, jobject activity, float& refresh
 			return false;
 		}
 
-		jmethodID jGetSystemServiceMethodId = env->GetMethodID(*jContextClass, "getSystemService", "(Ljava/lang/String;)Ljava/lang/Object;");
+		jmethodID jGetSystemServiceMethodId = getMethodId(*env, *jContextClass, "getSystemService", "(Ljava/lang/String;)Ljava/lang/Object;");
 
 		if (jGetSystemServiceMethodId == nullptr)
 		{
 			return false;
 		}
 
-		const ScopedJObject jWindowManagerObject(*env, env->CallObjectMethod(activity, jGetSystemServiceMethodId, *jWindowServiceString));
+		const ScopedJObject jWindowManagerObject(callObjectMethod(*env, activity, jGetSystemServiceMethodId, *jWindowServiceString));
 
 		if (!jWindowManagerObject.isValid())
 		{
 			return false;
 		}
 
-		const ScopedJClass jWindowManagerClass(*env, env->FindClass("android/view/WindowManager"));
+		const ScopedJClass jWindowManagerClass(findClass(*env, "android/view/WindowManager"));
 
 		if (!jWindowManagerClass.isValid())
 		{
 			return false;
 		}
 
-		jmethodID jGetDefaultDisplayMethodId = env->GetMethodID(*jWindowManagerClass, "getDefaultDisplay", "()Landroid/view/Display;");
+		jmethodID jGetDefaultDisplayMethodId = getMethodId(*env, *jWindowManagerClass, "getDefaultDisplay", "()Landroid/view/Display;");
 
 		if (jGetDefaultDisplayMethodId == nullptr)
 		{
 			return false;
 		}
 
-		jDisplayObject = ScopedJObject(*env, env->CallObjectMethod(*jWindowManagerObject, jGetDefaultDisplayMethodId));
+		jDisplayObject = ScopedJObject(callObjectMethod(*env, *jWindowManagerObject, jGetDefaultDisplayMethodId));
 	}
 
 	if (!jDisplayObject.isValid())
@@ -1820,21 +1831,21 @@ bool Utilities::displayRefreshRate(JNIEnv* env, jobject activity, float& refresh
 	}
 
 	// Get the display mode: display.getMode()
-	const ScopedJClass jDisplayClass(*env, env->FindClass("android/view/Display"));
+	const ScopedJClass jDisplayClass(findClass(*env, "android/view/Display"));
 
 	if (!jDisplayClass.isValid())
 	{
 		return false;
 	}
 
-	jmethodID jGetModeMethodId = env->GetMethodID(*jDisplayClass, "getMode", "()Landroid/view/Display$Mode;");
+	jmethodID jGetModeMethodId = getMethodId(*env, *jDisplayClass, "getMode", "()Landroid/view/Display$Mode;");
 
 	if (jGetModeMethodId == nullptr)
 	{
 		return false;
 	}
 
-	const ScopedJObject jDisplayModeObject(*env, env->CallObjectMethod(*jDisplayObject, jGetModeMethodId));
+	const ScopedJObject jDisplayModeObject(callObjectMethod(*env, *jDisplayObject, jGetModeMethodId));
 
 	if (!jDisplayModeObject.isValid())
 	{
@@ -1842,21 +1853,24 @@ bool Utilities::displayRefreshRate(JNIEnv* env, jobject activity, float& refresh
 	}
 
 	// Get the refresh rate: mode.getRefreshRate()
-	const ScopedJClass jDisplayModeClass(*env, env->FindClass("android/view/Display$Mode"));
+	const ScopedJClass jDisplayModeClass(findClass(*env, "android/view/Display$Mode"));
 
 	if (!jDisplayModeClass.isValid())
 	{
 		return false;
 	}
 
-	jmethodID jGetRefreshRateMethodId = env->GetMethodID(*jDisplayModeClass, "getRefreshRate", "()F");
+	jmethodID jGetRefreshRateMethodId = getMethodId(*env, *jDisplayModeClass, "getRefreshRate", "()F");
 
 	if (jGetRefreshRateMethodId == nullptr)
 	{
 		return false;
 	}
 
-	refreshRateHz = env->CallFloatMethod(*jDisplayModeObject, jGetRefreshRateMethodId);
+	if (!callFloatMethod(*env, *jDisplayModeObject, jGetRefreshRateMethodId, refreshRateHz))
+	{
+		return false;
+	}
 
 	return true;
 }
