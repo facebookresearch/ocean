@@ -7,11 +7,6 @@
 
 #include "ocean/platform/android/NativeInterfaceManager.h"
 
-#ifdef __GNUC__
-	#include <sys/syscall.h>
-	#include <unistd.h>
-#endif
-
 /**
  * The VM calls JNI_OnLoad when the native library is loaded.
  * @param vm Virtual machine object
@@ -36,6 +31,61 @@ namespace Platform
 namespace Android
 {
 
+NativeInterfaceManager::ScopedThreadAttachment::ScopedThreadAttachment(JavaVM& javaVM)
+{
+	JNIEnv* jniEnv = nullptr;
+
+	const jint result = javaVM.GetEnv((void**)(&jniEnv), JNI_VERSION_1_6);
+
+	if (result == JNI_OK)
+	{
+		// the thread is attached already, e.g., a thread created by Java, this object must not detach such a thread
+
+		jniEnv_ = jniEnv;
+
+		return;
+	}
+
+	if (result != JNI_EDETACHED)
+	{
+		Log::error() << "Failed to determine the JNI environment, GetEnv() returned " << result << "!";
+		return;
+	}
+
+	// the thread is a thread owned by Ocean, Java does not know this thread and does not control its lifetime,
+	// a daemon thread is not awaited when the virtual machine is destroyed, so that such a thread can never block the shutdown of the runtime
+
+	if (javaVM.AttachCurrentThreadAsDaemon(&jniEnv, nullptr) != JNI_OK)
+	{
+		Log::error() << "Failed to attach the current thread to the Java virtual machine!";
+		return;
+	}
+
+	attachedJavaVM_ = &javaVM;
+	jniEnv_ = jniEnv;
+}
+
+NativeInterfaceManager::ScopedThreadAttachment::~ScopedThreadAttachment()
+{
+	if (attachedJavaVM_ == nullptr)
+	{
+		return;
+	}
+
+	// the thread may have been detached by other code in the meantime, so that this object must not detach the thread a second time,
+	// 'GetEnv()' reads thread-local state of the runtime while 'DetachCurrentThread()' would modify global state which may be torn down already
+
+	JNIEnv* jniEnv = nullptr;
+
+	if (attachedJavaVM_->GetEnv((void**)(&jniEnv), JNI_VERSION_1_6) == JNI_OK)
+	{
+		attachedJavaVM_->DetachCurrentThread();
+	}
+
+	attachedJavaVM_ = nullptr;
+	jniEnv_ = nullptr;
+}
+
 NativeInterfaceManager::NativeInterfaceManager()
 {
 	// nothing to do here
@@ -43,61 +93,32 @@ NativeInterfaceManager::NativeInterfaceManager()
 
 NativeInterfaceManager::~NativeInterfaceManager()
 {
-	// nothing to do here
+	// this destructor is invoked during static de-initialization, on an arbitrary thread which may be detached already,
+	// therefore no JNI function must be invoked here, the global reference of the activity is released together with the process
 }
 
-JavaVM* NativeInterfaceManager::virtualMachine()
+JavaVM* NativeInterfaceManager::virtualMachine() const
 {
-	const ScopedLock scopedLock(lock_);
-
-	ocean_assert(virtualMachine_ != nullptr);
-
-	return virtualMachine_;
+	return virtualMachine_.load(std::memory_order_acquire);
 }
 
 JNIEnv* NativeInterfaceManager::environment()
 {
-	const ScopedLock scopedLock(lock_);
+	JavaVM* javaVM = virtualMachine();
 
-	if (!virtualMachine_)
+	if (javaVM == nullptr)
 	{
 		return nullptr;
 	}
 
-	const pid_t threadId = syscall(__NR_gettid);
+	// the object attaches the thread on demand and detaches the thread when the thread ends
 
-	const ThreadEnvironmentMap::const_iterator i = threadEnvironmentMap_.find(threadId);
-	if (i != threadEnvironmentMap_.end())
-	{
-		return i->second;
-	}
+	static thread_local ScopedThreadAttachment scopedThreadAttachment(*javaVM);
 
-	JNIEnv* environment = nullptr;
-	if (virtualMachine_->GetEnv((void**)&environment, JNI_VERSION_1_6) == JNI_EDETACHED)
-	{
-		if (virtualMachine_->AttachCurrentThread(&environment, nullptr) < 0)
-		{
-			Log::error() << "Failed to attach the environment to the current thread!";
-		}
-		else
-		{
-			Log::debug() << "Attached the environment to the current thread.";
-		}
-	}
-
-	if (environment)
-	{
-		threadEnvironmentMap_.insert(std::make_pair(threadId, environment));
-	}
-	else
-	{
-		Log::error() << "Failed to receive enviornment!";
-	}
-
-	return environment;
+	return scopedThreadAttachment.jniEnv(*javaVM);
 }
 
-jobject NativeInterfaceManager::currentActivity()
+jobject NativeInterfaceManager::currentActivity() const
 {
 	const ScopedLock scopedLock(lock_);
 
@@ -106,34 +127,83 @@ jobject NativeInterfaceManager::currentActivity()
 
 bool NativeInterfaceManager::setVirtualMachine(JavaVM* virtualMachine)
 {
-	ocean_assert(virtualMachine_ == nullptr);
+	ocean_assert(virtualMachine != nullptr);
 
-	const ScopedLock scopedLock(lock_);
-
-	if (!virtualMachine_)
+	if (virtualMachine == nullptr)
 	{
-#ifdef OCEAN_DEBUG
-		Log::info() << "Virtual machine assigned.";
-#endif
-
-		virtualMachine_ = virtualMachine;
-
-		return true;
+		return false;
 	}
 
-	return false;
+	// the virtual machine is set once, the first caller wins
+
+	JavaVM* expectedVirtualMachine = nullptr;
+
+	if (!virtualMachine_.compare_exchange_strong(expectedVirtualMachine, virtualMachine, std::memory_order_release, std::memory_order_acquire))
+	{
+		// Ocean's JNI_OnLoad() is a weak symbol, so that the same virtual machine may be provided several times, e.g., by several libraries
+
+		ocean_assert(expectedVirtualMachine == virtualMachine && "A different virtual machine is set already!");
+
+		return expectedVirtualMachine == virtualMachine;
+	}
+
+#ifdef OCEAN_DEBUG
+	Log::info() << "Virtual machine assigned.";
+#endif
+
+	return true;
 }
 
 void NativeInterfaceManager::setCurrentActivity(jobject activity)
 {
-	const ScopedLock scopedLock(lock_);
+	JNIEnv* jniEnv = environment();
 
-	JNIEnv* env = environment();
-	ocean_assert(env != nullptr);
+	if (jniEnv == nullptr)
+	{
+		Log::error() << "Failed to set the current activity, the JNI environment is unknown!";
 
-	currentActivity_ = ScopedJObject(*env, activity);
+		return;
+	}
 
-	currentActivity_.makeGlobal();
+	jobject newActivity = nullptr;
+
+	if (activity != nullptr)
+	{
+		// the caller keeps the ownership of 'activity', e.g., ANativeActivity owns the reference it provides via 'ANativeActivity::clazz'
+
+		newActivity = jniEnv->NewGlobalRef(activity);
+
+		if (newActivity == nullptr)
+		{
+			// NewGlobalRef() throws an OutOfMemoryError, the exception must not stay pending as the calling thread may never return to Java
+
+			if (jniEnv->ExceptionCheck() == JNI_TRUE)
+			{
+				jniEnv->ExceptionClear();
+			}
+
+			Log::error() << "Failed to create a global reference for the current activity!";
+
+			return;
+		}
+	}
+
+	TemporaryScopedLock scopedLock(lock_);
+
+		const jobject previousActivity = currentActivity_;
+		currentActivity_ = newActivity;
+
+	scopedLock.release();
+
+	if (previousActivity != nullptr)
+	{
+		jniEnv->DeleteGlobalRef(previousActivity);
+	}
+}
+
+bool NativeInterfaceManager::isValid() const
+{
+	return virtualMachine() != nullptr;
 }
 
 }
