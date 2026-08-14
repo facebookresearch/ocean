@@ -1219,8 +1219,8 @@ bool Utilities::sendIntentToConnectToWifi(JNIEnv* env, jobject activity, const s
 		return false;
 	}
 
-	const ScopedJClass jWifiNetworkSuggestionClass(*env, env->FindClass("android/net/wifi/WifiNetworkSuggestion"));
-	const ScopedJClass jBuilderClass(*env, env->FindClass("android/net/wifi/WifiNetworkSuggestion$Builder"));
+	const ScopedJClass jWifiNetworkSuggestionClass(findClass(*env, "android/net/wifi/WifiNetworkSuggestion"));
+	const ScopedJClass jBuilderClass(findClass(*env, "android/net/wifi/WifiNetworkSuggestion$Builder"));
 
 	if (!jWifiNetworkSuggestionClass || !jBuilderClass)
 	{
@@ -1233,38 +1233,38 @@ bool Utilities::sendIntentToConnectToWifi(JNIEnv* env, jobject activity, const s
 	//     .setSsid(ssid)
 	//     .setWpa2Passphrase(password)
 	//     .build();
-	jmethodID jNewBuilderMethod = env->GetMethodID(*jBuilderClass, "<init>", "()V");
-	jmethodID jSetSsidMethod = env->GetMethodID(*jBuilderClass, "setSsid", "(Ljava/lang/String;)Landroid/net/wifi/WifiNetworkSuggestion$Builder;");
-	jmethodID jSetWpa2PassphraseMethod = env->GetMethodID(*jBuilderClass, "setWpa2Passphrase", "(Ljava/lang/String;)Landroid/net/wifi/WifiNetworkSuggestion$Builder;");
-	jmethodID jBuildMethod = env->GetMethodID(*jBuilderClass, "build", "()Landroid/net/wifi/WifiNetworkSuggestion;");
+	jmethodID jNewBuilderMethod = getMethodId(*env, *jBuilderClass, "<init>", "()V");
+	jmethodID jSetSsidMethod = getMethodId(*env, *jBuilderClass, "setSsid", "(Ljava/lang/String;)Landroid/net/wifi/WifiNetworkSuggestion$Builder;");
+	jmethodID jSetWpa2PassphraseMethod = getMethodId(*env, *jBuilderClass, "setWpa2Passphrase", "(Ljava/lang/String;)Landroid/net/wifi/WifiNetworkSuggestion$Builder;");
+	jmethodID jBuildMethod = getMethodId(*env, *jBuilderClass, "build", "()Landroid/net/wifi/WifiNetworkSuggestion;");
 
 	if (!jNewBuilderMethod || !jSetSsidMethod || !jSetWpa2PassphraseMethod || !jBuildMethod)
 	{
 		return false;
 	}
 
-	ScopedJObject jBuilderObject(*env, env->NewObject(*jBuilderClass, jNewBuilderMethod));
+	ScopedJObject jBuilderObject(newObject(*env, *jBuilderClass, jNewBuilderMethod));
 
 	if (!jBuilderObject)
 	{
 		return false;
 	}
 
-	jBuilderObject = ScopedJObject(*env, env->CallObjectMethod(*jBuilderObject, jSetSsidMethod, *jSsidString));
+	jBuilderObject = ScopedJObject(callObjectMethod(*env, *jBuilderObject, jSetSsidMethod, *jSsidString));
 
 	if (!jBuilderObject)
 	{
 		return false;
 	}
 
-	jBuilderObject = ScopedJObject(*env, env->CallObjectMethod(*jBuilderObject, jSetWpa2PassphraseMethod, *jPasswordString));
+	jBuilderObject = ScopedJObject(callObjectMethod(*env, *jBuilderObject, jSetWpa2PassphraseMethod, *jPasswordString));
 
 	if (!jBuilderObject)
 	{
 		return false;
 	}
 
-	const ScopedJObject jWifiNetworkSuggestionObject(*env, env->CallObjectMethod(*jBuilderObject, jBuildMethod));
+	const ScopedJObject jWifiNetworkSuggestionObject(callObjectMethod(*env, *jBuilderObject, jBuildMethod));
 
 	if (!jWifiNetworkSuggestionObject)
 	{
@@ -1273,64 +1273,66 @@ bool Utilities::sendIntentToConnectToWifi(JNIEnv* env, jobject activity, const s
 
 	// final List<WifiNetworkSuggestion> suggestionsList = new ArrayList<>;
 	// suggestionsList.add(suggestion1);
-	const ScopedJClass jArrayListClass(*env, env->FindClass("java/util/ArrayList"));
+	const ScopedJClass jArrayListClass(findClass(*env, "java/util/ArrayList"));
 
 	if (!jArrayListClass)
 	{
 		return false;
 	}
 
-	jmethodID jnewArrayListMethod = env->GetMethodID(*jArrayListClass, "<init>", "()V");
-	jmethodID jAddMethod = env->GetMethodID(*jArrayListClass, "add", "(Ljava/lang/Object;)Z");
+	jmethodID jnewArrayListMethod = getMethodId(*env, *jArrayListClass, "<init>", "()V");
+	jmethodID jAddMethod = getMethodId(*env, *jArrayListClass, "add", "(Ljava/lang/Object;)Z");
 
 	if (!jnewArrayListMethod ||!jAddMethod)
 	{
 		return false;
 	}
 
-	const ScopedJObject jArrayListObject(*env, env->NewObject(*jArrayListClass, jnewArrayListMethod));
+	const ScopedJObject jArrayListObject(newObject(*env, *jArrayListClass, jnewArrayListMethod));
 
 	if (!jArrayListObject)
 	{
 		return false;
 	}
 
-	if (!env->CallBooleanMethod(*jArrayListObject, jAddMethod, *jWifiNetworkSuggestionObject))
+	bool wasAdded = false;
+
+	if (!callBooleanMethod(*env, *jArrayListObject, jAddMethod, wasAdded, *jWifiNetworkSuggestionObject) || !wasAdded)
 	{
 		return false;
 	}
 
 	// Bundle bundle = new Bundle();
 	// bundle.putParcelableArrayList(Settings.EXTRA_WIFI_NETWORK_LIST,(ArrayList<? extends Parcelable>) suggestionsList);
-	const ScopedJClass jBundleClass(*env, env->FindClass("android/os/Bundle"));
+	const ScopedJClass jBundleClass(findClass(*env, "android/os/Bundle"));
 
 	if (!jBundleClass)
 	{
 		return false;
 	}
 
-	jmethodID jNewBundleMethod = env->GetMethodID(*jBundleClass, "<init>", "()V");
+	jmethodID jNewBundleMethod = getMethodId(*env, *jBundleClass, "<init>", "()V");
 
 	if (!jNewBundleMethod)
 	{
 		return false;
 	}
 
-	const ScopedJObject jBundleObject(*env, env->NewObject(*jBundleClass, jNewBundleMethod));
+	const ScopedJObject jBundleObject(newObject(*env, *jBundleClass, jNewBundleMethod));
 
 	if (!jBundleObject)
 	{
 		return false;
 	}
 
-	const ScopedJClass jSettingsClass(*env, env->FindClass("android/provider/Settings"));
+	const ScopedJClass jSettingsClass(findClass(*env, "android/provider/Settings"));
 
 	if (!jSettingsClass)
 	{
 		return false;
 	}
 
-	jfieldID jExtraWifiNetworkListField = env->GetStaticFieldID(*jSettingsClass, "EXTRA_WIFI_NETWORK_LIST", "Ljava/lang/String;");
+	jfieldID jExtraWifiNetworkListField = getStaticFieldId(*env, *jSettingsClass, "EXTRA_WIFI_NETWORK_LIST", "Ljava/lang/String;");
 
 	if (jExtraWifiNetworkListField == nullptr)
 	{
@@ -1344,18 +1346,21 @@ bool Utilities::sendIntentToConnectToWifi(JNIEnv* env, jobject activity, const s
 		return false;
 	}
 
-	jmethodID jPutParcelableArrayListMethod = env->GetMethodID(*jBundleClass, "putParcelableArrayList", "(Ljava/lang/String;Ljava/util/ArrayList;)V");
+	jmethodID jPutParcelableArrayListMethod = getMethodId(*env, *jBundleClass, "putParcelableArrayList", "(Ljava/lang/String;Ljava/util/ArrayList;)V");
 
 	if (!jPutParcelableArrayListMethod)
 	{
 		return false;
 	}
 
-	env->CallVoidMethod(*jBundleObject, jPutParcelableArrayListMethod, *jExtraWifiNetworkListString, *jArrayListObject);
+	if (!callVoidMethod(*env, *jBundleObject, jPutParcelableArrayListMethod, *jExtraWifiNetworkListString, *jArrayListObject))
+	{
+		return false;
+	}
 
 	// final Intent intent = new Intent(Settings.ACTION_WIFI_ADD_NETWORKS);
 	// intent.putExtras(bundle);
-	jfieldID jActionWifiAddNetworksField = env->GetStaticFieldID(*jSettingsClass, "ACTION_WIFI_ADD_NETWORKS", "Ljava/lang/String;");
+	jfieldID jActionWifiAddNetworksField = getStaticFieldId(*env, *jSettingsClass, "ACTION_WIFI_ADD_NETWORKS", "Ljava/lang/String;");
 
 	if (jActionWifiAddNetworksField == nullptr)
 	{
@@ -1369,35 +1374,35 @@ bool Utilities::sendIntentToConnectToWifi(JNIEnv* env, jobject activity, const s
 		return false;
 	}
 
-	const ScopedJClass jIntentClass(*env, env->FindClass("android/content/Intent"));
+	const ScopedJClass jIntentClass(findClass(*env, "android/content/Intent"));
 
 	if (!jIntentClass)
 	{
 		return false;
 	}
 
-	jmethodID jNewIntentMethod = env->GetMethodID(*jIntentClass, "<init>", "(Ljava/lang/String;)V");
+	jmethodID jNewIntentMethod = getMethodId(*env, *jIntentClass, "<init>", "(Ljava/lang/String;)V");
 
 	if (!jNewIntentMethod)
 	{
 		return false;
 	}
 
-	ScopedJObject jIntentObject(*env, env->NewObject(*jIntentClass, jNewIntentMethod, *jActionWifiAddNetworksString));
+	ScopedJObject jIntentObject(newObject(*env, *jIntentClass, jNewIntentMethod, *jActionWifiAddNetworksString));
 
 	if (!jIntentObject)
 	{
 		return false;
 	}
 
-	jmethodID jPutExtrasMethod = env->GetMethodID(*jIntentClass, "putExtras", "(Landroid/os/Bundle;)Landroid/content/Intent;");
+	jmethodID jPutExtrasMethod = getMethodId(*env, *jIntentClass, "putExtras", "(Landroid/os/Bundle;)Landroid/content/Intent;");
 
 	if (!jPutExtrasMethod)
 	{
 		return false;
 	}
 
-	jIntentObject = ScopedJObject(*env, env->CallObjectMethod(*jIntentObject, jPutExtrasMethod, *jBundleObject));
+	jIntentObject = ScopedJObject(callObjectMethod(*env, *jIntentObject, jPutExtrasMethod, *jBundleObject));
 
 	if (!jIntentObject)
 	{
@@ -1406,16 +1411,16 @@ bool Utilities::sendIntentToConnectToWifi(JNIEnv* env, jobject activity, const s
 
 	// this.startActivityForResult(intent, 0);
 
-	jmethodID jStartActivityForResultMethod = env->GetMethodID(*jActivityClass, "startActivityForResult", "(Landroid/content/Intent;I)V");
+	jmethodID jStartActivityForResultMethod = getMethodId(*env, *jActivityClass, "startActivityForResult", "(Landroid/content/Intent;I)V");
 
 	if (!jStartActivityForResultMethod)
 	{
 		return false;
 	}
 
-	env->CallVoidMethod(activity, jStartActivityForResultMethod, *jIntentObject, jint(0));
+	// startActivityForResult() throws ActivityNotFoundException if the device does not provide the Wi-Fi settings activity
 
-	return true;
+	return callVoidMethod(*env, activity, jStartActivityForResultMethod, *jIntentObject, jint(0));
 }
 
 bool Utilities::currentWifiSsid(JNIEnv* env, jobject activity, std::string& ssid)
