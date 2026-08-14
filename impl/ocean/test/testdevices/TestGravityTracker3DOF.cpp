@@ -73,6 +73,90 @@ class TestableGravityTracker3DOF : public Devices::GravityTracker3DOF
 		}
 };
 
+/**
+ * Returns the largest error in the angular progress from both interpolation endpoints.
+ * This metric is independent of the great-circle axis, which is not unique for antipodal endpoints.
+ */
+static Scalar interpolationAngleError(const double queryTime, const Timestamps& timestamps, const Vectors3& gravities, const Vector3& interpolatedGravity)
+{
+	ocean_assert(timestamps.size() == gravities.size());
+	ocean_assert(timestamps.size() >= 2);
+	ocean_assert(double(timestamps.front()) < queryTime && queryTime < double(timestamps.back()));
+
+	size_t upperIndex = 1;
+
+	while (upperIndex < timestamps.size() && double(timestamps[upperIndex]) < queryTime)
+	{
+		++upperIndex;
+	}
+
+	ocean_assert(upperIndex < timestamps.size());
+
+	const size_t lowerIndex = upperIndex - 1;
+	const double interpolationDuration = double(timestamps[upperIndex]) - double(timestamps[lowerIndex]);
+	ocean_assert(interpolationDuration > 0.0);
+
+	const double interpolationFactor = (queryTime - double(timestamps[lowerIndex])) / interpolationDuration;
+
+	const Scalar totalAngle = gravities[lowerIndex].angle(gravities[upperIndex]);
+	const Scalar lowerAngleError = Numeric::abs(gravities[lowerIndex].angle(interpolatedGravity) - totalAngle * Scalar(interpolationFactor));
+	const Scalar upperAngleError = Numeric::abs(gravities[upperIndex].angle(interpolatedGravity) - totalAngle * Scalar(1.0 - interpolationFactor));
+
+	return std::max(lowerAngleError, upperAngleError);
+}
+
+/**
+ * Tests deterministic interpolation cases where a coordinate-based SLERP oracle is ill-conditioned
+ * or non-unique.
+ */
+static void testInterpolationEdgeCases(Validation& validation)
+{
+	const Vector3 lowerGravity(Scalar(1), Scalar(0), Scalar(0));
+
+	// On the single-precision iOS target, these distinct vectors have a dot product of -1.
+	// A coefficient-based SLERP oracle therefore divides by sin(pi) and can select the opposite arc.
+	Vector3 nearAntipodalGravity(Scalar(-1), Scalar(0.0001), Scalar(0));
+	const bool normalizationSucceeded = nearAntipodalGravity.normalize();
+	ocean_assert_and_suppress_unused(normalizationSucceeded, normalizationSucceeded);
+
+	// Equal, exactly antipodal, and nearly antipodal endpoint pairs.
+	const Vectors3 upperGravities =
+	{
+		lowerGravity,
+		-lowerGravity,
+		nearAntipodalGravity,
+	};
+
+	const Timestamps timestamps = {Timestamp(1.0), Timestamp(2.0)};
+
+	for (const Vector3& upperGravity : upperGravities)
+	{
+		TestableGravityTracker3DOF tracker("Test Gravity Tracker");
+		tracker.addSample(timestamps.front(), Devices::GravityTracker3DOF::GravityTracker3DOFSample::Gravities(1, lowerGravity));
+		tracker.addSample(timestamps.back(), Devices::GravityTracker3DOF::GravityTracker3DOFSample::Gravities(1, upperGravity));
+
+		const Vectors3 gravities = {lowerGravity, upperGravity};
+
+		for (const double interpolationFactor : {0.25, 0.5, 0.75})
+		{
+			const double queryTime = 1.0 + interpolationFactor;
+			const Devices::GravityTracker3DOF::GravityTracker3DOFSampleRef gravitySample = tracker.sample(Timestamp(queryTime), Devices::Measurement::IS_TIMESTAMP_INTERPOLATE);
+
+			if (!gravitySample || gravitySample->gravities().size() != 1)
+			{
+				OCEAN_SET_FAILED(validation);
+				continue;
+			}
+
+			const Vector3& actualGravity = gravitySample->gravities().front();
+
+			OCEAN_EXPECT_TRUE(validation, actualGravity.isUnit());
+			OCEAN_EXPECT_TRUE(validation, NumericD::isWeakEqual(double(gravitySample->timestamp()), queryTime));
+			OCEAN_EXPECT_LESS_EQUAL(validation, interpolationAngleError(queryTime, timestamps, gravities, actualGravity), Numeric::deg2rad(Scalar(0.5)));
+		}
+	}
+}
+
 bool TestGravityTracker3DOF::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
@@ -111,6 +195,8 @@ bool TestGravityTracker3DOF::testSampleInterpolation(const double testDuration)
 
 	RandomGenerator randomGenerator;
 	Validation validation(randomGenerator);
+
+	testInterpolationEdgeCases(validation);
 
 	const Timestamp startTimestamp(true);
 
@@ -198,9 +284,7 @@ bool TestGravityTracker3DOF::testSampleInterpolation(const double testDuration)
 					{
 						OCEAN_EXPECT_TRUE(validation, NumericD::isWeakEqual(returnedTime, queryTime));
 
-						const Vector3 expectedGravity = TestGravityTracker3DOF::expectedInterpolatedGravity(queryTime, timestamps, gravities);
-
-						const Scalar angleError = actualGravity.angle(expectedGravity);
+						const Scalar angleError = interpolationAngleError(queryTime, timestamps, gravities, actualGravity);
 						OCEAN_EXPECT_LESS_EQUAL(validation, angleError, Numeric::deg2rad(Scalar(0.5)));
 					}
 				}
@@ -254,67 +338,6 @@ bool TestGravityTracker3DOF::testSampleInterpolation(const double testDuration)
 	Log::info() << "Validation: " << validation;
 
 	return validation.succeeded();
-}
-
-Vector3 TestGravityTracker3DOF::expectedInterpolatedGravity(const double queryTime, const Timestamps& timestamps, const Vectors3& gravities)
-{
-	ocean_assert(timestamps.size() == gravities.size());
-	ocean_assert(!timestamps.empty());
-
-	if (timestamps.size() == 1)
-	{
-		return gravities.front();
-	}
-
-	size_t lowerIndex = 0;
-	size_t upperIndex = 1;
-
-	for (size_t n = 0; n < timestamps.size() - 1; ++n)
-	{
-		if (double(timestamps[n]) <= queryTime && queryTime <= double(timestamps[n + 1]))
-		{
-			lowerIndex = n;
-			upperIndex = n + 1;
-			break;
-		}
-	}
-
-	const Vector3& lowerGravity = gravities[lowerIndex];
-	const Vector3& upperGravity = gravities[upperIndex];
-
-	const double lowerTime = double(timestamps[lowerIndex]);
-	const double upperTime = double(timestamps[upperIndex]);
-
-	const double duration = upperTime - lowerTime;
-
-	if (NumericD::isEqualEps(duration))
-	{
-		return lowerGravity;
-	}
-
-	const double factor = (queryTime - lowerTime) / duration;
-
-	const Scalar dotProduct = lowerGravity * upperGravity;
-	const Scalar clampedDot = std::min(Scalar(1), std::max(Scalar(-1), dotProduct));
-	const Scalar angle = Numeric::acos(clampedDot);
-
-	if (Numeric::abs(angle) < Numeric::eps())
-	{
-		return lowerGravity;
-	}
-
-	const Scalar sinAngle = Numeric::sin(angle);
-	const Scalar factorLower = Numeric::sin((Scalar(1) - Scalar(factor)) * angle) / sinAngle;
-	const Scalar factorUpper = Numeric::sin(Scalar(factor) * angle) / sinAngle;
-
-	Vector3 result = lowerGravity * factorLower + upperGravity * factorUpper;
-
-	if (!result.normalize())
-	{
-		return lowerGravity;
-	}
-
-	return result;
 }
 
 } // namespace TestDevices

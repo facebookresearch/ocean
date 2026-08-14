@@ -10,10 +10,6 @@
 
 #include "ocean/test/testdevices/TestDevices.h"
 
-#include "ocean/base/Timestamp.h"
-
-#include "ocean/math/Vector3.h"
-
 #include "ocean/test/TestSelector.h"
 
 namespace Ocean
@@ -47,18 +43,6 @@ class OCEAN_TEST_DEVICES_EXPORT TestGravityTracker3DOF
 		 * @return True, if succeeded
 		 */
 		static bool testSampleInterpolation(const double testDuration);
-
-	protected:
-
-		/**
-		 * Computes the expected interpolated gravity vector for a given query timestamp.
-		 * Uses spherical linear interpolation (slerp) between the two bounding samples.
-		 * @param queryTime The query timestamp
-		 * @param timestamps The sample timestamps (must be sorted)
-		 * @param gravities The gravity vectors (unit vectors)
-		 * @return The expected interpolated gravity vector
-		 */
-		static Vector3 expectedInterpolatedGravity(const double queryTime, const Timestamps& timestamps, const Vectors3& gravities);
 };
 
 } // namespace TestDevices
