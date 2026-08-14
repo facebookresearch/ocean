@@ -7,7 +7,7 @@
 
 #include "ocean/platform/android/Permission.h"
 #include "ocean/platform/android/ScopedJNIEnvironment.h"
-#include "ocean/platform/android/ScopedJNIObject.h"
+#include "ocean/platform/android/ScopedJNILocalObject.h"
 #include "ocean/platform/android/Utilities.h"
 
 namespace Ocean

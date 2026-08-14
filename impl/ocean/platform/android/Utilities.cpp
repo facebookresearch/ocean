@@ -7,7 +7,7 @@
 
 #include "ocean/platform/android/Utilities.h"
 #include "ocean/platform/android/ScopedJNIEnvironment.h"
-#include "ocean/platform/android/ScopedJNIObject.h"
+#include "ocean/platform/android/ScopedJNILocalObject.h"
 
 #include <dirent.h>
 #include <errno.h>

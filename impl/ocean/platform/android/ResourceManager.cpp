@@ -8,7 +8,7 @@
 #include "ocean/platform/android/ResourceManager.h"
 #include "ocean/platform/android/NativeInterfaceManager.h"
 #include "ocean/platform/android/ScopedJNIEnvironment.h"
-#include "ocean/platform/android/ScopedJNIObject.h"
+#include "ocean/platform/android/ScopedJNILocalObject.h"
 #include "ocean/platform/android/Utilities.h"
 
 #include "ocean/io/File.h"

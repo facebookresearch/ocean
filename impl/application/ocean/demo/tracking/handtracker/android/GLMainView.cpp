@@ -18,7 +18,7 @@
 
 #include "ocean/platform/android/Bitmap.h"
 #include "ocean/platform/android/NativeInterfaceManager.h"
-#include "ocean/platform/android/ScopedJNIObject.h"
+#include "ocean/platform/android/ScopedJNILocalObject.h"
 #include "ocean/platform/android/Utilities.h"
 
 #include "ocean/rendering/AbsoluteTransform.h"

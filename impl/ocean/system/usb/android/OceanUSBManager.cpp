@@ -8,7 +8,7 @@
 #include "ocean/system/usb/android/OceanUSBManager.h"
 #include "ocean/system/usb/Utilities.h"
 
-#include "ocean/platform/android/ScopedJNIObject.h"
+#include "ocean/platform/android/ScopedJNILocalObject.h"
 #include "ocean/platform/android/Utilities.h"
 
 namespace Ocean

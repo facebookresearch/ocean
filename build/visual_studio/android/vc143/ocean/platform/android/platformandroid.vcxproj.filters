@@ -80,7 +80,7 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ScopedJNIGlobalObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ScopedJNIObject.h">
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ScopedJNILocalObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Utilities.h">

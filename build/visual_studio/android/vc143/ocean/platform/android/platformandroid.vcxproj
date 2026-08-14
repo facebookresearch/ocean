@@ -127,7 +127,7 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ResourceManager.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ScopedJNIEnvironment.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ScopedJNIGlobalObject.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ScopedJNIObject.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ScopedJNILocalObject.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Utilities.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

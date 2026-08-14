@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#ifndef META_OCEAN_PLATFORM_ANDROID_SCOPED_JNI_OBJECT_H
-#define META_OCEAN_PLATFORM_ANDROID_SCOPED_JNI_OBJECT_H
+#ifndef META_OCEAN_PLATFORM_ANDROID_SCOPED_JNI_LOCAL_OBJECT_H
+#define META_OCEAN_PLATFORM_ANDROID_SCOPED_JNI_LOCAL_OBJECT_H
 
 #include "ocean/platform/android/Android.h"
 #include "ocean/platform/android/ScopedJNIEnvironment.h"
@@ -363,4 +363,4 @@ ScopedJNILocalObject<T>& ScopedJNILocalObject<T>::operator=(ScopedJNILocalObject
 
 }
 
-#endif // META_OCEAN_PLATFORM_ANDROID_SCOPED_JNI_OBJECT_H
+#endif // META_OCEAN_PLATFORM_ANDROID_SCOPED_JNI_LOCAL_OBJECT_H

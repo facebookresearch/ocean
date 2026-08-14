@@ -9,7 +9,7 @@
 #define META_OCEAN_PLATFORM_ANDROID_UTILITIES_H
 
 #include "ocean/platform/android/Android.h"
-#include "ocean/platform/android/ScopedJNIObject.h"
+#include "ocean/platform/android/ScopedJNILocalObject.h"
 
 namespace Ocean
 {

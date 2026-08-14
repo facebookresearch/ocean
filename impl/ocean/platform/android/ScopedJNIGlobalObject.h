@@ -10,7 +10,7 @@
 
 #include "ocean/platform/android/Android.h"
 #include "ocean/platform/android/ScopedJNIEnvironment.h"
-#include "ocean/platform/android/ScopedJNIObject.h"
+#include "ocean/platform/android/ScopedJNILocalObject.h"
 
 #include "ocean/base/Messenger.h"
 
