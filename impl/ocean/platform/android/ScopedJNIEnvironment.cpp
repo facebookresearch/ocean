@@ -6,6 +6,7 @@
  */
 
 #include "ocean/platform/android/ScopedJNIEnvironment.h"
+#include "ocean/platform/android/Utilities.h"
 
 namespace Ocean
 {
@@ -65,6 +66,10 @@ ScopedJNIEnvironment::~ScopedJNIEnvironment()
 	if (threadAttachedExplicitly_)
 	{
 		ocean_assert(jniEnv_ != nullptr);
+
+		// a Java exception which is still pending is handed to Thread.dispatchUncaughtException while the thread detaches, which terminates the process
+
+		Utilities::clearPotentialException(*jniEnv_);
 
 		const jint result = javaVM_->DetachCurrentThread();
 		ocean_assert_and_suppress_unused(result == JNI_OK, result);

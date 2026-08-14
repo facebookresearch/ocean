@@ -6,6 +6,7 @@
  */
 
 #include "ocean/platform/android/NativeInterfaceManager.h"
+#include "ocean/platform/android/Utilities.h"
 
 /**
  * The VM calls JNI_OnLoad when the native library is loaded.
@@ -79,6 +80,10 @@ NativeInterfaceManager::ScopedThreadAttachment::~ScopedThreadAttachment()
 
 	if (attachedJavaVM_->GetEnv((void**)(&jniEnv), JNI_VERSION_1_6) == JNI_OK)
 	{
+		// a Java exception which is still pending is handed to Thread.dispatchUncaughtException while the thread detaches, which terminates the process
+
+		Utilities::clearPotentialException(*jniEnv);
+
 		attachedJavaVM_->DetachCurrentThread();
 	}
 
