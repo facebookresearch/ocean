@@ -267,23 +267,26 @@ void AdvancedFrameInterpolatorBilinearBase::interpolatePatch8BitPerChannel(const
 template <unsigned int tChannels>
 void AdvancedFrameInterpolatorBilinearBase::interpolateSquareMirroredBorder8BitPerChannel(const uint8_t* frame, const unsigned int width, const unsigned int height, const unsigned int framePaddingElements, uint8_t* buffer, const Vector2& position, const unsigned int patchSize)
 {
+	static_assert(tChannels >= 1u, "Invalid channel number!");
+
 	ocean_assert(frame != nullptr && buffer != nullptr);
 	ocean_assert(patchSize >= 1u && patchSize % 2u == 1u);
 
 	const unsigned int patchSize_2 = patchSize / 2u;
 
+	ocean_assert(width >= patchSize_2 + 1u && height >= patchSize_2 + 1u);
 	ocean_assert(position.x() >= Scalar(0) && position.y() >= Scalar(0));
 	ocean_assert(position.x() < Scalar(width) && position.y() < Scalar(height));
 
 	const int left = int(position.x()) - int(patchSize_2);
 	const int top = int(position.y()) - int(patchSize_2);
 
-	const Scalar tx = position.x() - Scalar(patchSize_2) - Scalar(left);
+	const Scalar tx = position.x() - Scalar(int(position.x()));
 	ocean_assert(tx >= 0 && tx <= 1);
 	const unsigned int txi = (unsigned int)(tx * Scalar(128) + Scalar(0.5));
 	const unsigned int txi_ = 128u - txi;
 
-	const Scalar ty = position.y() - Scalar(patchSize_2) - Scalar(top);
+	const Scalar ty = position.y() - Scalar(int(position.y()));
 	ocean_assert(ty >= 0 && ty <= 1);
 	const unsigned int tyi = (unsigned int)(ty * Scalar(128) + Scalar(0.5));
 	const unsigned int tyi_ = 128u - tyi;
@@ -293,87 +296,47 @@ void AdvancedFrameInterpolatorBilinearBase::interpolateSquareMirroredBorder8BitP
 	const unsigned int tx_y = txi_ * tyi;
 	const unsigned int txy = txi * tyi;
 
-	const int frameStrideElements = int(width * tChannels + framePaddingElements);
-
-	const uint8_t* frameTop = frame + top * frameStrideElements + left * int(tChannels);
-	const uint8_t* frameBottom = frameTop + frameStrideElements;
+	const unsigned int frameStrideElements = width * tChannels + framePaddingElements;
 
 	for (unsigned int y = 0u; y < patchSize; ++y)
 	{
-		const uint8_t* pixelTop = frameTop + CVUtilities::mirrorOffset(y + (unsigned int)(top), height) * frameStrideElements;
-		const uint8_t* pixelBottom = frameBottom + CVUtilities::mirrorOffset(y + (unsigned int)(top) + 1u, height) * frameStrideElements;
+		const int yTop = top + int(y);
+		const int yBottom = yTop + 1;
 
-		for (int xSigned = left; xSigned < left + int(patchSize); ++xSigned)
+		const uint8_t* const rowTop = frame + CVUtilities::mirrorIndex(yTop, height) * frameStrideElements;
+		const uint8_t* const rowBottom = frame + CVUtilities::mirrorIndex(yBottom, height) * frameStrideElements;
+
+		for (unsigned int x = 0u; x < patchSize; ++x)
 		{
-			const unsigned int x = (unsigned int)(xSigned);
+			const int xLeft = left + int(x);
+			const int xRight = xLeft + 1;
 
-			if (x < width && (x + 1u) < width)
+			unsigned int xLeftIndex;
+			unsigned int xRightIndex;
+
+			if ((unsigned int)(xLeft) < width && (unsigned int)(xRight) < width)
 			{
-				// both pixels lies inside the frame
-
-				for (unsigned int n = 0u; n < tChannels; ++n)
-				{
-					buffer[n] = uint8_t((pixelTop[0] * tx_y_ + pixelTop[tChannels] * txy_ + pixelBottom[0] * tx_y + pixelBottom[tChannels] * txy + 8192u) >> 14u);
-
-					++pixelTop;
-					++pixelBottom;
-				}
-			}
-			else if (x < width)
-			{
-				// x0 lies inside the frame
-
-				ocean_assert(x + 1u >= width);
-
-				const int offset = CVUtilities::mirrorOffset(x + 1u, width) * int(tChannels) + int(tChannels);
-
-				for (unsigned int n = 0u; n < tChannels; ++n)
-				{
-					buffer[n] = uint8_t((pixelTop[0] * tx_y_ + *(pixelTop + offset) * txy_ + pixelBottom[0] * tx_y + *(pixelBottom + offset) * txy + 8192u) >> 14u);
-
-					++pixelTop;
-					++pixelBottom;
-				}
-			}
-			else if (x + 1u < width)
-			{
-				// x1 lies inside the frame
-
-				ocean_assert(x >= width);
-
-				const int offset = CVUtilities::mirrorOffset(x, width) * int(tChannels);
-
-				for (unsigned int n = 0u; n < tChannels; ++n)
-				{
-					buffer[n] = uint8_t((*(pixelTop + 0 + offset) * tx_y_ + pixelTop[tChannels] * txy_ + *(pixelBottom + 0 + offset) * tx_y + pixelBottom[tChannels] * txy + 8192u) >> 14u);
-
-					++pixelTop;
-					++pixelBottom;
-				}
+				xLeftIndex = (unsigned int)(xLeft);
+				xRightIndex = (unsigned int)(xRight);
 			}
 			else
 			{
-				// neither x0 nor x1 lies inside the frame
+				xLeftIndex = CVUtilities::mirrorIndex(xLeft, width);
+				xRightIndex = CVUtilities::mirrorIndex(xRight, width);
+			}
 
-				ocean_assert(x >= width && x + 1u >= width);
+			const uint8_t* const pixelTopLeft = rowTop + xLeftIndex * tChannels;
+			const uint8_t* const pixelTopRight = rowTop + xRightIndex * tChannels;
+			const uint8_t* const pixelBottomLeft = rowBottom + xLeftIndex * tChannels;
+			const uint8_t* const pixelBottomRight = rowBottom + xRightIndex * tChannels;
 
-				const int offsetLeft = CVUtilities::mirrorOffset(x, width) * int(tChannels);
-				const int offsetRight = CVUtilities::mirrorOffset(x + 1u, width) * int(tChannels) + int(tChannels);
-
-				for (unsigned int n = 0u; n < tChannels; ++n)
-				{
-					buffer[n] = uint8_t((*(pixelTop + 0 + offsetLeft) * tx_y_ + *(pixelTop + offsetRight) * txy_ + *(pixelBottom + 0 + offsetLeft) * tx_y + *(pixelBottom + offsetRight) * txy + 8192u) >> 14u);
-
-					++pixelTop;
-					++pixelBottom;
-				}
+			for (unsigned int n = 0u; n < tChannels; ++n)
+			{
+				buffer[n] = uint8_t((pixelTopLeft[n] * tx_y_ + pixelTopRight[n] * txy_ + pixelBottomLeft[n] * tx_y + pixelBottomRight[n] * txy + 8192u) >> 14u);
 			}
 
 			buffer += tChannels;
 		}
-
-		frameTop += frameStrideElements;
-		frameBottom += frameStrideElements;
 	}
 }
 
@@ -387,18 +350,19 @@ void AdvancedFrameInterpolatorBilinearBase::interpolateSquareMirroredBorderTempl
 
 	constexpr unsigned int tPatchSize_2 = tPatchSize / 2u;
 
+	ocean_assert(width >= tPatchSize_2 + 1u && height >= tPatchSize_2 + 1u);
 	ocean_assert(position.x() >= 0 && position.y() >= 0);
 	ocean_assert(position.x() < Scalar(width) && position.y() < Scalar(height));
 
 	const int left = int(position.x()) - int(tPatchSize_2);
 	const int top = int(position.y()) - int(tPatchSize_2);
 
-	const Scalar tx = position.x() - Scalar(tPatchSize_2) - Scalar(left);
+	const Scalar tx = position.x() - Scalar(int(position.x()));
 	ocean_assert(tx >= 0 && tx <= 1);
 	const unsigned int txi = (unsigned int)(tx * Scalar(128) + Scalar(0.5));
 	const unsigned int txi_ = 128u - txi;
 
-	const Scalar ty = position.y() - Scalar(tPatchSize_2) - Scalar(top);
+	const Scalar ty = position.y() - Scalar(int(position.y()));
 	ocean_assert(ty >= 0 && ty <= 1);
 	const unsigned int tyi = (unsigned int)(ty * Scalar(128) + Scalar(0.5));
 	const unsigned int tyi_ = 128u - tyi;
@@ -408,87 +372,47 @@ void AdvancedFrameInterpolatorBilinearBase::interpolateSquareMirroredBorderTempl
 	const unsigned int tx_y = txi_ * tyi;
 	const unsigned int txy = txi * tyi;
 
-	const int frameStrideElements = int(width * tChannels + framePaddingElements);
-
-	const uint8_t* frameTop = frame + top * frameStrideElements + left * int(tChannels);
-	const uint8_t* frameBottom = frameTop + frameStrideElements;
+	const unsigned int frameStrideElements = width * tChannels + framePaddingElements;
 
 	for (unsigned int y = 0u; y < tPatchSize; ++y)
 	{
-		const uint8_t* pixelTop = frameTop + CVUtilities::mirrorOffset(y + (unsigned int)(top), height) * frameStrideElements;
-		const uint8_t* pixelBottom = frameBottom + CVUtilities::mirrorOffset(y + (unsigned int)(top) + 1u, height) * frameStrideElements;
+		const int yTop = top + int(y);
+		const int yBottom = yTop + 1;
 
-		for (int xSigned = left; xSigned < left + int(tPatchSize); ++xSigned)
+		const uint8_t* const rowTop = frame + CVUtilities::mirrorIndex(yTop, height) * frameStrideElements;
+		const uint8_t* const rowBottom = frame + CVUtilities::mirrorIndex(yBottom, height) * frameStrideElements;
+
+		for (unsigned int x = 0u; x < tPatchSize; ++x)
 		{
-			const unsigned int x = (unsigned int)(xSigned);
+			const int xLeft = left + int(x);
+			const int xRight = xLeft + 1;
 
-			if (x < width && (x + 1u) < width)
+			unsigned int xLeftIndex;
+			unsigned int xRightIndex;
+
+			if ((unsigned int)(xLeft) < width && (unsigned int)(xRight) < width)
 			{
-				// both pixels lies inside the frame
-
-				for (unsigned int n = 0u; n < tChannels; ++n)
-				{
-					buffer[n] = uint8_t((pixelTop[0] * tx_y_ + pixelTop[tChannels] * txy_ + pixelBottom[0] * tx_y + pixelBottom[tChannels] * txy + 8192u) >> 14u);
-
-					++pixelTop;
-					++pixelBottom;
-				}
-			}
-			else if (x < width)
-			{
-				// x0 lies inside the frame
-
-				ocean_assert(x + 1u >= width);
-
-				const int offset = CVUtilities::mirrorOffset(x + 1u, width) * int(tChannels) + int(tChannels);
-
-				for (unsigned int n = 0u; n < tChannels; ++n)
-				{
-					buffer[n] = uint8_t((pixelTop[0] * tx_y_ + *(pixelTop + offset) * txy_ + pixelBottom[0] * tx_y + *(pixelBottom + offset) * txy + 8192u) >> 14u);
-
-					++pixelTop;
-					++pixelBottom;
-				}
-			}
-			else if (x + 1u < width)
-			{
-				// x1 lies inside the frame
-
-				ocean_assert(x >= width);
-
-				const int offset = CVUtilities::mirrorOffset(x, width) * int(tChannels);
-
-				for (unsigned int n = 0u; n < tChannels; ++n)
-				{
-					buffer[n] = uint8_t((*(pixelTop + 0 + offset) * tx_y_ + pixelTop[tChannels] * txy_ + *(pixelBottom + 0 + offset) * tx_y + pixelBottom[tChannels] * txy + 8192u) >> 14u);
-
-					++pixelTop;
-					++pixelBottom;
-				}
+				xLeftIndex = (unsigned int)(xLeft);
+				xRightIndex = (unsigned int)(xRight);
 			}
 			else
 			{
-				// neither x0 nor x1 lies inside the frame
+				xLeftIndex = CVUtilities::mirrorIndex(xLeft, width);
+				xRightIndex = CVUtilities::mirrorIndex(xRight, width);
+			}
 
-				ocean_assert(x >= width && x + 1u >= width);
+			const uint8_t* const pixelTopLeft = rowTop + xLeftIndex * tChannels;
+			const uint8_t* const pixelTopRight = rowTop + xRightIndex * tChannels;
+			const uint8_t* const pixelBottomLeft = rowBottom + xLeftIndex * tChannels;
+			const uint8_t* const pixelBottomRight = rowBottom + xRightIndex * tChannels;
 
-				const int offsetLeft = CVUtilities::mirrorOffset(x, width) * int(tChannels);
-				const int offsetRight = CVUtilities::mirrorOffset(x + 1u, width) * int(tChannels) + int(tChannels);
-
-				for (unsigned int n = 0u; n < tChannels; ++n)
-				{
-					buffer[n] = uint8_t((*(pixelTop + 0 + offsetLeft) * tx_y_ + *(pixelTop + offsetRight) * txy_ + *(pixelBottom + 0 + offsetLeft) * tx_y + *(pixelBottom + offsetRight) * txy + 8192u) >> 14u);
-
-					++pixelTop;
-					++pixelBottom;
-				}
+			for (unsigned int n = 0u; n < tChannels; ++n)
+			{
+				buffer[n] = uint8_t((pixelTopLeft[n] * tx_y_ + pixelTopRight[n] * txy_ + pixelBottomLeft[n] * tx_y + pixelBottomRight[n] * txy + 8192u) >> 14u);
 			}
 
 			buffer += tChannels;
 		}
-
-		frameTop += frameStrideElements;
-		frameBottom += frameStrideElements;
 	}
 }
 

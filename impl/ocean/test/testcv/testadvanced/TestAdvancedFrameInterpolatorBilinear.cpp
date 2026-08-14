@@ -405,6 +405,27 @@ TEST(TestAdvancedFrameInterpolatorBilinear, InterpolatePatchWithMaskChannels4Pat
 }
 
 
+TEST(TestAdvancedFrameInterpolatorBilinear, InterpolateSquareMirroredBorderTopLeftQuantization)
+{
+	constexpr unsigned int width = 2u;
+	constexpr unsigned int height = 2u;
+	constexpr unsigned int patchSize = 3u;
+
+	const uint8_t frame[width * height] = {0u, 255u, 0u, 255u};
+	const uint8_t expectedBuffer[patchSize * patchSize] = {0u, 0u, 255u, 0u, 0u, 255u, 0u, 0u, 255u};
+
+	// Two float ULPs below the first 7-bit interpolation-factor boundary.
+	const Vector2 position(Scalar(0.0039062495343387127), Scalar(0));
+
+	uint8_t runtimeBuffer[patchSize * patchSize];
+	CV::Advanced::AdvancedFrameInterpolatorBilinearBase::interpolateSquareMirroredBorder8BitPerChannel<1u>(frame, width, height, 0u, runtimeBuffer, position, patchSize);
+	EXPECT_EQ(memcmp(runtimeBuffer, expectedBuffer, sizeof(expectedBuffer)), 0);
+
+	uint8_t templateBuffer[patchSize * patchSize];
+	CV::Advanced::AdvancedFrameInterpolatorBilinearBase::interpolateSquareMirroredBorderTemplate8BitPerChannel<1u, patchSize>(frame, width, height, 0u, templateBuffer, position);
+	EXPECT_EQ(memcmp(templateBuffer, expectedBuffer, sizeof(expectedBuffer)), 0);
+}
+
 TEST(TestAdvancedFrameInterpolatorBilinear, InterpolateSquareMirroredBorderChannels1PatchSize1)
 {
 	EXPECT_TRUE((TestAdvancedFrameInterpolatorBilinear::testInterpolateSquareMirroredBorder<1u, 1u>(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, GTEST_TEST_DURATION)));
