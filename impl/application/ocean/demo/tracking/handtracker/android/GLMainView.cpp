@@ -38,13 +38,22 @@ GLMainView::GLMainView()
 
 GLMainView::~GLMainView()
 {
-	stopThread();
+	// wait until the thread has ended, as threadRun() is using the members of this object
+
+	stopThreadExplicitly();
 
 	release();
 }
 
 void GLMainView::initializeHandTracker(const std::string& inputMedium, const std::string& resolution)
 {
+	if (inputFrameMedium_)
+	{
+		Log::debug() << "The hand tracker is initialized already, the medium and the resolution are not changed";
+
+		return;
+	}
+
 	inputFrameMedium_ = Media::Manager::get().newMedium(inputMedium);
 
 	if (inputFrameMedium_)
@@ -203,11 +212,11 @@ void GLMainView::threadRun()
 
 					if (bitmap)
 					{
-						jstring result = jstring(env->CallStaticObjectMethod(*jActivityClass_, jMethodId_, *bitmap));
+						const Platform::Android::ScopedJString result(*env, jstring(env->CallStaticObjectMethod(*jActivityClass_, jMethodId_, *bitmap)));
 
-						if (result != nullptr)
+						if (result)
 						{
-							const std::string cResult(Platform::Android::Utilities::toAString(env, result));
+							const std::string cResult(Platform::Android::Utilities::toAString(env, *result));
 
 							Log::debug() << "Successfully processed image: " << cResult;
 
