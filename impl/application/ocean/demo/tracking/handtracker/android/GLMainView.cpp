@@ -142,6 +142,10 @@ bool GLMainView::initialize()
 
 bool GLMainView::release()
 {
+	stopThreadExplicitly();
+
+	inputFrameMedium_.release();
+
 	renderingText_.release();
 
 	return GLFrameView::release();
