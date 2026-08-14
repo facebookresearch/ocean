@@ -123,7 +123,7 @@ bool OceanUSBManager::enumerateDevices(JNIEnv* jniEnv, DeviceDescriptors& device
 	}
 
 	Strings deviceNames;
-	if (!AndroidUtilities::toVector(jniEnv, resultList, deviceNames))
+	if (!AndroidUtilities::toVector(jniEnv, *resultList, deviceNames))
 	{
 		return false;
 	}
@@ -144,11 +144,11 @@ bool OceanUSBManager::enumerateDevices(JNIEnv* jniEnv, DeviceDescriptors& device
 		const ScopedJString jDeviceName(*jniEnv, AndroidUtilities::toJavaString(jniEnv, deviceName));
 		ocean_assert(jDeviceName);
 
-		const ScopedJString jManufacturerName(*jniEnv, jstring(jniEnv->CallStaticObjectMethod(*javaClassOceanUSBManager_, functionIdGetManufacturerName, jobject(jDeviceName))));
-		const ScopedJString jProductName(*jniEnv, jstring(jniEnv->CallStaticObjectMethod(*javaClassOceanUSBManager_, functionIdGetProductName, jobject(jDeviceName))));
-		const ScopedJString jProductDetails(*jniEnv, jstring(jniEnv->CallStaticObjectMethod(*javaClassOceanUSBManager_, functionIdGetProductDetails, jobject(jDeviceName))));
+		const ScopedJString jManufacturerName(*jniEnv, jstring(jniEnv->CallStaticObjectMethod(*javaClassOceanUSBManager_, functionIdGetManufacturerName, jobject(*jDeviceName))));
+		const ScopedJString jProductName(*jniEnv, jstring(jniEnv->CallStaticObjectMethod(*javaClassOceanUSBManager_, functionIdGetProductName, jobject(*jDeviceName))));
+		const ScopedJString jProductDetails(*jniEnv, jstring(jniEnv->CallStaticObjectMethod(*javaClassOceanUSBManager_, functionIdGetProductDetails, jobject(*jDeviceName))));
 
-		if (jProductDetails == nullptr)
+		if (!jProductDetails)
 		{
 			return false;
 		}
@@ -159,16 +159,16 @@ bool OceanUSBManager::enumerateDevices(JNIEnv* jniEnv, DeviceDescriptors& device
 
 		if (jProductName)
 		{
-			deviceDescriptor.productName_ = AndroidUtilities::toAString(jniEnv, jProductName);
+			deviceDescriptor.productName_ = AndroidUtilities::toAString(jniEnv, *jProductName);
 		}
 
 		if (jManufacturerName)
 		{
-			deviceDescriptor.manufacturerName_ = AndroidUtilities::toAString(jniEnv, jManufacturerName);
+			deviceDescriptor.manufacturerName_ = AndroidUtilities::toAString(jniEnv, *jManufacturerName);
 		}
 
 		std::vector<int> productDetails;
-		if (!AndroidUtilities::toVector(jniEnv, jProductDetails, productDetails))
+		if (!AndroidUtilities::toVector(jniEnv, *jProductDetails, productDetails))
 		{
 			return false;
 		}
@@ -240,7 +240,7 @@ bool OceanUSBManager::hasPermission(JNIEnv* jniEnv, const std::string& deviceNam
 	const ScopedJString jDeviceName(*jniEnv, AndroidUtilities::toJavaString(jniEnv, deviceName));
 	ocean_assert(jDeviceName);
 
-	const jint result = jniEnv->CallStaticIntMethod(*javaClassOceanUSBManager_, functionId, jobject(jDeviceName));
+	const jint result = jniEnv->CallStaticIntMethod(*javaClassOceanUSBManager_, functionId, jobject(*jDeviceName));
 
 	if (result == 1)
 	{
@@ -300,7 +300,7 @@ OceanUSBManager::ScopedPermissionSubscription OceanUSBManager::requestPermission
 		iPermission->second.emplace_back(uniqueRequestId, std::move(permissionCallback));
 	}
 
-	if (!jniEnv->CallStaticBooleanMethod(*javaClassOceanUSBManager_, functionId, jobject(jDeviceName)))
+	if (!jniEnv->CallStaticBooleanMethod(*javaClassOceanUSBManager_, functionId, jobject(*jDeviceName)))
 	{
 		if (permissionCallbackWasValid)
 		{
@@ -339,7 +339,7 @@ bool OceanUSBManager::openDevice(JNIEnv* jniEnv, const std::string& deviceName, 
 	const ScopedJString jDeviceName(*jniEnv, AndroidUtilities::toJavaString(jniEnv, deviceName));
 	ocean_assert(jDeviceName);
 
-	const jint result = jniEnv->CallStaticIntMethod(*javaClassOceanUSBManager_, functionId, jobject(jDeviceName));
+	const jint result = jniEnv->CallStaticIntMethod(*javaClassOceanUSBManager_, functionId, jobject(*jDeviceName));
 
 	if (result == -1)
 	{
@@ -376,7 +376,7 @@ bool OceanUSBManager::closeDevice(JNIEnv* jniEnv, const std::string& deviceName)
 	const ScopedJString jDeviceName(*jniEnv, AndroidUtilities::toJavaString(jniEnv, deviceName));
 	ocean_assert(jDeviceName);
 
-	return jniEnv->CallStaticBooleanMethod(*javaClassOceanUSBManager_, functionId, jobject(jDeviceName));
+	return jniEnv->CallStaticBooleanMethod(*javaClassOceanUSBManager_, functionId, jobject(*jDeviceName));
 }
 
 void OceanUSBManager::onDevicePermission(const std::string& deviceName, bool granted)

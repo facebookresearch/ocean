@@ -90,14 +90,14 @@ ScopedJObject Bitmap::toBitmap(JNIEnv* env, const Frame& rgbaFrame)
 		return ScopedJObject();
 	}
 
-	const jfieldID jFormatField = env->GetStaticFieldID(jBitmapConfigClass, "ARGB_8888", "Landroid/graphics/Bitmap$Config;");
+	const jfieldID jFormatField = env->GetStaticFieldID(*jBitmapConfigClass, "ARGB_8888", "Landroid/graphics/Bitmap$Config;");
 
 	if (jFormatField == nullptr)
 	{
 		return ScopedJObject();
 	}
 
-	const ScopedJObject jFormatObject(*env, env->GetStaticObjectField(jBitmapConfigClass, jFormatField));
+	const ScopedJObject jFormatObject(*env, env->GetStaticObjectField(*jBitmapConfigClass, jFormatField));
 
 	if (!jFormatObject)
 	{
@@ -111,14 +111,14 @@ ScopedJObject Bitmap::toBitmap(JNIEnv* env, const Frame& rgbaFrame)
 		return ScopedJObject();
 	}
 
-	const jmethodID jCreateBitmapMethod = env->GetStaticMethodID(jBitmapClass, "createBitmap", "(IILandroid/graphics/Bitmap$Config;)Landroid/graphics/Bitmap;");
+	const jmethodID jCreateBitmapMethod = env->GetStaticMethodID(*jBitmapClass, "createBitmap", "(IILandroid/graphics/Bitmap$Config;)Landroid/graphics/Bitmap;");
 
 	if (jCreateBitmapMethod == nullptr)
 	{
 		return ScopedJObject();
 	}
 
-	ScopedJObject jBitmapObject(*env, env->CallStaticObjectMethod(jBitmapClass, jCreateBitmapMethod, int(rgbaFrame.width()), int(rgbaFrame.height()), *jFormatObject));
+	ScopedJObject jBitmapObject(*env, env->CallStaticObjectMethod(*jBitmapClass, jCreateBitmapMethod, int(rgbaFrame.width()), int(rgbaFrame.height()), *jFormatObject));
 
 	if (!jBitmapObject)
 	{

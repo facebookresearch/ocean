@@ -82,7 +82,7 @@ void GLMainView::initializeHandTracker(const std::string& inputMedium, const std
 
 		if (activityClass)
 		{
-			jMethodId_ = env->GetStaticMethodID(activityClass, "processImage", "(Landroid/graphics/Bitmap;)Ljava/lang/String;");
+			jMethodId_ = env->GetStaticMethodID(*activityClass, "processImage", "(Landroid/graphics/Bitmap;)Ljava/lang/String;");
 
 			if (jMethodId_ == nullptr)
 			{

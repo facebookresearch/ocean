@@ -80,7 +80,7 @@ bool Utilities::toVector(JNIEnv* env, jobject javaStringList, Strings& strings)
 		return false;
 	}
 
-	const jmethodID functionId = env->GetMethodID(javaClassList, "toArray", "()[Ljava/lang/Object;");
+	const jmethodID functionId = env->GetMethodID(*javaClassList, "toArray", "()[Ljava/lang/Object;");
 
 	if (functionId == nullptr)
 	{
@@ -94,7 +94,7 @@ bool Utilities::toVector(JNIEnv* env, jobject javaStringList, Strings& strings)
 		return false;
 	}
 
-	const jsize size = env->GetArrayLength(javaArray);
+	const jsize size = env->GetArrayLength(*javaArray);
 
 	if (size < 0)
 	{
@@ -112,14 +112,14 @@ bool Utilities::toVector(JNIEnv* env, jobject javaStringList, Strings& strings)
 
 	for (jsize n = 0; n < size; ++n)
 	{
-		const ScopedJString javaString(*env, (jstring)(env->GetObjectArrayElement(javaArray, n)));
+		const ScopedJString javaString(*env, (jstring)(env->GetObjectArrayElement(*javaArray, n)));
 
 		if (!javaString)
 		{
 			return false;
 		}
 
-		strings.emplace_back(toAString(env, javaString));
+		strings.emplace_back(toAString(env, *javaString));
 	}
 
 	return true;
@@ -137,7 +137,7 @@ bool Utilities::toVector(JNIEnv* env, jobject javaIntegerList, std::vector<int>&
 		return false;
 	}
 
-	const jmethodID functionIdToArray = env->GetMethodID(javaClassList, "toArray", "()[Ljava/lang/Object;");
+	const jmethodID functionIdToArray = env->GetMethodID(*javaClassList, "toArray", "()[Ljava/lang/Object;");
 
 	if (functionIdToArray == nullptr)
 	{
@@ -151,7 +151,7 @@ bool Utilities::toVector(JNIEnv* env, jobject javaIntegerList, std::vector<int>&
 		return false;
 	}
 
-	const jsize size = env->GetArrayLength(javaArray);
+	const jsize size = env->GetArrayLength(*javaArray);
 
 	if (size < 0)
 	{
@@ -172,7 +172,7 @@ bool Utilities::toVector(JNIEnv* env, jobject javaIntegerList, std::vector<int>&
 		return false;
 	}
 
-	const jmethodID jFunctionIdIntValue = env->GetMethodID(javaClassInteger, "intValue", "()I");
+	const jmethodID jFunctionIdIntValue = env->GetMethodID(*javaClassInteger, "intValue", "()I");
 
 	if (jFunctionIdIntValue == nullptr)
 	{
@@ -181,14 +181,14 @@ bool Utilities::toVector(JNIEnv* env, jobject javaIntegerList, std::vector<int>&
 
 	for (jsize n = 0; n < size; ++n)
 	{
-		const ScopedJObject javaObject(*env, (jstring)(env->GetObjectArrayElement(javaArray, n)));
+		const ScopedJObject javaObject(*env, (jstring)(env->GetObjectArrayElement(*javaArray, n)));
 
 		if (!javaObject)
 		{
 			return false;
 		}
 
-		values.emplace_back(env->CallIntMethod(javaObject, jFunctionIdIntValue));
+		values.emplace_back(env->CallIntMethod(*javaObject, jFunctionIdIntValue));
 	}
 
 	return true;
@@ -206,7 +206,7 @@ bool Utilities::className(JNIEnv* env, jobject object, std::string& name)
 		return false;
 	}
 
-	jmethodID getClassMethodId =  env->GetMethodID(objectClass, "getClass", "()Ljava/lang/Class;");
+	jmethodID getClassMethodId =  env->GetMethodID(*objectClass, "getClass", "()Ljava/lang/Class;");
 
 	if (getClassMethodId == nullptr)
 	{
@@ -220,28 +220,28 @@ bool Utilities::className(JNIEnv* env, jobject object, std::string& name)
 		return false;
 	}
 
-	const ScopedJClass classDescriptor(*env, env->GetObjectClass(classObject));
+	const ScopedJClass classDescriptor(*env, env->GetObjectClass(*classObject));
 
 	if (!classDescriptor.isValid())
 	{
 		return false;
 	}
 
-	jmethodID getNameMethodId =  env->GetMethodID(classDescriptor, "getName", "()Ljava/lang/String;");
+	jmethodID getNameMethodId =  env->GetMethodID(*classDescriptor, "getName", "()Ljava/lang/String;");
 
 	if (getNameMethodId == nullptr)
 	{
 		return false;
 	}
 
-	const ScopedJString constructorName(*env, (jstring)env->CallObjectMethod(classObject, getNameMethodId));
+	const ScopedJString constructorName(*env, (jstring)env->CallObjectMethod(*classObject, getNameMethodId));
 
 	if (!constructorName.isValid())
 	{
 		return false;
 	}
 
-	name = toAString(env, constructorName);
+	name = toAString(env, *constructorName);
 
 	return !name.empty();
 }
@@ -269,14 +269,14 @@ bool Utilities::manifestVersion(JavaVM* javaVM, jobject activity, int& versionCo
 		return false;
 	}
 
-	jmethodID getPackageNameMethodId = scopedJNIEnvironment.jniEnv()->GetMethodID(activityClass, "getPackageName", "()Ljava/lang/String;");
+	jmethodID getPackageNameMethodId = scopedJNIEnvironment.jniEnv()->GetMethodID(*activityClass, "getPackageName", "()Ljava/lang/String;");
 
 	if (getPackageNameMethodId == nullptr)
 	{
 		return false;
 	}
 
-	jmethodID getPackageManagerMethodId =  scopedJNIEnvironment.jniEnv()->GetMethodID(activityClass, "getPackageManager", "()Landroid/content/pm/PackageManager;");
+	jmethodID getPackageManagerMethodId =  scopedJNIEnvironment.jniEnv()->GetMethodID(*activityClass, "getPackageManager", "()Landroid/content/pm/PackageManager;");
 
 	if (getPackageManagerMethodId == nullptr)
 	{
@@ -290,7 +290,7 @@ bool Utilities::manifestVersion(JavaVM* javaVM, jobject activity, int& versionCo
 		return false;
 	}
 
-	jmethodID getPackageInfoMethodId = scopedJNIEnvironment.jniEnv()->GetMethodID(javaClassPackageManager, "getPackageInfo", "(Ljava/lang/String;I)Landroid/content/pm/PackageInfo;");
+	jmethodID getPackageInfoMethodId = scopedJNIEnvironment.jniEnv()->GetMethodID(*javaClassPackageManager, "getPackageInfo", "(Ljava/lang/String;I)Landroid/content/pm/PackageInfo;");
 
 	if (getPackageInfoMethodId == nullptr)
 	{
@@ -304,14 +304,14 @@ bool Utilities::manifestVersion(JavaVM* javaVM, jobject activity, int& versionCo
 		return false;
 	}
 
-	const jfieldID versionCodeFieldId = scopedJNIEnvironment.jniEnv()->GetFieldID(javaClassPackageInfo, "versionCode", "I");
+	const jfieldID versionCodeFieldId = scopedJNIEnvironment.jniEnv()->GetFieldID(*javaClassPackageInfo, "versionCode", "I");
 
 	if (versionCodeFieldId == nullptr)
 	{
 		return false;
 	}
 
-	const jfieldID versionNameFieldId = scopedJNIEnvironment.jniEnv()->GetFieldID(javaClassPackageInfo, "versionName", "Ljava/lang/String;");
+	const jfieldID versionNameFieldId = scopedJNIEnvironment.jniEnv()->GetFieldID(*javaClassPackageInfo, "versionName", "Ljava/lang/String;");
 
 	if (versionNameFieldId == nullptr)
 	{
@@ -332,23 +332,23 @@ bool Utilities::manifestVersion(JavaVM* javaVM, jobject activity, int& versionCo
 		return false;
 	}
 
-	const ScopedJObject packageInfo(scopedJNIEnvironment, scopedJNIEnvironment.jniEnv()->CallObjectMethod(packageManager, getPackageInfoMethodId, *packageName, 0x0));
+	const ScopedJObject packageInfo(scopedJNIEnvironment, scopedJNIEnvironment.jniEnv()->CallObjectMethod(*packageManager, getPackageInfoMethodId, *packageName, 0x0));
 
 	if (!packageInfo.isValid())
 	{
 		return false;
 	}
 
-	versionCode = scopedJNIEnvironment.jniEnv()->GetIntField(packageInfo, versionCodeFieldId);
+	versionCode = scopedJNIEnvironment.jniEnv()->GetIntField(*packageInfo, versionCodeFieldId);
 
-	const ScopedJString versionNameFieldValue(scopedJNIEnvironment, (jstring)(scopedJNIEnvironment.jniEnv()->GetObjectField(packageInfo, versionNameFieldId)));
+	const ScopedJString versionNameFieldValue(scopedJNIEnvironment, (jstring)(scopedJNIEnvironment.jniEnv()->GetObjectField(*packageInfo, versionNameFieldId)));
 
-	if (versionNameFieldValue == nullptr)
+	if (!versionNameFieldValue)
 	{
 		return false;
 	}
 
-	versionName = Utilities::toAString(scopedJNIEnvironment.jniEnv(), versionNameFieldValue);
+	versionName = Utilities::toAString(scopedJNIEnvironment.jniEnv(), *versionNameFieldValue);
 
 	return true;
 }
@@ -379,8 +379,8 @@ bool Utilities::manifestSdkVersions(JNIEnv* env, jobject activity, unsigned int&
 	// PackageManager packageManager = getActivity().getPackageManager();
 	// String packageName = packageManager.getPackageName()
 	// ApplicationInfo applicationInfo = getActivity().getApplicationInfo(packageName, 0);
-	jmethodID jGetPackageNameMethodId = env->GetMethodID(jActivityClass, "getPackageName", "()Ljava/lang/String;");
-	jmethodID jGetPackageManagerMethodId =  env->GetMethodID(jActivityClass, "getPackageManager", "()Landroid/content/pm/PackageManager;");
+	jmethodID jGetPackageNameMethodId = env->GetMethodID(*jActivityClass, "getPackageName", "()Ljava/lang/String;");
+	jmethodID jGetPackageManagerMethodId =  env->GetMethodID(*jActivityClass, "getPackageManager", "()Landroid/content/pm/PackageManager;");
 
 	if (jGetPackageNameMethodId == nullptr || jGetPackageManagerMethodId == nullptr)
 	{
@@ -402,7 +402,7 @@ bool Utilities::manifestSdkVersions(JNIEnv* env, jobject activity, unsigned int&
 		return false;
 	}
 
-	jmethodID jGetApplicationInfoMethodId = env->GetMethodID(jPackageManagerClass, "getApplicationInfo", "(Ljava/lang/String;I)Landroid/content/pm/ApplicationInfo;");
+	jmethodID jGetApplicationInfoMethodId = env->GetMethodID(*jPackageManagerClass, "getApplicationInfo", "(Ljava/lang/String;I)Landroid/content/pm/ApplicationInfo;");
 
 	if (jGetApplicationInfoMethodId == nullptr)
 	{
@@ -416,7 +416,7 @@ bool Utilities::manifestSdkVersions(JNIEnv* env, jobject activity, unsigned int&
 		return false;
 	}
 
-	const ScopedJObject jApplicationInfoObject(*env, env->CallObjectMethod(jPackageManagerObject, jGetApplicationInfoMethodId, *jPackageNameString, 0x0));
+	const ScopedJObject jApplicationInfoObject(*env, env->CallObjectMethod(*jPackageManagerObject, jGetApplicationInfoMethodId, *jPackageNameString, 0x0));
 
 	if (!jApplicationInfoObject.isValid())
 	{
@@ -425,16 +425,16 @@ bool Utilities::manifestSdkVersions(JNIEnv* env, jobject activity, unsigned int&
 
 	// int minSdkVersion = applicationInfo.minSdkVersion;
 	// int targetSdkVersion = applicationInfo.targetSdkVersion;
-	jfieldID jMinSdkVersionFieldId = env->GetFieldID(jApplicationInfoClass, "minSdkVersion", "I");
-	jfieldID jTargetSdkVersionFieldId = env->GetFieldID(jApplicationInfoClass, "targetSdkVersion", "I");
+	jfieldID jMinSdkVersionFieldId = env->GetFieldID(*jApplicationInfoClass, "minSdkVersion", "I");
+	jfieldID jTargetSdkVersionFieldId = env->GetFieldID(*jApplicationInfoClass, "targetSdkVersion", "I");
 
 	if (jMinSdkVersionFieldId == nullptr || jTargetSdkVersionFieldId == nullptr)
 	{
 		return false;
 	}
 
-	const jint jMinSdkVersion = env->GetIntField(jApplicationInfoObject, jMinSdkVersionFieldId);
-	const jint jTargetSdkVersion = env->GetIntField(jApplicationInfoObject, jTargetSdkVersionFieldId);
+	const jint jMinSdkVersion = env->GetIntField(*jApplicationInfoObject, jMinSdkVersionFieldId);
+	const jint jTargetSdkVersion = env->GetIntField(*jApplicationInfoObject, jTargetSdkVersionFieldId);
 
 	if (jMinSdkVersion < 0 || jTargetSdkVersion < 0)
 	{
@@ -459,14 +459,14 @@ bool Utilities::androidReleaseVersion(JNIEnv* env, std::string& version)
 		return false;
 	}
 
-	jfieldID jReleaseField = env->GetStaticFieldID(jVersionClass, "RELEASE", "Ljava/lang/String;");
+	jfieldID jReleaseField = env->GetStaticFieldID(*jVersionClass, "RELEASE", "Ljava/lang/String;");
 
 	if (jReleaseField == nullptr)
 	{
 		return false;
 	}
 
-	const jstring jReleaseString = jstring(env->GetStaticObjectField(jVersionClass, jReleaseField));
+	const jstring jReleaseString = jstring(env->GetStaticObjectField(*jVersionClass, jReleaseField));
 
 	if (jReleaseString == nullptr)
 	{
@@ -489,14 +489,14 @@ bool Utilities::androidSdkVersion(JNIEnv* env, unsigned int& version)
 		return false;
 	}
 
-	jfieldID jSdkIntField = env->GetStaticFieldID(jVersionClass, "SDK_INT", "I");
+	jfieldID jSdkIntField = env->GetStaticFieldID(*jVersionClass, "SDK_INT", "I");
 
 	if (jSdkIntField == nullptr)
 	{
 		return false;
 	}
 
-	const jint jVersion = env->GetStaticIntField(jVersionClass, jSdkIntField);
+	const jint jVersion = env->GetStaticIntField(*jVersionClass, jSdkIntField);
 
 	if (jVersion < 0)
 	{
@@ -537,21 +537,21 @@ bool Utilities::deviceBrand(JNIEnv* env, std::string& brand)
 		return false;
 	}
 
-	jfieldID fieldId = env->GetStaticFieldID(javaClassBuild, "BRAND", "Ljava/lang/String;");
+	jfieldID fieldId = env->GetStaticFieldID(*javaClassBuild, "BRAND", "Ljava/lang/String;");
 
 	if (fieldId == nullptr)
 	{
 		return false;
 	}
 
-	const ScopedJString fieldValue(*env, (jstring)(env->GetStaticObjectField(javaClassBuild, fieldId)));
+	const ScopedJString fieldValue(*env, (jstring)(env->GetStaticObjectField(*javaClassBuild, fieldId)));
 
-	if (fieldValue == nullptr)
+	if (!fieldValue)
 	{
 		return false;
 	}
 
-	brand = Utilities::toAString(env, fieldValue);
+	brand = Utilities::toAString(env, *fieldValue);
 
 	return true;
 }
@@ -567,21 +567,21 @@ bool Utilities::deviceModel(JNIEnv* env, std::string& model)
 		return false;
 	}
 
-	jfieldID fieldId = env->GetStaticFieldID(javaClassBuild, "MODEL", "Ljava/lang/String;");
+	jfieldID fieldId = env->GetStaticFieldID(*javaClassBuild, "MODEL", "Ljava/lang/String;");
 
 	if (fieldId == nullptr)
 	{
 		return false;
 	}
 
-	const ScopedJString fieldValue(*env, (jstring)(env->GetStaticObjectField(javaClassBuild, fieldId)));
+	const ScopedJString fieldValue(*env, (jstring)(env->GetStaticObjectField(*javaClassBuild, fieldId)));
 
-	if (fieldValue == nullptr)
+	if (!fieldValue)
 	{
 		return false;
 	}
 
-	model = Utilities::toAString(env, fieldValue);
+	model = Utilities::toAString(env, *fieldValue);
 
 	return true;
 }
@@ -637,14 +637,14 @@ bool Utilities::sendIntentToComponent(JNIEnv* env, jobject activity, const std::
 		return false;
 	}
 
-	jmethodID jNewComponentNameMethod = env->GetMethodID(jComponentNameClass, "<init>", "(Ljava/lang/String;Ljava/lang/String;)V");
+	jmethodID jNewComponentNameMethod = env->GetMethodID(*jComponentNameClass, "<init>", "(Ljava/lang/String;Ljava/lang/String;)V");
 
 	if (!jNewComponentNameMethod)
 	{
 		return false;
 	}
 
-	const ScopedJObject jComponentNameObject(*env, env->NewObject(jComponentNameClass, jNewComponentNameMethod, *jPackageName, *jClassName));
+	const ScopedJObject jComponentNameObject(*env, env->NewObject(*jComponentNameClass, jNewComponentNameMethod, *jPackageName, *jClassName));
 
 	if (!jNewComponentNameMethod)
 	{
@@ -658,8 +658,8 @@ bool Utilities::sendIntentToComponent(JNIEnv* env, jobject activity, const std::
 		return false;
 	}
 
-	jfieldID jActionSendField = env->GetStaticFieldID(jIntentClass, "ACTION_SEND", "Ljava/lang/String;");
-	jfieldID jExtraTextField = env->GetStaticFieldID(jIntentClass, "EXTRA_TEXT", "Ljava/lang/String;");
+	jfieldID jActionSendField = env->GetStaticFieldID(*jIntentClass, "ACTION_SEND", "Ljava/lang/String;");
+	jfieldID jExtraTextField = env->GetStaticFieldID(*jIntentClass, "EXTRA_TEXT", "Ljava/lang/String;");
 
 	jstring jActionSendValue = (jstring)(env->GetStaticObjectField(*jIntentClass, jActionSendField));
 	jstring jExtraTextValue = (jstring)(env->GetStaticObjectField(*jIntentClass, jExtraTextField));
@@ -789,14 +789,14 @@ bool Utilities::connectToWifi(JNIEnv* env, jobject activity, const std::string& 
 		return false;
 	}
 
-	jmethodID jNewWifiConfigurationMethod = env->GetMethodID(jWifiConfigurationClass, "<init>", "()V");
+	jmethodID jNewWifiConfigurationMethod = env->GetMethodID(*jWifiConfigurationClass, "<init>", "()V");
 
 	if (!jNewWifiConfigurationMethod)
 	{
 		return false;
 	}
 
-	const ScopedJObject jWifiConfigurationObject(*env, env->NewObject(jWifiConfigurationClass, jNewWifiConfigurationMethod));
+	const ScopedJObject jWifiConfigurationObject(*env, env->NewObject(*jWifiConfigurationClass, jNewWifiConfigurationMethod));
 
 	if (!jWifiConfigurationObject)
 	{
@@ -810,14 +810,14 @@ bool Utilities::connectToWifi(JNIEnv* env, jobject activity, const std::string& 
 		return false;
 	}
 
-	jfieldID jEnabledField = env->GetStaticFieldID(jStatusClass, "ENABLED", "I");
+	jfieldID jEnabledField = env->GetStaticFieldID(*jStatusClass, "ENABLED", "I");
 
 	if (jEnabledField == nullptr)
 	{
 		return false;
 	}
 
-	const jint jEnabled = env->GetStaticIntField(jStatusClass, jEnabledField);
+	const jint jEnabled = env->GetStaticIntField(*jStatusClass, jEnabledField);
 
 	if (jEnabled < 0)
 	{
@@ -825,9 +825,9 @@ bool Utilities::connectToWifi(JNIEnv* env, jobject activity, const std::string& 
 		return false;
 	}
 
-	jfieldID jSsidField = env->GetFieldID(jWifiConfigurationClass, "SSID", "Ljava/lang/String;");
-	jfieldID jPreSharedKeyField = env->GetFieldID(jWifiConfigurationClass, "preSharedKey", "Ljava/lang/String;");
-	jfieldID jStatus = env->GetFieldID(jWifiConfigurationClass, "status", "I");
+	jfieldID jSsidField = env->GetFieldID(*jWifiConfigurationClass, "SSID", "Ljava/lang/String;");
+	jfieldID jPreSharedKeyField = env->GetFieldID(*jWifiConfigurationClass, "preSharedKey", "Ljava/lang/String;");
+	jfieldID jStatus = env->GetFieldID(*jWifiConfigurationClass, "status", "I");
 
 	if (jSsidField == nullptr || jPreSharedKeyField == nullptr ||jStatus == nullptr)
 	{
@@ -852,26 +852,26 @@ bool Utilities::connectToWifi(JNIEnv* env, jobject activity, const std::string& 
 		return false;
 	}
 
-	jfieldID jGroupCipherTkipField = env->GetStaticFieldID(jGroupCipherClass, "TKIP", "I");
-	jfieldID jGroupCipherCcmpField = env->GetStaticFieldID(jGroupCipherClass, "CCMP", "I");
+	jfieldID jGroupCipherTkipField = env->GetStaticFieldID(*jGroupCipherClass, "TKIP", "I");
+	jfieldID jGroupCipherCcmpField = env->GetStaticFieldID(*jGroupCipherClass, "CCMP", "I");
 
-	jfieldID jKeyMgmtWpaPskField = env->GetStaticFieldID(jKeyMgmtClass, "WPA_PSK", "I");
+	jfieldID jKeyMgmtWpaPskField = env->GetStaticFieldID(*jKeyMgmtClass, "WPA_PSK", "I");
 
-	jfieldID jPairwiseCipherTkipField = env->GetStaticFieldID(jPairwiseCipherClass, "TKIP", "I");
-	jfieldID jPairwiseCipherCcmpField = env->GetStaticFieldID(jPairwiseCipherClass, "CCMP", "I");
+	jfieldID jPairwiseCipherTkipField = env->GetStaticFieldID(*jPairwiseCipherClass, "TKIP", "I");
+	jfieldID jPairwiseCipherCcmpField = env->GetStaticFieldID(*jPairwiseCipherClass, "CCMP", "I");
 
 	if (jGroupCipherTkipField == nullptr || jGroupCipherCcmpField == nullptr || jKeyMgmtWpaPskField == nullptr || jPairwiseCipherTkipField == nullptr || jPairwiseCipherCcmpField == nullptr)
 	{
 		return false;
 	}
 
-	const jint jGroupCipherTkip = env->GetStaticIntField(jGroupCipherClass, jGroupCipherTkipField);
-	const jint jGroupCipherCcmp = env->GetStaticIntField(jGroupCipherClass, jGroupCipherCcmpField);
+	const jint jGroupCipherTkip = env->GetStaticIntField(*jGroupCipherClass, jGroupCipherTkipField);
+	const jint jGroupCipherCcmp = env->GetStaticIntField(*jGroupCipherClass, jGroupCipherCcmpField);
 
-	const jint jKeyMgmtWpaPsk = env->GetStaticIntField(jKeyMgmtClass, jKeyMgmtWpaPskField);
+	const jint jKeyMgmtWpaPsk = env->GetStaticIntField(*jKeyMgmtClass, jKeyMgmtWpaPskField);
 
-	const jint jPairwiseCipherTkip = env->GetStaticIntField(jPairwiseCipherClass, jPairwiseCipherTkipField);
-	const jint jPairwiseCipherCcmp = env->GetStaticIntField(jPairwiseCipherClass, jPairwiseCipherCcmpField);
+	const jint jPairwiseCipherTkip = env->GetStaticIntField(*jPairwiseCipherClass, jPairwiseCipherTkipField);
+	const jint jPairwiseCipherCcmp = env->GetStaticIntField(*jPairwiseCipherClass, jPairwiseCipherCcmpField);
 
 	if (jGroupCipherTkip < 0 || jGroupCipherCcmp < 0 || jKeyMgmtWpaPsk < 0 || jPairwiseCipherTkip < 0 || jPairwiseCipherCcmp < 0)
 	{
@@ -886,38 +886,38 @@ bool Utilities::connectToWifi(JNIEnv* env, jobject activity, const std::string& 
 		return false;
 	}
 
-	jmethodID jSetIntMethod = env->GetMethodID(jBitSetClass, "set", "(I)V");
+	jmethodID jSetIntMethod = env->GetMethodID(*jBitSetClass, "set", "(I)V");
 
 	if (!jSetIntMethod)
 	{
 		return false;
 	}
 
-	jfieldID jAllowedGroupCiphersField = env->GetFieldID(jWifiConfigurationClass, "allowedGroupCiphers", "Ljava/util/BitSet;");
-	jfieldID jAllowedKeyManagementField = env->GetFieldID(jWifiConfigurationClass, "allowedKeyManagement", "Ljava/util/BitSet;");
-	jfieldID jAllowedPairwiseCiphersField = env->GetFieldID(jWifiConfigurationClass, "allowedPairwiseCiphers", "Ljava/util/BitSet;");
+	jfieldID jAllowedGroupCiphersField = env->GetFieldID(*jWifiConfigurationClass, "allowedGroupCiphers", "Ljava/util/BitSet;");
+	jfieldID jAllowedKeyManagementField = env->GetFieldID(*jWifiConfigurationClass, "allowedKeyManagement", "Ljava/util/BitSet;");
+	jfieldID jAllowedPairwiseCiphersField = env->GetFieldID(*jWifiConfigurationClass, "allowedPairwiseCiphers", "Ljava/util/BitSet;");
 
 	if (jAllowedGroupCiphersField == nullptr || jAllowedKeyManagementField == nullptr || jAllowedPairwiseCiphersField == nullptr)
 	{
 		return false;
 	}
 
-	const ScopedJObject jAllowedGroupCiphersObject(*env, env->GetObjectField(jWifiConfigurationObject, jAllowedGroupCiphersField));
-	const ScopedJObject jAllowedKeyManagementObject(*env, env->GetObjectField(jWifiConfigurationObject, jAllowedKeyManagementField));
-	const ScopedJObject jAllowedPairwiseCiphersObject(*env, env->GetObjectField(jWifiConfigurationObject, jAllowedPairwiseCiphersField));
+	const ScopedJObject jAllowedGroupCiphersObject(*env, env->GetObjectField(*jWifiConfigurationObject, jAllowedGroupCiphersField));
+	const ScopedJObject jAllowedKeyManagementObject(*env, env->GetObjectField(*jWifiConfigurationObject, jAllowedKeyManagementField));
+	const ScopedJObject jAllowedPairwiseCiphersObject(*env, env->GetObjectField(*jWifiConfigurationObject, jAllowedPairwiseCiphersField));
 
 	if (!jAllowedGroupCiphersObject || !jAllowedKeyManagementObject ||!jAllowedPairwiseCiphersObject)
 	{
 		return false;
 	}
 
-	env->CallVoidMethod(jAllowedGroupCiphersObject, jSetIntMethod, jGroupCipherTkip);
-	env->CallVoidMethod(jAllowedGroupCiphersObject, jSetIntMethod, jGroupCipherCcmp);
+	env->CallVoidMethod(*jAllowedGroupCiphersObject, jSetIntMethod, jGroupCipherTkip);
+	env->CallVoidMethod(*jAllowedGroupCiphersObject, jSetIntMethod, jGroupCipherCcmp);
 
-	env->CallVoidMethod(jAllowedKeyManagementObject, jSetIntMethod, jKeyMgmtWpaPsk);
+	env->CallVoidMethod(*jAllowedKeyManagementObject, jSetIntMethod, jKeyMgmtWpaPsk);
 
-	env->CallVoidMethod(jAllowedPairwiseCiphersObject, jSetIntMethod, jPairwiseCipherTkip);
-	env->CallVoidMethod(jAllowedPairwiseCiphersObject, jSetIntMethod, jPairwiseCipherCcmp);
+	env->CallVoidMethod(*jAllowedPairwiseCiphersObject, jSetIntMethod, jPairwiseCipherTkip);
+	env->CallVoidMethod(*jAllowedPairwiseCiphersObject, jSetIntMethod, jPairwiseCipherCcmp);
 
 	// WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
 	// int newNetworkID = wifiManager.addNetwork(conf);
@@ -929,22 +929,22 @@ bool Utilities::connectToWifi(JNIEnv* env, jobject activity, const std::string& 
 		return false;
 	}
 
-	jfieldID jWifiServiceField = env->GetStaticFieldID(jContextClass, "WIFI_SERVICE", "Ljava/lang/String;");
+	jfieldID jWifiServiceField = env->GetStaticFieldID(*jContextClass, "WIFI_SERVICE", "Ljava/lang/String;");
 
 	if (jWifiServiceField == nullptr)
 	{
 		return false;
 	}
 
-	const ScopedJString jWifiServiceString(*env, (jstring)(env->GetStaticObjectField(jContextClass, jWifiServiceField)));
+	const ScopedJString jWifiServiceString(*env, (jstring)(env->GetStaticObjectField(*jContextClass, jWifiServiceField)));
 
 	if (!jWifiServiceString.isValid())
 	{
 		return false;
 	}
 
-	jmethodID jGetSystemServiceMethod = env->GetMethodID(jContextClass, "getSystemService", "(Ljava/lang/String;)Ljava/lang/Object;");
-	jmethodID jAddNetworkMethod = env->GetMethodID(jWifiManagerClass, "addNetwork", "(Landroid/net/wifi/WifiConfiguration;)I");
+	jmethodID jGetSystemServiceMethod = env->GetMethodID(*jContextClass, "getSystemService", "(Ljava/lang/String;)Ljava/lang/Object;");
+	jmethodID jAddNetworkMethod = env->GetMethodID(*jWifiManagerClass, "addNetwork", "(Landroid/net/wifi/WifiConfiguration;)I");
 
 	if (jGetSystemServiceMethod == nullptr || jAddNetworkMethod == nullptr)
 	{
@@ -958,7 +958,7 @@ bool Utilities::connectToWifi(JNIEnv* env, jobject activity, const std::string& 
 		return false;
 	}
 
-	jint newNetworkID = env->CallIntMethod(jWifiManagerObject, jAddNetworkMethod, *jWifiConfigurationObject);
+	jint newNetworkID = env->CallIntMethod(*jWifiManagerObject, jAddNetworkMethod, *jWifiConfigurationObject);
 
 	if (newNetworkID < 0)
 	{
@@ -968,26 +968,26 @@ bool Utilities::connectToWifi(JNIEnv* env, jobject activity, const std::string& 
 	// wifiManager.disconnect();
 	// wifiManager.enableNetwork(newNetworkID, true);
 	// wifiManager.reconnect();
-	jmethodID jDisconnectMethod = env->GetMethodID(jWifiManagerClass, "disconnect", "()Z");
-	jmethodID jEnableNetworkMethod = env->GetMethodID(jWifiManagerClass, "enableNetwork", "(IZ)Z");
-	jmethodID jReconnectMethod = env->GetMethodID(jWifiManagerClass, "reconnect", "()Z");
+	jmethodID jDisconnectMethod = env->GetMethodID(*jWifiManagerClass, "disconnect", "()Z");
+	jmethodID jEnableNetworkMethod = env->GetMethodID(*jWifiManagerClass, "enableNetwork", "(IZ)Z");
+	jmethodID jReconnectMethod = env->GetMethodID(*jWifiManagerClass, "reconnect", "()Z");
 
 	if (!jDisconnectMethod || !jEnableNetworkMethod || !jReconnectMethod)
 	{
 		return false;
 	}
 
-	if (!env->CallBooleanMethod(jWifiManagerObject, jDisconnectMethod))
+	if (!env->CallBooleanMethod(*jWifiManagerObject, jDisconnectMethod))
 	{
 		return false;
 	}
 
-	if (!env->CallBooleanMethod(jWifiManagerObject, jEnableNetworkMethod, newNetworkID, /* attempt connect */ true))
+	if (!env->CallBooleanMethod(*jWifiManagerObject, jEnableNetworkMethod, newNetworkID, /* attempt connect */ true))
 	{
 		return false;
 	}
 
-	if (!env->CallBooleanMethod(jWifiManagerObject, jReconnectMethod))
+	if (!env->CallBooleanMethod(*jWifiManagerObject, jReconnectMethod))
 	{
 		return false;
 	}
@@ -1037,38 +1037,38 @@ bool Utilities::sendIntentToConnectToWifi(JNIEnv* env, jobject activity, const s
 	//     .setSsid(ssid)
 	//     .setWpa2Passphrase(password)
 	//     .build();
-	jmethodID jNewBuilderMethod = env->GetMethodID(jBuilderClass, "<init>", "()V");
-	jmethodID jSetSsidMethod = env->GetMethodID(jBuilderClass, "setSsid", "(Ljava/lang/String;)Landroid/net/wifi/WifiNetworkSuggestion$Builder;");
-	jmethodID jSetWpa2PassphraseMethod = env->GetMethodID(jBuilderClass, "setWpa2Passphrase", "(Ljava/lang/String;)Landroid/net/wifi/WifiNetworkSuggestion$Builder;");
-	jmethodID jBuildMethod = env->GetMethodID(jBuilderClass, "build", "()Landroid/net/wifi/WifiNetworkSuggestion;");
+	jmethodID jNewBuilderMethod = env->GetMethodID(*jBuilderClass, "<init>", "()V");
+	jmethodID jSetSsidMethod = env->GetMethodID(*jBuilderClass, "setSsid", "(Ljava/lang/String;)Landroid/net/wifi/WifiNetworkSuggestion$Builder;");
+	jmethodID jSetWpa2PassphraseMethod = env->GetMethodID(*jBuilderClass, "setWpa2Passphrase", "(Ljava/lang/String;)Landroid/net/wifi/WifiNetworkSuggestion$Builder;");
+	jmethodID jBuildMethod = env->GetMethodID(*jBuilderClass, "build", "()Landroid/net/wifi/WifiNetworkSuggestion;");
 
 	if (!jNewBuilderMethod || !jSetSsidMethod || !jSetWpa2PassphraseMethod || !jBuildMethod)
 	{
 		return false;
 	}
 
-	ScopedJObject jBuilderObject(*env, env->NewObject(jBuilderClass, jNewBuilderMethod));
+	ScopedJObject jBuilderObject(*env, env->NewObject(*jBuilderClass, jNewBuilderMethod));
 
 	if (!jBuilderObject)
 	{
 		return false;
 	}
 
-	jBuilderObject = ScopedJObject(*env, env->CallObjectMethod(jBuilderObject, jSetSsidMethod, *jSsidString));
+	jBuilderObject = ScopedJObject(*env, env->CallObjectMethod(*jBuilderObject, jSetSsidMethod, *jSsidString));
 
 	if (!jBuilderObject)
 	{
 		return false;
 	}
 
-	jBuilderObject = ScopedJObject(*env, env->CallObjectMethod(jBuilderObject, jSetWpa2PassphraseMethod, *jPasswordString));
+	jBuilderObject = ScopedJObject(*env, env->CallObjectMethod(*jBuilderObject, jSetWpa2PassphraseMethod, *jPasswordString));
 
 	if (!jBuilderObject)
 	{
 		return false;
 	}
 
-	const ScopedJObject jWifiNetworkSuggestionObject(*env, env->CallObjectMethod(jBuilderObject, jBuildMethod));
+	const ScopedJObject jWifiNetworkSuggestionObject(*env, env->CallObjectMethod(*jBuilderObject, jBuildMethod));
 
 	if (!jWifiNetworkSuggestionObject)
 	{
@@ -1085,14 +1085,14 @@ bool Utilities::sendIntentToConnectToWifi(JNIEnv* env, jobject activity, const s
 	}
 
 	jmethodID jnewArrayListMethod = env->GetMethodID(*jArrayListClass, "<init>", "()V");
-	jmethodID jAddMethod = env->GetMethodID(jArrayListClass, "add", "(Ljava/lang/Object;)Z");
+	jmethodID jAddMethod = env->GetMethodID(*jArrayListClass, "add", "(Ljava/lang/Object;)Z");
 
 	if (!jnewArrayListMethod ||!jAddMethod)
 	{
 		return false;
 	}
 
-	const ScopedJObject jArrayListObject(*env, env->NewObject(jArrayListClass, jnewArrayListMethod));
+	const ScopedJObject jArrayListObject(*env, env->NewObject(*jArrayListClass, jnewArrayListMethod));
 
 	if (!jArrayListObject)
 	{
@@ -1113,14 +1113,14 @@ bool Utilities::sendIntentToConnectToWifi(JNIEnv* env, jobject activity, const s
 		return false;
 	}
 
-	jmethodID jNewBundleMethod = env->GetMethodID(jBundleClass, "<init>", "()V");
+	jmethodID jNewBundleMethod = env->GetMethodID(*jBundleClass, "<init>", "()V");
 
 	if (!jNewBundleMethod)
 	{
 		return false;
 	}
 
-	const ScopedJObject jBundleObject(*env, env->NewObject(jBundleClass, jNewBundleMethod));
+	const ScopedJObject jBundleObject(*env, env->NewObject(*jBundleClass, jNewBundleMethod));
 
 	if (!jBundleObject)
 	{
@@ -1134,39 +1134,39 @@ bool Utilities::sendIntentToConnectToWifi(JNIEnv* env, jobject activity, const s
 		return false;
 	}
 
-	jfieldID jExtraWifiNetworkListField = env->GetStaticFieldID(jSettingsClass, "EXTRA_WIFI_NETWORK_LIST", "Ljava/lang/String;");
+	jfieldID jExtraWifiNetworkListField = env->GetStaticFieldID(*jSettingsClass, "EXTRA_WIFI_NETWORK_LIST", "Ljava/lang/String;");
 
 	if (jExtraWifiNetworkListField == nullptr)
 	{
 		return false;
 	}
 
-	const ScopedJString jExtraWifiNetworkListString(*env, (jstring)(env->GetStaticObjectField(jSettingsClass, jExtraWifiNetworkListField)));
+	const ScopedJString jExtraWifiNetworkListString(*env, (jstring)(env->GetStaticObjectField(*jSettingsClass, jExtraWifiNetworkListField)));
 
 	if (!jExtraWifiNetworkListString.isValid())
 	{
 		return false;
 	}
 
-	jmethodID jPutParcelableArrayListMethod = env->GetMethodID(jBundleClass, "putParcelableArrayList", "(Ljava/lang/String;Ljava/util/ArrayList;)V");
+	jmethodID jPutParcelableArrayListMethod = env->GetMethodID(*jBundleClass, "putParcelableArrayList", "(Ljava/lang/String;Ljava/util/ArrayList;)V");
 
 	if (!jPutParcelableArrayListMethod)
 	{
 		return false;
 	}
 
-	env->CallVoidMethod(jBundleObject, jPutParcelableArrayListMethod, *jExtraWifiNetworkListString, *jArrayListObject);
+	env->CallVoidMethod(*jBundleObject, jPutParcelableArrayListMethod, *jExtraWifiNetworkListString, *jArrayListObject);
 
 	// final Intent intent = new Intent(Settings.ACTION_WIFI_ADD_NETWORKS);
 	// intent.putExtras(bundle);
-	jfieldID jActionWifiAddNetworksField = env->GetStaticFieldID(jSettingsClass, "ACTION_WIFI_ADD_NETWORKS", "Ljava/lang/String;");
+	jfieldID jActionWifiAddNetworksField = env->GetStaticFieldID(*jSettingsClass, "ACTION_WIFI_ADD_NETWORKS", "Ljava/lang/String;");
 
 	if (jActionWifiAddNetworksField == nullptr)
 	{
 		return false;
 	}
 
-	const ScopedJString jActionWifiAddNetworksString(*env, (jstring)(env->GetStaticObjectField(jSettingsClass, jActionWifiAddNetworksField)));
+	const ScopedJString jActionWifiAddNetworksString(*env, (jstring)(env->GetStaticObjectField(*jSettingsClass, jActionWifiAddNetworksField)));
 
 	if (!jActionWifiAddNetworksString.isValid())
 	{
@@ -1175,26 +1175,26 @@ bool Utilities::sendIntentToConnectToWifi(JNIEnv* env, jobject activity, const s
 
 	const ScopedJClass jIntentClass(*env, env->FindClass("android/content/Intent"));
 
-	if (!jSettingsClass)
+	if (!jIntentClass)
 	{
 		return false;
 	}
 
-	jmethodID jNewIntentMethod = env->GetMethodID(jIntentClass, "<init>", "(Ljava/lang/String;)V");
+	jmethodID jNewIntentMethod = env->GetMethodID(*jIntentClass, "<init>", "(Ljava/lang/String;)V");
 
 	if (!jNewIntentMethod)
 	{
 		return false;
 	}
 
-	ScopedJObject jIntentObject(*env, env->NewObject(jIntentClass, jNewIntentMethod, *jActionWifiAddNetworksString));
+	ScopedJObject jIntentObject(*env, env->NewObject(*jIntentClass, jNewIntentMethod, *jActionWifiAddNetworksString));
 
 	if (!jIntentObject)
 	{
 		return false;
 	}
 
-	jmethodID jPutExtrasMethod = env->GetMethodID(jIntentClass, "putExtras", "(Landroid/os/Bundle;)Landroid/content/Intent;");
+	jmethodID jPutExtrasMethod = env->GetMethodID(*jIntentClass, "putExtras", "(Landroid/os/Bundle;)Landroid/content/Intent;");
 
 	if (!jPutExtrasMethod)
 	{
@@ -1210,7 +1210,7 @@ bool Utilities::sendIntentToConnectToWifi(JNIEnv* env, jobject activity, const s
 
 	// this.startActivityForResult(intent, 0);
 
-	jmethodID jStartActivityForResultMethod = env->GetMethodID(jActivityClass, "startActivityForResult", "(Landroid/content/Intent;I)V");
+	jmethodID jStartActivityForResultMethod = env->GetMethodID(*jActivityClass, "startActivityForResult", "(Landroid/content/Intent;I)V");
 
 	if (!jStartActivityForResultMethod)
 	{
@@ -1249,21 +1249,21 @@ bool Utilities::currentWifiSsid(JNIEnv* env, jobject activity, std::string& ssid
 		return false;
 	}
 
-	jfieldID jConnectivityServiceFieldId = env->GetStaticFieldID(jContextClass, "CONNECTIVITY_SERVICE", "Ljava/lang/String;");
+	jfieldID jConnectivityServiceFieldId = env->GetStaticFieldID(*jContextClass, "CONNECTIVITY_SERVICE", "Ljava/lang/String;");
 
 	if (jConnectivityServiceFieldId == nullptr)
 	{
 		return false;
 	}
 
-	const ScopedJString jConnectivityServiceString(*env, (jstring)(env->GetStaticObjectField(jContextClass, jConnectivityServiceFieldId)));
+	const ScopedJString jConnectivityServiceString(*env, (jstring)(env->GetStaticObjectField(*jContextClass, jConnectivityServiceFieldId)));
 
 	if (!jConnectivityServiceString.isValid())
 	{
 		return false;
 	}
 
-	jmethodID jGetSystemServiceMethodId = env->GetMethodID(jContextClass, "getSystemService", "(Ljava/lang/String;)Ljava/lang/Object;");
+	jmethodID jGetSystemServiceMethodId = env->GetMethodID(*jContextClass, "getSystemService", "(Ljava/lang/String;)Ljava/lang/Object;");
 
 	if (jGetSystemServiceMethodId == nullptr)
 	{
@@ -1277,14 +1277,14 @@ bool Utilities::currentWifiSsid(JNIEnv* env, jobject activity, std::string& ssid
 		return false;
 	}
 
-	jmethodID jGetActiveNetworkInfoMethodId = env->GetMethodID(jConnectivityManagerClass, "getActiveNetworkInfo", "()Landroid/net/NetworkInfo;");
+	jmethodID jGetActiveNetworkInfoMethodId = env->GetMethodID(*jConnectivityManagerClass, "getActiveNetworkInfo", "()Landroid/net/NetworkInfo;");
 
 	if (jGetActiveNetworkInfoMethodId == nullptr)
 	{
 		return false;
 	}
 
-	const ScopedJObject jNetworkInfoObject(*env, env->CallObjectMethod(jConnectivityManagerObject, jGetActiveNetworkInfoMethodId));
+	const ScopedJObject jNetworkInfoObject(*env, env->CallObjectMethod(*jConnectivityManagerObject, jGetActiveNetworkInfoMethodId));
 
 	if (!jNetworkInfoObject)
 	{
@@ -1302,7 +1302,7 @@ bool Utilities::currentWifiSsid(JNIEnv* env, jobject activity, std::string& ssid
 	//         ssid = wifiInfo.getSSID();
 	//     }
 	// }
-	jmethodID jIsConnectedMethodId = env->GetMethodID(jNetworkInfoClass, "isConnected", "()Z");
+	jmethodID jIsConnectedMethodId = env->GetMethodID(*jNetworkInfoClass, "isConnected", "()Z");
 
 	if (jIsConnectedMethodId == nullptr)
 	{
@@ -1324,14 +1324,14 @@ bool Utilities::currentWifiSsid(JNIEnv* env, jobject activity, std::string& ssid
 		return false;
 	}
 
-	jfieldID jWifiServiceFieldId = env->GetStaticFieldID(jContextClass, "WIFI_SERVICE", "Ljava/lang/String;");
+	jfieldID jWifiServiceFieldId = env->GetStaticFieldID(*jContextClass, "WIFI_SERVICE", "Ljava/lang/String;");
 
 	if (jWifiServiceFieldId == nullptr)
 	{
 		return false;
 	}
 
-	const ScopedJString jWifiServiceString(*env, (jstring)(env->GetStaticObjectField(jContextClass, jWifiServiceFieldId)));
+	const ScopedJString jWifiServiceString(*env, (jstring)(env->GetStaticObjectField(*jContextClass, jWifiServiceFieldId)));
 
 	if (!jWifiServiceString.isValid())
 	{
@@ -1345,22 +1345,22 @@ bool Utilities::currentWifiSsid(JNIEnv* env, jobject activity, std::string& ssid
 		return false;
 	}
 
-	jmethodID jGetConnectionInfoMethodId = env->GetMethodID(jWifiManagerClass, "getConnectionInfo", "()Landroid/net/wifi/WifiInfo;");
-	jmethodID jGetSsidMethodId = env->GetMethodID(jWifiInfoClass, "getSSID", "()Ljava/lang/String;");
+	jmethodID jGetConnectionInfoMethodId = env->GetMethodID(*jWifiManagerClass, "getConnectionInfo", "()Landroid/net/wifi/WifiInfo;");
+	jmethodID jGetSsidMethodId = env->GetMethodID(*jWifiInfoClass, "getSSID", "()Ljava/lang/String;");
 
 	if (jGetConnectionInfoMethodId == nullptr || jGetSsidMethodId == nullptr)
 	{
 		return false;
 	}
 
-	const ScopedJObject jWifiInfoObject(*env, env->CallObjectMethod(jWifiManagerObject, jGetConnectionInfoMethodId));
+	const ScopedJObject jWifiInfoObject(*env, env->CallObjectMethod(*jWifiManagerObject, jGetConnectionInfoMethodId));
 
 	if (!jWifiInfoObject)
 	{
 		return false;
 	}
 
-	const ScopedJString jSsidString(*env, (jstring)(env->CallObjectMethod(jWifiInfoObject, jGetSsidMethodId)));
+	const ScopedJString jSsidString(*env, (jstring)(env->CallObjectMethod(*jWifiInfoObject, jGetSsidMethodId)));
 
 	if (!jSsidString.isValid())
 	{
@@ -1368,7 +1368,7 @@ bool Utilities::currentWifiSsid(JNIEnv* env, jobject activity, std::string& ssid
 	}
 
 	// The SSID will will be returned surrounded by double quotation marks (e.g. "metaguest"). Otherwise, it is returned as a string of hex digits.
-	const std::string paddedSsid = toAString(env, jSsidString);
+	const std::string paddedSsid = toAString(env, *jSsidString);
 
 	if (paddedSsid.size() >= 2 && paddedSsid.front() == '"' && paddedSsid.back() == '"')
 	{
@@ -1395,14 +1395,14 @@ bool Utilities::triggerVibration(JNIEnv* env, jobject activity, unsigned int int
 		return false;
 	}
 
-	const jfieldID jVibratorServiceFieldId = env->GetStaticFieldID(jContextClass, "VIBRATOR_SERVICE", "Ljava/lang/String;");
+	const jfieldID jVibratorServiceFieldId = env->GetStaticFieldID(*jContextClass, "VIBRATOR_SERVICE", "Ljava/lang/String;");
 
 	if (jVibratorServiceFieldId == nullptr)
 	{
 		return false;
 	}
 
-    const ScopedJString jVibratorServiceString(*env, (jstring)(env->GetStaticObjectField(jContextClass, jVibratorServiceFieldId)));
+    const ScopedJString jVibratorServiceString(*env, (jstring)(env->GetStaticObjectField(*jContextClass, jVibratorServiceFieldId)));
 
 	const ScopedJClass jActivityClass(*env, env->GetObjectClass(activity));
 
@@ -1411,7 +1411,7 @@ bool Utilities::triggerVibration(JNIEnv* env, jobject activity, unsigned int int
 		return false;
 	}
 
-    jmethodID jGetSystemServiceMethodId = env->GetMethodID(jActivityClass, "getSystemService", "(Ljava/lang/String;)Ljava/lang/Object;");
+    jmethodID jGetSystemServiceMethodId = env->GetMethodID(*jActivityClass, "getSystemService", "(Ljava/lang/String;)Ljava/lang/Object;");
 
 	if (jGetSystemServiceMethodId == nullptr)
 	{
@@ -1432,14 +1432,14 @@ bool Utilities::triggerVibration(JNIEnv* env, jobject activity, unsigned int int
 		return false;
 	}
 
-	const jmethodID jHasVibratorMethodId = env->GetMethodID(jVibratorClass, "hasVibrator", "()Z");
+	const jmethodID jHasVibratorMethodId = env->GetMethodID(*jVibratorClass, "hasVibrator", "()Z");
 
 	if (jHasVibratorMethodId == nullptr)
 	{
 		return false;
 	}
 
-	const bool hasVibrator = env->CallBooleanMethod(jVibratorServiceObject, jHasVibratorMethodId);
+	const bool hasVibrator = env->CallBooleanMethod(*jVibratorServiceObject, jHasVibratorMethodId);
 
 	if (!hasVibrator)
 	{
@@ -1462,7 +1462,7 @@ bool Utilities::triggerVibration(JNIEnv* env, jobject activity, unsigned int int
 			return false;
 		}
 
-        const jmethodID jCreateOneShotMethodId = env->GetStaticMethodID(jVibrationEffectClass, "createOneShot", "(JI)Landroid/os/VibrationEffect;");
+        const jmethodID jCreateOneShotMethodId = env->GetStaticMethodID(*jVibrationEffectClass, "createOneShot", "(JI)Landroid/os/VibrationEffect;");
 
 		if (jCreateOneShotMethodId == nullptr)
 		{
@@ -1480,32 +1480,32 @@ bool Utilities::triggerVibration(JNIEnv* env, jobject activity, unsigned int int
 			amplitude = 100;
 		}
 
-		const ScopedJObject jVibrationEffectObject(*env, env->CallStaticObjectMethod(jVibrationEffectClass, jCreateOneShotMethodId, jlong(duration), amplitude));
+		const ScopedJObject jVibrationEffectObject(*env, env->CallStaticObjectMethod(*jVibrationEffectClass, jCreateOneShotMethodId, jlong(duration), amplitude));
 
 		if (!jVibrationEffectObject)
 		{
 			return false;
 		}
 
-		const jmethodID jVibrateMethodId = env->GetMethodID(jVibratorClass, "vibrate", "(Landroid/os/VibrationEffect;)V");
+		const jmethodID jVibrateMethodId = env->GetMethodID(*jVibratorClass, "vibrate", "(Landroid/os/VibrationEffect;)V");
 
 		if (jVibrateMethodId == nullptr)
 		{
 			return false;
 		}
 
-		env->CallVoidMethod(jVibratorServiceObject, jVibrateMethodId, *jVibrationEffectObject);
+		env->CallVoidMethod(*jVibratorServiceObject, jVibrateMethodId, *jVibrationEffectObject);
     }
 	else
 	{
-    	const jmethodID jVibrateMethodId = env->GetMethodID(jVibratorClass, "vibrate", "(J)V");
+    	const jmethodID jVibrateMethodId = env->GetMethodID(*jVibratorClass, "vibrate", "(J)V");
 
 		if (jVibrateMethodId == nullptr)
 		{
 			return false;
 		}
 
-        env->CallVoidMethod(jVibratorServiceObject, jVibrateMethodId, jlong(duration));
+        env->CallVoidMethod(*jVibratorServiceObject, jVibrateMethodId, jlong(duration));
     }
 
 	return true;
@@ -1541,7 +1541,7 @@ bool Utilities::displayRefreshRate(JNIEnv* env, jobject activity, float& refresh
 			return false;
 		}
 
-		jmethodID jGetDisplayMethodId = env->GetMethodID(jActivityClass, "getDisplay", "()Landroid/view/Display;");
+		jmethodID jGetDisplayMethodId = env->GetMethodID(*jActivityClass, "getDisplay", "()Landroid/view/Display;");
 
 		if (jGetDisplayMethodId == nullptr)
 		{
@@ -1560,21 +1560,21 @@ bool Utilities::displayRefreshRate(JNIEnv* env, jobject activity, float& refresh
 			return false;
 		}
 
-		jfieldID jWindowServiceFieldId = env->GetStaticFieldID(jContextClass, "WINDOW_SERVICE", "Ljava/lang/String;");
+		jfieldID jWindowServiceFieldId = env->GetStaticFieldID(*jContextClass, "WINDOW_SERVICE", "Ljava/lang/String;");
 
 		if (jWindowServiceFieldId == nullptr)
 		{
 			return false;
 		}
 
-		const ScopedJString jWindowServiceString(*env, (jstring)(env->GetStaticObjectField(jContextClass, jWindowServiceFieldId)));
+		const ScopedJString jWindowServiceString(*env, (jstring)(env->GetStaticObjectField(*jContextClass, jWindowServiceFieldId)));
 
 		if (!jWindowServiceString.isValid())
 		{
 			return false;
 		}
 
-		jmethodID jGetSystemServiceMethodId = env->GetMethodID(jContextClass, "getSystemService", "(Ljava/lang/String;)Ljava/lang/Object;");
+		jmethodID jGetSystemServiceMethodId = env->GetMethodID(*jContextClass, "getSystemService", "(Ljava/lang/String;)Ljava/lang/Object;");
 
 		if (jGetSystemServiceMethodId == nullptr)
 		{
@@ -1595,14 +1595,14 @@ bool Utilities::displayRefreshRate(JNIEnv* env, jobject activity, float& refresh
 			return false;
 		}
 
-		jmethodID jGetDefaultDisplayMethodId = env->GetMethodID(jWindowManagerClass, "getDefaultDisplay", "()Landroid/view/Display;");
+		jmethodID jGetDefaultDisplayMethodId = env->GetMethodID(*jWindowManagerClass, "getDefaultDisplay", "()Landroid/view/Display;");
 
 		if (jGetDefaultDisplayMethodId == nullptr)
 		{
 			return false;
 		}
 
-		jDisplayObject = ScopedJObject(*env, env->CallObjectMethod(jWindowManagerObject, jGetDefaultDisplayMethodId));
+		jDisplayObject = ScopedJObject(*env, env->CallObjectMethod(*jWindowManagerObject, jGetDefaultDisplayMethodId));
 	}
 
 	if (!jDisplayObject.isValid())
@@ -1619,14 +1619,14 @@ bool Utilities::displayRefreshRate(JNIEnv* env, jobject activity, float& refresh
 		return false;
 	}
 
-	jmethodID jGetModeMethodId = env->GetMethodID(jDisplayClass, "getMode", "()Landroid/view/Display$Mode;");
+	jmethodID jGetModeMethodId = env->GetMethodID(*jDisplayClass, "getMode", "()Landroid/view/Display$Mode;");
 
 	if (jGetModeMethodId == nullptr)
 	{
 		return false;
 	}
 
-	const ScopedJObject jDisplayModeObject(*env, env->CallObjectMethod(jDisplayObject, jGetModeMethodId));
+	const ScopedJObject jDisplayModeObject(*env, env->CallObjectMethod(*jDisplayObject, jGetModeMethodId));
 
 	if (!jDisplayModeObject.isValid())
 	{
@@ -1641,14 +1641,14 @@ bool Utilities::displayRefreshRate(JNIEnv* env, jobject activity, float& refresh
 		return false;
 	}
 
-	jmethodID jGetRefreshRateMethodId = env->GetMethodID(jDisplayModeClass, "getRefreshRate", "()F");
+	jmethodID jGetRefreshRateMethodId = env->GetMethodID(*jDisplayModeClass, "getRefreshRate", "()F");
 
 	if (jGetRefreshRateMethodId == nullptr)
 	{
 		return false;
 	}
 
-	refreshRateHz = env->CallFloatMethod(jDisplayModeObject, jGetRefreshRateMethodId);
+	refreshRateHz = env->CallFloatMethod(*jDisplayModeObject, jGetRefreshRateMethodId);
 
 	return true;
 }

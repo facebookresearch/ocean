@@ -159,12 +159,6 @@ class ScopedJNILocalObject
 		inline const T& object() const;
 
 		/**
-		 * Cast operator.
-		 * @return The encapsulated reference, nullptr if no reference is encapsulated
-		 */
-		inline operator T() const;
-
-		/**
 		 * Returns the encapsulated reference, must not be called if no reference is encapsulated.
 		 * @see isValid().
 		 * @return The encapsulated reference
@@ -325,12 +319,6 @@ inline bool ScopedJNILocalObject<T>::isValid() const
 
 template <typename T>
 inline const T& ScopedJNILocalObject<T>::object() const
-{
-	return object_;
-}
-
-template <typename T>
-inline ScopedJNILocalObject<T>::operator T() const
 {
 	return object_;
 }

@@ -65,7 +65,7 @@ bool ResourceManager::initialize(JavaVM* javaVM, jobject activity, AAssetManager
 			return false;
 		}
 
-		jmethodID getAssetsMethodId = scopedJNIEnvironment.jniEnv()->GetMethodID(activityClass, "getAssets", "()Landroid/content/res/AssetManager;");
+		jmethodID getAssetsMethodId = scopedJNIEnvironment.jniEnv()->GetMethodID(*activityClass, "getAssets", "()Landroid/content/res/AssetManager;");
 
 		if (getAssetsMethodId == nullptr)
 		{
@@ -79,7 +79,7 @@ bool ResourceManager::initialize(JavaVM* javaVM, jobject activity, AAssetManager
 			return false;
 		}
 
-		assetManager_ = AAssetManager_fromJava(scopedJNIEnvironment.jniEnv(), jAssetManagerObject);
+		assetManager_ = AAssetManager_fromJava(scopedJNIEnvironment.jniEnv(), *jAssetManagerObject);
 	}
 
 	if (assetManager_ == nullptr)
@@ -323,7 +323,7 @@ bool ResourceManager::externalFilesDirectory(JNIEnv* env, jobject activity, std:
 		return false;
 	}
 
-	jmethodID jGetExternalFilesDirMethod = env->GetMethodID(jRootActivityClass, "getExternalFilesDir", "(Ljava/lang/String;)Ljava/io/File;");
+	jmethodID jGetExternalFilesDirMethod = env->GetMethodID(*jRootActivityClass, "getExternalFilesDir", "(Ljava/lang/String;)Ljava/io/File;");
 
 	if (!jGetExternalFilesDirMethod)
 	{
@@ -376,14 +376,14 @@ bool ResourceManager::externalFilesDirectory(JNIEnv* env, jobject activity, std:
 	ScopedJString jExternalDirectoryTypeString;
 	if (!environmentFieldName.empty())
 	{
-		jfieldID jEnvironmentFieldId = env->GetStaticFieldID(jEnvironmentClass, environmentFieldName.c_str(), "Ljava/lang/String;");
+		jfieldID jEnvironmentFieldId = env->GetStaticFieldID(*jEnvironmentClass, environmentFieldName.c_str(), "Ljava/lang/String;");
 
 		if (jEnvironmentFieldId == nullptr)
 		{
 			return false;
 		}
 
-		jExternalDirectoryTypeString = ScopedJString(*env, (jstring)(env->GetStaticObjectField(jEnvironmentClass, jEnvironmentFieldId)));
+		jExternalDirectoryTypeString = ScopedJString(*env, (jstring)(env->GetStaticObjectField(*jEnvironmentClass, jEnvironmentFieldId)));
 
 		if (!jExternalDirectoryTypeString.isValid())
 		{
@@ -405,21 +405,21 @@ bool ResourceManager::externalFilesDirectory(JNIEnv* env, jobject activity, std:
 		return false;
 	}
 
-	jmethodID jFileGetPathMethod = env->GetMethodID(jFileClass, "getPath", "()Ljava/lang/String;");
+	jmethodID jFileGetPathMethod = env->GetMethodID(*jFileClass, "getPath", "()Ljava/lang/String;");
 
 	if (!jFileGetPathMethod)
 	{
 		return false;
 	}
 
-	const ScopedJString jDirectoryNameString(*env, (jstring)env->CallObjectMethod(jFileObject, jFileGetPathMethod));
+	const ScopedJString jDirectoryNameString(*env, (jstring)env->CallObjectMethod(*jFileObject, jFileGetPathMethod));
 
 	if (!jDirectoryNameString.isValid())
 	{
 		return false;
 	}
 
-	const IO::Directory externalDirectory(Platform::Android::Utilities::toAString(env, jDirectoryNameString));
+	const IO::Directory externalDirectory(Platform::Android::Utilities::toAString(env, *jDirectoryNameString));
 
 	if (!externalDirectory.isValid() || !externalDirectory.exists())
 	{

@@ -41,14 +41,14 @@ bool Permission::hasPermission(JavaVM* javaVM, jobject activity, const std::stri
 		return false;
 	}
 
-	jfieldID fieldId = scopedJNIEnvironment.jniEnv()->GetStaticFieldID(javaClassPackageManager, "PERMISSION_GRANTED", "I");
+	jfieldID fieldId = scopedJNIEnvironment.jniEnv()->GetStaticFieldID(*javaClassPackageManager, "PERMISSION_GRANTED", "I");
 
 	if (fieldId == nullptr)
 	{
 		return false;
 	}
 
-	const jint permissionGrantedValue = scopedJNIEnvironment.jniEnv()->GetStaticIntField(javaClassPackageManager, fieldId);
+	const jint permissionGrantedValue = scopedJNIEnvironment.jniEnv()->GetStaticIntField(*javaClassPackageManager, fieldId);
 
 	const ScopedJClass javaClassContext(scopedJNIEnvironment, scopedJNIEnvironment.jniEnv()->FindClass("android/content/Context"));
 
@@ -57,7 +57,7 @@ bool Permission::hasPermission(JavaVM* javaVM, jobject activity, const std::stri
 		return false;
 	}
 
-	jmethodID methodId = scopedJNIEnvironment.jniEnv()->GetMethodID(javaClassContext, "checkSelfPermission", "(Ljava/lang/String;)I");
+	jmethodID methodId = scopedJNIEnvironment.jniEnv()->GetMethodID(*javaClassContext, "checkSelfPermission", "(Ljava/lang/String;)I");
 
 	if (methodId == nullptr)
 	{
@@ -112,7 +112,7 @@ bool Permission::requestPermissions(JavaVM* javaVM, jobject activity, const Stri
 			return false;
 		}
 
-		scopedJNIEnvironment.jniEnv()->SetObjectArrayElement(permissionArray, jsize(n), Utilities::toJavaString(scopedJNIEnvironment.jniEnv(), androidPermission));
+		scopedJNIEnvironment.jniEnv()->SetObjectArrayElement(*permissionArray, jsize(n), Utilities::toJavaString(scopedJNIEnvironment.jniEnv(), androidPermission));
 	}
 
 	const ScopedJClass javaClassActivity(scopedJNIEnvironment, scopedJNIEnvironment.jniEnv()->FindClass("android/app/Activity"));
@@ -122,7 +122,7 @@ bool Permission::requestPermissions(JavaVM* javaVM, jobject activity, const Stri
 		return false;
 	}
 
-	jmethodID methodId = scopedJNIEnvironment.jniEnv()->GetMethodID(javaClassActivity, "requestPermissions", "([Ljava/lang/String;I)V");
+	jmethodID methodId = scopedJNIEnvironment.jniEnv()->GetMethodID(*javaClassActivity, "requestPermissions", "([Ljava/lang/String;I)V");
 
 	if (methodId == nullptr)
 	{
