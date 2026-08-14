@@ -965,35 +965,35 @@ bool Utilities::connectToWifi(JNIEnv* env, jobject activity, const std::string& 
 		return false;
 	}
 
-	const ScopedJClass jWifiConfigurationClass(*env, env->FindClass("android/net/wifi/WifiConfiguration"));
+	const ScopedJClass jWifiConfigurationClass(findClass(*env, "android/net/wifi/WifiConfiguration"));
 
 	if (!jWifiConfigurationClass)
 	{
 		return false;
 	}
 
-	jmethodID jNewWifiConfigurationMethod = env->GetMethodID(*jWifiConfigurationClass, "<init>", "()V");
+	jmethodID jNewWifiConfigurationMethod = getMethodId(*env, *jWifiConfigurationClass, "<init>", "()V");
 
 	if (!jNewWifiConfigurationMethod)
 	{
 		return false;
 	}
 
-	const ScopedJObject jWifiConfigurationObject(*env, env->NewObject(*jWifiConfigurationClass, jNewWifiConfigurationMethod));
+	const ScopedJObject jWifiConfigurationObject(newObject(*env, *jWifiConfigurationClass, jNewWifiConfigurationMethod));
 
 	if (!jWifiConfigurationObject)
 	{
 		return false;
 	}
 
-	const ScopedJClass jStatusClass(*env, env->FindClass("android/net/wifi/WifiConfiguration$Status"));
+	const ScopedJClass jStatusClass(findClass(*env, "android/net/wifi/WifiConfiguration$Status"));
 
 	if (!jStatusClass)
 	{
 		return false;
 	}
 
-	jfieldID jEnabledField = env->GetStaticFieldID(*jStatusClass, "ENABLED", "I");
+	jfieldID jEnabledField = getStaticFieldId(*env, *jStatusClass, "ENABLED", "I");
 
 	if (jEnabledField == nullptr)
 	{
@@ -1008,9 +1008,9 @@ bool Utilities::connectToWifi(JNIEnv* env, jobject activity, const std::string& 
 		return false;
 	}
 
-	jfieldID jSsidField = env->GetFieldID(*jWifiConfigurationClass, "SSID", "Ljava/lang/String;");
-	jfieldID jPreSharedKeyField = env->GetFieldID(*jWifiConfigurationClass, "preSharedKey", "Ljava/lang/String;");
-	jfieldID jStatus = env->GetFieldID(*jWifiConfigurationClass, "status", "I");
+	jfieldID jSsidField = getFieldId(*env, *jWifiConfigurationClass, "SSID", "Ljava/lang/String;");
+	jfieldID jPreSharedKeyField = getFieldId(*env, *jWifiConfigurationClass, "preSharedKey", "Ljava/lang/String;");
+	jfieldID jStatus = getFieldId(*env, *jWifiConfigurationClass, "status", "I");
 
 	if (jSsidField == nullptr || jPreSharedKeyField == nullptr ||jStatus == nullptr)
 	{
@@ -1026,22 +1026,22 @@ bool Utilities::connectToWifi(JNIEnv* env, jobject activity, const std::string& 
 	// conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
 	// conf.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
 	// conf.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
-	const ScopedJClass jGroupCipherClass(*env, env->FindClass("android/net/wifi/WifiConfiguration$GroupCipher"));
-	const ScopedJClass jKeyMgmtClass(*env, env->FindClass("android/net/wifi/WifiConfiguration$KeyMgmt"));
-	const ScopedJClass jPairwiseCipherClass(*env, env->FindClass("android/net/wifi/WifiConfiguration$PairwiseCipher"));
+	const ScopedJClass jGroupCipherClass(findClass(*env, "android/net/wifi/WifiConfiguration$GroupCipher"));
+	const ScopedJClass jKeyMgmtClass(findClass(*env, "android/net/wifi/WifiConfiguration$KeyMgmt"));
+	const ScopedJClass jPairwiseCipherClass(findClass(*env, "android/net/wifi/WifiConfiguration$PairwiseCipher"));
 
 	if (!jGroupCipherClass || !jKeyMgmtClass ||!jPairwiseCipherClass)
 	{
 		return false;
 	}
 
-	jfieldID jGroupCipherTkipField = env->GetStaticFieldID(*jGroupCipherClass, "TKIP", "I");
-	jfieldID jGroupCipherCcmpField = env->GetStaticFieldID(*jGroupCipherClass, "CCMP", "I");
+	jfieldID jGroupCipherTkipField = getStaticFieldId(*env, *jGroupCipherClass, "TKIP", "I");
+	jfieldID jGroupCipherCcmpField = getStaticFieldId(*env, *jGroupCipherClass, "CCMP", "I");
 
-	jfieldID jKeyMgmtWpaPskField = env->GetStaticFieldID(*jKeyMgmtClass, "WPA_PSK", "I");
+	jfieldID jKeyMgmtWpaPskField = getStaticFieldId(*env, *jKeyMgmtClass, "WPA_PSK", "I");
 
-	jfieldID jPairwiseCipherTkipField = env->GetStaticFieldID(*jPairwiseCipherClass, "TKIP", "I");
-	jfieldID jPairwiseCipherCcmpField = env->GetStaticFieldID(*jPairwiseCipherClass, "CCMP", "I");
+	jfieldID jPairwiseCipherTkipField = getStaticFieldId(*env, *jPairwiseCipherClass, "TKIP", "I");
+	jfieldID jPairwiseCipherCcmpField = getStaticFieldId(*env, *jPairwiseCipherClass, "CCMP", "I");
 
 	if (jGroupCipherTkipField == nullptr || jGroupCipherCcmpField == nullptr || jKeyMgmtWpaPskField == nullptr || jPairwiseCipherTkipField == nullptr || jPairwiseCipherCcmpField == nullptr)
 	{
@@ -1062,23 +1062,23 @@ bool Utilities::connectToWifi(JNIEnv* env, jobject activity, const std::string& 
 		return false;
 	}
 
-	const ScopedJClass jBitSetClass(*env, env->FindClass("java/util/BitSet"));
+	const ScopedJClass jBitSetClass(findClass(*env, "java/util/BitSet"));
 
 	if (!jBitSetClass)
 	{
 		return false;
 	}
 
-	jmethodID jSetIntMethod = env->GetMethodID(*jBitSetClass, "set", "(I)V");
+	jmethodID jSetIntMethod = getMethodId(*env, *jBitSetClass, "set", "(I)V");
 
 	if (!jSetIntMethod)
 	{
 		return false;
 	}
 
-	jfieldID jAllowedGroupCiphersField = env->GetFieldID(*jWifiConfigurationClass, "allowedGroupCiphers", "Ljava/util/BitSet;");
-	jfieldID jAllowedKeyManagementField = env->GetFieldID(*jWifiConfigurationClass, "allowedKeyManagement", "Ljava/util/BitSet;");
-	jfieldID jAllowedPairwiseCiphersField = env->GetFieldID(*jWifiConfigurationClass, "allowedPairwiseCiphers", "Ljava/util/BitSet;");
+	jfieldID jAllowedGroupCiphersField = getFieldId(*env, *jWifiConfigurationClass, "allowedGroupCiphers", "Ljava/util/BitSet;");
+	jfieldID jAllowedKeyManagementField = getFieldId(*env, *jWifiConfigurationClass, "allowedKeyManagement", "Ljava/util/BitSet;");
+	jfieldID jAllowedPairwiseCiphersField = getFieldId(*env, *jWifiConfigurationClass, "allowedPairwiseCiphers", "Ljava/util/BitSet;");
 
 	if (jAllowedGroupCiphersField == nullptr || jAllowedKeyManagementField == nullptr || jAllowedPairwiseCiphersField == nullptr)
 	{
@@ -1094,25 +1094,26 @@ bool Utilities::connectToWifi(JNIEnv* env, jobject activity, const std::string& 
 		return false;
 	}
 
-	env->CallVoidMethod(*jAllowedGroupCiphersObject, jSetIntMethod, jGroupCipherTkip);
-	env->CallVoidMethod(*jAllowedGroupCiphersObject, jSetIntMethod, jGroupCipherCcmp);
-
-	env->CallVoidMethod(*jAllowedKeyManagementObject, jSetIntMethod, jKeyMgmtWpaPsk);
-
-	env->CallVoidMethod(*jAllowedPairwiseCiphersObject, jSetIntMethod, jPairwiseCipherTkip);
-	env->CallVoidMethod(*jAllowedPairwiseCiphersObject, jSetIntMethod, jPairwiseCipherCcmp);
+	if (!callVoidMethod(*env, *jAllowedGroupCiphersObject, jSetIntMethod, jGroupCipherTkip)
+			|| !callVoidMethod(*env, *jAllowedGroupCiphersObject, jSetIntMethod, jGroupCipherCcmp)
+			|| !callVoidMethod(*env, *jAllowedKeyManagementObject, jSetIntMethod, jKeyMgmtWpaPsk)
+			|| !callVoidMethod(*env, *jAllowedPairwiseCiphersObject, jSetIntMethod, jPairwiseCipherTkip)
+			|| !callVoidMethod(*env, *jAllowedPairwiseCiphersObject, jSetIntMethod, jPairwiseCipherCcmp))
+	{
+		return false;
+	}
 
 	// WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
 	// int newNetworkID = wifiManager.addNetwork(conf);
-	const ScopedJClass jContextClass(*env, env->FindClass("android/content/Context"));
-	const ScopedJClass jWifiManagerClass(*env, env->FindClass("android/net/wifi/WifiManager"));
+	const ScopedJClass jContextClass(findClass(*env, "android/content/Context"));
+	const ScopedJClass jWifiManagerClass(findClass(*env, "android/net/wifi/WifiManager"));
 
 	if (!jContextClass || !jWifiManagerClass)
 	{
 		return false;
 	}
 
-	jfieldID jWifiServiceField = env->GetStaticFieldID(*jContextClass, "WIFI_SERVICE", "Ljava/lang/String;");
+	jfieldID jWifiServiceField = getStaticFieldId(*env, *jContextClass, "WIFI_SERVICE", "Ljava/lang/String;");
 
 	if (jWifiServiceField == nullptr)
 	{
@@ -1126,22 +1127,29 @@ bool Utilities::connectToWifi(JNIEnv* env, jobject activity, const std::string& 
 		return false;
 	}
 
-	jmethodID jGetSystemServiceMethod = env->GetMethodID(*jContextClass, "getSystemService", "(Ljava/lang/String;)Ljava/lang/Object;");
-	jmethodID jAddNetworkMethod = env->GetMethodID(*jWifiManagerClass, "addNetwork", "(Landroid/net/wifi/WifiConfiguration;)I");
+	jmethodID jGetSystemServiceMethod = getMethodId(*env, *jContextClass, "getSystemService", "(Ljava/lang/String;)Ljava/lang/Object;");
+	jmethodID jAddNetworkMethod = getMethodId(*env, *jWifiManagerClass, "addNetwork", "(Landroid/net/wifi/WifiConfiguration;)I");
 
 	if (jGetSystemServiceMethod == nullptr || jAddNetworkMethod == nullptr)
 	{
 		return false;
 	}
 
-	const ScopedJObject jWifiManagerObject(*env, env->CallObjectMethod(activity, jGetSystemServiceMethod, *jWifiServiceString));
+	const ScopedJObject jWifiManagerObject(callObjectMethod(*env, activity, jGetSystemServiceMethod, *jWifiServiceString));
 
 	if (!jWifiManagerObject)
 	{
 		return false;
 	}
 
-	jint newNetworkID = env->CallIntMethod(*jWifiManagerObject, jAddNetworkMethod, *jWifiConfigurationObject);
+	// a thrown exception makes addNetwork() return 0, which is a valid network id, so that the result must not be interpreted before the call is known to have succeeded
+
+	int32_t newNetworkID = 0;
+
+	if (!callIntMethod(*env, *jWifiManagerObject, jAddNetworkMethod, newNetworkID, *jWifiConfigurationObject))
+	{
+		return false;
+	}
 
 	if (newNetworkID < 0)
 	{
@@ -1151,26 +1159,31 @@ bool Utilities::connectToWifi(JNIEnv* env, jobject activity, const std::string& 
 	// wifiManager.disconnect();
 	// wifiManager.enableNetwork(newNetworkID, true);
 	// wifiManager.reconnect();
-	jmethodID jDisconnectMethod = env->GetMethodID(*jWifiManagerClass, "disconnect", "()Z");
-	jmethodID jEnableNetworkMethod = env->GetMethodID(*jWifiManagerClass, "enableNetwork", "(IZ)Z");
-	jmethodID jReconnectMethod = env->GetMethodID(*jWifiManagerClass, "reconnect", "()Z");
+	jmethodID jDisconnectMethod = getMethodId(*env, *jWifiManagerClass, "disconnect", "()Z");
+	jmethodID jEnableNetworkMethod = getMethodId(*env, *jWifiManagerClass, "enableNetwork", "(IZ)Z");
+	jmethodID jReconnectMethod = getMethodId(*env, *jWifiManagerClass, "reconnect", "()Z");
 
 	if (!jDisconnectMethod || !jEnableNetworkMethod || !jReconnectMethod)
 	{
 		return false;
 	}
 
-	if (!env->CallBooleanMethod(*jWifiManagerObject, jDisconnectMethod))
+	// disconnect(), enableNetwork() and reconnect() throw a SecurityException without the necessary permissions,
+	// a thrown exception is not distinguishable from a returned 'false' so that both must be checked separately
+
+	bool methodResult = false;
+
+	if (!callBooleanMethod(*env, *jWifiManagerObject, jDisconnectMethod, methodResult) || !methodResult)
 	{
 		return false;
 	}
 
-	if (!env->CallBooleanMethod(*jWifiManagerObject, jEnableNetworkMethod, newNetworkID, /* attempt connect */ true))
+	if (!callBooleanMethod(*env, *jWifiManagerObject, jEnableNetworkMethod, methodResult, newNetworkID, /* attempt connect */ jboolean(JNI_TRUE)) || !methodResult)
 	{
 		return false;
 	}
 
-	if (!env->CallBooleanMethod(*jWifiManagerObject, jReconnectMethod))
+	if (!callBooleanMethod(*env, *jWifiManagerObject, jReconnectMethod, methodResult) || !methodResult)
 	{
 		return false;
 	}
