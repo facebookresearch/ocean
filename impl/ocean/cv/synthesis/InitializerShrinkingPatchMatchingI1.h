@@ -776,13 +776,16 @@ bool InitializerShrinkingPatchMatchingI1::patchInitializationIteration5x5(Frame&
 
 		if (ssdBest == (unsigned int)(-1))
 		{
+			// The dynamic mask also contains pixels synthesized earlier in this
+			// iteration. They are not valid mapping sources: applying the mapping
+			// to another frame must only read pixels outside the original mask.
 			for (unsigned int y = 0u; ssdBest == (unsigned int)(-1) && y < height; ++y)
 			{
-				const uint8_t* dynamicMaskRow = dynamicMask.constrow<uint8_t>(y);
+				const uint8_t* staticMaskRow = staticMask.constrow<uint8_t>(y);
 
 				for (unsigned int x = 0u; x < width; ++x)
 				{
-					if (dynamicMaskRow[x] == 0xFFu)
+					if (staticMaskRow[x] == 0xFFu)
 					{
 						ssdBest = (unsigned int)(-2);
 

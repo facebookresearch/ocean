@@ -555,6 +555,38 @@ TEST(TestInitializerI1, ShrinkingPatchMatching_4Channels)
 	EXPECT_TRUE(TestInitializerI1::testShrinkingPatchMatching(width, height, 4u, GTEST_TEST_DURATION, worker));
 }
 
+TEST(TestInitializerI1, ShrinkingPatchMatching_StaticSourceFallback)
+{
+	constexpr unsigned int width = 10u;
+	constexpr unsigned int height = 10u;
+	constexpr unsigned int channels = 2u;
+
+	Frame frame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT));
+	frame.setValue(0x5Au);
+
+	Frame mask(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
+	mask.setValue(0x00u);
+
+	const CV::PixelPosition sourcePosition(width - 1u, height - 1u);
+	mask.pixel<uint8_t>(sourcePosition.x(), sourcePosition.y())[0] = 0xFFu;
+
+	CV::Synthesis::LayerI1 layer(frame, mask);
+	RandomGenerator randomGenerator(1u);
+
+	ASSERT_TRUE(CV::Synthesis::InitializerShrinkingPatchMatchingI1(layer, randomGenerator, 1u, false, 1u).invoke());
+
+	for (unsigned int y = 0u; y < height; ++y)
+	{
+		for (unsigned int x = 0u; x < width; ++x)
+		{
+			if (mask.constpixel<uint8_t>(x, y)[0] != 0xFFu)
+			{
+				EXPECT_EQ(layer.mappingI1().position(x, y), sourcePosition);
+			}
+		}
+	}
+}
+
 #endif // OCEAN_USE_GTEST
 
 bool TestInitializerI1::testAppearanceMappingAreaConstrained(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -2510,13 +2542,14 @@ bool TestInitializerI1::shrinkPatchMatchingIteration(Frame& frame, Frame& mask, 
 
 		if (ssdBest == uint32_t(-1))
 		{
-			// let's use the first non-mask pixel can we find
+			// Use a source outside the original mask, not a pixel synthesized
+			// earlier in this iteration.
 
 			for (unsigned int y = 0u; ssdBest == uint32_t(-1) && y < mask.height(); ++y)
 			{
 				for (unsigned int x = 0u; x < mask.width(); ++x)
 				{
-					if (mask.constpixel<uint8_t>(x, y)[0] == 0xFFu)
+					if (copyMask.constpixel<uint8_t>(x, y)[0] == 0xFFu)
 					{
 						ssdBest = 0u;
 						bestMapping = CV::PixelPosition(x, y);
