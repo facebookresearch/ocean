@@ -14,7 +14,7 @@
 #include "ocean/base/ScopedSubscription.h"
 #include "ocean/base/Singleton.h"
 
-#include "ocean/platform/android/ScopedJNIObject.h"
+#include "ocean/platform/android/ScopedJNIGlobalObject.h"
 
 namespace Ocean
 {
@@ -223,7 +223,7 @@ class OCEAN_SYSTEM_USB_ANDROID_EXPORT OceanUSBManager : public Singleton<OceanUS
 	protected:
 
 		/// The JNI class object of the Java OceanUSBManager class, invalid if not yet initialized.
-		Platform::Android::ScopedJClass javaClassOceanUSBManager_;
+		Platform::Android::ScopedGlobalJClass javaClassOceanUSBManager_;
 
 		/// The map mapping device names to permission callback functions.
 		PermissionCallbackMap permissionCallbackMap_;

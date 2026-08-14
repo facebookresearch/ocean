@@ -13,7 +13,7 @@
 #include "ocean/media/FrameMedium.h"
 #include "ocean/media/PixelImage.h"
 
-#include "ocean/platform/android/ScopedJNIObject.h"
+#include "ocean/platform/android/ScopedJNIGlobalObject.h"
 
 #include "ocean/platform/android/application/GLFrameView.h"
 
@@ -84,7 +84,7 @@ class GLMainView :
 		Ocean::Rendering::TextRef renderingText_;
 
 		/// The JNI class of the activity.
-		Ocean::Platform::Android::ScopedJClass jActivityClass_;
+		Ocean::Platform::Android::ScopedGlobalJClass jActivityClass_;
 
 		/// The JNI method id of the tracking function.
 		jmethodID jMethodId_ = nullptr;

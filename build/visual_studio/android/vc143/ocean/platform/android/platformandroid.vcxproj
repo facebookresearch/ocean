@@ -126,6 +126,7 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ProcessorMonitor.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ResourceManager.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ScopedJNIEnvironment.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ScopedJNIGlobalObject.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ScopedJNIObject.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Utilities.h" />
   </ItemGroup>
