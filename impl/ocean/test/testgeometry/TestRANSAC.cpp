@@ -530,15 +530,19 @@ bool TestRANSAC::testP3P(const AnyCameraType anyCameraType, const size_t corresp
 
 				if (!result)
 				{
-					OCEAN_SET_FAILED(validation);
+					scopedIteration.setInaccurate();
 
 					continue;
 				}
 
+				// Evaluate accuracy only for known inliers; corrupted 3D outliers need not satisfy camera projection preconditions.
+				const std::vector<uint8_t> faultyStatements = Subset::indices2statements<Index32, 1u>(faultyIndices, objectPoints.size());
+				const Indices32 validIndices = Subset::statements2indices<Index32, 0u>(faultyStatements);
+
 				Scalar sumSqrDistances = 0;
 				size_t numberPreciseCorrespondences = 0;
 
-				for (size_t n = 0; n < objectPoints.size(); ++n)
+				for (const Index32 n : validIndices)
 				{
 					const Vector2& imagePoint = imagePoints[n];
 					const Vector3& objectPoint = objectPoints[n];
