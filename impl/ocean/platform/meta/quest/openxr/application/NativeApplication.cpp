@@ -7,6 +7,8 @@
 
 #include "ocean/platform/meta/quest/openxr/application/NativeApplication.h"
 
+#include "ocean/base/ScopedFunction.h"
+
 #include "ocean/platform/android/Permission.h"
 #include "ocean/platform/android/ResourceManager.h"
 
@@ -81,6 +83,7 @@ NativeApplication::~NativeApplication()
 
 bool NativeApplication::run()
 {
+	const ScopedFunctionVoid scopedExitFunction(&NativeApplication::exitApplication);
 
 #ifdef OCEAN_PLATFORM_BUILD_ANDROID
 
@@ -170,21 +173,18 @@ bool NativeApplication::run()
 
 	xrInstance_.release();
 
-#ifdef OCEAN_PLATFORM_BUILD_ANDROID
+	// the thread stays attached to the virtual machine until the process ends,
+	// the std::atexit handlers of OceanManager release JNI references during singleton teardown and need an attached thread
 
-	ocean_assert(androidApp_ != nullptr);
-	androidApp_->activity->vm->DetachCurrentThread();
+	return true;
+}
 
-#endif
-
-	// we explicitly exit the application here (instead of returning),
-	// as the Oculus app does not seem to `terminate` although the application terminates
-	// as a result, static variables would stay initialized during two individual run calls
+void NativeApplication::exitApplication()
+{
+	// the Oculus app does not seem to `terminate` although the application terminates,
+	// so that static variables would stay initialized during two individual run calls
 
 	exit(0);
-
-	// will never happen
-	return true;
 }
 
 void NativeApplication::requestAndroidPermission(std::string&& permission)

@@ -82,7 +82,7 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_APPLICATION_EXPORT NativeApplication
 
 		/**
 		 * The run method of this application.
-		 * Calling this function will start the application logic and will return before the application closes.
+		 * Calling this function will start the application logic and will not return, as the process is ended explicitly once the application has finished.
 		 * True, if the application closes after a successful execution; False, if the application did not start successfully
 		 */
 		virtual bool run();
@@ -348,6 +348,11 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_APPLICATION_EXPORT NativeApplication
 		mutable Lock androidPermissionLock_;
 
 	private:
+
+		/**
+		 * Ends the process.
+		 */
+		static void exitApplication();
 
 		/// The current OpenXR session state.
 		XrSessionState xrSessionState_ = XR_SESSION_STATE_UNKNOWN;
