@@ -24,6 +24,149 @@ namespace Platform
 namespace Android
 {
 
+bool Utilities::clearPotentialException(JNIEnv& jniEnvironment)
+{
+	if (jniEnvironment.ExceptionCheck() == JNI_FALSE)
+	{
+		return false;
+	}
+
+	// while an exception is pending, JNI allows a small set of functions only,
+	// the throwable is therefore taken as a plain reference first and is scoped once the exception is cleared
+
+	const jthrowable throwable = jniEnvironment.ExceptionOccurred();
+
+	// the exception must be cleared before the throwable can be inspected, as the inspection needs further JNI calls
+
+	jniEnvironment.ExceptionClear();
+
+	const ScopedJObject jThrowable(jniEnvironment, throwable);
+
+	std::string description;
+
+	if (jThrowable)
+	{
+		const ScopedJClass jThrowableClass(jniEnvironment, jniEnvironment.GetObjectClass(*jThrowable));
+
+		if (jThrowableClass)
+		{
+			const jmethodID jToStringMethodId = jniEnvironment.GetMethodID(*jThrowableClass, "toString", "()Ljava/lang/String;");
+
+			if (jToStringMethodId != nullptr)
+			{
+				const ScopedJString jDescription(jniEnvironment, jstring(jniEnvironment.CallObjectMethod(*jThrowable, jToStringMethodId)));
+
+				if (jDescription)
+				{
+					description = toAString(&jniEnvironment, *jDescription);
+				}
+			}
+		}
+
+		// the inspection itself may have thrown, that exception must not stay pending either
+
+		if (jniEnvironment.ExceptionCheck() == JNI_TRUE)
+		{
+			jniEnvironment.ExceptionClear();
+		}
+	}
+
+	if (description.empty())
+	{
+		Log::error() << "A Java exception has been thrown and was cleared, the description could not be determined";
+	}
+	else
+	{
+		Log::error() << "A Java exception has been thrown and was cleared: " << description;
+	}
+
+	return true;
+}
+
+ScopedJClass Utilities::findClass(JNIEnv& jniEnvironment, const std::string& className)
+{
+	ocean_assert(!className.empty());
+
+	ScopedJClass javaClass(jniEnvironment, jniEnvironment.FindClass(className.c_str()));
+
+	if (!javaClass)
+	{
+		// the class is not found if and only if an exception has been thrown
+
+		clearPotentialException(jniEnvironment);
+	}
+
+	return javaClass;
+}
+
+jmethodID Utilities::getMethodId(JNIEnv& jniEnvironment, jclass javaClass, const std::string& name, const std::string& signature)
+{
+	ocean_assert(javaClass != nullptr);
+	ocean_assert(!name.empty() && !signature.empty());
+
+	const jmethodID methodId = jniEnvironment.GetMethodID(javaClass, name.c_str(), signature.c_str());
+
+	if (methodId == nullptr)
+	{
+		// the id is not found if and only if an exception has been thrown
+
+		clearPotentialException(jniEnvironment);
+	}
+
+	return methodId;
+}
+
+jmethodID Utilities::getStaticMethodId(JNIEnv& jniEnvironment, jclass javaClass, const std::string& name, const std::string& signature)
+{
+	ocean_assert(javaClass != nullptr);
+	ocean_assert(!name.empty() && !signature.empty());
+
+	const jmethodID methodId = jniEnvironment.GetStaticMethodID(javaClass, name.c_str(), signature.c_str());
+
+	if (methodId == nullptr)
+	{
+		// the id is not found if and only if an exception has been thrown
+
+		clearPotentialException(jniEnvironment);
+	}
+
+	return methodId;
+}
+
+jfieldID Utilities::getFieldId(JNIEnv& jniEnvironment, jclass javaClass, const std::string& name, const std::string& signature)
+{
+	ocean_assert(javaClass != nullptr);
+	ocean_assert(!name.empty() && !signature.empty());
+
+	const jfieldID fieldId = jniEnvironment.GetFieldID(javaClass, name.c_str(), signature.c_str());
+
+	if (fieldId == nullptr)
+	{
+		// the id is not found if and only if an exception has been thrown
+
+		clearPotentialException(jniEnvironment);
+	}
+
+	return fieldId;
+}
+
+jfieldID Utilities::getStaticFieldId(JNIEnv& jniEnvironment, jclass javaClass, const std::string& name, const std::string& signature)
+{
+	ocean_assert(javaClass != nullptr);
+	ocean_assert(!name.empty() && !signature.empty());
+
+	const jfieldID fieldId = jniEnvironment.GetStaticFieldID(javaClass, name.c_str(), signature.c_str());
+
+	if (fieldId == nullptr)
+	{
+		// the id is not found if and only if an exception has been thrown
+
+		clearPotentialException(jniEnvironment);
+	}
+
+	return fieldId;
+}
+
 std::string Utilities::toAString(JNIEnv* env, jstring javaString)
 {
 	if (javaString == nullptr)
