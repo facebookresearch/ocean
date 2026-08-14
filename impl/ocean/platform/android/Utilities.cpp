@@ -796,74 +796,86 @@ bool Utilities::sendIntentToComponent(JNIEnv* env, jobject activity, const std::
 	const ScopedJString jClassName(*env, env->NewStringUTF(className.c_str()));
 	const ScopedJString jExtraText(*env, env->NewStringUTF(extraText.c_str()));
 
-	const ScopedJClass jComponentNameClass(*env, env->FindClass("android/content/ComponentName"));
+	const ScopedJClass jComponentNameClass(findClass(*env, "android/content/ComponentName"));
 
 	if (!jComponentNameClass)
 	{
 		return false;
 	}
 
-	jmethodID jNewComponentNameMethod = env->GetMethodID(*jComponentNameClass, "<init>", "(Ljava/lang/String;Ljava/lang/String;)V");
+	const jmethodID jNewComponentNameMethod = getMethodId(*env, *jComponentNameClass, "<init>", "(Ljava/lang/String;Ljava/lang/String;)V");
 
 	if (!jNewComponentNameMethod)
 	{
 		return false;
 	}
 
-	const ScopedJObject jComponentNameObject(*env, env->NewObject(*jComponentNameClass, jNewComponentNameMethod, *jPackageName, *jClassName));
+	const ScopedJObject jComponentNameObject(newObject(*env, *jComponentNameClass, jNewComponentNameMethod, *jPackageName, *jClassName));
 
 	if (!jNewComponentNameMethod)
 	{
 		return false;
 	}
 
-	const ScopedJClass jIntentClass(*env, env->FindClass("android/content/Intent"));
+	const ScopedJClass jIntentClass(findClass(*env, "android/content/Intent"));
 
 	if (!jIntentClass)
 	{
 		return false;
 	}
 
-	jfieldID jActionSendField = env->GetStaticFieldID(*jIntentClass, "ACTION_SEND", "Ljava/lang/String;");
-	jfieldID jExtraTextField = env->GetStaticFieldID(*jIntentClass, "EXTRA_TEXT", "Ljava/lang/String;");
+	const jfieldID jActionSendField = getStaticFieldId(*env, *jIntentClass, "ACTION_SEND", "Ljava/lang/String;");
+	const jfieldID jExtraTextField = getStaticFieldId(*env, *jIntentClass, "EXTRA_TEXT", "Ljava/lang/String;");
 
 	jstring jActionSendValue = (jstring)(env->GetStaticObjectField(*jIntentClass, jActionSendField));
 	jstring jExtraTextValue = (jstring)(env->GetStaticObjectField(*jIntentClass, jExtraTextField));
 
-	jmethodID jNewIntentMethod = env->GetMethodID(*jIntentClass, "<init>", "(Ljava/lang/String;)V");
-	jmethodID jPutExtraMethod = env->GetMethodID(*jIntentClass, "putExtra", "(Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;");
-	jmethodID jSetTypeMethod = env->GetMethodID(*jIntentClass, "setType", "(Ljava/lang/String;)Landroid/content/Intent;");
-	jmethodID jSetComponentNameMethod = env->GetMethodID(*jIntentClass, "setComponent","(Landroid/content/ComponentName;)Landroid/content/Intent;");
+	const jmethodID jNewIntentMethod = getMethodId(*env, *jIntentClass, "<init>", "(Ljava/lang/String;)V");
+	const jmethodID jPutExtraMethod = getMethodId(*env, *jIntentClass, "putExtra", "(Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;");
+	const jmethodID jSetTypeMethod = getMethodId(*env, *jIntentClass, "setType", "(Ljava/lang/String;)Landroid/content/Intent;");
+	const jmethodID jSetComponentNameMethod = getMethodId(*env, *jIntentClass, "setComponent", "(Landroid/content/ComponentName;)Landroid/content/Intent;");
 
 	if (!jNewComponentNameMethod || !jPutExtraMethod || !jSetTypeMethod || !jSetComponentNameMethod)
 	{
 		return false;
 	}
 
-	ScopedJObject jIntentObject(*env, env->NewObject(*jIntentClass, jNewIntentMethod, jActionSendValue));
+	ScopedJObject jIntentObject(newObject(*env, *jIntentClass, jNewIntentMethod, jActionSendValue));
 
 	if (!jIntentObject)
 	{
 		return false;
 	}
 
-	env->CallObjectMethod(*jIntentObject, jPutExtraMethod, jExtraTextValue, *jExtraText);
+	// putExtra(), setType() and setComponent() return the intent itself, the returned reference is not needed and is released right away
+
+	if (!callObjectMethod(*env, *jIntentObject, jPutExtraMethod, jExtraTextValue, *jExtraText))
+	{
+		return false;
+	}
 
 	const ScopedJString jMimeType(*env, env->NewStringUTF("text/plain"));
-	env->CallObjectMethod(*jIntentObject, jSetTypeMethod, *jMimeType);
 
-	env->CallObjectMethod(*jIntentObject, jSetComponentNameMethod, *jComponentNameObject);
+	if (!callObjectMethod(*env, *jIntentObject, jSetTypeMethod, *jMimeType))
+	{
+		return false;
+	}
 
-	jmethodID jStartActivityMethod = env->GetMethodID(*jActivityClass, "startActivity", "(Landroid/content/Intent;)V");
+	if (!callObjectMethod(*env, *jIntentObject, jSetComponentNameMethod, *jComponentNameObject))
+	{
+		return false;
+	}
+
+	const jmethodID jStartActivityMethod = getMethodId(*env, *jActivityClass, "startActivity", "(Landroid/content/Intent;)V");
 
 	if (!jStartActivityMethod)
 	{
 		return false;
 	}
 
-	env->CallVoidMethod(activity, jStartActivityMethod, *jIntentObject);
+	// startActivity() throws ActivityNotFoundException if no activity can handle the intent
 
-	return true;
+	return callVoidMethod(*env, activity, jStartActivityMethod, *jIntentObject);
 }
 
 bool Utilities::startActivity(JNIEnv* env, jobject rootActivity, const std::string& activityClassName)
@@ -878,39 +890,44 @@ bool Utilities::startActivity(JNIEnv* env, jobject rootActivity, const std::stri
 		return false;
 	}
 
-	jmethodID jStartActivityMethod = env->GetMethodID(*jRootActivityClass, "startActivity", "(Landroid/content/Intent;)V");
+	const jmethodID jStartActivityMethod = getMethodId(*env, *jRootActivityClass, "startActivity", "(Landroid/content/Intent;)V");
 
 	if (!jStartActivityMethod)
 	{
 		return false;
 	}
 
-	const ScopedJClass jIntentClass(*env, env->FindClass("android/content/Intent"));
+	const ScopedJClass jIntentClass(findClass(*env, "android/content/Intent"));
 
 	if (!jIntentClass)
 	{
 		return false;
 	}
 
-	jmethodID jNewIntentMethod = env->GetMethodID(*jIntentClass, "<init>", "(Landroid/content/Context;Ljava/lang/Class;)V");
+	const jmethodID jNewIntentMethod = getMethodId(*env, *jIntentClass, "<init>", "(Landroid/content/Context;Ljava/lang/Class;)V");
 
 	if (!jNewIntentMethod)
 	{
 		return false;
 	}
 
-	const ScopedJClass jActivityClass(*env, env->FindClass(activityClassName.c_str()));
+	const ScopedJClass jActivityClass(findClass(*env, activityClassName));
 
-	ScopedJObject jIntentObject(*env, env->NewObject(*jIntentClass, jNewIntentMethod, rootActivity, *jActivityClass));
+	if (!jActivityClass)
+	{
+		return false;
+	}
+
+	ScopedJObject jIntentObject(newObject(*env, *jIntentClass, jNewIntentMethod, rootActivity, *jActivityClass));
 
 	if (!jIntentObject)
 	{
 		return false;
 	}
 
-	env->CallVoidMethod(rootActivity, jStartActivityMethod, *jIntentObject);
+	// startActivity() throws ActivityNotFoundException if no activity can handle the intent
 
-	return true;
+	return callVoidMethod(*env, rootActivity, jStartActivityMethod, *jIntentObject);
 }
 
 bool Utilities::connectToWifi(JNIEnv* env, jobject activity, const std::string& ssid, const std::string& password)
