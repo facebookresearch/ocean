@@ -9,8 +9,10 @@
 
 from __future__ import annotations
 
+import json
 import os
 import platform
+import re
 import subprocess
 from dataclasses import dataclass
 from enum import Enum
@@ -113,9 +115,6 @@ def get_all_installed_vs_versions() -> list[tuple[str, str, str]]:
 
         if not result.stdout.strip():
             return []
-
-        import json
-        import re
 
         installations = json.loads(result.stdout)
         installed = []
@@ -607,8 +606,6 @@ def _get_vs_generator_for_version(year: str) -> Optional[str]:
             errors="replace",
         )
         if result.returncode == 0 and result.stdout.strip():
-            import json
-
             try:
                 installations = json.loads(result.stdout)
                 for install in installations:
@@ -653,7 +650,6 @@ def _get_vs_info_for_year(year: str) -> Optional[str]:
             errors="replace",
             check=True,
         )
-        import json
 
         installations = json.loads(result.stdout)
         for install in installations:
@@ -722,7 +718,6 @@ def _detect_visual_studio_version() -> Optional[str]:
         display_name = result.stdout.strip()
 
         # Extract year from display name (last 4 digits)
-        import re
 
         year_match = re.search(r"(\d{4})$", display_name)
         if year_match and major_version:
