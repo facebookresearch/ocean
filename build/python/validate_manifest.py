@@ -41,7 +41,7 @@ def load_schema() -> dict:
         print(f"Error: Schema not found: {schema_path}")
         sys.exit(1)
 
-    with open(schema_path) as f:
+    with open(schema_path, encoding="utf-8") as f:
         return json.load(f)
 
 
@@ -51,7 +51,7 @@ def load_manifest(path: Path) -> dict:
         print(f"Error: Manifest not found: {path}")
         sys.exit(1)
 
-    with open(path) as f:
+    with open(path, encoding="utf-8") as f:
         return yaml.safe_load(f)
 
 

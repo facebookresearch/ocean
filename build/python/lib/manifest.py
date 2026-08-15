@@ -380,7 +380,7 @@ class Manifest:
     @classmethod
     def from_file(cls, path: Path) -> "Manifest":
         """Load manifest from YAML file."""
-        with open(path, "r") as f:
+        with open(path, "r", encoding="utf-8") as f:
             data = yaml.safe_load(f)
         return cls.from_dict(data)
 

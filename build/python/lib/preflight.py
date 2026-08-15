@@ -702,7 +702,7 @@ def check_android_ndk() -> ToolchainInfo:
     source_props = ndk_path / "source.properties"
     if source_props.exists():
         try:
-            content = source_props.read_text()
+            content = source_props.read_text(encoding="utf-8", errors="replace")
             for line in content.split("\n"):
                 if line.startswith("Pkg.Revision"):
                     version = line.split("=")[1].strip()

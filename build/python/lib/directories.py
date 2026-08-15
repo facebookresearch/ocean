@@ -284,13 +284,13 @@ class DirectoryManager:
         with _metadata_lock:
             # Use file locking for cross-process synchronization
             lock_file = final_dir / ".build_metadata.lock"
-            with open(lock_file, "w") as lock_f:
+            with open(lock_file, "w", encoding="utf-8") as lock_f:
                 _lock_file(lock_f)
                 try:
                     # Load existing metadata or create new
                     if metadata_file.exists():
                         try:
-                            with open(metadata_file, "r") as f:
+                            with open(metadata_file, "r", encoding="utf-8") as f:
                                 metadata = json.load(f)
                         except (json.JSONDecodeError, ValueError):
                             # File was corrupted, recreate it
@@ -319,7 +319,7 @@ class DirectoryManager:
                     # Write atomically: write to temp file, then rename
                     # On Windows, we need to remove the destination first
                     temp_file = metadata_file.with_suffix(".tmp")
-                    with open(temp_file, "w") as f:
+                    with open(temp_file, "w", encoding="utf-8") as f:
                         json.dump(metadata, f, indent=2)
                     if os.name == "nt" and metadata_file.exists():
                         metadata_file.unlink()
