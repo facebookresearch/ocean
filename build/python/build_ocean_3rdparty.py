@@ -1485,14 +1485,16 @@ def parse_args() -> argparse.Namespace:
         type=str,
         action="append",
         default=[],
-        help="Include optional library (can be specified multiple times)",
+        help="Include optional library(ies). Can be specified multiple times. "
+        "Comma-separated also supported. See --list-optional.",
     )
     parser.add_argument(
         "--with-group",
         type=str,
         action="append",
         default=[],
-        help="Include all libraries in an optional group",
+        help="Include all libraries in an optional group. Can be specified "
+        "multiple times. Comma-separated also supported. See --list-optional.",
     )
     parser.add_argument(
         "--all",
@@ -1930,6 +1932,21 @@ def main() -> int:  # noqa: C901
         # Auto-detect if on Windows and no version specified
         msvc_toolset, msvc_path = get_msvc_toolset_version_and_path()
 
+    # A (None, None) result for an explicit --vs-version means that version is
+    # not installed. Continuing silently builds with the auto-detected toolset
+    # and stamps *its* name into the output directories, so the user ends up
+    # with vc143 artifacts in a tree they believe is vc142.
+    if args.vs_version and detect_host_os() == OS.WINDOWS and msvc_toolset is None:
+        print(f"Error: Visual Studio {args.vs_version} is not installed.")
+        installed = get_all_installed_vs_versions()
+        if installed:
+            print("Detected installations:")
+            for year, toolset, path in installed:
+                print(f"  - {year} ({toolset}): {path}")
+        else:
+            print("  No Visual Studio installation was detected.")
+        return 1
+
     # Expand platforms with configs/link types
     targets = [
         BuildTarget(
@@ -2021,11 +2038,39 @@ def main() -> int:  # noqa: C901
     print(f"  {get_equivalent_command(args, targets)}")
     print()
 
+    # --with / --with-group take the same comma-separated form as --library, and
+    # an unknown name is an error. Previously the value was matched verbatim
+    # against library names, so `--with opencv,openssl` and `--with opencv2`
+    # matched nothing, built the default set, and still printed success.
+    with_libs = _split_list_arg(args.with_libs)
+    with_groups = _split_list_arg(args.with_group)
+    optional_libs = manifest.get_optional_libraries()
+    optional_groups = manifest.get_optional_groups()
+
+    for name in with_libs:
+        if name not in manifest.libraries:
+            print(f"Error: unknown library: {name}")
+            print(
+                f"Available optional libraries: {', '.join(sorted(optional_libs))} "
+                "(see --list-optional)"
+            )
+            return 1
+        if name not in optional_libs:
+            print(f"Note: '{name}' is not optional; it is always built.")
+    for name in with_groups:
+        if name not in optional_groups:
+            print(f"Error: unknown optional group: {name}")
+            print(
+                f"Available optional groups: {', '.join(sorted(optional_groups))} "
+                "(see --list-optional)"
+            )
+            return 1
+
     # Filter libraries - get libraries that support ANY of the target platforms
     target_platforms = list({t.os.value for t in targets}) if targets else None
     libraries = manifest.filter_libraries(
-        with_libs=args.with_libs,
-        with_groups=args.with_group,
+        with_libs=with_libs,
+        with_groups=with_groups,
         build_all=args.build_all,
         platforms=target_platforms,
     )
