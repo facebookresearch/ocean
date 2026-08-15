@@ -139,7 +139,7 @@
         "type": {
           "type": "string",
           "description": "Source type",
-          "enum": ["git", "archive", "local"]
+          "enum": ["git", "archive", "local", "ndk_source"]
         },
         "url": {
           "type": "string",
@@ -179,6 +179,10 @@
         "source_subdir": {
           "type": "string",
           "description": "Subdirectory within the source to use as the build root (useful for monorepos)"
+        },
+        "ndk_path": {
+          "type": "string",
+          "description": "Path within the Android NDK root to copy from (for ndk_source type), e.g. 'sources/android/native_app_glue'"
         }
       },
       "allOf": [
@@ -205,6 +209,14 @@
           "then": {
             "required": ["local_path"]
           }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": "ndk_source" } }
+          },
+          "then": {
+            "required": ["ndk_path"]
+          }
         }
       ],
       "additionalProperties": false
@@ -217,7 +229,7 @@
         "system": {
           "type": "string",
           "description": "Build system to use",
-          "enum": ["cmake", "header_only", "custom"]
+          "enum": ["cmake", "header_only", "imported_shared", "custom"]
         },
         "options": {
           "$ref": "#/definitions/build_options",
@@ -249,6 +261,25 @@
           "items": {
             "type": "string"
           }
+        },
+        "post_install_copy": {
+          "type": "array",
+          "description": "Extra files to copy from the build directory into the install directory after 'cmake --install', for projects whose install rules miss some artifacts",
+          "items": {
+            "type": "object",
+            "required": ["glob", "dest"],
+            "properties": {
+              "glob": {
+                "type": "string",
+                "description": "Glob pattern relative to the build directory"
+              },
+              "dest": {
+                "type": "string",
+                "description": "Destination directory relative to the install directory"
+              }
+            },
+            "additionalProperties": false
+          }
         }
       },
       "additionalProperties": false
@@ -260,7 +291,12 @@
         "oneOf": [
           { "type": "string" },
           { "type": "boolean" },
-          { "type": "number" }
+          { "type": "number" },
+          {
+            "type": "array",
+            "description": "List-valued option, e.g. imported_shared's lib_files",
+            "items": { "type": "string" }
+          }
         ]
       }
     }
