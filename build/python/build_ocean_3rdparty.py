@@ -156,7 +156,13 @@ from lib import (
     SourceFetcher,
 )
 from lib.builder_base import BuildContext, Builder
-from lib.platform import detect_host_os, get_installed_windows_archs, get_msvc_toolset_version_and_path, get_all_installed_vs_versions
+from lib.platform import (
+    detect_host_os,
+    get_all_installed_vs_versions,
+    get_installed_windows_archs,
+    get_msvc_toolset_version_and_path,
+    WINDOWS_ARCH_COMPONENTS,
+)
 from lib.progress import BuildPhase, ProgressDisplay
 
 
@@ -199,10 +205,14 @@ PLATFORM_GROUPS: Dict[str, List[tuple[OS, Arch]]] = {
 }
 
 
-def get_all_supported_platforms() -> (
-    tuple[List[tuple[OS, Arch]], List[tuple[str, str]]]
-):
+def get_all_supported_platforms(
+    vs_version: Optional[str] = None,
+) -> tuple[List[tuple[OS, Arch]], List[tuple[str, str]]]:
     """Get all target platforms supported by the current host.
+
+    Args:
+        vs_version: Visual Studio year to scope Windows detection to. Ignored on
+            non-Windows hosts.
 
     Returns a tuple of:
         - platforms: list of (OS, Arch) that can be built
@@ -234,8 +244,11 @@ def get_all_supported_platforms() -> (
     host_os = detect_host_os()
     host_arch = detect_host_arch()
 
-    # Always include native host target
-    platforms.append((host_os, host_arch))
+    # Include the native host target. On Windows this is decided by MSVC
+    # toolchain detection below: an ARM64 host whose Visual Studio lacks the
+    # ARM64 tools cannot build for its own architecture.
+    if host_os != OS.WINDOWS:
+        platforms.append((host_os, host_arch))
 
     if host_os == OS.MACOS:
         # macOS can cross-compile to iOS if Xcode is available
@@ -251,10 +264,22 @@ def get_all_supported_platforms() -> (
             platforms.append((OS.MACOS, Arch.ARM64))
 
     elif host_os == OS.WINDOWS:
-        # Add all 64-bit architectures that have MSVC tools installed.
-        for arch in get_installed_windows_archs():
-            if (OS.WINDOWS, arch) not in platforms:
+        # Add only the 64-bit architectures whose MSVC tools are installed in
+        # the Visual Studio installation this build will actually use.
+        installed_archs = get_installed_windows_archs(vs_version)
+        for arch in (Arch.X86_64, Arch.ARM64):
+            if arch in installed_archs:
                 platforms.append((OS.WINDOWS, arch))
+            else:
+                skipped.append(
+                    (
+                        f"win_{arch.value}",
+                        f"{WINDOWS_ARCH_COMPONENTS[arch]} not installed in the "
+                        "selected Visual Studio (add it via the Visual Studio "
+                        "Installer, or pass --vs-version to select another "
+                        "installation)",
+                    )
+                )
 
     # All platforms can cross-compile to Android if NDK is available
     if get_android_ndk_path():
@@ -278,7 +303,11 @@ def get_equivalent_command(
     parts = [f"python {script_name}"]
 
     # Targets
-    platforms = parse_platforms(args.target) if args.target else get_all_supported_platforms()[0]
+    platforms = (
+        parse_platforms(args.target)
+        if args.target
+        else get_all_supported_platforms(args.vs_version)[0]
+    )
     target_strs = [f"{os.value}_{arch.value}" for os, arch in platforms]
     parts.append(f"--target {','.join(target_strs)}")
 
@@ -1632,6 +1661,7 @@ def parse_link_types(link_args: Optional[List[str]]) -> List[LinkType]:
 
 def parse_platforms(
     target_args: Optional[List[str]],
+    vs_version: Optional[str] = None,
 ) -> Optional[List[tuple[OS, Arch]]]:
     """Parse platform arguments (supports both comma-separated and multiple flags).
 
@@ -1651,7 +1681,7 @@ def parse_platforms(
                 continue
             if t.lower() == "all_supported":
                 # Return all platforms supported by the current host
-                return get_all_supported_platforms()[0]
+                return get_all_supported_platforms(vs_version)[0]
             if t.lower() in PLATFORM_GROUPS:
                 platforms.extend(PLATFORM_GROUPS[t.lower()])
             else:
@@ -1802,9 +1832,9 @@ def main() -> int:  # noqa: C901
     configs = parse_configs(args.config)
     link_types = parse_link_types(args.link)
     if args.target:
-        platforms = parse_platforms(args.target)
+        platforms = parse_platforms(args.target, args.vs_version)
     else:
-        platforms, skipped_platforms = get_all_supported_platforms()
+        platforms, skipped_platforms = get_all_supported_platforms(args.vs_version)
         if skipped_platforms:
             print("Skipped platforms:")
             for group, reason in skipped_platforms:

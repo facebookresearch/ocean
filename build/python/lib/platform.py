@@ -16,7 +16,7 @@ import re
 import subprocess
 from dataclasses import dataclass
 from enum import Enum
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 
 class OS(Enum):
@@ -52,6 +52,37 @@ class LinkType(Enum):
     SHARED = "shared"
 
 
+# Visual Studio component IDs providing the 64-bit MSVC cross-tools, by target
+# architecture. These IDs are stable across Visual Studio versions, unlike the
+# display names, which are localized and carry the toolset number.
+WINDOWS_ARCH_COMPONENT_IDS: Dict[Arch, str] = {
+    Arch.X86_64: "Microsoft.VisualStudio.Component.VC.Tools.x86.x64",
+    Arch.ARM64: "Microsoft.VisualStudio.Component.VC.Tools.ARM64",
+}
+
+# Human-readable form of the above, for error messages.
+WINDOWS_ARCH_COMPONENTS: Dict[Arch, str] = {
+    Arch.X86_64: (
+        "MSVC x64/x86 build tools (Microsoft.VisualStudio.Component.VC.Tools.x86.x64)"
+    ),
+    Arch.ARM64: (
+        "MSVC ARM64/ARM64EC build tools "
+        "(Microsoft.VisualStudio.Component.VC.Tools.ARM64)"
+    ),
+}
+
+
+def find_vswhere() -> Optional[str]:
+    """Locate vswhere.exe, the Visual Studio installation query tool."""
+    for path in (
+        r"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe",
+        r"C:\Program Files\Microsoft Visual Studio\Installer\vswhere.exe",
+    ):
+        if os.path.exists(path):
+            return path
+    return None
+
+
 def get_msvc_toolset_version(vs_version: Optional[str] = None) -> Optional[str]:
     """Get the MSVC toolset version.
 
@@ -78,18 +109,7 @@ def get_all_installed_vs_versions() -> list[tuple[str, str, str]]:
     if platform.system().lower() != "windows":
         return []
 
-    # Find vswhere.exe
-    vswhere_paths = [
-        r"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe",
-        r"C:\Program Files\Microsoft Visual Studio\Installer\vswhere.exe",
-    ]
-
-    vswhere_path = None
-    for path in vswhere_paths:
-        if os.path.exists(path):
-            vswhere_path = path
-            break
-
+    vswhere_path = find_vswhere()
     if not vswhere_path:
         return []
 
@@ -103,9 +123,12 @@ def get_all_installed_vs_versions() -> list[tuple[str, str, str]]:
     }
 
     try:
-        # Get all VS installations in JSON format
+        # Get all VS installations in JSON format. '-products *' includes the
+        # standalone Build Tools SKU, which is what CI hosts typically have;
+        # these flags must stay in sync with the component query in
+        # get_installed_windows_archs().
         result = subprocess.run(
-            [vswhere_path, "-all", "-format", "json"],
+            [vswhere_path, "-all", "-products", "*", "-format", "json"],
             capture_output=True,
             text=True,
             encoding="utf-8",
@@ -737,39 +760,71 @@ def _detect_visual_studio_version() -> Optional[str]:
     return None
 
 
-def get_installed_windows_archs() -> List[Arch]:
+def _normalize_install_path(path: str) -> str:
+    """Normalize a Visual Studio path for case-insensitive comparison."""
+    return os.path.normcase(os.path.normpath(path.strip()))
+
+
+def _vs_install_root(vc_path: str) -> str:
+    """Convert a '<install>\\VC' path back to the installation root.
+
+    get_all_installed_vs_versions() appends 'VC' because that is what CMake and
+    the toolchain files expect, but vswhere reports and matches on the root.
+    """
+    if os.path.basename(vc_path).lower() == "vc":
+        return os.path.dirname(vc_path)
+    return vc_path
+
+
+def get_installed_windows_archs(vs_version: Optional[str] = None) -> List[Arch]:
     """Detect which Windows architectures have MSVC tools installed via vswhere.
 
     Probes for 64-bit architecture components only (x86_64 and ARM64).
-    Falls back to the host architecture if vswhere is unavailable or no
-    components are detected.
-    """
-    vswhere_paths = [
-        r"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe",
-        r"C:\Program Files\Microsoft Visual Studio\Installer\vswhere.exe",
-    ]
-    vswhere_path = None
-    for path in vswhere_paths:
-        if os.path.exists(path):
-            vswhere_path = path
-            break
 
+    The probe is scoped to the Visual Studio installation that the build will
+    actually use. With several versions installed it is common for one to carry
+    the ARM64 tools and another not; an unscoped query reports ARM64 as
+    available and the build then fails deep inside MSBuild with an opaque
+    'BaseOutputPath/OutputPath is not set for VCTargetsPath.vcxproj'.
+
+    Args:
+        vs_version: Visual Studio year to scope to (e.g. "2022"). Defaults to
+            the auto-selected (newest) installation.
+
+    Falls back to the host architecture only when the installation cannot be
+    identified at all (no vswhere, or no detectable Visual Studio). Once an
+    installation is identified, an empty result is authoritative: it means that
+    installation genuinely carries neither toolchain.
+    """
+    vswhere_path = find_vswhere()
     if not vswhere_path:
         return [detect_host_arch()]
 
-    # Map VS component IDs to architectures (64-bit only)
-    component_to_arch = {
-        "Microsoft.VisualStudio.Component.VC.Tools.x86.x64": Arch.X86_64,
-        "Microsoft.VisualStudio.Component.VC.Tools.ARM64": Arch.ARM64,
-    }
+    _, selected_vc_path = get_msvc_toolset_version_and_path(vs_version)
+    selected_root = (
+        _normalize_install_path(_vs_install_root(selected_vc_path))
+        if selected_vc_path
+        else None
+    )
+
+    if selected_root is None:
+        # No installation to scope to (vswhere found nothing, the requested
+        # --vs-version is absent, or detection fell back to bare cl.exe).
+        # Scoping is impossible, so report the host architecture rather than
+        # silently reverting to "any installation has these tools".
+        return [detect_host_arch()]
 
     archs = []
-    for component, arch in component_to_arch.items():
+    for arch, component in WINDOWS_ARCH_COMPONENT_IDS.items():
         try:
             result = subprocess.run(
+                # These flags must stay identical to the query in
+                # get_all_installed_vs_versions(): selected_root comes from
+                # there, and a narrower filter here would drop the very
+                # installation being matched against.
                 [
                     vswhere_path,
-                    "-latest",
+                    "-all",
                     "-products",
                     "*",
                     "-requires",
@@ -783,12 +838,18 @@ def get_installed_windows_archs() -> List[Arch]:
                 errors="replace",
                 check=True,
             )
-            if result.stdout.strip():
-                archs.append(arch)
         except subprocess.CalledProcessError:
-            pass
+            continue
 
-    return archs if archs else [detect_host_arch()]
+        roots = {
+            _normalize_install_path(line)
+            for line in result.stdout.splitlines()
+            if line.strip()
+        }
+        if selected_root in roots:
+            archs.append(arch)
+
+    return archs
 
 
 def parse_platform_string(platform_str: str) -> tuple[OS, Arch]:

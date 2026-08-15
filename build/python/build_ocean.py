@@ -84,11 +84,17 @@ def get_default_platforms() -> List[Tuple[OS, Arch]]:
     return [(host_os, host_arch)]
 
 
-def get_all_supported_platforms() -> List[Tuple[OS, Arch]]:
+def get_all_supported_platforms(
+    vs_version: Optional[str] = None,
+) -> List[Tuple[OS, Arch]]:
     """Get all target platforms supported by the current host.
 
     Returns platforms that can be built on the current host, including
     cross-compilation targets when the required toolchains are available.
+
+    Args:
+        vs_version: Visual Studio year to scope Windows detection to. Ignored on
+            non-Windows hosts.
     """
     # Import additional functions needed for platform detection
     _platform_spec = importlib.util.spec_from_file_location(
@@ -104,8 +110,11 @@ def get_all_supported_platforms() -> List[Tuple[OS, Arch]]:
     host_os = detect_host_os()
     host_arch = detect_host_arch()
 
-    # Always include native host target
-    platforms.append((host_os, host_arch))
+    # Include the native host target. On Windows this is decided by MSVC
+    # toolchain detection below: an ARM64 host whose Visual Studio lacks the
+    # ARM64 tools cannot build for its own architecture.
+    if host_os != OS.WINDOWS:
+        platforms.append((host_os, host_arch))
 
     if host_os == OS.MACOS:
         # macOS can cross-compile to iOS if Xcode is available
@@ -119,8 +128,9 @@ def get_all_supported_platforms() -> List[Tuple[OS, Arch]]:
             platforms.append((OS.MACOS, Arch.ARM64))
 
     elif host_os == OS.WINDOWS:
-        # Add all 64-bit architectures that have MSVC tools installed.
-        for arch in get_installed_windows_archs():
+        # Add only the 64-bit architectures whose MSVC tools are installed in
+        # the Visual Studio installation this build will actually use.
+        for arch in get_installed_windows_archs(vs_version):
             if (OS.WINDOWS, arch) not in platforms:
                 platforms.append((OS.WINDOWS, arch))
 
@@ -592,6 +602,7 @@ def parse_link_types(link_args: Optional[List[str]]) -> List[LinkType]:
 
 def parse_platforms(
     target_args: Optional[List[str]],
+    vs_version: Optional[str] = None,
 ) -> Optional[List[Tuple[OS, Arch]]]:
     """Parse platform arguments.
 
@@ -609,7 +620,7 @@ def parse_platforms(
                 continue
             if t.lower() == "all_supported":
                 # Return all platforms supported by the current host
-                return get_all_supported_platforms()
+                return get_all_supported_platforms(vs_version)
             platforms.append(parse_platform_string(t))
     return platforms or None
 
@@ -655,7 +666,11 @@ def main() -> int:
     # Parse build configuration
     configs = parse_configs(args.config)
     link_types = parse_link_types(args.link)
-    platforms = parse_platforms(args.target) if args.target else get_default_platforms()
+    platforms = (
+        parse_platforms(args.target, args.vs_version)
+        if args.target
+        else get_default_platforms()
+    )
 
     # Handle Quest mode
     if args.quest:
