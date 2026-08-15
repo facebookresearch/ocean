@@ -1653,7 +1653,7 @@ def parse_configs(config_args: Optional[List[str]]) -> List[BuildConfig]:
                 configs.append(BuildConfig.RELEASE)
             else:
                 raise ValueError(f"Unknown config: {c}")
-    return configs or [BuildConfig.DEBUG, BuildConfig.RELEASE]
+    return _dedup(configs) or [BuildConfig.DEBUG, BuildConfig.RELEASE]
 
 
 def parse_link_types(link_args: Optional[List[str]]) -> List[LinkType]:
@@ -1685,7 +1685,7 @@ def parse_link_types(link_args: Optional[List[str]]) -> List[LinkType]:
             return [LinkType.STATIC, LinkType.SHARED]
         return [LinkType.STATIC]
 
-    return types
+    return _dedup(types)
 
 
 def find_unbuildable_windows_targets(
@@ -1747,7 +1747,11 @@ def parse_platforms(
                 platforms.extend(PLATFORM_GROUPS[t.lower()])
             else:
                 platforms.append(parse_platform_string(t))
-    return platforms or None
+    # De-duplicated because a group and a member of it are both documented
+    # usage (`--target macos --target macos_arm64`): without this, the same
+    # (library, target) job is submitted twice and two builds race in one
+    # build directory.
+    return _dedup(platforms) or None
 
 
 def _print_post_build_instructions(install_dir: Path) -> None:
@@ -1960,6 +1964,7 @@ def main() -> int:  # noqa: C901
         for config in configs
         for link_type in link_types
     ]
+    targets = _dedup(targets)
 
     # Filter out shared builds for platforms that don't support them.
     # iOS is excluded because of code-signing and Swift module issues.

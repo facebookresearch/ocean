@@ -78,6 +78,11 @@ DEFAULT_BUILD_DIR = Path("ocean_build")
 DEFAULT_INSTALL_DIR = Path("ocean_install")
 
 
+def _dedup(values: List) -> List:
+    """Order-preserving de-duplication."""
+    return list(dict.fromkeys(values))
+
+
 def get_default_platforms() -> List[Tuple[OS, Arch]]:
     """Get default target platforms based on host OS."""
     host_os = detect_host_os()
@@ -580,7 +585,7 @@ def parse_configs(config_args: Optional[List[str]]) -> List[BuildConfig]:
                 configs.append(BuildConfig.RELEASE)
             else:
                 raise ValueError(f"Unknown config: {c}")
-    return configs or [BuildConfig.DEBUG, BuildConfig.RELEASE]
+    return _dedup(configs) or [BuildConfig.DEBUG, BuildConfig.RELEASE]
 
 
 def parse_link_types(link_args: Optional[List[str]]) -> List[LinkType]:
@@ -598,7 +603,7 @@ def parse_link_types(link_args: Optional[List[str]]) -> List[LinkType]:
                 types.append(LinkType.SHARED)
             else:
                 raise ValueError(f"Unknown link type: {lt}")
-    return types or [LinkType.STATIC]
+    return _dedup(types) or [LinkType.STATIC]
 
 
 def parse_platforms(
@@ -623,7 +628,7 @@ def parse_platforms(
                 # Return all platforms supported by the current host
                 return get_all_supported_platforms(vs_version)
             platforms.append(parse_platform_string(t))
-    return platforms or None
+    return _dedup(platforms) or None
 
 
 def main() -> int:
@@ -700,6 +705,9 @@ def main() -> int:
         for config in configs
         for link_type in link_types
     ]
+    # A repeated target would otherwise configure and build the same directory
+    # twice in sequence, doubling the wall clock for no output change.
+    targets = _dedup(targets)
 
     # Print build plan
     print("\nOcean Build Configuration")
