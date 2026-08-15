@@ -379,9 +379,21 @@ class Manifest:
 
     @classmethod
     def from_file(cls, path: Path) -> "Manifest":
-        """Load manifest from YAML file."""
+        """Load manifest from YAML file.
+
+        Raises:
+            ValueError: If the file is not valid YAML or is not a mapping.
+                The YAML parser's own exception is converted here so callers
+                do not have to import yaml to handle a malformed manifest.
+        """
         with open(path, "r", encoding="utf-8") as f:
-            data = yaml.safe_load(f)
+            try:
+                data = yaml.safe_load(f)
+            except yaml.YAMLError as e:
+                raise ValueError(f"{path} is not valid YAML: {e}") from e
+        if not isinstance(data, dict):
+            kind = "empty" if data is None else type(data).__name__
+            raise ValueError(f"{path} must contain a top-level mapping, found {kind}")
         return cls.from_dict(data)
 
     @classmethod

@@ -297,19 +297,37 @@ def get_all_supported_platforms(
     return platforms, skipped
 
 
+def _dedup(values: List) -> List:
+    """Order-preserving de-duplication."""
+    return list(dict.fromkeys(values))
+
+
+def _split_list_arg(values: Optional[List[str]]) -> List[str]:
+    """Flatten repeated and comma-separated occurrences of a list-valued flag."""
+    result = []
+    for arg in values or []:
+        for item in arg.split(","):
+            item = item.strip()
+            if item:
+                result.append(item)
+    return _dedup(result)
+
+
 def get_equivalent_command(
-    args: argparse.Namespace, script_name: str = "build_ocean_3rdparty.py"
+    args: argparse.Namespace,
+    targets: List[BuildTarget],
+    script_name: str = "build_ocean_3rdparty.py",
 ) -> str:
-    """Generate the equivalent explicit command for the given args."""
+    """Spell out the fully explicit command that reproduces this run.
+
+    Derived from the resolved target list rather than re-parsed from ``args``,
+    so the printed command names the targets the build actually used — not the
+    ones the user asked for before detection and the toolchain check pruned
+    them. Pasting it back must produce the same build.
+    """
     parts = [f"python {script_name}"]
 
-    # Targets
-    platforms = (
-        parse_platforms(args.target)
-        if args.target
-        else get_all_supported_platforms(args.vs_version)[0]
-    )
-    target_strs = [f"{os.value}_{arch.value}" for os, arch in platforms]
+    target_strs = _dedup([f"{t.os.value}_{t.arch.value}" for t in targets])
     parts.append(f"--target {','.join(target_strs)}")
 
     # Directories
@@ -322,31 +340,39 @@ def get_equivalent_command(
     parts.append(f"--source-dir {source_dir}")
     parts.append(f"--build-dir {build_dir}")
 
-    # Config
-    configs = (
-        parse_configs(args.config)
-        if args.config
-        else [BuildConfig.DEBUG, BuildConfig.RELEASE]
-    )
-    config_strs = [c.value for c in configs]
+    config_strs = _dedup([t.build_config.value for t in targets])
     parts.append(f"--config {','.join(config_strs)}")
 
-    # Link type
-    link_types = parse_link_types(args.link) if args.link else [LinkType.STATIC]
-    link_strs = [lt.value for lt in link_types]
+    link_strs = _dedup([t.link_type.value for t in targets])
     parts.append(f"--link {','.join(link_strs)}")
 
-    # Specific libraries (if provided)
-    if hasattr(args, "library") and args.library:
-        # Flatten all library arguments into a single list
-        all_libs = []
-        for arg in args.library:
-            for lib in arg.split(","):
-                lib = lib.strip()
-                if lib:
-                    all_libs.append(lib)
-        if all_libs:
-            parts.append(f"--library {','.join(all_libs)}")
+    if args.manifest:
+        parts.append(f"--manifest {args.manifest}")
+
+    # Flags that change which libraries are built or where they end up. Omitting
+    # any of these makes the printed command build a different set than the run
+    # it claims to reproduce.
+    libs = _split_list_arg(getattr(args, "library", None))
+    if libs:
+        parts.append(f"--library {','.join(libs)}")
+    for name in _split_list_arg(args.with_libs):
+        parts.append(f"--with {name}")
+    for name in _split_list_arg(args.with_group):
+        parts.append(f"--with-group {name}")
+    if args.build_all:
+        parts.append("--all")
+    if args.for_external_integration:
+        parts.append("--for-external-integration")
+    if args.with_cmake_configs:
+        parts.append("--with-cmake-configs")
+    if args.vs_version:
+        parts.append(f"--vs-version {args.vs_version}")
+    if args.android_api_level:
+        parts.append(f"--android-api-level {args.android_api_level}")
+    if args.parallel:
+        parts.append(f"--parallel {args.parallel}")
+    if args.jobs:
+        parts.append(f"--jobs {args.jobs}")
 
     return " \\\n    ".join(parts)
 
@@ -1788,6 +1814,17 @@ def main() -> int:  # noqa: C901
             print(f"Error: {e}")
             return 1
 
+    # Resolve the build matrix before any slow work happens, so a typo in
+    # --target/--config/--link is an error message rather than a traceback
+    # emerging after pre-flight and the manifest load have already printed.
+    try:
+        configs = parse_configs(args.config)
+        link_types = parse_link_types(args.link)
+        requested_platforms = parse_platforms(args.target, args.vs_version)
+    except ValueError as e:
+        print(f"Error: {e}")
+        return 1
+
     # Run pre-flight checks (unless skipped or just listing)
     if not args.skip_preflight and not args.list_optional and not args.dry_run:
         if not run_preflight_checks(log_level):
@@ -1806,7 +1843,12 @@ def main() -> int:  # noqa: C901
 
     # Load manifest
     print(f"Loading manifest: {manifest_path}")
-    manifest = Manifest.from_file(manifest_path)
+    try:
+        manifest = Manifest.from_file(manifest_path)
+    except (OSError, ValueError) as e:
+        print(f"Error: {e}")
+        print("Run ./validate_manifest.py for a detailed schema check.")
+        return 1
     print(f"  Found {len(manifest.libraries)} libraries")
 
     # Handle --list-optional
@@ -1837,11 +1879,6 @@ def main() -> int:  # noqa: C901
                 print(f"    {lib_name} ({lib.version}) - {lib.description}")
         return 0
 
-    # Show equivalent command
-    print("\nEquivalent command:")
-    print(f"  {get_equivalent_command(args)}")
-    print()
-
     # Determine directories
     cwd = Path.cwd()
     base_dir = Path(args.output_dir) if args.output_dir else cwd / DEFAULT_BASE_DIR
@@ -1850,12 +1887,16 @@ def main() -> int:  # noqa: C901
     build_dir = Path(args.build_dir) if args.build_dir else base_dir / "build"
 
     # Initialize managers
-    dir_manager = DirectoryManager(
-        install_dir,
-        source_dir,
-        build_dir,
-        for_external_integration=args.for_external_integration,
-    )
+    try:
+        dir_manager = DirectoryManager(
+            install_dir,
+            source_dir,
+            build_dir,
+            for_external_integration=args.for_external_integration,
+        )
+    except OSError as e:
+        print(f"Error: cannot create the output directories under {base_dir}: {e}")
+        return 1
     fetcher = SourceFetcher(dir_manager, manifest_dir=manifest_path.parent)
 
     # Handle --clean
@@ -1864,10 +1905,8 @@ def main() -> int:  # noqa: C901
         dir_manager.clean_all()
 
     # Determine targets
-    configs = parse_configs(args.config)
-    link_types = parse_link_types(args.link)
-    if args.target:
-        platforms = parse_platforms(args.target, args.vs_version)
+    if requested_platforms is not None:
+        platforms = requested_platforms
         unbuildable = find_unbuildable_windows_targets(platforms, args.vs_version)
         if unbuildable:
             print("Error: the selected Visual Studio cannot build these targets:")
@@ -1974,6 +2013,13 @@ def main() -> int:  # noqa: C901
             available_set = set(available_target_strs)
             targets = [t for t in targets if t.to_path_component() in available_set]
             print(f"Building for: {', '.join(t.to_path_component() for t in targets)}")
+
+    # Printed only now that the target set is final: everything above can still
+    # remove targets, and a command that advertises a set the build excluded
+    # reproduces the wrong thing.
+    print("\nEquivalent command:")
+    print(f"  {get_equivalent_command(args, targets)}")
+    print()
 
     # Filter libraries - get libraries that support ANY of the target platforms
     target_platforms = list({t.os.value for t in targets}) if targets else None
