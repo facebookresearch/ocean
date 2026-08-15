@@ -670,6 +670,8 @@ def _fix_macos_install_names(lib_dir: Path) -> None:
                 ["otool", "-L", str(dylib)],
                 capture_output=True,
                 text=True,
+                encoding="utf-8",
+                errors="replace",
                 check=True,
             )
 
@@ -702,6 +704,8 @@ def _fix_macos_install_names(lib_dir: Path) -> None:
                 ["otool", "-D", str(dylib)],
                 capture_output=True,
                 text=True,
+                encoding="utf-8",
+                errors="replace",
                 check=True,
             )
             lines = result.stdout.strip().split("\n")

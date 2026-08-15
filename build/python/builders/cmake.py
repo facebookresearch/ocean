@@ -393,6 +393,8 @@ class CMakeBuilder(Builder):
             cwd=cwd,
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            errors="replace",
             creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0,
         )
 
@@ -400,7 +402,7 @@ class CMakeBuilder(Builder):
         if log_file:
             try:
                 log_file.parent.mkdir(parents=True, exist_ok=True)
-                with open(log_file, "a") as f:
+                with open(log_file, "a", encoding="utf-8", errors="replace") as f:
                     timestamp = datetime.datetime.now().isoformat()
                     f.write(f"\n{'=' * 60}\n")
                     f.write(f"[{timestamp}] Phase: {phase}\n")

@@ -149,6 +149,8 @@ def check_cmake() -> VersionInfo:
             [path, "--version"],
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            errors="replace",
             check=True,
         )
         first_line = result.stdout.split("\n")[0]
@@ -195,6 +197,8 @@ def check_git() -> VersionInfo:
             ["git", "--version"],
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            errors="replace",
             check=True,
         )
         first_line = result.stdout.strip()
@@ -241,6 +245,8 @@ def check_ninja() -> VersionInfo:
             ["ninja", "--version"],
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            errors="replace",
             check=True,
         )
         version_str = result.stdout.strip()
@@ -493,6 +499,8 @@ def check_xcode() -> ToolchainInfo:
             ["xcode-select", "-p"],
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            errors="replace",
             check=True,
         )
         xcode_path = result.stdout.strip()
@@ -504,6 +512,8 @@ def check_xcode() -> ToolchainInfo:
                 ["xcodebuild", "-version"],
                 capture_output=True,
                 text=True,
+                encoding="utf-8",
+                errors="replace",
                 check=True,
             )
             # Parse "Xcode 15.2" from first line
@@ -534,6 +544,8 @@ def check_macos_sdk() -> ToolchainInfo:
             ["xcrun", "--sdk", "macosx", "--show-sdk-path"],
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            errors="replace",
             check=True,
         )
         sdk_path = result.stdout.strip()
@@ -545,6 +557,8 @@ def check_macos_sdk() -> ToolchainInfo:
                 ["xcrun", "--sdk", "macosx", "--show-sdk-version"],
                 capture_output=True,
                 text=True,
+                encoding="utf-8",
+                errors="replace",
                 check=True,
             )
             version = ver_result.stdout.strip()
@@ -572,6 +586,8 @@ def check_ios_sdk() -> ToolchainInfo:
             ["xcrun", "--sdk", "iphoneos", "--show-sdk-path"],
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            errors="replace",
             check=True,
         )
         sdk_path = result.stdout.strip()
@@ -583,6 +599,8 @@ def check_ios_sdk() -> ToolchainInfo:
                 ["xcrun", "--sdk", "iphoneos", "--show-sdk-version"],
                 capture_output=True,
                 text=True,
+                encoding="utf-8",
+                errors="replace",
                 check=True,
             )
             version = ver_result.stdout.strip()
@@ -610,6 +628,8 @@ def check_ios_simulator_sdk() -> ToolchainInfo:
             ["xcrun", "--sdk", "iphonesimulator", "--show-sdk-path"],
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            errors="replace",
             check=True,
         )
         sdk_path = result.stdout.strip()
@@ -621,6 +641,8 @@ def check_ios_simulator_sdk() -> ToolchainInfo:
                 ["xcrun", "--sdk", "iphonesimulator", "--show-sdk-version"],
                 capture_output=True,
                 text=True,
+                encoding="utf-8",
+                errors="replace",
                 check=True,
             )
             version = ver_result.stdout.strip()
@@ -729,6 +751,8 @@ def check_visual_studio() -> ToolchainInfo:
             ],
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            errors="replace",
             check=True,
         )
         install_path = result.stdout.strip()
@@ -756,6 +780,8 @@ def check_visual_studio() -> ToolchainInfo:
                 ],
                 capture_output=True,
                 text=True,
+                encoding="utf-8",
+                errors="replace",
                 check=True,
             )
             version = ver_result.stdout.strip()
@@ -778,6 +804,8 @@ def check_visual_studio() -> ToolchainInfo:
                 ],
                 capture_output=True,
                 text=True,
+                encoding="utf-8",
+                errors="replace",
                 check=True,
             )
             product_name = name_result.stdout.strip()

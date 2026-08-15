@@ -106,6 +106,8 @@ def get_all_installed_vs_versions() -> list[tuple[str, str, str]]:
             [vswhere_path, "-all", "-format", "json"],
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            errors="replace",
             check=True,
         )
 
@@ -202,6 +204,8 @@ def _detect_toolset_from_cl() -> tuple[Optional[str], Optional[str]]:
             ["cl"],
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            errors="replace",
         )
         # cl.exe outputs version info to stderr
         version_output = result.stderr
@@ -368,6 +372,8 @@ def get_ios_sdk_path(sdk_type: str = "iphoneos") -> Optional[str]:
             ["xcrun", "--sdk", sdk_type, "--show-sdk-path"],
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            errors="replace",
             check=True,
         )
         return result.stdout.strip()
@@ -586,6 +592,8 @@ def _get_vs_generator_for_version(year: str) -> Optional[str]:
             ],
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            errors="replace",
         )
         if result.stdout.strip():
             return f"Visual Studio {version} {year}"
@@ -595,6 +603,8 @@ def _get_vs_generator_for_version(year: str) -> Optional[str]:
             [vswhere_path, "-all", "-format", "json"],
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            errors="replace",
         )
         if result.returncode == 0 and result.stdout.strip():
             import json
@@ -639,6 +649,8 @@ def _get_vs_info_for_year(year: str) -> Optional[str]:
             [vswhere_path, "-all", "-format", "json"],
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            errors="replace",
             check=True,
         )
         import json
@@ -691,6 +703,8 @@ def _detect_visual_studio_version() -> Optional[str]:
             [vswhere_path, "-latest", "-property", "installationVersion"],
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            errors="replace",
             check=True,
         )
         install_version = result.stdout.strip()
@@ -701,6 +715,8 @@ def _detect_visual_studio_version() -> Optional[str]:
             [vswhere_path, "-latest", "-property", "displayName"],
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            errors="replace",
             check=True,
         )
         display_name = result.stdout.strip()
@@ -768,6 +784,8 @@ def get_installed_windows_archs() -> List[Arch]:
                 ],
                 capture_output=True,
                 text=True,
+                encoding="utf-8",
+                errors="replace",
                 check=True,
             )
             if result.stdout.strip():
