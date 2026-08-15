@@ -61,6 +61,7 @@ BuildConfig = _platform_module.BuildConfig
 BuildTarget = _platform_module.BuildTarget
 LinkType = _platform_module.LinkType
 OS = _platform_module.OS
+configure_console_encoding = _platform_module.configure_console_encoding
 detect_host_arch = _platform_module.detect_host_arch
 detect_host_os = _platform_module.detect_host_os
 get_cmake_generator = _platform_module.get_cmake_generator
@@ -627,6 +628,8 @@ def parse_platforms(
 
 def main() -> int:
     """Main entry point."""
+    configure_console_encoding()
+
     args = parse_args()
 
     # Determine log level

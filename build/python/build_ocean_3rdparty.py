@@ -157,6 +157,7 @@ from lib import (
 )
 from lib.builder_base import BuildContext, Builder
 from lib.platform import (
+    configure_console_encoding,
     detect_host_os,
     get_all_installed_vs_versions,
     get_installed_windows_archs,
@@ -1773,6 +1774,8 @@ def _print_post_build_instructions(install_dir: Path) -> None:
 
 def main() -> int:  # noqa: C901
     """Main entry point."""
+    configure_console_encoding()
+
     args = parse_args()
 
     # Determine log level (--verbose is shortcut for --log-level verbose)

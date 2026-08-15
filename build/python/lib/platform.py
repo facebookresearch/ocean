@@ -14,9 +14,29 @@ import os
 import platform
 import re
 import subprocess
+import sys
 from dataclasses import dataclass
 from enum import Enum
 from typing import Dict, List, Optional
+
+
+def configure_console_encoding() -> None:
+    """Force UTF-8 on stdout/stderr so the status glyphs survive redirection.
+
+    On Windows a console-attached stdout uses UTF-8, but a pipe or a redirected
+    file falls back to the ANSI code page. cp1252 cannot encode the U+2713 /
+    U+2717 / U+2550 characters the build prints, so `build_ocean_3rdparty.py >
+    build.log` aborts on the very first status line with a UnicodeEncodeError
+    that looks nothing like its cause.
+    """
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if reconfigure is None:
+            continue
+        try:
+            reconfigure(encoding="utf-8", errors="replace")
+        except (OSError, ValueError):
+            pass
 
 
 class OS(Enum):
