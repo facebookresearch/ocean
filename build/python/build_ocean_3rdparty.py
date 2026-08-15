@@ -1659,6 +1659,38 @@ def parse_link_types(link_args: Optional[List[str]]) -> List[LinkType]:
     return types
 
 
+def find_unbuildable_windows_targets(
+    platforms: Optional[List[tuple[OS, Arch]]],
+    vs_version: Optional[str] = None,
+) -> List[tuple[str, str]]:
+    """Find explicitly requested Windows targets the selected VS cannot build.
+
+    Without this check, requesting an architecture whose MSVC tools are missing
+    surfaces only as MSBuild's opaque 'The BaseOutputPath/OutputPath property is
+    not set for project VCTargetsPath.vcxproj', deep into the configure step.
+
+    Returns a list of (target_string, reason) for the unbuildable targets.
+    """
+    if not platforms or detect_host_os() != OS.WINDOWS:
+        return []
+
+    windows_archs = {arch for os_val, arch in platforms if os_val == OS.WINDOWS}
+    if not windows_archs:
+        return []
+
+    installed = set(get_installed_windows_archs(vs_version))
+    return [
+        (
+            f"win_{arch.value}",
+            f"{WINDOWS_ARCH_COMPONENTS[arch]} not installed in the selected "
+            "Visual Studio (add it via the Visual Studio Installer, or pass "
+            "--vs-version to select another installation)",
+        )
+        for arch in sorted(windows_archs - installed, key=lambda a: a.value)
+        if arch in WINDOWS_ARCH_COMPONENTS
+    ]
+
+
 def parse_platforms(
     target_args: Optional[List[str]],
     vs_version: Optional[str] = None,
@@ -1833,6 +1865,12 @@ def main() -> int:  # noqa: C901
     link_types = parse_link_types(args.link)
     if args.target:
         platforms = parse_platforms(args.target, args.vs_version)
+        unbuildable = find_unbuildable_windows_targets(platforms, args.vs_version)
+        if unbuildable:
+            print("Error: the selected Visual Studio cannot build these targets:")
+            for target_str, reason in unbuildable:
+                print(f"  - {target_str}: {reason}")
+            return 1
     else:
         platforms, skipped_platforms = get_all_supported_platforms(args.vs_version)
         if skipped_platforms:
