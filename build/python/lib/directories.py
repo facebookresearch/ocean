@@ -111,6 +111,7 @@ class DirectoryManager:
         source_dir: Optional[Path] = None,
         build_dir: Optional[Path] = None,
         for_external_integration: bool = False,
+        create: bool = True,
     ):
         """Initialize directory manager.
 
@@ -125,6 +126,9 @@ class DirectoryManager:
                 (default), produce the standard CMake install layout per
                 target (one complete prefix per library per target), which
                 works directly with find_package(... CONFIG).
+            create: If False, resolve the paths but do not create anything on
+                disk. Used by --dry-run, which must not leave directories
+                behind for a build it did not run.
         """
         self.install_dir = install_dir.resolve()
         self.for_external_integration = for_external_integration
@@ -137,9 +141,10 @@ class DirectoryManager:
         self.builds_dir = (build_dir or default_cache / "builds").resolve()
 
         # Create base directories
-        self.sources_dir.mkdir(parents=True, exist_ok=True)
-        self.builds_dir.mkdir(parents=True, exist_ok=True)
-        self.install_dir.mkdir(parents=True, exist_ok=True)
+        if create:
+            self.sources_dir.mkdir(parents=True, exist_ok=True)
+            self.builds_dir.mkdir(parents=True, exist_ok=True)
+            self.install_dir.mkdir(parents=True, exist_ok=True)
 
     def get_source_dir(self, library: str, version: str) -> Path:
         """Get the source directory for a library (shared across all targets)."""

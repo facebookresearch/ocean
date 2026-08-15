@@ -1899,16 +1899,22 @@ def main() -> int:  # noqa: C901
             source_dir,
             build_dir,
             for_external_integration=args.for_external_integration,
+            create=not args.dry_run,
         )
     except OSError as e:
         print(f"Error: cannot create the output directories under {base_dir}: {e}")
         return 1
     fetcher = SourceFetcher(dir_manager, manifest_dir=manifest_path.parent)
 
-    # Handle --clean
+    # Handle --clean. Deliberately not done under --dry-run: deleting every
+    # fetched source and build tree is the most destructive thing this script
+    # can do, and "show me what you would build" must not do it.
     if args.clean:
-        print("Cleaning cache...")
-        dir_manager.clean_all()
+        if args.dry_run:
+            print("Dry run: skipping --clean (would delete the source and build cache)")
+        else:
+            print("Cleaning cache...")
+            dir_manager.clean_all()
 
     # Determine targets
     if requested_platforms is not None:
