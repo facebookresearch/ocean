@@ -1651,7 +1651,7 @@ def parse_platforms(
                 continue
             if t.lower() == "all_supported":
                 # Return all platforms supported by the current host
-                return get_all_supported_platforms()
+                return get_all_supported_platforms()[0]
             if t.lower() in PLATFORM_GROUPS:
                 platforms.extend(PLATFORM_GROUPS[t.lower()])
             else:
