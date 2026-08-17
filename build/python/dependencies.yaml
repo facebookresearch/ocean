@@ -212,9 +212,17 @@ libraries:
       options:
         BUILD_CURL_EXE: OFF
         BUILD_TESTING: OFF
-        CURL_USE_MBEDTLS: OFF
+        # mbedTLS is the TLS backend. OpenSSL is not an option here: it builds
+        # with a Perl Configure script rather than CMake, and this build system
+        # only drives CMake projects. Without a backend curl reports
+        # "Unsupported protocol" for every https:// URL, which is what
+        # Ocean::HTTPSClient uses on Linux and Android.
+        CURL_ENABLE_SSL: ON
+        CURL_USE_MBEDTLS: ON
         CURL_USE_OPENSSL: OFF
         CURL_DISABLE_LDAP: ON
+        # Keeps HTTP and HTTPS, disables DICT/FTP/IMAP/LDAP/POP3/SMB/SMTP/etc.
+        # HTTPS is gated on the TLS backend, not on this flag.
         HTTP_ONLY: ON
         USE_LIBIDN2: OFF
         # Both default to auto-detect, so a host with libssh2-dev or libpsl-dev
@@ -223,10 +231,18 @@ libraries:
         # libraries.
         CURL_USE_LIBSSH2: OFF
         CURL_USE_LIBPSL: OFF
+        # "auto" bakes in a CA path probed from the *build* host, which is
+        # meaningless for a cross-compiled Android binary and makes the Linux
+        # build depend on whether the builder happens to have a CA bundle.
+        # Callers pass their own via HTTPSClient's caCertificates parameter,
+        # which maps to CURLOPT_CAINFO.
+        CURL_CA_BUNDLE: none
+        CURL_CA_PATH: none
         # Prevent curl from trying to link against libraries that don't exist on all platforms
         HAVE_LIBSOCKET: OFF
     dependencies:
       - zlib
+      - mbedtls
     platforms: all
 
   assimp:

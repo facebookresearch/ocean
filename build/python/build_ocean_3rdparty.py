@@ -1506,6 +1506,53 @@ def warn_link_type_skips(
             _print_link_type_skip_warning(lib_name, skipped)
 
 
+def find_unsatisfied_link_type_deps(
+    libraries: Dict[str, LibraryConfig],
+    targets: List[BuildTarget],
+) -> List[str]:
+    """Find dependencies no selected link type will build for their consumer.
+
+    A library restricted to `link_types: [static]` is skipped for shared
+    targets. That is fine while some selected target still produces its static
+    build — the consumer links that (see
+    DirectoryManager.get_dependency_dirs). It is fatal when nothing does: the
+    dependency is simply never built, and the consumer's configure fails inside
+    find_package, several layers away from the flag that caused it.
+    """
+    problems = []
+    for name, lib in sorted(libraries.items()):
+        for target in targets:
+            if not lib.supports_platform(target.os.value):
+                continue
+            if not lib.supports_link_type(target.link_type.value):
+                continue
+            for dep_name in lib.dependencies:
+                dep = libraries.get(dep_name)
+                if dep is None or not dep.supports_platform(target.os.value):
+                    continue
+                if dep.supports_link_type(target.link_type.value):
+                    continue
+                # Skipped for this link type. Acceptable only if another
+                # selected target builds it for the same platform and config.
+                if any(
+                    dep.supports_link_type(other.link_type.value)
+                    for other in targets
+                    if other.os == target.os
+                    and other.arch == target.arch
+                    and other.build_config == target.build_config
+                ):
+                    continue
+                supported = ", ".join(dep.link_types)
+                message = (
+                    f"  - {name} is built as {target.link_type.value} but needs "
+                    f"{dep_name}, which only supports {supported}; add "
+                    f"--link {dep.link_types[0]} so it gets built"
+                )
+                if message not in problems:
+                    problems.append(message)
+    return problems
+
+
 def parse_args() -> argparse.Namespace:
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(
@@ -2224,6 +2271,13 @@ def main() -> int:  # noqa: C901
             libraries=libraries,
         )
         return 0
+
+    unsatisfied = find_unsatisfied_link_type_deps(libraries, targets)
+    if unsatisfied:
+        print("Error: some dependencies would never be built:")
+        for problem in unsatisfied:
+            print(problem)
+        return 1
 
     # Build!
     # Warn about any library/target combinations that will be silently skipped
