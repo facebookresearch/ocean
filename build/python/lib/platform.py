@@ -17,6 +17,7 @@ import subprocess
 import sys
 from dataclasses import dataclass
 from enum import Enum
+from pathlib import Path
 from typing import Dict, List, Optional
 
 
@@ -944,3 +945,171 @@ def parse_target_string(target_str: str) -> BuildTarget:
         link_type=link_val,
         msvc_toolset=msvc_toolset,
     )
+
+
+# ---------------------------------------------------------------------------
+# Cross-compilation options
+#
+# Shared by both entry points on purpose. build_ocean_3rdparty.py and
+# build_ocean.py must configure the same platform the same way, or Ocean ends
+# up built for a different target than the libraries it links.
+# ---------------------------------------------------------------------------
+
+
+def add_cross_compile_options(
+    cmd: List[str], target: BuildTarget, android_api_level: Optional[int] = None
+) -> None:
+    """Add cross-compilation options for the target."""
+    if target.os == OS.ANDROID:
+        add_android_options(cmd, target, android_api_level)
+    elif target.os == OS.IOS:
+        add_ios_options(cmd, target)
+    elif target.os == OS.MACOS:
+        add_macos_options(cmd, target)
+    elif target.os == OS.WINDOWS:
+        add_windows_options(cmd, target)
+    # Linux native builds don't need special handling
+
+
+def add_android_options(
+    cmd: List[str], target: BuildTarget, android_api_level: Optional[int] = None
+) -> None:
+    """Add Android NDK toolchain options."""
+    ndk_path = get_android_ndk_path()
+    if not ndk_path:
+        raise RuntimeError(
+            "Android NDK not found. Set ANDROID_NDK_HOME environment variable."
+        )
+
+    toolchain = Path(ndk_path) / "build" / "cmake" / "android.toolchain.cmake"
+    if not toolchain.exists():
+        raise RuntimeError(f"Android toolchain not found: {toolchain}")
+
+    cmd.append(f"-DCMAKE_TOOLCHAIN_FILE={toolchain}")
+
+    # Set Android ABI
+    abi_map = {
+        Arch.ARM64: "arm64-v8a",
+        Arch.ARMV7: "armeabi-v7a",
+        Arch.X86_64: "x86_64",
+        Arch.X86: "x86",
+    }
+    cmd.append(f"-DANDROID_ABI={abi_map[target.arch]}")
+
+    # API level (minimum supported Android version)
+    api_level = DEFAULT_ANDROID_API_LEVEL
+    if android_api_level:
+        api_level = android_api_level
+    cmd.append(f"-DANDROID_PLATFORM=android-{api_level}")
+
+    # Use libc++. For shared builds, use the shared variant so that all
+    # loaded .so files share a single C++ runtime instance. Using c++_static
+    # in a shared build would give each .so its own private libc++ copy,
+    # which causes ODR violations and incompatible std::string/std::mutex
+    # state across library boundaries.
+    if target.link_type == LinkType.SHARED:
+        cmd.append("-DANDROID_STL=c++_shared")
+    else:
+        cmd.append("-DANDROID_STL=c++_static")
+
+    # On Windows, build tools may not be on PATH but bundled with the
+    # Android SDK/NDK. Tell CMake where to find them explicitly.
+    ninja_path = find_ninja_program()
+    if ninja_path and ninja_path != "ninja":
+        cmd.append(f"-DCMAKE_MAKE_PROGRAM={ninja_path}")
+    elif not ninja_path:
+        # Ninja not found, but generator may be "Unix Makefiles" —
+        # find make in the NDK prebuilt directory
+        make_path = find_make_program()
+        if make_path and make_path != "make":
+            cmd.append(f"-DCMAKE_MAKE_PROGRAM={make_path}")
+
+
+def add_ios_options(cmd: List[str], target: BuildTarget) -> None:
+    """Add iOS cross-compilation options."""
+    # Use the ios-cmake toolchain if available, otherwise set manually
+    toolchain_path = find_ios_toolchain()
+
+    if toolchain_path:
+        cmd.append(f"-DCMAKE_TOOLCHAIN_FILE={toolchain_path}")
+
+        # Platform selection
+        if target.arch == Arch.ARM64:
+            cmd.append("-DPLATFORM=OS64")  # iOS device
+        else:
+            cmd.append("-DPLATFORM=SIMULATOR64")  # iOS simulator
+
+        cmd.append("-DDEPLOYMENT_TARGET=15.0")
+
+        # Enable symbol visibility for shared library builds
+        # The ios-cmake toolchain defaults to -fvisibility=hidden which
+        # hides all symbols. For shared libraries, we need symbols exported.
+        if target.link_type == LinkType.SHARED:
+            cmd.append("-DENABLE_VISIBILITY=ON")
+    else:
+        # Manual configuration
+        sdk_path = get_ios_sdk_path("iphoneos")
+        if not sdk_path:
+            raise RuntimeError("iOS SDK not found")
+
+        cmd.extend(
+            [
+                "-DCMAKE_SYSTEM_NAME=iOS",
+                f"-DCMAKE_OSX_SYSROOT={sdk_path}",
+                "-DCMAKE_OSX_DEPLOYMENT_TARGET=15.0",
+            ]
+        )
+
+        if target.arch == Arch.ARM64:
+            cmd.append("-DCMAKE_OSX_ARCHITECTURES=arm64")
+
+
+def add_macos_options(cmd: List[str], target: BuildTarget) -> None:
+    """Add macOS options."""
+    cmd.append("-DCMAKE_OSX_DEPLOYMENT_TARGET=12.0")
+
+    if target.arch == Arch.ARM64:
+        cmd.append("-DCMAKE_OSX_ARCHITECTURES=arm64")
+        cmd.append("-DCMAKE_SYSTEM_PROCESSOR=arm64")
+    elif target.arch == Arch.X86_64:
+        cmd.append("-DCMAKE_OSX_ARCHITECTURES=x86_64")
+        cmd.append("-DCMAKE_SYSTEM_PROCESSOR=x86_64")
+
+
+def add_windows_options(cmd: List[str], target: BuildTarget) -> None:
+    """Add Windows options including architecture for Visual Studio generator.
+
+    Visual Studio generators require the -A flag to specify target architecture.
+    This enables cross-compilation (e.g., building ARM64 on x64 host).
+    """
+    # Map Ocean Arch to Visual Studio architecture names
+    arch_map = {
+        Arch.ARM64: "ARM64",
+        Arch.X86_64: "x64",
+        Arch.X86: "Win32",
+    }
+
+    if target.arch not in arch_map:
+        raise RuntimeError(f"Unsupported Windows architecture: {target.arch}")
+
+    # Add architecture flag for Visual Studio generator
+    cmd.extend(["-A", arch_map[target.arch]])
+
+    # Set MSVC runtime library to match Ocean's build configuration
+    # Ocean uses MultiThreadedDebugDLL (/MDd) for debug and MultiThreadedDLL (/MD) for release
+    # This ensures all 3rdparty libraries use the same runtime as Ocean
+    if target.build_config == BuildConfig.DEBUG:
+        cmd.append("-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDebugDLL")
+    else:
+        cmd.append("-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDLL")
+
+
+def find_ios_toolchain() -> Optional[Path]:
+    """Find iOS CMake toolchain file."""
+    # Look for toolchain in our local toolchains directory
+    toolchain_path = Path(__file__).parent.parent / "toolchains" / "ios.toolchain.cmake"
+
+    if toolchain_path.exists():
+        return toolchain_path
+
+    return None
