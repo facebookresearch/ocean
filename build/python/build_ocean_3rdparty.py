@@ -2092,53 +2092,64 @@ def main() -> int:  # noqa: C901
             )
             return 1
 
-    # Filter libraries - get libraries that support ANY of the target platforms
+    # Validate --library up front, against the whole manifest
+    requested_libs = _split_list_arg(args.library)
+    for lib_name in requested_libs:
+        if lib_name not in manifest.libraries:
+            print(f"Error: Unknown library: {lib_name}")
+            print(f"Available libraries: {', '.join(sorted(manifest.libraries.keys()))}")
+            return 1
+
+    # Filter libraries - get libraries that support ANY of the target platforms.
+    # Naming a library with --library is a request for that library, so it joins
+    # the optional allow-list: otherwise an optional target (opencv) was excluded
+    # here and the --library step below could only intersect, never restore it.
     target_platforms = list({t.os.value for t in targets}) if targets else None
     libraries = manifest.filter_libraries(
-        with_libs=with_libs,
+        with_libs=with_libs + requested_libs,
         with_groups=with_groups,
         build_all=args.build_all,
         platforms=target_platforms,
     )
 
-    # Handle --library flag: filter to only specified libraries and their dependencies
-    if args.library:
-        requested_libs = []
-        for arg in args.library:
-            for lib in arg.split(","):
-                lib = lib.strip()
-                if lib:
-                    requested_libs.append(lib)
+    # Handle --library flag: build only the requested libraries and their deps
+    if requested_libs:
+        # Build a graph to find all dependencies
+        full_graph = DependencyGraph.from_manifest(manifest, manifest.libraries)
 
-        if requested_libs:
-            # Validate that all requested libraries exist
-            for lib_name in requested_libs:
-                if lib_name not in manifest.libraries:
-                    print(f"Error: Unknown library: {lib_name}")
-                    print(
-                        f"Available libraries: {', '.join(sorted(manifest.libraries.keys()))}"
-                    )
-                    return 1
+        # Collect all transitive dependencies
+        needed_libs: set[str] = set(requested_libs)
+        for lib_name in requested_libs:
+            needed_libs.update(full_graph.get_all_dependencies(lib_name))
 
-            # Build a graph to find all dependencies
-            full_graph = DependencyGraph.from_manifest(manifest, manifest.libraries)
+        # Filter libraries to only those needed
+        libraries = {
+            name: lib for name, lib in libraries.items() if name in needed_libs
+        }
 
-            # Collect all transitive dependencies
-            needed_libs: set[str] = set(requested_libs)
-            for lib_name in requested_libs:
-                needed_libs.update(full_graph.get_all_dependencies(lib_name))
+        # A requested library the platform filter removed used to vanish here,
+        # leaving only its dependencies and a success banner at the end.
+        unbuildable = [name for name in requested_libs if name not in libraries]
+        if unbuildable:
+            selected = ", ".join(sorted(target_platforms or []))
+            print("Error: these libraries cannot be built for the selected targets:")
+            for name in unbuildable:
+                supported = ", ".join(manifest.libraries[name].platforms)
+                print(
+                    f"  - {name}: supports [{supported}], "
+                    f"selected targets are [{selected}]"
+                )
+            return 1
 
-            # Filter libraries to only those needed
-            libraries = {
-                name: lib for name, lib in libraries.items() if name in needed_libs
-            }
-
-            print(f"Requested: {', '.join(requested_libs)}")
-            print(
-                f"Including dependencies: {', '.join(sorted(needed_libs - set(requested_libs)))}"
-            )
+        print(f"Requested: {', '.join(requested_libs)}")
+        dependencies = sorted(set(libraries) - set(requested_libs))
+        if dependencies:
+            print(f"Including dependencies: {', '.join(dependencies)}")
 
     print(f"Libraries to build: {len(libraries)}")
+    if not libraries:
+        print("Error: no libraries are selected for the requested targets.")
+        return 1
 
     # Handle --dry-run
     if args.dry_run:
