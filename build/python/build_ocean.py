@@ -516,6 +516,11 @@ def run_cmake_build(
             print(f"Error: cannot configure {target.to_path_component()}: {e}")
             return False
 
+    # Selects the Quest variants of the demo applications. Without it --quest only
+    # renamed the output directory and produced an ordinary Android build.
+    if quest_mode and target.os == OS.ANDROID:
+        configure_args.append("-DOCEAN_ENABLE_QUEST=TRUE")
+
     if minimal:
         configure_args.extend(
             [
@@ -864,6 +869,20 @@ def main() -> int:
     # Handle Quest mode
     if args.quest:
         platforms = [(OS.ANDROID, Arch.ARM64)]
+
+        # The Quest-only content is entirely demo applications, and ten of the
+        # fourteen return() early unless the build is static. Either flag leaves
+        # nothing Quest-specific to build, so say so rather than producing an
+        # ordinary Android build in a quest_* directory.
+        if args.minimal:
+            print("Error: --quest cannot be combined with --minimal.")
+            print("  Quest-specific content is all demo applications, which")
+            print("  --minimal disables. Drop one of the two flags.")
+            return 1
+        if LinkType.SHARED in link_types:
+            print("Error: --quest requires --link static.")
+            print("  Most Quest demo applications are skipped for shared builds.")
+            return 1
 
     # Determine MSVC toolset based on --vs-version (for Windows targets)
     msvc_toolset = None
