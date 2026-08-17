@@ -19,6 +19,7 @@ from lib.platform import (
     Arch,
     BuildConfig,
     BuildTarget,
+    DEFAULT_ANDROID_API_LEVEL,
     find_make_program,
     find_ninja_program,
     get_android_ndk_path,
@@ -224,7 +225,7 @@ class CMakeBuilder(Builder):
         cmd.append(f"-DANDROID_ABI={abi_map[target.arch]}")
 
         # API level (minimum supported Android version)
-        api_level = 32
+        api_level = DEFAULT_ANDROID_API_LEVEL
         if ctx and ctx.android_api_level:
             api_level = ctx.android_api_level
         cmd.append(f"-DANDROID_PLATFORM=android-{api_level}")

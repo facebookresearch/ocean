@@ -39,6 +39,12 @@ def configure_console_encoding() -> None:
             pass
 
 
+# Minimum Android version the third-party libraries target by default.
+# Overridable with --android-api-level; kept here so the builder and the
+# metadata that records it cannot disagree.
+DEFAULT_ANDROID_API_LEVEL = 32
+
+
 class OS(Enum):
     """Target operating system."""
 

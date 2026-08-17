@@ -19,7 +19,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, Optional
 
-from .platform import BuildTarget, LinkType
+from .platform import BuildTarget, LinkType, OS
 
 # Cross-platform file locking
 if os.name == "nt":
@@ -358,6 +358,7 @@ class DirectoryManager:
         version: str,
         target: BuildTarget,
         source_info: Dict,
+        android_api_level: Optional[int] = None,
     ) -> None:
         """Write build metadata to final output directory.
 
@@ -404,6 +405,13 @@ class DirectoryManager:
 
                     metadata["last_built"] = datetime.now().isoformat()
 
+                    # Recorded rather than encoded in the path: the API level
+                    # changes what the binaries link against but not their
+                    # target triple, and putting it in the path would orphan
+                    # every existing Android output directory.
+                    if android_api_level is not None and target.os == OS.ANDROID:
+                        metadata["android_api_level"] = android_api_level
+
                     # Write atomically: write to temp file, then rename
                     # On Windows, we need to remove the destination first
                     temp_file = metadata_file.with_suffix(".tmp")
@@ -414,6 +422,74 @@ class DirectoryManager:
                     temp_file.rename(metadata_file)
                 finally:
                     _unlock_file(lock_f)
+
+    def find_android_api_level_conflicts(
+        self, libraries: Dict, targets: list, api_level: int
+    ) -> list:
+        """Find installed Android output built against a different API level.
+
+        The API level is not part of the target path, so a second run at a
+        different level overwrites some libraries and leaves the rest —
+        producing one tree whose halves target different Android versions, with
+        nothing to indicate it.
+
+        Only output this run will NOT replace counts. A library that is about
+        to be rebuilt for the same target has its directory rmtree'd and its
+        metadata rewritten, so its recorded level is irrelevant; flagging it
+        would refuse a run that ends up perfectly consistent.
+
+        Args:
+            libraries: The filtered library set this run will build.
+            targets: The resolved build targets.
+            api_level: The Android API level this run will use.
+
+        Returns:
+            (metadata_file, recorded_level) pairs, sorted by path.
+        """
+        # The same predicate build_all uses to create jobs, so a target that
+        # produces no Android output cannot trigger the check.
+        rebuilding = {
+            (name, target.to_path_component())
+            for name, library in libraries.items()
+            for target in targets
+            if target.os == OS.ANDROID
+            and library.supports_platform(target.os.value)
+            and library.supports_link_type(target.link_type.value)
+        }
+        if not rebuilding:
+            # This run produces no Android output at all, so it cannot create a
+            # mixture no matter what is already on disk.
+            return []
+
+        conflicts = []
+        for metadata_file in self.install_dir.rglob(".build_metadata.json"):
+            try:
+                with open(metadata_file, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+            except (OSError, ValueError):
+                continue
+            if not isinstance(data, dict):
+                continue
+            recorded = data.get("android_api_level")
+            if recorded is None or recorded == api_level:
+                continue
+            built = data.get("targets_built")
+            if not isinstance(built, list):
+                continue
+            library = data.get("library")
+            # Any Android output at a different level that this run will not
+            # overwrite — including a target the run does not build, such as
+            # existing _static output while only _shared is being rebuilt.
+            if any(
+                target.startswith(f"{OS.ANDROID.value}_")
+                and (library, target) not in rebuilding
+                for target in built
+            ):
+                conflicts.append((metadata_file, recorded))
+
+        # Sorted so the truncated list in the error message is stable between
+        # runs rather than filesystem order.
+        return sorted(conflicts)
 
     def get_dependency_dirs(
         self,

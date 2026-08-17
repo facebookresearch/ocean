@@ -158,6 +158,7 @@ from lib import (
 from lib.builder_base import BuildContext, Builder
 from lib.platform import (
     configure_console_encoding,
+    DEFAULT_ANDROID_API_LEVEL,
     detect_host_os,
     detect_windows_archs,
     get_all_installed_vs_versions,
@@ -633,7 +634,9 @@ def execute_build_job(
         "ref": lib.source.ref,
         "fetched_commit": fetcher.get_actual_commit(lib.name, lib.version),
     }
-    dir_manager.write_build_metadata(lib.name, lib.version, target, source_info)
+    dir_manager.write_build_metadata(
+        lib.name, lib.version, target, source_info, android_api_level
+    )
 
     duration = time.time() - start_time
     return BuildResult(
@@ -1974,6 +1977,10 @@ def main() -> int:  # noqa: C901
         print(f"Error: {e}")
         return 1
 
+    # Resolved once so the level the builder passes to CMake and the level
+    # recorded in the build metadata cannot drift apart.
+    android_api_level = args.android_api_level or DEFAULT_ANDROID_API_LEVEL
+
     # Run pre-flight checks (unless skipped or just listing)
     if not args.skip_preflight and not args.list_optional and not args.dry_run:
         if not run_preflight_checks(log_level):
@@ -2310,6 +2317,31 @@ def main() -> int:  # noqa: C901
         )
         return 0
 
+    # The API level is recorded in the metadata rather than the path, so a
+    # rebuild at a different level would silently leave a tree with some
+    # libraries built for each. Refuse instead.
+    conflicts = dir_manager.find_android_api_level_conflicts(
+        libraries, targets, android_api_level
+    )
+    if conflicts:
+        print(
+            f"Error: {dir_manager.install_dir} already holds Android libraries "
+            f"built for a different API level than the requested "
+            f"android-{android_api_level}:"
+        )
+        for metadata_file, recorded in conflicts[:5]:
+            print(f"  - {metadata_file.parent} was built for android-{recorded}")
+        if len(conflicts) > 5:
+            print(f"  ... and {len(conflicts) - 5} more")
+        print(
+            "  The API level is not part of the output path, so rebuilding here "
+            "would leave\n  a tree with some libraries built for each. Remove the "
+            "install directory and\n  re-run, or build elsewhere with --output-dir. "
+            "(--clean only clears the source\n  and build caches, not the install "
+            "tree.)"
+        )
+        return 1
+
     unsatisfied = find_unsatisfied_link_type_deps(libraries, targets)
     if unsatisfied:
         print("Error: some dependencies would never be built:")
@@ -2334,7 +2366,7 @@ def main() -> int:  # noqa: C901
             include_cmake_configs=args.with_cmake_configs,
             log_level=log_level,
             vs_version=args.vs_version,
-            android_api_level=args.android_api_level,
+            android_api_level=android_api_level,
         )
         print("\n✓ Build completed successfully!")
         if not args.for_external_integration:
