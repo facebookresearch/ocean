@@ -12,6 +12,7 @@ from __future__ import annotations
 import shutil
 
 from lib.builder_base import BuildContext, Builder
+from lib.directories import remove_tree
 
 
 class HeaderOnlyBuilder(Builder):
@@ -43,7 +44,7 @@ class HeaderOnlyBuilder(Builder):
         # Copy to install location
         dst_include = ctx.install_dir / "include"
         if dst_include.exists():
-            shutil.rmtree(dst_include)
+            remove_tree(dst_include)
 
         shutil.copytree(src_include, dst_include)
 

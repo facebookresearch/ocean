@@ -474,7 +474,7 @@ class SourceFetcher:
 
                 if src.is_dir():
                     if dest.exists():
-                        shutil.rmtree(dest)
+                        remove_tree(dest)
                     shutil.copytree(src, dest)
                 else:
                     shutil.copy2(src, dest)

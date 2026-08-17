@@ -1029,7 +1029,7 @@ def _install_standard_layout(
         return ignored
 
     if final_dir.exists():
-        shutil.rmtree(final_dir)
+        remove_tree(final_dir)
     final_dir.parent.mkdir(parents=True, exist_ok=True)
     shutil.copytree(install_dir, final_dir, symlinks=True, ignore=ignore)
 
@@ -1109,7 +1109,7 @@ def reorganize_output(  # noqa: C901
 
     if src_libs:
         if final_lib.exists():
-            shutil.rmtree(final_lib)
+            remove_tree(final_lib)
         final_lib.mkdir(parents=True, exist_ok=True)
 
         entries = [item for src_lib in src_libs for item in src_lib.iterdir()]
@@ -1153,7 +1153,7 @@ def reorganize_output(  # noqa: C901
                     # Copy to central location instead
                     central_dir = top_level_install_dir / item.name / library_name
                     if central_dir.exists():
-                        shutil.rmtree(central_dir)
+                        remove_tree(central_dir)
                     shutil.copytree(item, central_dir)
             elif item.is_dir():
                 # Skip .framework directories entirely

@@ -14,6 +14,7 @@ from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Callable, Dict, Optional, TYPE_CHECKING
 
+from .directories import remove_tree
 from .platform import BuildTarget, LinkType
 
 if TYPE_CHECKING:
@@ -170,10 +171,8 @@ class Builder(ABC):
         Args:
             ctx: Build context
         """
-        import shutil
-
         if ctx.build_dir.exists():
-            shutil.rmtree(ctx.build_dir)
+            remove_tree(ctx.build_dir)
 
     @staticmethod
     def _ensure_dir(path: Path) -> None:
