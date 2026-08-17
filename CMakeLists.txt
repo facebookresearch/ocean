@@ -190,6 +190,46 @@ if (OCEAN_THIRD_PARTY_ROOT)
         else()
             message(FATAL_ERROR "Unsupported CMAKE_OSX_ARCHITECTURES: ${CMAKE_OSX_ARCHITECTURES}")
         endif()
+    elseif (WIN32)
+        # Two Windows-specific rules, both of which the generic branches below
+        # get wrong.
+        #
+        # First, the -A flag decides the target for a Visual Studio generator;
+        # CMAKE_SYSTEM_PROCESSOR stays at the host architecture, exactly as
+        # CMAKE_OSX_ARCHITECTURES does on Apple. Reading the processor instead
+        # sent an ARM64 build to the x64 third-party libraries.
+        #
+        # Second, the directory is named "x64", not "x86_64". That is what
+        # build_ocean_3rdparty.py writes -- see BuildTarget.to_path_component(),
+        # which special-cases this spelling for Windows only -- and what the
+        # Visual Studio property sheets expect via OceanPlatformSuffix. Deriving
+        # "x86_64" here made every standard-layout Windows build fail detection,
+        # because the directory it looked for is one no tool produces.
+        # CMAKE_VS_PLATFORM_NAME is the platform the Visual Studio generator
+        # actually resolved to, which is what we want for two reasons: it
+        # already reflects the generator's own default when -A was not given,
+        # and it is a bare name. CMAKE_GENERATOR_PLATFORM is the raw -A value,
+        # which may carry additional fields -- "x64,version=10.0.26100.0"
+        # selects a Windows SDK version and is perfectly valid.
+        if (CMAKE_VS_PLATFORM_NAME)
+            set(_ocean_3p_win_arch "${CMAKE_VS_PLATFORM_NAME}")
+        elseif (CMAKE_GENERATOR_PLATFORM)
+            # Non-Visual-Studio generator that still took -A; drop any fields.
+            string(REGEX REPLACE ",.*$" "" _ocean_3p_win_arch
+                   "${CMAKE_GENERATOR_PLATFORM}")
+        else()
+            set(_ocean_3p_win_arch "${CMAKE_SYSTEM_PROCESSOR}")
+        endif()
+
+        if (_ocean_3p_win_arch MATCHES "^([Aa][Rr][Mm]64|aarch64)$")
+            set(_ocean_3p_arch "arm64")
+        elseif (_ocean_3p_win_arch MATCHES "^(x64|x86_64|AMD64|amd64)$")
+            set(_ocean_3p_arch "x64")
+        elseif (_ocean_3p_win_arch MATCHES "^(Win32|x86|i686|i386)$")
+            set(_ocean_3p_arch "x86")
+        else()
+            message(FATAL_ERROR "Unsupported Windows architecture: ${_ocean_3p_win_arch}")
+        endif()
     elseif (CMAKE_SYSTEM_PROCESSOR MATCHES "arm64|aarch64|ARM64")
         set(_ocean_3p_arch "arm64")
     elseif (CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|AMD64|amd64")
