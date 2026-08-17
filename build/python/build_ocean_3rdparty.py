@@ -156,6 +156,7 @@ from lib import (
     SourceFetcher,
 )
 from lib.builder_base import BuildContext, Builder
+from lib.directories import remove_tree
 from lib.platform import (
     configure_console_encoding,
     DEFAULT_ANDROID_API_LEVEL,
@@ -1697,7 +1698,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--clean",
         action="store_true",
-        help="Clean cache before building",
+        help="Remove the source and build caches before building. The install "
+        "tree is kept — delete it by hand, or use --output-dir, for a fully "
+        "clean result.",
     )
     parser.add_argument(
         "--log-level",
@@ -2056,16 +2059,6 @@ def main() -> int:  # noqa: C901
         return 1
     fetcher = SourceFetcher(dir_manager, manifest_dir=manifest_path.parent)
 
-    # Handle --clean. Deliberately not done under --dry-run: deleting every
-    # fetched source and build tree is the most destructive thing this script
-    # can do, and "show me what you would build" must not do it.
-    if args.clean:
-        if args.dry_run:
-            print("Dry run: skipping --clean (would delete the source and build cache)")
-        else:
-            print("Cleaning cache...")
-            dir_manager.clean_all()
-
     # Determine targets
     if requested_platforms is not None:
         platforms = requested_platforms.platforms
@@ -2308,6 +2301,11 @@ def main() -> int:  # noqa: C901
 
     # Handle --dry-run
     if args.dry_run:
+        if args.clean:
+            print(
+                "Dry run: --clean skipped (it would delete the source and "
+                "build caches)\n"
+            )
         graph = DependencyGraph.from_manifest(manifest, libraries)
         print_build_plan(
             graph,
@@ -2348,6 +2346,30 @@ def main() -> int:  # noqa: C901
         for problem in unsatisfied:
             print(problem)
         return 1
+
+    # Handle --clean. Deliberately last: every validation above can still
+    # refuse the run, and deleting a source cache the user then has to re-fetch
+    # — only to be told the build was never going to start — is the worst
+    # possible order. --dry-run returns before reaching here.
+    if args.clean:
+        # Each path is echoed only once it is actually gone: --source-dir and
+        # --build-dir can point anywhere, this is the most destructive thing
+        # the script does, and remove_tree can fail partway.
+        print("Cleaning cache...")
+        for cache_dir in (dir_manager.sources_dir, dir_manager.builds_dir):
+            if cache_dir.exists():
+                remove_tree(cache_dir)
+                print(f"  removed: {cache_dir}")
+            else:
+                print(f"  absent:  {cache_dir}")
+        print(f"  kept:    {dir_manager.install_dir}")
+        print(
+            "           --clean does not remove built output. Libraries this "
+            "manifest no\n           longer builds stay there, and Ocean's CMake "
+            "puts every directory in\n           the install tree on "
+            "CMAKE_PREFIX_PATH — so a stale one can still be\n           picked "
+            "up. Delete it by hand, or build elsewhere with --output-dir."
+        )
 
     # Build!
     # Warn about any library/target combinations that will be silently skipped
