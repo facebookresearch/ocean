@@ -43,6 +43,7 @@ import argparse
 
 # Add lib to path for imports - import platform module directly to avoid yaml dependency
 import importlib.util
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -159,6 +160,18 @@ def get_all_supported_platforms(
 # ============================================================================
 
 
+def get_config_suffix(target: BuildTarget, quest_mode: bool = False) -> str:
+    """Directory name for a target's build and install trees.
+
+    Single source of truth: the build, the install prefix and the summary all
+    derive their paths from this, so the path printed at the end is the path
+    the artifacts were written to.
+    """
+    if quest_mode and target.os == OS.ANDROID:
+        return f"quest_{target.link_type.value}_{target.build_config.value}"
+    return target.to_path_component()
+
+
 def get_cmake_preset_name(target: BuildTarget, quest_mode: bool = False) -> str:
     """Get the CMake preset name for a build target."""
     if quest_mode and target.os == OS.ANDROID:
@@ -265,6 +278,7 @@ def run_cmake_build(
     log_level: str = "ERROR",
     android_sdk: str = "android-32",
     vs_version: Optional[str] = None,
+    jobs: int = 0,
 ) -> bool:
     """Run CMake configure and build for a single target.
 
@@ -272,13 +286,9 @@ def run_cmake_build(
         True if successful, False otherwise.
     """
     preset_name = get_cmake_preset_name(target, quest_mode)
-    target_str = target.to_path_component()
 
     # Determine build and install directories for this configuration
-    if quest_mode and target.os == OS.ANDROID:
-        config_suffix = f"quest_{target.link_type.value}_{target.build_config.value}"
-    else:
-        config_suffix = target_str
+    config_suffix = get_config_suffix(target, quest_mode)
 
     config_build_dir = build_dir / config_suffix
     config_install_dir = install_dir / config_suffix
@@ -398,14 +408,17 @@ def run_cmake_build(
         print("Configure-only mode: skipping build step.")
         return True
 
-    # Build arguments
+    # Build arguments. `--parallel` must carry a job count: bare `-j` means
+    # "unlimited" to the Unix Makefiles generator, which forks one compiler per
+    # ready target and takes the machine into swap.
     build_args = [
         "cmake",
         "--build",
         str(config_build_dir),
         "--target",
         "install",
-        "-j",
+        "--parallel",
+        str(jobs if jobs > 0 else (os.cpu_count() or 4)),
     ]
 
     # Add config for multi-config generators
@@ -551,6 +564,13 @@ def parse_args() -> argparse.Namespace:
 
     # Build control
     parser.add_argument(
+        "--parallel",
+        "-j",
+        type=int,
+        default=0,
+        help="Maximum parallel compile jobs (default: auto-detect)",
+    )
+    parser.add_argument(
         "--configure-only",
         action="store_true",
         help="Only run CMake configure step, skip build",
@@ -659,15 +679,24 @@ def main() -> int:
 
     # Determine directories
     cwd = Path.cwd()
-    build_dir = Path(args.build_dir) if args.build_dir else cwd / DEFAULT_BUILD_DIR
+    # Resolved against the user's cwd here and only here. CMake configure runs
+    # with cwd=ocean_source_dir while the build step runs in the user's cwd, so
+    # a relative --build-dir used to name two different directories in one run.
+    build_dir = (
+        Path(args.build_dir).expanduser().resolve()
+        if args.build_dir
+        else cwd / DEFAULT_BUILD_DIR
+    )
     install_dir = (
-        Path(args.install_dir) if args.install_dir else cwd / DEFAULT_INSTALL_DIR
+        Path(args.install_dir).expanduser().resolve()
+        if args.install_dir
+        else cwd / DEFAULT_INSTALL_DIR
     )
 
     # Default third-party directory matches build_ocean_3rdparty.py's default
     # install location.
     if args.third_party_dir:
-        third_party_dir = Path(args.third_party_dir)
+        third_party_dir = Path(args.third_party_dir).expanduser().resolve()
     else:
         third_party_dir = cwd / "ocean_3rdparty" / "install"
 
@@ -708,6 +737,15 @@ def main() -> int:
     # A repeated target would otherwise configure and build the same directory
     # twice in sequence, doubling the wall clock for no output change.
     targets = _dedup(targets)
+
+    if not targets:
+        print("Error: no buildable targets.")
+        print(
+            "  On Windows this means the selected Visual Studio has no MSVC "
+            "build tools for any 64-bit architecture; install them via the "
+            "Visual Studio Installer or pass --vs-version."
+        )
+        return 1
 
     # Print build plan
     print("\nOcean Build Configuration")
@@ -755,6 +793,7 @@ def main() -> int:
             log_level=log_level,
             android_sdk=args.android_sdk,
             vs_version=args.vs_version,
+            jobs=args.parallel,
         )
         if not success:
             failed_builds.append(get_cmake_preset_name(target, args.quest))
@@ -773,11 +812,7 @@ def main() -> int:
         print("\nAll builds completed successfully.")
         print("\nInstall locations:")
         for target in targets:
-            if args.quest and target.os == OS.ANDROID:
-                suffix = f"quest_{target.link_type.value}_{target.build_config.value}"
-            else:
-                suffix = target.to_path_component()
-            print(f"  - {install_dir / target.os.value / suffix}")
+            print(f"  - {install_dir / get_config_suffix(target, args.quest)}")
         return 0
 
 
