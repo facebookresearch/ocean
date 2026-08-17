@@ -1,0 +1,43 @@
+Install only the library kind that was asked for.
+
+zlib's CMakeLists declares both targets with an explicit keyword --
+`add_library(zlib SHARED ...)` and `add_library(zlibstatic STATIC ...)` -- so
+BUILD_SHARED_LIBS has no effect on either. zlib reads it in exactly one place,
+to decide whether the DLL gets a `1.dll` suffix. Both targets are then
+installed unconditionally.
+
+On Windows that puts three files in a static install prefix: zlib.dll, zlib.lib
+(the import library for that DLL) and zlibstatic.lib (the real static library).
+Import libraries and static libraries share the .lib extension, so a consumer
+has no way to tell them apart, links the import library, and fails at load
+because the DLL was filtered out of the static prefix.
+
+Gate the install on BUILD_SHARED_LIBS so the prefix contains one kind only.
+Both targets are still built -- this touches the install rule alone, which
+keeps the patch to a single hunk and avoids reordering zlib's target setup.
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -179,10 +179,17 @@
+ endif()
+
+ if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL )
+-    install(TARGETS zlib zlibstatic
+-        RUNTIME DESTINATION "${INSTALL_BIN_DIR}"
+-        ARCHIVE DESTINATION "${INSTALL_LIB_DIR}"
+-        LIBRARY DESTINATION "${INSTALL_LIB_DIR}" )
++    if(BUILD_SHARED_LIBS)
++        install(TARGETS zlib
++            RUNTIME DESTINATION "${INSTALL_BIN_DIR}"
++            ARCHIVE DESTINATION "${INSTALL_LIB_DIR}"
++            LIBRARY DESTINATION "${INSTALL_LIB_DIR}" )
++    else()
++        install(TARGETS zlibstatic
++            RUNTIME DESTINATION "${INSTALL_BIN_DIR}"
++            ARCHIVE DESTINATION "${INSTALL_LIB_DIR}"
++            LIBRARY DESTINATION "${INSTALL_LIB_DIR}" )
++    endif()
+ endif()
+ if(NOT SKIP_INSTALL_HEADERS AND NOT SKIP_INSTALL_ALL )
+     install(FILES ${ZLIB_PUBLIC_HDRS} DESTINATION "${INSTALL_INC_DIR}")

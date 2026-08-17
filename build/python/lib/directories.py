@@ -183,7 +183,11 @@ class DirectoryManager:
         return self.sources_dir / library / version
 
     def source_exists(
-        self, library: str, version: str, fingerprint: Optional[str] = None
+        self,
+        library: str,
+        version: str,
+        fingerprint: Optional[str] = None,
+        trust_legacy_marker: bool = True,
     ) -> bool:
         """Check whether a cached source is present and still current.
 
@@ -198,6 +202,9 @@ class DirectoryManager:
             version: Library version.
             fingerprint: Digest of the current source definition. None skips
                 the check and only tests for presence.
+            trust_legacy_marker: Whether a marker predating fingerprints may be
+                adopted as current. False for sources whose tree is not fully
+                determined by (url, ref) — see below.
         """
         marker = self.get_source_dir(library, version) / ".ocean_fetched"
         if not marker.exists():
@@ -212,10 +219,15 @@ class DirectoryManager:
 
         if not isinstance(data, dict) or "fingerprint" not in data:
             # A marker written before fingerprints existed holds a bare
-            # timestamp. Adopting the current fingerprint rather than forcing a
-            # re-fetch keeps existing caches warm: assuming the tree matches the
-            # current definition is exactly what the old code did unconditionally,
-            # and from here on a change is detected.
+            # timestamp, so it says nothing about which definition produced the
+            # tree. For a plain (url, ref) checkout, adopting it keeps existing
+            # caches warm and is exactly the assumption the old code made
+            # unconditionally. For a source carrying a patch or copy_files it
+            # cannot be trusted: whether the patch was applied at all, and which
+            # version of it, is unknowable from a timestamp — and adopting it
+            # would make a newly added patch silently never take effect.
+            if not trust_legacy_marker:
+                return False
             self.mark_source_fetched(library, version, fingerprint)
             return True
 

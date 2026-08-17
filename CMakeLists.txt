@@ -445,7 +445,15 @@ if (OCEAN_THIRD_PARTY_ROOT AND _ocean_3p_resolved_layout STREQUAL "external")
     set(_zlib_lib_path "${OCEAN_THIRD_PARTY_ROOT}/zlib/lib/${_ocean_3p_target}")
     if (EXISTS "${_zlib_lib_path}")
         if (WIN32)
-            set(_zlib_lib_name "zlib${_debug_suffix}.lib")
+            # zlib names its two Windows outputs differently: zlibstatic.lib is
+            # the static archive, while zlib.lib is the import library for
+            # zlib1.dll. Both end in .lib, so naming the wrong one links
+            # cleanly and then fails at load with a missing DLL.
+            if (_ocean_3p_link STREQUAL "static")
+                set(_zlib_lib_name "zlibstatic${_debug_suffix}.lib")
+            else()
+                set(_zlib_lib_name "zlib${_debug_suffix}.lib")
+            endif()
         else()
             set(_zlib_lib_name "libz${_debug_suffix}.a")
         endif()

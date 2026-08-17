@@ -22,6 +22,11 @@ libraries:
       type: git
       url: https://github.com/madler/zlib.git
       ref: "v1.3.1"
+      # zlib declares both targets with an explicit keyword
+      # (add_library(zlib SHARED ...) / add_library(zlibstatic STATIC ...)),
+      # so BUILD_SHARED_LIBS does not select between them and it installs both
+      # regardless. The patch gates the install rule on BUILD_SHARED_LIBS.
+      patch: patches/zlib.patch
     build:
       system: cmake
       options:
