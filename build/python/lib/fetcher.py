@@ -21,7 +21,7 @@ import zipfile
 from pathlib import Path
 from typing import Dict, Optional
 
-from .directories import DirectoryManager
+from .directories import DirectoryManager, remove_tree
 from .manifest import SourceConfig
 from .platform import get_android_ndk_path
 
@@ -144,7 +144,7 @@ class SourceFetcher:
             if source_dir.exists():
                 if not quiet:
                     print("    Cleaning up partial download...")
-                shutil.rmtree(source_dir)
+                remove_tree(source_dir)
 
             try:
                 if source.type == "git":
@@ -171,9 +171,13 @@ class SourceFetcher:
                 with self._global_lock:
                     self._failed[cache_key] = error_msg
 
-                # Clean up the partial source
+                # Clean up the partial source. Never let a cleanup failure
+                # replace the fetch error the user actually needs to see.
                 if source_dir.exists():
-                    shutil.rmtree(source_dir)
+                    try:
+                        remove_tree(source_dir)
+                    except OSError:
+                        pass
 
                 raise RuntimeError(error_msg) from e
 

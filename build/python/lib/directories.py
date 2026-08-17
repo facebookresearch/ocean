@@ -12,6 +12,7 @@ from __future__ import annotations
 import json
 import os
 import shutil
+import stat
 import threading
 from dataclasses import dataclass
 from datetime import datetime
@@ -26,8 +27,14 @@ if os.name == "nt":
     import msvcrt
 
     def _lock_file(f):
-        """Lock a file on Windows."""
-        msvcrt.locking(f.fileno(), msvcrt.LK_NBLCK, 1)
+        """Lock a file on Windows.
+
+        LK_LOCK, not LK_NBLCK: the non-blocking variant raises immediately when
+        another process holds the lock, so two concurrent builds writing the
+        same metadata file crash instead of taking turns. LK_LOCK retries for
+        ~10s before giving up.
+        """
+        msvcrt.locking(f.fileno(), msvcrt.LK_LOCK, 1)
 
     def _unlock_file(f):
         """Unlock a file on Windows."""
@@ -48,6 +55,31 @@ else:
 
 # Lock for thread-safe metadata file access
 _metadata_lock = threading.Lock()
+
+
+def remove_tree(path: Path) -> None:
+    """Delete a directory tree, including read-only files.
+
+    git marks everything under `.git/objects` read-only, and on Windows
+    DeleteFile refuses a read-only file. A plain `shutil.rmtree` over a clone
+    therefore raises PermissionError partway through and leaves a half-deleted
+    tree, which the next run treats as a partial download and tries to delete
+    again — so `--clean` becomes permanently stuck.
+    """
+
+    def _clear_readonly(func, target, _exc) -> None:
+        # Restore the write bit on the entry and on its parent: Windows
+        # DeleteFile refuses a read-only file, and POSIX unlink needs write
+        # permission on the containing directory, not on the file.
+        entry = Path(target)
+        for candidate in (entry.parent, entry):
+            try:
+                candidate.chmod(candidate.stat().st_mode | stat.S_IWUSR)
+            except OSError:
+                pass
+        func(target)
+
+    shutil.rmtree(path, onexc=_clear_readonly)
 
 
 @dataclass
@@ -229,19 +261,19 @@ class DirectoryManager:
         """Remove build directory for a specific target."""
         build_dir = self.get_build_dir(library, version, target)
         if build_dir.exists():
-            shutil.rmtree(build_dir)
+            remove_tree(build_dir)
 
     def clean_all_builds(self, library: str, version: str) -> None:
         """Remove all build directories for a library."""
         builds_base = self.builds_dir / library / version
         if builds_base.exists():
-            shutil.rmtree(builds_base)
+            remove_tree(builds_base)
 
     def clean_source(self, library: str, version: str) -> None:
         """Remove source directory for a library."""
         source_dir = self.get_source_dir(library, version)
         if source_dir.exists():
-            shutil.rmtree(source_dir)
+            remove_tree(source_dir)
 
     def clean_library(self, library: str, version: str) -> None:
         """Remove all cache and output for a library."""
@@ -253,20 +285,20 @@ class DirectoryManager:
         if self.for_external_integration:
             final_dir = self.get_final_dir(library, version)
             if final_dir.exists():
-                shutil.rmtree(final_dir)
+                remove_tree(final_dir)
         else:
             for target_dir in self.install_dir.iterdir():
                 if target_dir.is_dir():
                     lib_dir = target_dir / library
                     if lib_dir.exists():
-                        shutil.rmtree(lib_dir)
+                        remove_tree(lib_dir)
 
     def clean_all(self) -> None:
         """Remove all cache directories (sources and builds)."""
         if self.sources_dir.exists():
-            shutil.rmtree(self.sources_dir)
+            remove_tree(self.sources_dir)
         if self.builds_dir.exists():
-            shutil.rmtree(self.builds_dir)
+            remove_tree(self.builds_dir)
         # Note: We don't clean install_dir by default for safety
 
     def write_build_metadata(
