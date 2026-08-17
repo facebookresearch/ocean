@@ -770,6 +770,7 @@ def detect_windows_archs(
         return [detect_host_arch()], False
 
     archs = []
+    probe_failed = False
     for arch, component in WINDOWS_ARCH_COMPONENT_IDS.items():
         try:
             result = subprocess.run(
@@ -796,8 +797,11 @@ def detect_windows_archs(
         # OSError covers vswhere becoming inaccessible between find_vswhere()
         # and here; SubprocessError covers a non-zero exit and any future
         # timeout. Neither should abort platform detection for every
-        # architecture — skip this one and carry on.
+        # architecture — skip this one and carry on, but the answer is no
+        # longer authoritative: a component we could not probe is unknown,
+        # not absent, and callers must not refuse to build it.
         except (subprocess.SubprocessError, OSError):
+            probe_failed = True
             continue
 
         roots = {
@@ -807,6 +811,13 @@ def detect_windows_archs(
         }
         if selected_root in roots:
             archs.append(arch)
+
+    if probe_failed:
+        # At least one component query never ran, so absence from `archs`
+        # cannot be distinguished from "not asked". Fall back to the host
+        # guess rather than letting a transient vswhere failure hard-reject
+        # an architecture that is in fact installed.
+        return [detect_host_arch()], False
 
     return archs, True
 
