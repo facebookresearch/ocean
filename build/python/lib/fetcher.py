@@ -9,6 +9,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import os
 import shutil
 import subprocess
@@ -113,6 +114,7 @@ class SourceFetcher:
         """
         source_dir = self.dirs.get_source_dir(library, version)
         cache_key = f"{library}/{version}"
+        fingerprint = self._source_fingerprint(source)
 
         # Check if this fetch has permanently failed
         with self._global_lock:
@@ -120,7 +122,7 @@ class SourceFetcher:
                 raise RuntimeError(self._failed[cache_key])
 
         # Fast path: already cached
-        if self.dirs.source_exists(library, version):
+        if self.dirs.source_exists(library, version, fingerprint):
             return source_dir
 
         # Slow path: need to fetch (with locking)
@@ -132,12 +134,18 @@ class SourceFetcher:
                     raise RuntimeError(self._failed[cache_key])
 
             # Double-check after acquiring lock
-            if self.dirs.source_exists(library, version):
+            if self.dirs.source_exists(library, version, fingerprint):
                 return source_dir
 
             # Actually fetch
             if not quiet:
-                print(f"  Fetching {library} {version}...")
+                if source_dir.exists():
+                    print(
+                        f"  Re-fetching {library} {version} "
+                        "(source definition changed)..."
+                    )
+                else:
+                    print(f"  Fetching {library} {version}...")
             source_dir.parent.mkdir(parents=True, exist_ok=True)
 
             # Clean up any partial download from previous attempt
@@ -162,7 +170,7 @@ class SourceFetcher:
                 self._apply_post_fetch(source, source_dir, quiet)
 
                 # Mark as fetched
-                self.dirs.mark_source_fetched(library, version)
+                self.dirs.mark_source_fetched(library, version, fingerprint)
 
                 return source_dir
             except Exception as e:
@@ -180,6 +188,62 @@ class SourceFetcher:
                         pass
 
                 raise RuntimeError(error_msg) from e
+
+    def _resolve_manifest_path(self, raw: str) -> Path:
+        """Resolve a manifest-relative path (patch files, copy_files sources)."""
+        path = Path(raw).expanduser()
+        return path if path.is_absolute() else (self.manifest_dir / path).resolve()
+
+    @staticmethod
+    def _hash_path(path: Path, digest: "hashlib._Hash") -> None:
+        """Fold a file's bytes, or a whole tree's, into digest."""
+        if path.is_dir():
+            for child in sorted(path.rglob("*")):
+                if child.is_file():
+                    digest.update(str(child.relative_to(path)).encode("utf-8"))
+                    digest.update(child.read_bytes())
+        elif path.is_file():
+            digest.update(path.read_bytes())
+        else:
+            digest.update(b"<missing>")
+
+    def _source_fingerprint(self, source: SourceConfig) -> str:
+        """Digest everything that determines the content of the fetched tree.
+
+        The cache directory is keyed on (library, version) alone, so without
+        this a changed `ref`, an edited patch or a modified copy_files input is
+        invisible: the marker exists, the fetch is skipped, and every later
+        build silently compiles the old tree. That is worst for patches, which
+        are edited in place while iterating on a library.
+        """
+        digest = hashlib.sha256()
+        for field in (
+            source.type,
+            source.url,
+            source.ref,
+            source.archive_url,
+            source.local_path,
+            source.ndk_path,
+            source.source_subdir,
+            str(source.shallow),
+        ):
+            digest.update((field or "").encode("utf-8"))
+            digest.update(b"\0")
+
+        for src_path, dest_path in sorted((source.copy_files or {}).items()):
+            digest.update(f"{src_path}->{dest_path}\0".encode("utf-8"))
+            self._hash_path(self._resolve_manifest_path(src_path), digest)
+
+        if source.patch:
+            self._hash_path(self._resolve_manifest_path(source.patch), digest)
+
+        # A `local` source is copied from inside the repository, so its content
+        # is part of the definition. NDK sources are not hashed: the NDK is
+        # external and already pinned by its own version.
+        if source.type == "local" and source.local_path:
+            self._hash_path(self._resolve_manifest_path(source.local_path), digest)
+
+        return digest.hexdigest()
 
     def _fetch_git(self, source: SourceConfig, target_dir: Path) -> None:
         """Fetch source from git repository."""

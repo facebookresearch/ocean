@@ -182,18 +182,57 @@ class DirectoryManager:
         """Get the source directory for a library (shared across all targets)."""
         return self.sources_dir / library / version
 
-    def source_exists(self, library: str, version: str) -> bool:
-        """Check if source has already been fetched."""
-        source_dir = self.get_source_dir(library, version)
-        # Check for a marker file that indicates successful fetch
-        marker = source_dir / ".ocean_fetched"
-        return marker.exists()
+    def source_exists(
+        self, library: str, version: str, fingerprint: Optional[str] = None
+    ) -> bool:
+        """Check whether a cached source is present and still current.
 
-    def mark_source_fetched(self, library: str, version: str) -> None:
-        """Mark source as successfully fetched."""
+        The cache path is (library, version) only, so a changed `ref`, an
+        edited patch or a modified copy_files input does not move it. The
+        marker therefore records a fingerprint of the source definition and the
+        caller passes the current one; a mismatch means the cached tree was
+        built from a different definition and must be re-fetched.
+
+        Args:
+            library: Library name.
+            version: Library version.
+            fingerprint: Digest of the current source definition. None skips
+                the check and only tests for presence.
+        """
+        marker = self.get_source_dir(library, version) / ".ocean_fetched"
+        if not marker.exists():
+            return False
+        if fingerprint is None:
+            return True
+
+        try:
+            data = json.loads(marker.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            data = None
+
+        if not isinstance(data, dict) or "fingerprint" not in data:
+            # A marker written before fingerprints existed holds a bare
+            # timestamp. Adopting the current fingerprint rather than forcing a
+            # re-fetch keeps existing caches warm: assuming the tree matches the
+            # current definition is exactly what the old code did unconditionally,
+            # and from here on a change is detected.
+            self.mark_source_fetched(library, version, fingerprint)
+            return True
+
+        return data["fingerprint"] == fingerprint
+
+    def mark_source_fetched(
+        self, library: str, version: str, fingerprint: str = ""
+    ) -> None:
+        """Mark source as successfully fetched, recording its fingerprint."""
         source_dir = self.get_source_dir(library, version)
         marker = source_dir / ".ocean_fetched"
-        marker.write_text(datetime.now().isoformat())
+        marker.write_text(
+            json.dumps(
+                {"fetched_at": datetime.now().isoformat(), "fingerprint": fingerprint}
+            ),
+            encoding="utf-8",
+        )
 
     def get_build_dir(self, library: str, version: str, target: BuildTarget) -> Path:
         """Get the build directory for a specific (library, target) combination."""
