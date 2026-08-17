@@ -153,10 +153,6 @@ class SourceFetcher:
         source_dir = self.dirs.get_source_dir(library, version)
         cache_key = f"{library}/{version}"
         fingerprint = self._source_fingerprint(source)
-        # A legacy (pre-fingerprint) marker records only a timestamp. It is a
-        # safe stand-in for a plain checkout, but not for a tree we modified
-        # after fetching.
-        trust_legacy = not (source.patch or source.copy_files)
 
         # Check if this fetch has permanently failed
         with self._global_lock:
@@ -164,7 +160,7 @@ class SourceFetcher:
                 raise RuntimeError(self._failed[cache_key])
 
         # Fast path: already cached
-        if self.dirs.source_exists(library, version, fingerprint, trust_legacy):
+        if self.dirs.source_exists(library, version, fingerprint):
             return source_dir
 
         # Slow path: need to fetch (with locking)
@@ -176,7 +172,7 @@ class SourceFetcher:
                     raise RuntimeError(self._failed[cache_key])
 
             # Double-check after acquiring lock
-            if self.dirs.source_exists(library, version, fingerprint, trust_legacy):
+            if self.dirs.source_exists(library, version, fingerprint):
                 return source_dir
 
             # Actually fetch

@@ -9,11 +9,13 @@
 
 from __future__ import annotations
 
+import contextlib
 import json
 import os
 import shutil
 import stat
 import sys
+import tempfile
 import threading
 from dataclasses import dataclass, replace
 from datetime import datetime
@@ -193,7 +195,6 @@ class DirectoryManager:
         library: str,
         version: str,
         fingerprint: Optional[str] = None,
-        trust_legacy_marker: bool = True,
     ) -> bool:
         """Check whether a cached source is present and still current.
 
@@ -203,14 +204,20 @@ class DirectoryManager:
         caller passes the current one; a mismatch means the cached tree was
         built from a different definition and must be re-fetched.
 
+        A marker that carries no usable fingerprint — one written before
+        fingerprints existed, or truncated by an interrupted write — is treated
+        as stale rather than adopted. It records only a timestamp, so it cannot
+        say which definition produced the tree, and adopting it would stamp the
+        current fingerprint onto source that may not match: the cache would
+        then actively assert something false, and no later run would ever
+        correct it. The cost of being wrong here is a silently wrong build; the
+        cost of being conservative is one refetch per library.
+
         Args:
             library: Library name.
             version: Library version.
             fingerprint: Digest of the current source definition. None skips
                 the check and only tests for presence.
-            trust_legacy_marker: Whether a marker predating fingerprints may be
-                adopted as current. False for sources whose tree is not fully
-                determined by (url, ref) — see below.
         """
         marker = self.get_source_dir(library, version) / ".ocean_fetched"
         if not marker.exists():
@@ -221,36 +228,38 @@ class DirectoryManager:
         try:
             data = json.loads(marker.read_text(encoding="utf-8"))
         except (OSError, ValueError):
-            data = None
+            return False
 
         if not isinstance(data, dict) or "fingerprint" not in data:
-            # A marker written before fingerprints existed holds a bare
-            # timestamp, so it says nothing about which definition produced the
-            # tree. For a plain (url, ref) checkout, adopting it keeps existing
-            # caches warm and is exactly the assumption the old code made
-            # unconditionally. For a source carrying a patch or copy_files it
-            # cannot be trusted: whether the patch was applied at all, and which
-            # version of it, is unknowable from a timestamp — and adopting it
-            # would make a newly added patch silently never take effect.
-            if not trust_legacy_marker:
-                return False
-            self.mark_source_fetched(library, version, fingerprint)
-            return True
+            return False
 
         return data["fingerprint"] == fingerprint
 
     def mark_source_fetched(
         self, library: str, version: str, fingerprint: str = ""
     ) -> None:
-        """Mark source as successfully fetched, recording its fingerprint."""
+        """Mark source as successfully fetched, recording its fingerprint.
+
+        Written to a sibling temporary file and renamed, so an interrupted write
+        cannot leave a truncated marker behind. A half-written marker now forces
+        a refetch rather than being adopted, which is safe but wasteful, and
+        os.replace is atomic on both POSIX and Windows.
+        """
         source_dir = self.get_source_dir(library, version)
         marker = source_dir / ".ocean_fetched"
-        marker.write_text(
-            json.dumps(
-                {"fetched_at": datetime.now().isoformat(), "fingerprint": fingerprint}
-            ),
-            encoding="utf-8",
+        payload = json.dumps(
+            {"fetched_at": datetime.now().isoformat(), "fingerprint": fingerprint}
         )
+
+        fd, temp_name = tempfile.mkstemp(dir=str(source_dir), prefix=".ocean_fetched.")
+        try:
+            with os.fdopen(fd, "w", encoding="utf-8") as handle:
+                handle.write(payload)
+            os.replace(temp_name, marker)
+        except BaseException:
+            with contextlib.suppress(OSError):
+                os.unlink(temp_name)
+            raise
 
     def get_build_dir(self, library: str, version: str, target: BuildTarget) -> Path:
         """Get the build directory for a specific (library, target) combination."""
