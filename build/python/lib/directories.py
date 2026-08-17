@@ -13,6 +13,7 @@ import json
 import os
 import shutil
 import stat
+import sys
 import threading
 from dataclasses import dataclass, replace
 from datetime import datetime
@@ -79,7 +80,12 @@ def remove_tree(path: Path) -> None:
                 pass
         func(target)
 
-    shutil.rmtree(path, onexc=_clear_readonly)
+    # `onexc` replaced `onerror` in 3.12 and `onerror` warns from 3.12 on, so
+    # neither spelling works across the documented 3.8+ range on its own.
+    if sys.version_info >= (3, 12):
+        shutil.rmtree(path, onexc=_clear_readonly)
+    else:
+        shutil.rmtree(path, onerror=lambda f, t, e: _clear_readonly(f, t, e))
 
 
 @dataclass

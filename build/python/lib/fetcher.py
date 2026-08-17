@@ -13,6 +13,7 @@ import hashlib
 import os
 import shutil
 import subprocess
+import sys
 import tarfile
 import tempfile
 import threading
@@ -53,7 +54,7 @@ def _extract_zip_safely(zf: zipfile.ZipFile, target_dir: Path) -> None:
     over the network — the ARCore .aar comes straight from dl.google.com — and
     the cost of being wrong is a write outside the build tree, so the check is
     made explicit rather than inherited. The tar paths get the equivalent from
-    ``filter="data"``.
+    ``_extract_tar_safely``.
     """
     root = target_dir.resolve()
     for member in zf.infolist():
@@ -63,6 +64,43 @@ def _extract_zip_safely(zf: zipfile.ZipFile, target_dir: Path) -> None:
                 f"Refusing to extract '{member.filename}': it resolves outside {root}"
             )
     zf.extractall(target_dir)
+
+
+def _extract_tar_safely(tf: tarfile.TarFile, target_dir: Path) -> None:
+    """Extract a tar archive, refusing members that escape target_dir.
+
+    ``extractall(filter="data")`` is the right answer but only exists from
+    3.12 (and the 3.8-3.11 maintenance releases that backported it), while the
+    build docs promise 3.8+. Fall back to an explicit check that covers the
+    same escape routes: absolute paths, '..' traversal, and links pointing out
+    of the tree.
+    """
+    root = target_dir.resolve()
+
+    def _resolves_inside(name: str) -> bool:
+        destination = (root / name).resolve()
+        return destination == root or root in destination.parents
+
+    for member in tf.getmembers():
+        if not _resolves_inside(member.name):
+            raise RuntimeError(
+                f"Refusing to extract '{member.name}': it resolves outside {root}"
+            )
+        # A link's target is resolved at extraction time relative to the member's
+        # own directory, so it needs the same check against its parent.
+        if member.islnk() or member.issym():
+            link_base = (root / member.name).parent
+            link_target = (link_base / member.linkname).resolve()
+            if link_target != root and root not in link_target.parents:
+                raise RuntimeError(
+                    f"Refusing to extract link '{member.name}': "
+                    f"it points outside {root}"
+                )
+
+    if sys.version_info >= (3, 12):
+        tf.extractall(target_dir, filter="data")
+    else:
+        tf.extractall(target_dir)
 
 
 class SourceFetcher:
@@ -356,10 +394,10 @@ class SourceFetcher:
                     _extract_zip_safely(zf, target_dir)
             elif url_lower.endswith((".tar.gz", ".tgz")):
                 with tarfile.open(archive_path, "r:gz") as tf:
-                    tf.extractall(target_dir, filter="data")
+                    _extract_tar_safely(tf, target_dir)
             elif url_lower.endswith((".tar.bz2", ".tbz2")):
                 with tarfile.open(archive_path, "r:bz2") as tf:
-                    tf.extractall(target_dir, filter="data")
+                    _extract_tar_safely(tf, target_dir)
             elif url_lower.endswith((".tar.xz", ".txz")):
                 with tarfile.open(archive_path, "r:xz") as tf:
                     tf.extractall(target_dir, filter="data")
