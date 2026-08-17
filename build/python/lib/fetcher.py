@@ -10,14 +10,58 @@
 from __future__ import annotations
 
 import os
+import shutil
 import subprocess
+import tarfile
+import tempfile
 import threading
+import urllib.error
+import urllib.request
+import zipfile
 from pathlib import Path
 from typing import Dict, Optional
 
 from .directories import DirectoryManager
 from .manifest import SourceConfig
 from .platform import get_android_ndk_path
+
+# Upper bound on any single network operation. Not a performance budget — a
+# full opencv clone over a slow link is legitimately slow — but a backstop so a
+# stalled transfer fails with a message instead of hanging the build forever
+# behind the progress display, where there is nothing to see.
+DEFAULT_FETCH_TIMEOUT_SECONDS = 3600
+
+
+def _fetch_timeout() -> int:
+    """Network timeout in seconds, overridable via OCEAN_3P_FETCH_TIMEOUT."""
+    raw = os.environ.get("OCEAN_3P_FETCH_TIMEOUT")
+    if raw:
+        try:
+            value = int(raw)
+        except ValueError:
+            return DEFAULT_FETCH_TIMEOUT_SECONDS
+        if value > 0:
+            return value
+    return DEFAULT_FETCH_TIMEOUT_SECONDS
+
+
+def _extract_zip_safely(zf: zipfile.ZipFile, target_dir: Path) -> None:
+    """Extract a zip archive, refusing members that escape target_dir.
+
+    CPython's ZipFile already drops '..' components, but these archives arrive
+    over the network — the ARCore .aar comes straight from dl.google.com — and
+    the cost of being wrong is a write outside the build tree, so the check is
+    made explicit rather than inherited. The tar paths get the equivalent from
+    ``filter="data"``.
+    """
+    root = target_dir.resolve()
+    for member in zf.infolist():
+        destination = (root / member.filename).resolve()
+        if destination != root and root not in destination.parents:
+            raise RuntimeError(
+                f"Refusing to extract '{member.filename}': it resolves outside {root}"
+            )
+    zf.extractall(target_dir)
 
 
 class SourceFetcher:
@@ -98,8 +142,6 @@ class SourceFetcher:
 
             # Clean up any partial download from previous attempt
             if source_dir.exists():
-                import shutil
-
                 if not quiet:
                     print("    Cleaning up partial download...")
                 shutil.rmtree(source_dir)
@@ -131,8 +173,6 @@ class SourceFetcher:
 
                 # Clean up the partial source
                 if source_dir.exists():
-                    import shutil
-
                     shutil.rmtree(source_dir)
 
                 raise RuntimeError(error_msg) from e
@@ -189,11 +229,10 @@ class SourceFetcher:
         self._run_git(["remote", "add", "origin", url], cwd=target_dir)
 
         # Try to fetch just the commit (git 2.5+ with server support)
-        result = subprocess.run(
-            ["git", "fetch", "--depth", "1", "origin", commit],
+        result = self._run_git(
+            ["fetch", "--depth", "1", "origin", commit],
             cwd=target_dir,
-            capture_output=True,
-            creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0,
+            check=False,
         )
 
         if result.returncode != 0:
@@ -217,47 +256,53 @@ class SourceFetcher:
         if not source.archive_url:
             raise ValueError("Archive source requires 'archive_url'")
 
-        import tarfile
-        import tempfile
-        import urllib.request
-        import zipfile
-
-        # Download archive (note: quiet not available here, but archive fetches are rare)
-        with tempfile.NamedTemporaryFile(delete=False) as tmp:
-            urllib.request.urlretrieve(source.archive_url, tmp.name)
+        # Downloaded through urlopen rather than urlretrieve so the transfer
+        # carries a timeout, and inside try/finally so a failed download does
+        # not leave the temporary file behind.
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".download") as tmp:
             archive_path = Path(tmp.name)
-
         try:
+            try:
+                with (
+                    urllib.request.urlopen(
+                        source.archive_url, timeout=_fetch_timeout()
+                    ) as response,
+                    open(archive_path, "wb") as out,
+                ):
+                    shutil.copyfileobj(response, out)
+            except (urllib.error.URLError, OSError) as e:
+                raise RuntimeError(
+                    f"Failed to download {source.archive_url}: {e}"
+                ) from e
+
             target_dir.mkdir(parents=True, exist_ok=True)
 
             # Extract based on extension
             url_lower = source.archive_url.lower()
             if url_lower.endswith((".zip", ".aar")):
                 with zipfile.ZipFile(archive_path, "r") as zf:
-                    zf.extractall(target_dir)
+                    _extract_zip_safely(zf, target_dir)
             elif url_lower.endswith((".tar.gz", ".tgz")):
                 with tarfile.open(archive_path, "r:gz") as tf:
-                    tf.extractall(target_dir)
+                    tf.extractall(target_dir, filter="data")
             elif url_lower.endswith((".tar.bz2", ".tbz2")):
                 with tarfile.open(archive_path, "r:bz2") as tf:
-                    tf.extractall(target_dir)
+                    tf.extractall(target_dir, filter="data")
             elif url_lower.endswith((".tar.xz", ".txz")):
                 with tarfile.open(archive_path, "r:xz") as tf:
-                    tf.extractall(target_dir)
+                    tf.extractall(target_dir, filter="data")
             else:
                 raise ValueError(f"Unknown archive format: {source.archive_url}")
 
             # If archive extracts to single directory, move contents up
             self._flatten_single_dir(target_dir)
         finally:
-            archive_path.unlink()
+            archive_path.unlink(missing_ok=True)
 
     def _fetch_local(self, source: SourceConfig, target_dir: Path) -> None:
         """Copy source from local path."""
         if not source.local_path:
             raise ValueError("Local source requires 'local_path'")
-
-        import shutil
 
         # Resolve local_path relative to manifest directory
         local_path = Path(source.local_path)
@@ -280,8 +325,6 @@ class SourceFetcher:
         if not source.ndk_path:
             raise ValueError("ndk_source type requires 'ndk_path'")
 
-        import shutil
-
         ndk_root = get_android_ndk_path()
         if not ndk_root:
             raise RuntimeError(
@@ -303,8 +346,6 @@ class SourceFetcher:
         self, source: SourceConfig, target_dir: Path, quiet: bool = False
     ) -> None:
         """Apply patches and copy files after fetching source."""
-        import shutil
-
         # Determine the effective source directory (may be a subdirectory)
         effective_dir = target_dir
         if source.source_subdir:
@@ -390,9 +431,6 @@ class SourceFetcher:
 
     def _flatten_single_dir(self, target_dir: Path) -> None:
         """If directory contains only one subdirectory, move its contents up."""
-        import shutil
-        import tempfile
-
         entries = list(target_dir.iterdir())
         if len(entries) == 1 and entries[0].is_dir():
             single_dir = entries[0]
@@ -440,10 +478,16 @@ class SourceFetcher:
                 text=True,
                 encoding="utf-8",
                 errors="replace",
+                timeout=_fetch_timeout(),
                 creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0,
             )
         except FileNotFoundError as e:
             raise RuntimeError("git is not installed or not on PATH") from e
+        except subprocess.TimeoutExpired as e:
+            raise RuntimeError(
+                f"git {' '.join(args)} timed out after {_fetch_timeout()}s. "
+                "Set OCEAN_3P_FETCH_TIMEOUT to raise the limit."
+            ) from e
 
         if check and result.returncode != 0:
             detail = (result.stderr or result.stdout or "").strip()
