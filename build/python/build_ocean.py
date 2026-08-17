@@ -455,6 +455,14 @@ def run_cmake_build(
     # Determine CMake generator
     if generator:
         cmake_generator = generator
+    elif target.os == OS.IOS:
+        # Ocean's top-level CMakeLists.txt calls enable_language(Swift) for iOS,
+        # and CMake only implements Swift for the Xcode generator — anything
+        # else dies in CMakeDetermineSwiftCompiler. The shared
+        # get_cmake_generator() prefers Ninja/Makefiles for iOS, which is right
+        # for the third-party libraries (plain C/C++, single-config) and wrong
+        # here, so the requirement is applied where it comes from.
+        cmake_generator = "Xcode"
     else:
         cmake_generator = get_cmake_generator(target, vs_version)
 
@@ -519,10 +527,9 @@ def run_cmake_build(
     # these, CMake is never told what it is building for and every cross target silently
     # produces host binaries in a target-named directory.
     #
-    # iOS and Windows still use the hand-written flags below: iOS additionally needs the
-    # Xcode generator for Swift, and the Windows branch would emit a second -A. Both are
-    # wired up separately.
-    if target.os in (OS.ANDROID, OS.MACOS):
+    # Windows still uses the hand-written flags below: add_windows_options() would
+    # emit a second -A, which CMake rejects outright. It is wired up separately.
+    if target.os in (OS.ANDROID, OS.MACOS, OS.IOS):
         try:
             add_cross_compile_options(configure_args, target, android_api_level)
         except RuntimeError as e:
