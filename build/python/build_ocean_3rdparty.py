@@ -1088,20 +1088,25 @@ def reorganize_output(  # noqa: C901
 
     # Copy lib to target-specific directory (exclude cmake/pkgconfig)
     # Also filter out wrong library types (e.g., .dylib when building static)
-    src_lib = install_dir / "lib"
+    #
+    # Both lib/ and lib64/ are read. GNUInstallDirs resolves CMAKE_INSTALL_LIBDIR
+    # to lib64 for 64-bit builds on RHEL-family distributions, so a tree that
+    # installed there looks empty to a lib-only search and the library silently
+    # reduces to headers. Everything is flattened into a single lib/<target>
+    # directory, which is what the external layout has always published.
+    src_libs = [d for d in (install_dir / "lib", install_dir / "lib64") if d.is_dir()]
     is_shared = target.link_type == LinkType.SHARED
 
-    if src_lib.exists():
+    if src_libs:
         if final_lib.exists():
             shutil.rmtree(final_lib)
         final_lib.mkdir(parents=True, exist_ok=True)
 
+        entries = [item for src_lib in src_libs for item in src_lib.iterdir()]
+
         # Collect symlink targets so we skip real files that have an unversioned
         # symlink alias (e.g., skip libpng16.a when libpng.a -> libpng16.a exists)
-        symlink_targets = set()
-        for item in src_lib.iterdir():
-            if item.is_symlink():
-                symlink_targets.add(item.resolve())
+        symlink_targets = {item.resolve() for item in entries if item.is_symlink()}
 
         # Determine which library extensions to skip based on link type. Only
         # filter when the install tree actually holds both kinds; a library
@@ -1124,7 +1129,7 @@ def reorganize_output(  # noqa: C901
             skip_extensions = {".a"}
             skip_patterns = []
 
-        for item in src_lib.iterdir():
+        for item in entries:
             # Always skip cmake and pkgconfig in lib directory
             if item.is_dir() and item.name in ("cmake", "pkgconfig"):
                 if include_cmake_configs:
