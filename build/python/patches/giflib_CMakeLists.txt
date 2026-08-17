@@ -37,12 +37,19 @@ if(BUILD_SHARED_LIBS)
     #set_target_properties(gif PROPERTIES VERSION ${LIBVER} SOVERSION ${LIBMAJOR})
     if(WIN32)
         set_target_properties(gif PROPERTIES SUFFIX "-${LIBMAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX}")
-        target_compile_definitions(gif PRIVATE "-Dstrtok_r=strtok_s")
         # Export all symbols to generate an import library (.lib) on Windows
         set_target_properties(gif PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
     endif(WIN32)
 else()
     add_library(gif STATIC ${giflib_SRC})
+endif()
+
+# gif_font.c calls strtok_r, which MSVC does not provide. This is a source
+# compatibility fix, not a linkage one, so it must apply to both library kinds
+# — it used to sit inside the shared branch, leaving the static Windows build
+# (the default half of Windows' static,shared) unable to compile.
+if(WIN32)
+    target_compile_definitions(gif PRIVATE strtok_r=strtok_s)
 endif()
 
 # On linux, at least, math library is separate in libm

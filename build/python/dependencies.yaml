@@ -217,6 +217,12 @@ libraries:
         CURL_DISABLE_LDAP: ON
         HTTP_ONLY: ON
         USE_LIBIDN2: OFF
+        # Both default to auto-detect, so a host with libssh2-dev or libpsl-dev
+        # installed produces a curl that links against them while a host
+        # without them does not — the same manifest yielding two different
+        # libraries.
+        CURL_USE_LIBSSH2: OFF
+        CURL_USE_LIBPSL: OFF
         # Prevent curl from trying to link against libraries that don't exist on all platforms
         HAVE_LIBSOCKET: OFF
     dependencies:
