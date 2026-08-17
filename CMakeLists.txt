@@ -110,26 +110,10 @@ if (IOS OR MACOS)
     string(APPEND CMAKE_OBJCXX_FLAGS " -fobjc-arc -fno-objc-arc-exceptions")
 endif()
 
-if (MACOS)
-    # Assemble list of directories which contain Ocean libraries and third party libraries into "OCEAN_MACOSX_BUNDLE_LIBRARY_PATHS".
-    # When installing executables as ".app" bundles for MacOS, "fixup_bundle()" provided by CMake's BuntleUtilities module
-    # is used to install shared libraries needed by the application into the "*.app/" directory structure.
-    # "OCEAN_MACOSX_BUNDLE_LIBRARY_PATHS" is passed to "fixup_bundle()" to specify where the shared library files can be found.
-    list(TRANSFORM CMAKE_PREFIX_PATH APPEND /lib OUTPUT_VARIABLE OCEAN_MACOSX_BUNDLE_LIBRARY_PATHS)
-    list(APPEND OCEAN_MACOSX_BUNDLE_LIBRARY_PATHS "${CMAKE_INSTALL_PREFIX}/lib")
-endif()
-
-if (BUILD_SHARED_LIBS)
-    if (MACOS OR LINUX)
-        list(TRANSFORM CMAKE_PREFIX_PATH APPEND /lib OUTPUT_VARIABLE CMAKE_INSTALL_RPATH)
-
-        if (MACOS)
-            list(PREPEND CMAKE_INSTALL_RPATH @loader_path @loader_path/../lib)
-        elseif (LINUX)
-            list(PREPEND CMAKE_INSTALL_RPATH $ORIGIN $ORIGIN/../lib)
-        endif()
-    endif()
-endif()
+# CMAKE_INSTALL_RPATH and OCEAN_MACOSX_BUNDLE_LIBRARY_PATHS are assembled after
+# the third-party resolution below, not here: both are derived from
+# CMAKE_PREFIX_PATH / CMAKE_LIBRARY_PATH, and neither holds a third-party
+# directory until that block has run.
 
 # ============================================================================
 # Third-party library resolution
@@ -616,25 +600,56 @@ if (OCEAN_THIRD_PARTY_ROOT AND _ocean_3p_resolved_layout STREQUAL "external")
         endif()
     endif()
 
-    # Update macOS bundle library paths for Python layout
-    # The paths set earlier (line ~88) use CMAKE_PREFIX_PATH which doesn't include
-    # the target-specific subdirectory. For Python layout, use CMAKE_LIBRARY_PATH
-    # which already contains the correct target-specific paths.
-    if (MACOS AND BUILD_SHARED_LIBS)
-        set(OCEAN_MACOSX_BUNDLE_LIBRARY_PATHS ${CMAKE_LIBRARY_PATH})
+endif()
+
+# ----------------------------------------------------------------------------
+# Runtime library search paths for shared builds.
+#
+# Assembled here because both inputs are empty until the layout blocks above
+# have run. Computed at the top of the file, CMAKE_INSTALL_RPATH named only
+# <ocean>/build/cmake/lib -- a directory holding no libraries -- so an
+# installed shared build could not start: the loader failed on the first
+# third-party dependency and the binaries only ran with a hand-built
+# LD_LIBRARY_PATH. A later fix-up existed but sat inside the external-layout
+# branch and read CMAKE_LIBRARY_PATH, which the standard (default) layout never
+# populates, so the default configuration was the broken one.
+#
+# The two layouts keep libraries in different places, so both inputs are used:
+# the standard layout puts each library in its own prefix, and lib64 is what
+# GNUInstallDirs picks for 64-bit builds on RHEL-family distributions; the
+# external layout resolves per-target directories into CMAKE_LIBRARY_PATH.
+# ----------------------------------------------------------------------------
+if (BUILD_SHARED_LIBS AND (MACOS OR LINUX))
+    set(_ocean_runtime_paths "")
+
+    foreach(_ocean_prefix ${CMAKE_PREFIX_PATH})
+        foreach(_ocean_libdir lib lib64)
+            if (IS_DIRECTORY "${_ocean_prefix}/${_ocean_libdir}")
+                list(APPEND _ocean_runtime_paths "${_ocean_prefix}/${_ocean_libdir}")
+            endif()
+        endforeach()
+    endforeach()
+
+    list(APPEND _ocean_runtime_paths ${CMAKE_LIBRARY_PATH})
+    if (_ocean_runtime_paths)
+        list(REMOVE_DUPLICATES _ocean_runtime_paths)
+    endif()
+
+    set(CMAKE_INSTALL_RPATH ${_ocean_runtime_paths})
+    if (MACOS)
+        list(PREPEND CMAKE_INSTALL_RPATH @loader_path @loader_path/../lib)
+    else()
+        list(PREPEND CMAKE_INSTALL_RPATH $ORIGIN $ORIGIN/../lib)
+    endif()
+
+    if (MACOS)
+        # fixup_bundle() needs the same directories to find the libraries it
+        # copies into a .app.
+        set(OCEAN_MACOSX_BUNDLE_LIBRARY_PATHS ${_ocean_runtime_paths})
         list(APPEND OCEAN_MACOSX_BUNDLE_LIBRARY_PATHS "${CMAKE_INSTALL_PREFIX}/lib")
     endif()
 
-    # Similarly update RPATH for shared builds
-    if (BUILD_SHARED_LIBS)
-        if (MACOS)
-            set(CMAKE_INSTALL_RPATH ${CMAKE_LIBRARY_PATH})
-            list(PREPEND CMAKE_INSTALL_RPATH @loader_path @loader_path/../lib)
-        elseif (LINUX)
-            set(CMAKE_INSTALL_RPATH ${CMAKE_LIBRARY_PATH})
-            list(PREPEND CMAKE_INSTALL_RPATH $ORIGIN $ORIGIN/../lib)
-        endif()
-    endif()
+    message(STATUS "Runtime library search paths: ${_ocean_runtime_paths}")
 endif()
 
 message(STATUS " ")
