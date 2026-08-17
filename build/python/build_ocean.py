@@ -65,6 +65,8 @@ OS = _platform_module.OS
 configure_console_encoding = _platform_module.configure_console_encoding
 detect_host_arch = _platform_module.detect_host_arch
 detect_host_os = _platform_module.detect_host_os
+get_android_ndk_path = _platform_module.get_android_ndk_path
+get_ios_sdk_path = _platform_module.get_ios_sdk_path
 get_cmake_generator = _platform_module.get_cmake_generator
 get_msvc_toolset_version = _platform_module.get_msvc_toolset_version
 get_installed_windows_archs = _platform_module.get_installed_windows_archs
@@ -103,16 +105,6 @@ def get_all_supported_platforms(
         vs_version: Visual Studio year to scope Windows detection to. Ignored on
             non-Windows hosts.
     """
-    # Import additional functions needed for platform detection
-    _platform_spec = importlib.util.spec_from_file_location(
-        "platform", Path(__file__).parent / "lib" / "platform.py"
-    )
-    _platform_mod = importlib.util.module_from_spec(_platform_spec)
-    _platform_spec.loader.exec_module(_platform_mod)
-
-    get_android_ndk_path = _platform_mod.get_android_ndk_path
-    get_ios_sdk_path = _platform_mod.get_ios_sdk_path
-
     platforms = []
     host_os = detect_host_os()
     host_arch = detect_host_arch()
