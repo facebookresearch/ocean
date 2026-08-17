@@ -211,7 +211,7 @@ def get_all_installed_vs_versions() -> list[tuple[str, str, str]]:
         installed.sort(key=lambda x: int(x[3]) if x[3].isdigit() else -1, reverse=True)
         return [(year, toolset, path) for year, toolset, path, _major in installed]
 
-    except (subprocess.CalledProcessError, FileNotFoundError, json.JSONDecodeError):
+    except (subprocess.SubprocessError, OSError, json.JSONDecodeError):
         return []
 
 
@@ -695,8 +695,10 @@ def _vs_install_root(vc_path: str) -> str:
     return vc_path
 
 
-def get_installed_windows_archs(vs_version: Optional[str] = None) -> List[Arch]:
-    """Detect which Windows architectures have MSVC tools installed via vswhere.
+def detect_windows_archs(
+    vs_version: Optional[str] = None,
+) -> tuple[List[Arch], bool]:
+    """Detect which Windows architectures have MSVC tools installed.
 
     Probes for 64-bit architecture components only (x86_64 and ARM64).
 
@@ -710,14 +712,18 @@ def get_installed_windows_archs(vs_version: Optional[str] = None) -> List[Arch]:
         vs_version: Visual Studio year to scope to (e.g. "2022"). Defaults to
             the auto-selected (newest) installation.
 
-    Falls back to the host architecture only when the installation cannot be
-    identified at all (no vswhere, or no detectable Visual Studio). Once an
-    installation is identified, an empty result is authoritative: it means that
-    installation genuinely carries neither toolchain.
+    Returns:
+        (archs, scoped). When `scoped` is True the answer is authoritative:
+        an architecture missing from `archs` genuinely has no tools in the
+        selected installation. When it is False no installation could be
+        identified at all (no vswhere, or nothing detectable), `archs` is a
+        host-architecture guess, and callers must neither claim an
+        architecture is "not installed in the selected Visual Studio" nor
+        refuse to build it.
     """
     vswhere_path = find_vswhere()
     if not vswhere_path:
-        return [detect_host_arch()]
+        return [detect_host_arch()], False
 
     _, selected_vc_path = get_msvc_toolset_version_and_path(vs_version)
     selected_root = (
@@ -731,7 +737,7 @@ def get_installed_windows_archs(vs_version: Optional[str] = None) -> List[Arch]:
         # --vs-version is absent, or detection fell back to bare cl.exe).
         # Scoping is impossible, so report the host architecture rather than
         # silently reverting to "any installation has these tools".
-        return [detect_host_arch()]
+        return [detect_host_arch()], False
 
     archs = []
     for arch, component in WINDOWS_ARCH_COMPONENT_IDS.items():
@@ -757,7 +763,11 @@ def get_installed_windows_archs(vs_version: Optional[str] = None) -> List[Arch]:
                 errors="replace",
                 check=True,
             )
-        except subprocess.CalledProcessError:
+        # OSError covers vswhere becoming inaccessible between find_vswhere()
+        # and here; SubprocessError covers a non-zero exit and any future
+        # timeout. Neither should abort platform detection for every
+        # architecture — skip this one and carry on.
+        except (subprocess.SubprocessError, OSError):
             continue
 
         roots = {
@@ -768,7 +778,16 @@ def get_installed_windows_archs(vs_version: Optional[str] = None) -> List[Arch]:
         if selected_root in roots:
             archs.append(arch)
 
-    return archs
+    return archs, True
+
+
+def get_installed_windows_archs(vs_version: Optional[str] = None) -> List[Arch]:
+    """Architectures the selected Visual Studio can build for.
+
+    Convenience wrapper around detect_windows_archs() for callers that do not
+    need to know whether the probe could be scoped.
+    """
+    return detect_windows_archs(vs_version)[0]
 
 
 def parse_platform_string(platform_str: str) -> tuple[OS, Arch]:

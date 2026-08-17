@@ -159,8 +159,8 @@ from lib.builder_base import BuildContext, Builder
 from lib.platform import (
     configure_console_encoding,
     detect_host_os,
+    detect_windows_archs,
     get_all_installed_vs_versions,
-    get_installed_windows_archs,
     get_msvc_toolset_version_and_path,
     WINDOWS_ARCH_COMPONENTS,
 )
@@ -267,11 +267,11 @@ def get_all_supported_platforms(
     elif host_os == OS.WINDOWS:
         # Add only the 64-bit architectures whose MSVC tools are installed in
         # the Visual Studio installation this build will actually use.
-        installed_archs = get_installed_windows_archs(vs_version)
+        installed_archs, scoped = detect_windows_archs(vs_version)
         for arch in (Arch.X86_64, Arch.ARM64):
             if arch in installed_archs:
                 platforms.append((OS.WINDOWS, arch))
-            else:
+            elif scoped:
                 skipped.append(
                     (
                         f"win_{arch.value}",
@@ -279,6 +279,20 @@ def get_all_supported_platforms(
                         "selected Visual Studio (add it via the Visual Studio "
                         "Installer, or pass --vs-version to select another "
                         "installation)",
+                    )
+                )
+            else:
+                # No installation could be identified, so the arch list above
+                # is a host-architecture guess. Saying the component is "not
+                # installed in the selected Visual Studio" would be a claim
+                # the probe never made.
+                skipped.append(
+                    (
+                        f"win_{arch.value}",
+                        "could not identify a Visual Studio installation to "
+                        "probe (vswhere.exe not found), so only the host "
+                        f"architecture is assumed buildable — pass "
+                        f"--target win_{arch.value} to try it anyway",
                     )
                 )
 
@@ -1763,7 +1777,15 @@ def find_unbuildable_windows_targets(
     if not windows_archs:
         return []
 
-    installed = set(get_installed_windows_archs(vs_version))
+    installed_archs, scoped = detect_windows_archs(vs_version)
+    if not scoped:
+        # The arch list is a host-architecture guess, not an answer. Refusing
+        # an explicitly requested target on that basis would leave a user whose
+        # Visual Studio sits somewhere vswhere cannot see it with no way to
+        # build at all. Let CMake report the real problem instead.
+        return []
+
+    installed = set(installed_archs)
     return [
         (
             f"win_{arch.value}",
