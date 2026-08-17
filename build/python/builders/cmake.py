@@ -134,6 +134,14 @@ class CMakeBuilder(Builder):
         else:
             cmd.append("-DBUILD_SHARED_LIBS=ON")
 
+        # Static archives routinely end up inside a shared library — a
+        # link_types: [static] dependency linked into a shared consumer, or any
+        # of these libraries linked into a shared Ocean module. Without PIC the
+        # ELF toolchains reject that with "relocation R_X86_64_32S against
+        # `.rodata' can not be used when making a shared object". No effect on
+        # MSVC, which is always position independent.
+        cmd.append("-DCMAKE_POSITION_INDEPENDENT_CODE=ON")
+
         # Add dependency paths
         cmake_prefix_paths = [
             str(ctx.get_dependency_cmake_prefix(dep))
