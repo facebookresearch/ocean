@@ -41,8 +41,11 @@ cd \path\to\ocean
 # Build all required third-party libraries for the host platform (debug + release, static + shared)
 python build/python/build_ocean_3rdparty.py
 
-# Build for a specific architecture
+# Build for every Windows architecture the selected Visual Studio supports
 python build/python/build_ocean_3rdparty.py --target win
+
+# Build for one specific architecture
+python build/python/build_ocean_3rdparty.py --target win_x86_64
 
 # Build release only, static only
 python build/python/build_ocean_3rdparty.py --config release --link static

@@ -75,7 +75,7 @@ import time
 from concurrent.futures import as_completed, ThreadPoolExecutor
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, NamedTuple, Optional, Set
 
 # Windows console mode restoration
 # When printing Unicode characters on Windows, Python may enable Virtual Terminal
@@ -1808,14 +1808,14 @@ def parse_link_types(link_args: Optional[List[str]]) -> List[LinkType]:
 def find_unbuildable_windows_targets(
     platforms: Optional[List[tuple[OS, Arch]]],
     vs_version: Optional[str] = None,
-) -> List[tuple[str, str]]:
-    """Find explicitly requested Windows targets the selected VS cannot build.
+) -> List[tuple[Arch, str]]:
+    """Find requested Windows architectures the selected VS cannot build.
 
     Without this check, requesting an architecture whose MSVC tools are missing
     surfaces only as MSBuild's opaque 'The BaseOutputPath/OutputPath property is
     not set for project VCTargetsPath.vcxproj', deep into the configure step.
 
-    Returns a list of (target_string, reason) for the unbuildable targets.
+    Returns a list of (arch, reason) for the unbuildable architectures.
     """
     if not platforms or detect_host_os() != OS.WINDOWS:
         return []
@@ -1835,7 +1835,7 @@ def find_unbuildable_windows_targets(
     installed = set(installed_archs)
     return [
         (
-            f"win_{arch.value}",
+            arch,
             f"{WINDOWS_ARCH_COMPONENTS[arch]} not installed in the selected "
             "Visual Studio (add it via the Visual Studio Installer, or pass "
             "--vs-version to select another installation)",
@@ -1845,10 +1845,23 @@ def find_unbuildable_windows_targets(
     ]
 
 
+class ParsedPlatforms(NamedTuple):
+    """Platforms resolved from --target, and which of them the user named.
+
+    `explicit` holds only the platforms named with an architecture. One that
+    arrived by expanding a group (`win` -> win_x86_64 + win_arm64) or from
+    `all_supported` is a suggestion rather than a request, so it is dropped
+    with a warning when it cannot be built instead of failing the run.
+    """
+
+    platforms: List[tuple[OS, Arch]]
+    explicit: Set[tuple[OS, Arch]]
+
+
 def parse_platforms(
     target_args: Optional[List[str]],
     vs_version: Optional[str] = None,
-) -> Optional[List[tuple[OS, Arch]]]:
+) -> Optional[ParsedPlatforms]:
     """Parse platform arguments (supports both comma-separated and multiple flags).
 
     Special values:
@@ -1860,23 +1873,28 @@ def parse_platforms(
         return None
 
     platforms = []
+    explicit: Set[tuple[OS, Arch]] = set()
     for arg in target_args:
         for t in arg.split(","):
             t = t.strip()
             if not t:
                 continue
             if t.lower() == "all_supported":
-                # Return all platforms supported by the current host
-                return get_all_supported_platforms(vs_version)[0]
+                # Already filtered by host detection, so nothing here was
+                # named by the user and nothing needs rejecting.
+                return ParsedPlatforms(get_all_supported_platforms(vs_version)[0], set())
             if t.lower() in PLATFORM_GROUPS:
                 platforms.extend(PLATFORM_GROUPS[t.lower()])
             else:
-                platforms.append(parse_platform_string(t))
+                platform = parse_platform_string(t)
+                platforms.append(platform)
+                explicit.add(platform)
     # De-duplicated because a group and a member of it are both documented
     # usage (`--target macos --target macos_arm64`): without this, the same
     # (library, target) job is submitted twice and two builds race in one
     # build directory.
-    return _dedup(platforms) or None
+    platforms = _dedup(platforms)
+    return ParsedPlatforms(platforms, explicit) if platforms else None
 
 
 def _print_post_build_instructions(install_dir: Path) -> None:
@@ -2043,13 +2061,33 @@ def main() -> int:  # noqa: C901
 
     # Determine targets
     if requested_platforms is not None:
-        platforms = requested_platforms
+        platforms = requested_platforms.platforms
         unbuildable = find_unbuildable_windows_targets(platforms, args.vs_version)
-        if unbuildable:
+
+        # Reject only what the user named by architecture.
+        named = [
+            (arch, reason)
+            for arch, reason in unbuildable
+            if (OS.WINDOWS, arch) in requested_platforms.explicit
+        ]
+        if named:
             print("Error: the selected Visual Studio cannot build these targets:")
-            for target_str, reason in unbuildable:
-                print(f"  - {target_str}: {reason}")
+            for arch, reason in named:
+                print(f"  - win_{arch.value}: {reason}")
             return 1
+
+        # Anything left came from expanding a group, so drop it with the same
+        # warning a bare invocation prints. `--target win` is in the public
+        # Windows build instructions and expands to arm64, which most Visual
+        # Studio installs cannot build; failing a documented command there
+        # helps nobody.
+        if unbuildable:
+            print("Skipped platforms:")
+            for arch, reason in unbuildable:
+                print(f"  - win_{arch.value}: {reason}")
+            print()
+            dropped = {(OS.WINDOWS, arch) for arch, _ in unbuildable}
+            platforms = [p for p in platforms if p not in dropped]
     else:
         platforms, skipped_platforms = get_all_supported_platforms(args.vs_version)
         if skipped_platforms:
