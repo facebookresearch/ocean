@@ -9,6 +9,7 @@
 
 from __future__ import annotations
 
+import dataclasses
 import os
 import sys
 from dataclasses import dataclass, field
@@ -183,6 +184,25 @@ except ImportError:
     sys.exit(1)
 
 
+def _reject_unknown_keys(data: Dict[str, Any], cls: type, context: str) -> None:
+    """Fail on manifest keys the model does not know about.
+
+    Every `from_dict` reads named keys and ignores the rest, so a typo — a
+    `platform:` where `platforms:` was meant, or `link_type:` for `link_types:`
+    — silently takes the default. `platforms` defaults to "all", so the typo
+    turns a Windows-only library into one built for every target, and the first
+    sign of trouble is a compile error inside that library. The build path
+    never runs the JSON schema, so this is the only place it can be caught.
+    """
+    known = {f.name for f in dataclasses.fields(cls)} - {"name"}
+    unknown = sorted(set(data) - known)
+    if unknown:
+        raise ValueError(
+            f"{context}: unknown key(s): {', '.join(unknown)}. "
+            f"Known keys: {', '.join(sorted(known))}"
+        )
+
+
 @dataclass
 class SourceConfig:
     """Source code location configuration."""
@@ -199,7 +219,8 @@ class SourceConfig:
     ndk_path: Optional[str] = None  # Subpath within Android NDK (for ndk_source type)
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "SourceConfig":
+    def from_dict(cls, data: Dict[str, Any], context: str = "source") -> "SourceConfig":
+        _reject_unknown_keys(data, cls, context)
         return cls(
             type=data.get("type", "git"),
             url=data.get("url"),
@@ -230,7 +251,8 @@ class BuildConfig:
     post_install_copy: List[Dict[str, str]] = field(default_factory=list)
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "BuildConfig":
+    def from_dict(cls, data: Dict[str, Any], context: str = "build") -> "BuildConfig":
+        _reject_unknown_keys(data, cls, context)
         return cls(
             system=data.get("system", "cmake"),
             options=data.get("options", {}),
@@ -291,6 +313,8 @@ class LibraryConfig:
 
     @classmethod
     def from_dict(cls, name: str, data: Dict[str, Any]) -> "LibraryConfig":
+        _reject_unknown_keys(data, cls, f"library '{name}'")
+
         # Handle platforms as either string or list
         platforms_raw = data.get("platforms", "all")
         if isinstance(platforms_raw, str):
@@ -315,8 +339,12 @@ class LibraryConfig:
             name=name,
             version=data.get("version", "unknown"),
             description=data.get("description", ""),
-            source=SourceConfig.from_dict(data.get("source", {})),
-            build=BuildConfig.from_dict(data.get("build", {})),
+            source=SourceConfig.from_dict(
+                data.get("source", {}), f"library '{name}' source"
+            ),
+            build=BuildConfig.from_dict(
+                data.get("build", {}), f"library '{name}' build"
+            ),
             dependencies=data.get("dependencies", []),
             platforms=platforms,
             link_types=link_types,
@@ -362,6 +390,7 @@ class ManifestDefaults:
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "ManifestDefaults":
+        _reject_unknown_keys(data, cls, "defaults")
         return cls(
             shallow_clone=data.get("shallow_clone", True),
             configs=data.get("configs", ["debug", "release"]),
