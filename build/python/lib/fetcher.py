@@ -352,22 +352,40 @@ class SourceFetcher:
                 text=True,
                 encoding="utf-8",
                 errors="replace",
+                # Neither tool may prompt: `patch` asks "File to patch:" on
+                # stdin when it cannot guess, which would hang the build
+                # forever behind the progress display.
+                stdin=subprocess.DEVNULL,
                 creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0,
             )
             if result.returncode != 0:
-                # Try with patch command as fallback (for non-git sources)
-                result = subprocess.run(
-                    ["patch", "-p1", "-i", str(patch_path)],
-                    cwd=target_dir,
-                    capture_output=True,
-                    text=True,
-                    encoding="utf-8",
-                    errors="replace",
-                    creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0,
-                )
-                if result.returncode != 0:
+                git_error = (result.stderr or result.stdout or "").strip()
+                # Fall back to `patch` for sources that are not git checkouts.
+                # It is absent from a default Windows install, so a missing
+                # tool must surface git's diagnostic, not a FileNotFoundError.
+                try:
+                    fallback = subprocess.run(
+                        ["patch", "-p1", "-i", str(patch_path)],
+                        cwd=target_dir,
+                        capture_output=True,
+                        text=True,
+                        encoding="utf-8",
+                        errors="replace",
+                        stdin=subprocess.DEVNULL,
+                        creationflags=(
+                            subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0
+                        ),
+                    )
+                except FileNotFoundError:
                     raise RuntimeError(
-                        f"Failed to apply patch {source.patch}: {result.stderr}"
+                        f"Failed to apply patch {source.patch}: {git_error}"
+                    ) from None
+                if fallback.returncode != 0:
+                    patch_error = (fallback.stderr or fallback.stdout or "").strip()
+                    raise RuntimeError(
+                        f"Failed to apply patch {source.patch}:\n"
+                        f"  git apply: {git_error}\n"
+                        f"  patch -p1: {patch_error}"
                     )
 
     def _flatten_single_dir(self, target_dir: Path) -> None:
@@ -404,23 +422,45 @@ class SourceFetcher:
         cwd: Optional[Path] = None,
         check: bool = True,
     ) -> subprocess.CompletedProcess:
-        """Run a git command."""
+        """Run a git command.
+
+        Raises:
+            RuntimeError: If git is missing, or the command fails and check is
+                set. git's stderr is included in the message — a bare
+                CalledProcessError carries only the exit code, which cannot
+                distinguish a missing tag from a network failure from a
+                credential prompt.
+        """
         cmd = ["git"] + args
-        return subprocess.run(
-            cmd,
-            cwd=cwd,
-            check=check,
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
-            creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0,
-        )
+        try:
+            result = subprocess.run(
+                cmd,
+                cwd=cwd,
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0,
+            )
+        except FileNotFoundError as e:
+            raise RuntimeError("git is not installed or not on PATH") from e
+
+        if check and result.returncode != 0:
+            detail = (result.stderr or result.stdout or "").strip()
+            message = f"git {' '.join(args)} failed (exit {result.returncode})"
+            raise RuntimeError(f"{message}: {detail}" if detail else message)
+        return result
 
     def get_actual_commit(self, library: str, version: str) -> Optional[str]:
-        """Get the actual commit hash of a fetched source."""
+        """Get the actual commit hash of a fetched source.
+
+        Returns None for non-git sources. `git rev-parse` walks up to the
+        nearest enclosing repository, so without the `.git` check an archive or
+        local source unpacked underneath the user's own checkout would record
+        *that* checkout's HEAD as the library's `fetched_commit`.
+        """
         source_dir = self.dirs.get_source_dir(library, version)
-        if not source_dir.exists():
+        if not source_dir.exists() or not (source_dir / ".git").exists():
             return None
 
         try:
