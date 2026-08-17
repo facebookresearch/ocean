@@ -404,7 +404,17 @@ def _ndk_version_key(name: str) -> tuple:
 
     Compared numerically per component: a lexicographic sort puts '9.x' above
     '27.x', which would pick a years-old NDK on a host that has both.
+
+    The legacy 'r<major><letter>' spelling needs the letter as well. Taking
+    only the digits makes r21d and r21e compare equal, so which one is picked
+    comes down to the order the directory happens to be listed in.
     """
+    legacy = re.fullmatch(r"r(\d+)([a-z]?)", name.strip(), re.IGNORECASE)
+    if legacy:
+        major, letter = legacy.groups()
+        # Revision-less 'r21' predates 'r21a'; letters then order a < b < c.
+        return (int(major), ord(letter.lower()) - ord("a") + 1 if letter else 0)
+
     parts = re.findall(r"\d+", name)
     return tuple(int(p) for p in parts) if parts else (0,)
 
