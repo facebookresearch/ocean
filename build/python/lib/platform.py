@@ -101,12 +101,16 @@ _VS_YEAR_TO_MAJOR: Dict[str, str] = {
     "2026": "18",
 }
 _VS_MAJOR_TO_YEAR: Dict[str, str] = {v: k for k, v in _VS_YEAR_TO_MAJOR.items()}
+# The MSVC toolset is versioned independently of the product: Visual Studio 17
+# (2022) ships compiler 14.3, which Ocean writes as "vc143". The two numbers
+# must never be derived from one another by string surgery.
 _VS_MAJOR_TO_TOOLSET: Dict[str, str] = {
     "15": "vc141",
     "16": "vc142",
     "17": "vc143",
     "18": "vc145",
 }
+_VS_TOOLSET_TO_MAJOR: Dict[str, str] = {v: k for k, v in _VS_MAJOR_TO_TOOLSET.items()}
 
 
 def find_vswhere() -> Optional[str]:
@@ -188,16 +192,18 @@ def get_all_installed_vs_versions() -> list[tuple[str, str, str]]:
             # Extract major version (e.g., "17" from "17.8.34525.116")
             major_version = install_version.split(".")[0] if install_version else ""
 
-            # Extract year from display name (e.g., "2022" from "Visual Studio Professional 2022")
-            year_match = re.search(r"(\d{4})$", display_name)
-            if year_match:
-                year = year_match.group(1)
-            else:
-                # displayName is localized and is empty for some Build Tools
-                # installs, so fall back to the major version. Not f"20{major}"
-                # — that yields "2017" for VS 2022 (major 17), which then sorts
-                # the newest installation to the bottom of the list.
-                year = _VS_MAJOR_TO_YEAR.get(major_version, major_version)
+            # installationVersion is the authoritative, stable identifier, so
+            # it decides the year wherever we know the product major.
+            # displayName is localized marketing text, is empty for some Build
+            # Tools installs, and can carry a trailing number of its own
+            # ("Visual Studio Community LTSC 2024" on a 2022 install), so it is
+            # only consulted for a major we do not recognise.
+            year = _VS_MAJOR_TO_YEAR.get(major_version)
+            if not year:
+                # Note: not f"20{major}" — that yields "2017" for VS 2022
+                # (major 17), which then sorts the newest install to the bottom.
+                year_match = re.search(r"(\d{4})$", display_name)
+                year = year_match.group(1) if year_match else major_version
 
             toolset = _VS_MAJOR_TO_TOOLSET.get(major_version, f"vc{major_version}")
 
@@ -634,6 +640,25 @@ def get_cmake_generator(target: BuildTarget, vs_version: Optional[str] = None) -
             return "Unix Makefiles"
 
 
+def _vs_major_version(year: str, toolset: str) -> Optional[str]:
+    """The number CMake wants in "Visual Studio <major> <year>".
+
+    Three numbering schemes are in play and they are not interchangeable: the
+    year (2022), the Visual Studio product major version (17, as reported by
+    vswhere's installationVersion), and the MSVC toolset version (compiler
+    14.3, which Ocean writes as "vc143"). Only the product major belongs in a
+    generator name — reading it off "vc143" gives 14, which is Visual Studio
+    2015.
+    """
+    major = _VS_YEAR_TO_MAJOR.get(year) or _VS_TOOLSET_TO_MAJOR.get(toolset)
+    if major:
+        return major
+    # get_all_installed_vs_versions() synthesises f"vc{major}" for a product
+    # major it does not recognise, so a future release still round-trips.
+    suffix = toolset.removeprefix("vc")
+    return suffix if suffix.isdigit() and len(suffix) <= 2 else None
+
+
 def _generator_name(year: str, major_version: Optional[str] = None) -> Optional[str]:
     """CMake generator string for a Visual Studio year, e.g. 'Visual Studio 17 2022'."""
     major = major_version or _VS_YEAR_TO_MAJOR.get(year)
@@ -651,8 +676,7 @@ def _get_vs_generator_for_version(year: str) -> Optional[str]:
     """
     for installed_year, toolset, _path in get_all_installed_vs_versions():
         if installed_year == year:
-            major = _VS_YEAR_TO_MAJOR.get(year) or toolset.removeprefix("vc")[:2]
-            return _generator_name(year, major)
+            return _generator_name(year, _vs_major_version(year, toolset))
 
     # Not installed, or vswhere is unavailable. For a year we know the mapping
     # for, trust the user and let CMake produce the (clear) error if it is
@@ -675,8 +699,7 @@ def _detect_visual_studio_version() -> Optional[str]:
     if not installed:
         return None
     year, toolset, _path = installed[0]
-    major = _VS_YEAR_TO_MAJOR.get(year) or toolset.removeprefix("vc")[:2]
-    return _generator_name(year, major)
+    return _generator_name(year, _vs_major_version(year, toolset))
 
 
 def _normalize_install_path(path: str) -> str:
