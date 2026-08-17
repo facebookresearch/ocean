@@ -948,14 +948,16 @@ def _install_standard_layout(
         skip_extensions = set()
 
     def should_skip(path: Path) -> bool:
+        # Only the wrong-link-type artifacts are dropped. Versioned names are
+        # deliberately kept: for a shared build `libz.so.1.3.1` /
+        # `libz.1.3.1.dylib` IS the library — the unversioned name is only a
+        # symlink to it — so filtering versioned files here would copy the
+        # symlink chain and none of its targets.
         if path.suffix in skip_extensions:
             return True
         for pattern in skip_patterns:
             if pattern in path.name:
                 return True
-        # For shared builds, skip versioned library files (e.g. libz.1.dylib).
-        if is_shared and _is_versioned_lib(path.name):
-            return True
         return False
 
     def ignore(directory: str, names: List[str]) -> List[str]:
