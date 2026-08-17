@@ -212,6 +212,113 @@ def get_cmake_preset_name(target: BuildTarget, quest_mode: bool = False) -> str:
     return f"{target.os.value}-{arch_str}-{target.link_type.value}-{target.build_config.value}"
 
 
+def find_targets_missing_third_party(
+    third_party_root: Path,
+    third_party_layout: str,
+    targets: List[BuildTarget],
+) -> List[Tuple[BuildTarget, str]]:
+    """Find targets the third-party tree has nothing for.
+
+    Ocean now really cross-compiles, so a target whose libraries were never built
+    fails at find_package or at link, tens of minutes in and with an error naming a
+    library rather than the missing target. Check up front instead.
+
+    The probed path mirrors what the top-level CMakeLists.txt derives, so a target
+    that passes here is one CMake can resolve.
+
+    Returns:
+        A (target, reason) pair per target with no usable third-party tree.
+    """
+    missing = []
+
+    for target in targets:
+        if third_party_layout == "external":
+            _, include_paths, library_paths = get_third_party_paths_external_layout(
+                third_party_root, target
+            )
+            if not include_paths and not library_paths:
+                missing.append(
+                    (
+                        target,
+                        f"no <library>/h/{target.os.value}/ or "
+                        f"<library>/lib/{target.to_path_component()}/ under "
+                        f"{third_party_root}",
+                    )
+                )
+            continue
+
+        target_root = third_party_root / target.to_path_component()
+        if not target_root.is_dir():
+            missing.append((target, f"{target_root} does not exist"))
+
+    return missing
+
+
+def detect_other_third_party_layout(
+    third_party_root: Path, third_party_layout: str, targets: List[BuildTarget]
+) -> Optional[str]:
+    """Return the layout the tree actually looks like, when it is not the requested one.
+
+    Pointing the standard layout at a tree built with --for-external-integration (or the
+    reverse) resolves nothing, and the resulting error names a missing library rather
+    than the mismatch that caused it.
+    """
+    other = "standard" if third_party_layout == "external" else "external"
+
+    for target in targets:
+        if other == "standard":
+            if (third_party_root / target.to_path_component()).is_dir():
+                return other
+        else:
+            _, include_paths, library_paths = get_third_party_paths_external_layout(
+                third_party_root, target
+            )
+            if include_paths or library_paths:
+                return other
+
+    return None
+
+
+def check_third_party_targets(
+    third_party_root: Path,
+    third_party_layout: str,
+    targets: List[BuildTarget],
+) -> bool:
+    """Report targets the third-party tree cannot satisfy.
+
+    Returns:
+        True when every target has a usable tree, False after printing why not.
+    """
+    unsatisfied = find_targets_missing_third_party(
+        third_party_root, third_party_layout, targets
+    )
+    if not unsatisfied:
+        return True
+
+    print("\nError: no third-party libraries for these targets:")
+    for target, reason in unsatisfied:
+        print(f"  {target.to_path_component()}: {reason}")
+
+    other = detect_other_third_party_layout(
+        third_party_root, third_party_layout, [t for t, _ in unsatisfied]
+    )
+    if other:
+        print(
+            f"\n  That tree is in the '{other}' layout, but "
+            f"--third-party-layout is '{third_party_layout}'."
+        )
+        print(f"    Re-run with --third-party-layout {other}")
+        return False
+
+    print("\n  Build them first:")
+    wanted = _dedup([f"{t.os.value}_{t.arch.value}" for t, _ in unsatisfied])
+    flags = " ".join(f"--target {t}" for t in wanted)
+    if third_party_layout == "external":
+        flags += " --for-external-integration"
+    print(f"    ./build_ocean_3rdparty.py {flags}")
+    return False
+
+
 def get_third_party_paths_external_layout(
     third_party_root: Path,
     target: BuildTarget,
@@ -819,6 +926,9 @@ def main() -> int:
     if not third_party_dir.exists():
         print(f"Error: Third-party directory not found: {third_party_dir}")
         print("  Build third-party libraries first with build_ocean_3rdparty.py")
+        return 1
+
+    if not check_third_party_targets(third_party_dir, args.third_party_layout, targets):
         return 1
 
     # Build each target
