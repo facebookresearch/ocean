@@ -92,12 +92,36 @@ WINDOWS_ARCH_COMPONENTS: Dict[Arch, str] = {
 }
 
 
+# Visual Studio year <-> the major version number that appears in CMake's
+# generator name ("Visual Studio 17 2022") and in vswhere's installationVersion.
+_VS_YEAR_TO_MAJOR: Dict[str, str] = {
+    "2017": "15",
+    "2019": "16",
+    "2022": "17",
+    "2026": "18",
+}
+_VS_MAJOR_TO_YEAR: Dict[str, str] = {v: k for k, v in _VS_YEAR_TO_MAJOR.items()}
+_VS_MAJOR_TO_TOOLSET: Dict[str, str] = {
+    "15": "vc141",
+    "16": "vc142",
+    "17": "vc143",
+    "18": "vc145",
+}
+
+
 def find_vswhere() -> Optional[str]:
-    """Locate vswhere.exe, the Visual Studio installation query tool."""
-    for path in (
-        r"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe",
-        r"C:\Program Files\Microsoft Visual Studio\Installer\vswhere.exe",
-    ):
+    """Locate vswhere.exe, the Visual Studio installation query tool.
+
+    The installer roots come from the environment rather than being hard-coded
+    to C:, so this agrees with preflight's own probe on hosts where Program
+    Files is not on the system drive.
+    """
+    roots = (
+        os.environ.get("ProgramFiles(x86)", r"C:\Program Files (x86)"),
+        os.environ.get("ProgramFiles", r"C:\Program Files"),
+    )
+    for root in roots:
+        path = os.path.join(root, "Microsoft Visual Studio", "Installer", "vswhere.exe")
         if os.path.exists(path):
             return path
     return None
@@ -133,15 +157,6 @@ def get_all_installed_vs_versions() -> list[tuple[str, str, str]]:
     if not vswhere_path:
         return []
 
-    # Map major version to toolset
-    # VS 2017 = 15.x = vc141, VS 2019 = 16.x = vc142, VS 2022 = 17.x = vc143, VS 2026 = 18.x = vc145
-    major_to_toolset = {
-        "15": "vc141",
-        "16": "vc142",
-        "17": "vc143",
-        "18": "vc145",
-    }
-
     try:
         # Get all VS installations in JSON format. '-products *' includes the
         # standalone Build Tools SKU, which is what CI hosts typically have;
@@ -175,20 +190,26 @@ def get_all_installed_vs_versions() -> list[tuple[str, str, str]]:
 
             # Extract year from display name (e.g., "2022" from "Visual Studio Professional 2022")
             year_match = re.search(r"(\d{4})$", display_name)
-            year = (
-                year_match.group(1) if year_match else f"20{major_version}"
-            )  # Fallback
+            if year_match:
+                year = year_match.group(1)
+            else:
+                # displayName is localized and is empty for some Build Tools
+                # installs, so fall back to the major version. Not f"20{major}"
+                # — that yields "2017" for VS 2022 (major 17), which then sorts
+                # the newest installation to the bottom of the list.
+                year = _VS_MAJOR_TO_YEAR.get(major_version, major_version)
 
-            toolset = major_to_toolset.get(major_version, f"vc{major_version}")
+            toolset = _VS_MAJOR_TO_TOOLSET.get(major_version, f"vc{major_version}")
 
             # Append \VC to get the VC directory path
             vc_path = os.path.join(install_path, "VC")
 
-            installed.append((year, toolset, vc_path))
+            installed.append((year, toolset, vc_path, major_version))
 
-        # Sort by year descending (newest first)
-        installed.sort(key=lambda x: x[0], reverse=True)
-        return installed
+        # Sort by major version descending (newest first). Sorting on the year
+        # string would misorder an entry whose year had to be derived.
+        installed.sort(key=lambda x: int(x[3]) if x[3].isdigit() else -1, reverse=True)
+        return [(year, toolset, path) for year, toolset, path, _major in installed]
 
     except (subprocess.CalledProcessError, FileNotFoundError, json.JSONDecodeError):
         return []
@@ -580,6 +601,12 @@ def get_cmake_generator(target: BuildTarget, vs_version: Optional[str] = None) -
             return "Unix Makefiles"
 
 
+def _generator_name(year: str, major_version: Optional[str] = None) -> Optional[str]:
+    """CMake generator string for a Visual Studio year, e.g. 'Visual Studio 17 2022'."""
+    major = major_version or _VS_YEAR_TO_MAJOR.get(year)
+    return f"Visual Studio {major} {year}" if major else None
+
+
 def _get_vs_generator_for_version(year: str) -> Optional[str]:
     """Get the CMake generator string for a specific Visual Studio version.
 
@@ -587,197 +614,36 @@ def _get_vs_generator_for_version(year: str) -> Optional[str]:
         year: The Visual Studio year (e.g., "2022", "2026")
 
     Returns:
-        CMake generator string if found, None otherwise
+        CMake generator string if the year is installed or known, None otherwise
     """
-    # Map year to version number
-    year_to_version = {
-        "2017": "15",
-        "2019": "16",
-        "2022": "17",
-        "2026": "18",
-    }
+    for installed_year, toolset, _path in get_all_installed_vs_versions():
+        if installed_year == year:
+            major = _VS_YEAR_TO_MAJOR.get(year) or toolset.removeprefix("vc")[:2]
+            return _generator_name(year, major)
 
-    version = year_to_version.get(year)
-    if not version:
-        # Try to detect from installed VS
-        vs_info = _get_vs_info_for_year(year)
-        if vs_info:
-            return vs_info
-        return None
-
-    # Verify this version is actually installed
-    vswhere_paths = [
-        r"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe",
-        r"C:\Program Files\Microsoft Visual Studio\Installer\vswhere.exe",
-    ]
-
-    vswhere_path = None
-    for path in vswhere_paths:
-        if os.path.exists(path):
-            vswhere_path = path
-            break
-
-    if not vswhere_path:
-        # No vswhere, just return the generator string and let CMake validate
-        return f"Visual Studio {version} {year}"
-
-    try:
-        # Check if this specific version is installed
-        # Use -version to filter by major version range
-        result = subprocess.run(
-            [
-                vswhere_path,
-                "-version",
-                f"[{version}.0,{int(version) + 1}.0)",
-                "-property",
-                "installationPath",
-            ],
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
-        )
-        if result.stdout.strip():
-            return f"Visual Studio {version} {year}"
-
-        # If version range query failed, try searching all installations for the year
-        result = subprocess.run(
-            [vswhere_path, "-all", "-format", "json"],
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
-        )
-        if result.returncode == 0 and result.stdout.strip():
-            try:
-                installations = json.loads(result.stdout)
-                for install in installations:
-                    display_name = install.get("displayName", "")
-                    if year in display_name:
-                        return f"Visual Studio {version} {year}"
-            except json.JSONDecodeError:
-                pass
-
-        # Last resort: if the user explicitly requested this version, trust them
-        # and return the generator string - CMake will error if it's not installed
-        return f"Visual Studio {version} {year}"
-
-    except (subprocess.CalledProcessError, FileNotFoundError):
-        # If vswhere fails, still return the generator string and let CMake validate
-        return f"Visual Studio {version} {year}"
-
-
-def _get_vs_info_for_year(year: str) -> Optional[str]:
-    """Try to find VS installation info for a specific year."""
-    vswhere_paths = [
-        r"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe",
-        r"C:\Program Files\Microsoft Visual Studio\Installer\vswhere.exe",
-    ]
-
-    vswhere_path = None
-    for path in vswhere_paths:
-        if os.path.exists(path):
-            vswhere_path = path
-            break
-
-    if not vswhere_path:
-        return None
-
-    try:
-        # Get all installed versions
-        result = subprocess.run(
-            [vswhere_path, "-all", "-format", "json"],
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
-            check=True,
-        )
-
-        installations = json.loads(result.stdout)
-        for install in installations:
-            display_name = install.get("displayName", "")
-            if year in display_name:
-                # Found matching year
-                version = install.get("catalog", {}).get("productLineVersion", "")
-                if version:
-                    return f"Visual Studio {version} {year}"
-    except (subprocess.CalledProcessError, FileNotFoundError, json.JSONDecodeError):
-        pass
-
-    return None
+    # Not installed, or vswhere is unavailable. For a year we know the mapping
+    # for, trust the user and let CMake produce the (clear) error if it is
+    # wrong; --vs-version is validated separately against the installed set.
+    return _generator_name(year)
 
 
 def _detect_visual_studio_version() -> Optional[str]:
-    """Detect the installed Visual Studio version for CMake generator.
+    """Detect the newest installed Visual Studio, as a CMake generator string.
 
-    Returns the CMake generator string like "Visual Studio 17 2022" or None if not found.
+    Delegates to get_all_installed_vs_versions() rather than running its own
+    vswhere queries. The previous `-latest` probes here omitted `-products *`,
+    which excludes the standalone Build Tools SKU that CI hosts use: on such a
+    host detection returned None and get_cmake_generator() fell through to a
+    hard-coded "Visual Studio 17 2022", so every library failed to configure
+    with "could not find any instance of Visual Studio" — after all sources had
+    already been cloned.
     """
-    # Use vswhere to find installed Visual Studio instances
-    vswhere_paths = [
-        r"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe",
-        r"C:\Program Files\Microsoft Visual Studio\Installer\vswhere.exe",
-    ]
-
-    vswhere_path = None
-    for path in vswhere_paths:
-        if os.path.exists(path):
-            vswhere_path = path
-            break
-
-    if not vswhere_path:
+    installed = get_all_installed_vs_versions()
+    if not installed:
         return None
-
-    # Map year to CMake generator version number
-    year_to_version = {
-        "2017": "15",
-        "2019": "16",
-        "2022": "17",
-        "2026": "18",
-    }
-
-    try:
-        # Get the installation version (e.g., "17.x.y" for VS 2022)
-        result = subprocess.run(
-            [vswhere_path, "-latest", "-property", "installationVersion"],
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
-            check=True,
-        )
-        install_version = result.stdout.strip()
-        major_version = install_version.split(".")[0] if install_version else ""
-
-        # Get the display name to extract the year (e.g., "Visual Studio Professional 2022")
-        result = subprocess.run(
-            [vswhere_path, "-latest", "-property", "displayName"],
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
-            check=True,
-        )
-        display_name = result.stdout.strip()
-
-        # Extract year from display name (last 4 digits)
-
-        year_match = re.search(r"(\d{4})$", display_name)
-        if year_match and major_version:
-            year = year_match.group(1)
-            return f"Visual Studio {major_version} {year}"
-
-        # Fallback: if we got a year but no major version, use the mapping
-        if year_match:
-            year = year_match.group(1)
-            version = year_to_version.get(year)
-            if version:
-                return f"Visual Studio {version} {year}"
-
-    except (subprocess.CalledProcessError, FileNotFoundError, IndexError):
-        pass
-
-    return None
+    year, toolset, _path = installed[0]
+    major = _VS_YEAR_TO_MAJOR.get(year) or toolset.removeprefix("vc")[:2]
+    return _generator_name(year, major)
 
 
 def _normalize_install_path(path: str) -> str:
