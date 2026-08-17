@@ -504,6 +504,43 @@ if (OCEAN_THIRD_PARTY_ROOT AND _ocean_3p_resolved_layout STREQUAL "external")
         endif()
     endif()
 
+    # mbedTLS - curl's TLS backend (see build/python/dependencies.yaml). CMake
+    # ships no FindMbedTLS module and the external layout carries no package
+    # config, so the imported target is assembled by hand. Order matters for a
+    # static link: mbedtls needs mbedx509, which needs mbedcrypto.
+    set(_mbedtls_lib_path "${OCEAN_THIRD_PARTY_ROOT}/mbedtls/lib/${_ocean_3p_target}")
+    if (EXISTS "${_mbedtls_lib_path}" AND NOT TARGET MbedTLS::mbedtls)
+        set(_mbedtls_libs "")
+        foreach(_mbedtls_component mbedtls mbedx509 mbedcrypto)
+            if (WIN32)
+                set(_mbedtls_candidates
+                    "${_mbedtls_component}${_debug_suffix}.lib" "${_mbedtls_component}.lib")
+            else()
+                set(_mbedtls_candidates
+                    "lib${_mbedtls_component}${_debug_suffix}.a" "lib${_mbedtls_component}.a")
+            endif()
+            # mbedTLS does not set CMAKE_DEBUG_POSTFIX, so unlike curl or libpng
+            # its debug archives are named exactly like the release ones. Try
+            # the suffixed name first, then fall back to the bare one.
+            foreach(_mbedtls_candidate ${_mbedtls_candidates})
+                if (EXISTS "${_mbedtls_lib_path}/${_mbedtls_candidate}")
+                    list(APPEND _mbedtls_libs "${_mbedtls_lib_path}/${_mbedtls_candidate}")
+                    break()
+                endif()
+            endforeach()
+        endforeach()
+
+        list(LENGTH _mbedtls_libs _mbedtls_lib_count)
+        if (_mbedtls_lib_count EQUAL 3)
+            add_library(MbedTLS::mbedtls INTERFACE IMPORTED)
+            set_target_properties(MbedTLS::mbedtls PROPERTIES
+                INTERFACE_INCLUDE_DIRECTORIES
+                    "${OCEAN_THIRD_PARTY_ROOT}/mbedtls/h/${_ocean_3p_platform}"
+                INTERFACE_LINK_LIBRARIES "${_mbedtls_libs}")
+            message(STATUS "  MBEDTLS_LIBRARIES = ${_mbedtls_libs}")
+        endif()
+    endif()
+
     # libusb library
     set(_libusb_lib_path "${OCEAN_THIRD_PARTY_ROOT}/libusb/lib/${_ocean_3p_target}")
     if (EXISTS "${_libusb_lib_path}")

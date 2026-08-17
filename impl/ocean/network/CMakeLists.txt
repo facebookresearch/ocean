@@ -13,6 +13,13 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
 
     if (ANDROID OR LINUX)
         find_package(CURL QUIET)
+
+        # curl is built against mbedTLS. In the standard 3P layout mbedTLS
+        # ships its own package config; in the external layout the top-level
+        # CMakeLists has already created MbedTLS::mbedtls by hand.
+        if (NOT TARGET MbedTLS::mbedtls)
+            find_package(MbedTLS QUIET CONFIG)
+        endif()
     endif()
 
     # Source files
@@ -58,6 +65,16 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
             PUBLIC
                 CURL::libcurl
         )
+
+        # CURL::libcurl is an imported target built from a bare library path, so
+        # it carries no transitive dependencies. libcurl's TLS backend has to be
+        # named explicitly and must follow it on the static link line.
+        if (TARGET MbedTLS::mbedtls)
+            target_link_libraries(${OCEAN_TARGET_NAME}
+                PUBLIC
+                    MbedTLS::mbedtls
+            )
+        endif()
 
         if (TARGET ZLIB::ZLIB)
             target_link_libraries(${OCEAN_TARGET_NAME}
