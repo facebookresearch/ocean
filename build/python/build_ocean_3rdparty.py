@@ -895,6 +895,24 @@ def _copy_lib_files_recursive(
                     shutil.copy2(actual_file, dest)
 
 
+def _detect_installed_library_kinds(install_dir: Path) -> tuple[bool, bool]:
+    """Report whether an install tree contains static and/or shared libraries.
+
+    The wrong-link-type filter must only run when a tree contains both kinds —
+    that is, when an upstream project installed a variant we did not ask for
+    (libpng installs both regardless of BUILD_SHARED_LIBS). Applying it
+    unconditionally empties libraries that only ever ship one kind, such as an
+    imported_shared library like ARCore, which is nothing but a .so.
+    """
+    has_static = any(install_dir.rglob("*.a")) or any(install_dir.rglob("*.lib"))
+    has_shared = (
+        any(install_dir.rglob("*.so"))
+        or any(install_dir.rglob("*.dylib"))
+        or any(install_dir.rglob("*.dll"))
+    )
+    return has_static, has_shared
+
+
 def _install_standard_layout(
     install_dir: Path,
     final_dir: Path,
@@ -923,19 +941,7 @@ def _install_standard_layout(
     if not install_dir.exists():
         return
 
-    # Detect which library kinds the install actually contains so we only
-    # apply the link-type filter when both kinds exist (e.g., libpng installs
-    # both libpng.a and libpng.dylib regardless of BUILD_SHARED_LIBS). When
-    # only one kind is present (e.g., imported_shared libraries like ARCore
-    # that always ship a .so), keep what's there.
-    has_static_libs = any(install_dir.rglob("*.a")) or any(
-        install_dir.rglob("*.lib")
-    )
-    has_shared_libs = (
-        any(install_dir.rglob("*.so"))
-        or any(install_dir.rglob("*.dylib"))
-        or any(install_dir.rglob("*.dll"))
-    )
+    has_static_libs, has_shared_libs = _detect_installed_library_kinds(install_dir)
 
     is_shared = target.link_type == LinkType.SHARED
     skip_patterns: List[str] = []
@@ -1063,8 +1069,15 @@ def reorganize_output(  # noqa: C901
             if item.is_symlink():
                 symlink_targets.add(item.resolve())
 
-        # Determine which library extensions to skip based on link type
-        if target.link_type == LinkType.STATIC:
+        # Determine which library extensions to skip based on link type. Only
+        # filter when the install tree actually holds both kinds; a library
+        # that ships a single kind (an imported_shared .so like ARCore) would
+        # otherwise be filtered down to an empty directory.
+        has_static_libs, has_shared_libs = _detect_installed_library_kinds(install_dir)
+        if not (has_static_libs and has_shared_libs):
+            skip_extensions = set()
+            skip_patterns = []
+        elif target.link_type == LinkType.STATIC:
             # Skip shared libraries when building static
             # On Windows, DLLs are in bin/ so we don't see them here, but skip .dll just in case
             skip_extensions = {".dylib", ".so", ".dll"}
