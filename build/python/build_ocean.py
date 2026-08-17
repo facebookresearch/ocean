@@ -62,6 +62,8 @@ BuildConfig = _platform_module.BuildConfig
 BuildTarget = _platform_module.BuildTarget
 LinkType = _platform_module.LinkType
 OS = _platform_module.OS
+DEFAULT_ANDROID_API_LEVEL = _platform_module.DEFAULT_ANDROID_API_LEVEL
+add_cross_compile_options = _platform_module.add_cross_compile_options
 configure_console_encoding = _platform_module.configure_console_encoding
 detect_host_arch = _platform_module.detect_host_arch
 detect_host_os = _platform_module.detect_host_os
@@ -84,6 +86,31 @@ DEFAULT_INSTALL_DIR = Path("ocean_install")
 def _dedup(values: List) -> List:
     """Order-preserving de-duplication."""
     return list(dict.fromkeys(values))
+
+
+def _resolve_android_api_level(args: argparse.Namespace) -> Optional[int]:
+    """Resolve the Android API level from the current and the deprecated flag.
+
+    --android-sdk took an "android-32" style string and only ever reached CMake as
+    -DANDROID_PLATFORM, which the NDK toolchain ignored because no toolchain file was
+    passed. It is accepted for one more release, spelled as an API level.
+
+    Raises:
+        ValueError: if the legacy --android-sdk value cannot be parsed.
+    """
+    if args.android_sdk is None:
+        return args.android_api_level
+
+    text = args.android_sdk.strip().removeprefix("android-")
+    if not text.isdigit():
+        raise ValueError(f"Cannot parse --android-sdk value: {args.android_sdk}")
+
+    parsed = int(text)
+    print(
+        f"Warning: --android-sdk is deprecated, "
+        f"use --android-api-level {parsed} instead."
+    )
+    return args.android_api_level if args.android_api_level is not None else parsed
 
 
 def get_default_platforms() -> List[Tuple[OS, Arch]]:
@@ -272,7 +299,7 @@ def run_cmake_build(
     configure_only: bool = False,
     generator: Optional[str] = None,
     log_level: str = "ERROR",
-    android_sdk: str = "android-32",
+    android_api_level: Optional[int] = None,
     vs_version: Optional[str] = None,
     jobs: int = 0,
 ) -> bool:
@@ -367,11 +394,20 @@ def run_cmake_build(
             f"-DCMAKE_LIBRARY_PATH={';'.join(str(p) for p in cmake_library_path)}"
         )
 
-    if target.os == OS.ANDROID:
-        configure_args.append(
-            f"-DCMAKE_FIND_ROOT_PATH={';'.join(str(p) for p in cmake_prefix_path)}"
-        )
-        configure_args.append(f"-DANDROID_PLATFORM={android_sdk}")
+    # Cross-compilation settings, shared with build_ocean_3rdparty.py so Ocean and the
+    # libraries it links against cannot be configured for different targets. Without
+    # these, CMake is never told what it is building for and every cross target silently
+    # produces host binaries in a target-named directory.
+    #
+    # iOS and Windows still use the hand-written flags below: iOS additionally needs the
+    # Xcode generator for Swift, and the Windows branch would emit a second -A. Both are
+    # wired up separately.
+    if target.os in (OS.ANDROID, OS.MACOS):
+        try:
+            add_cross_compile_options(configure_args, target, android_api_level)
+        except RuntimeError as e:
+            print(f"Error: cannot configure {target.to_path_component()}: {e}")
+            return False
 
     if minimal:
         configure_args.extend(
@@ -545,10 +581,17 @@ def parse_args() -> argparse.Namespace:
         "Default: ERROR",
     )
     parser.add_argument(
+        "--android-api-level",
+        type=int,
+        default=None,
+        help=f"Android API level for cross-compilation (e.g., 24, 32, 34). "
+        f"Default: {DEFAULT_ANDROID_API_LEVEL}.",
+    )
+    parser.add_argument(
         "--android-sdk",
         type=str,
-        default="android-32",
-        help="Android SDK version. Default: android-32",
+        default=None,
+        help=argparse.SUPPRESS,
     )
     parser.add_argument(
         "--vs-version",
@@ -663,6 +706,12 @@ def main() -> int:
     valid_levels = {"ERROR", "WARNING", "NOTICE", "STATUS", "VERBOSE", "DEBUG", "TRACE"}
     if log_level not in valid_levels:
         print(f"Error: Invalid log level: {log_level}")
+        return 1
+
+    try:
+        android_api_level = _resolve_android_api_level(args)
+    except ValueError as e:
+        print(f"Error: {e}")
         return 1
 
     # Find Ocean source directory
@@ -787,7 +836,7 @@ def main() -> int:
             configure_only=args.configure_only,
             generator=args.generator,
             log_level=log_level,
-            android_sdk=args.android_sdk,
+            android_api_level=android_api_level,
             vs_version=args.vs_version,
             jobs=args.parallel,
         )
