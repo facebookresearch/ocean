@@ -347,7 +347,10 @@ class CMakeBuilder(Builder):
                 continue
 
             full_pattern = str(ctx.build_dir / pattern)
-            dest_dir = ctx.install_dir / dest / ctx.target.to_path_component()
+            # `dest` is relative to the install prefix, which is a plain CMake
+            # staging tree — the per-target directory belongs to the final
+            # output layout and is added later, by reorganize_output().
+            dest_dir = ctx.install_dir / dest
             self._ensure_dir(dest_dir)
 
             matches = glob_module.glob(full_pattern, recursive=True)
