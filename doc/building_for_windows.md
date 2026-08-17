@@ -9,7 +9,7 @@ This document describes the process to build Ocean for Windows. It covers:
 ## 1 Prerequisites
 
 * [General prerequisites listed on the main page](../README.md)
-* Python 3.8 or higher, plus the build scripts' dependencies: `pip install -r build/python/requirements.txt`
+* Python 3.10 or higher, plus the build scripts' dependencies: `pip install -r build/python/requirements.txt`
 * Visual Studio 2019 or later is required (2022 recommended). The build system will auto-detect the newest installed version.
 
 ### Enabling Long Path Support (Highly Recommended)

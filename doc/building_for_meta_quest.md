@@ -14,7 +14,7 @@ To build the project, you need to satisfy the following prerequisites:
 
 Please refer to the [main page](../README.md) for general build prerequisites.
 
-* Python 3.8 or higher, plus the build scripts' dependencies: `pip install -r build/python/requirements.txt`
+* Python 3.10 or higher, plus the build scripts' dependencies: `pip install -r build/python/requirements.txt`
 
 ### Android Setup
 

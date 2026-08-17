@@ -10,7 +10,7 @@ This document describes the process to build Ocean for macOS. It covers:
 ## 1 Prerequisites
 
 * [General prerequisites listed on the main page](../README.md)
-* Python 3.8 or higher, plus the build scripts' dependencies: `pip install -r build/python/requirements.txt`
+* Python 3.10 or higher, plus the build scripts' dependencies: `pip install -r build/python/requirements.txt`
 * Xcode is required (recommended version: 15 or higher)
 
 ## 2 Building the third-party libraries

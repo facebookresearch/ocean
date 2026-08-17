@@ -10,7 +10,7 @@ This document describes the process of building Ocean for iOS. It covers:
 ## 1 Prerequisites
 
 * [General prerequisites listed on the main page](../README.md)
-* Python 3.8 or higher, plus the build scripts' dependencies: `pip install -r build/python/requirements.txt`
+* Python 3.10 or higher, plus the build scripts' dependencies: `pip install -r build/python/requirements.txt`
 * Create an [Apple Developer account](https://developer.apple.com/), if you haven't already
 * Retrieve the team ID of the above developer account. This will be an alphanumeric identifier of the form `XXXXXXXXXX`. Here are instructions to
   * [find it on the Apple page](https://developer.apple.com/help/account/manage-your-team/locate-your-team-id) and to

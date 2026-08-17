@@ -13,7 +13,6 @@ import hashlib
 import os
 import shutil
 import subprocess
-import sys
 import tarfile
 import tempfile
 import threading
@@ -66,38 +65,73 @@ def _extract_zip_safely(zf: zipfile.ZipFile, target_dir: Path) -> None:
     zf.extractall(target_dir)
 
 
+def _have_tar_data_filter() -> bool:
+    """Whether this interpreter has tarfile's safe extraction filter.
+
+    Feature-detected rather than version-compared: the filter landed in 3.12
+    but was backported to later 3.10 and 3.11 maintenance releases.
+    """
+    return hasattr(tarfile, "data_filter")
+
+
+def _member_kind(member: tarfile.TarInfo) -> str:
+    """Human-readable member type, for the refusal message."""
+    if member.issym():
+        return "symbolic link"
+    if member.islnk():
+        return "hard link"
+    if member.isfifo():
+        return "FIFO"
+    if member.ischr():
+        return "character device"
+    if member.isblk():
+        return "block device"
+    return "special file"
+
+
 def _extract_tar_safely(tf: tarfile.TarFile, target_dir: Path) -> None:
     """Extract a tar archive, refusing members that escape target_dir.
 
-    ``extractall(filter="data")`` is the right answer but only exists from
-    3.12 (and the 3.8-3.11 maintenance releases that backported it), while the
-    build docs promise 3.8+. Fall back to an explicit check that covers the
-    same escape routes: absolute paths, '..' traversal, and links pointing out
-    of the tree.
+    ``extractall(filter="data")`` is the right answer and is used wherever it
+    exists: 3.12, and the 3.10/3.11 maintenance releases that backported it.
+    Below that there is no safe filter, and the checks needed to replace it are
+    not the obvious ones:
+
+    - A hard link's target is resolved by tarfile against the extraction root,
+      while a symlink's is resolved against the member's own directory. Using
+      one rule for both lets `a/evil -> ../outside` through.
+    - Members are validated before any are written, so an earlier symlink can
+      change what a later path means. Reproducing tarfile's extraction-order
+      semantics correctly is the whole reason ``data_filter`` exists.
+
+    Rather than reimplement it, the fallback accepts only regular files and
+    directories. That is an allowlist, so it also covers the member types with
+    no place in a source tree at all -- FIFOs, block and character devices --
+    which `data_filter` rejects and which a denylist of link types would let
+    through. A FIFO in the source tree is enough to hang the next build step
+    that opens it.
+
+    Every archive in the manifest is a plain source tree, so this costs nothing
+    today and fails loudly rather than silently if that changes.
     """
     root = target_dir.resolve()
-
-    def _resolves_inside(name: str) -> bool:
-        destination = (root / name).resolve()
-        return destination == root or root in destination.parents
+    have_data_filter = _have_tar_data_filter()
 
     for member in tf.getmembers():
-        if not _resolves_inside(member.name):
+        destination = (root / member.name).resolve()
+        if destination != root and root not in destination.parents:
             raise RuntimeError(
                 f"Refusing to extract '{member.name}': it resolves outside {root}"
             )
-        # A link's target is resolved at extraction time relative to the member's
-        # own directory, so it needs the same check against its parent.
-        if member.islnk() or member.issym():
-            link_base = (root / member.name).parent
-            link_target = (link_base / member.linkname).resolve()
-            if link_target != root and root not in link_target.parents:
-                raise RuntimeError(
-                    f"Refusing to extract link '{member.name}': "
-                    f"it points outside {root}"
-                )
+        if not have_data_filter and not (member.isfile() or member.isdir()):
+            raise RuntimeError(
+                f"Refusing to extract '{member.name}': it is a "
+                f"{_member_kind(member)}, and this Python has no tarfile data "
+                "filter to validate it safely. Use Python 3.12 or newer to "
+                "extract archives containing anything but files and directories."
+            )
 
-    if sys.version_info >= (3, 12):
+    if have_data_filter:
         tf.extractall(target_dir, filter="data")
     else:
         tf.extractall(target_dir)
@@ -396,7 +430,7 @@ class SourceFetcher:
                     _extract_tar_safely(tf, target_dir)
             elif url_lower.endswith((".tar.xz", ".txz")):
                 with tarfile.open(archive_path, "r:xz") as tf:
-                    tf.extractall(target_dir, filter="data")
+                    _extract_tar_safely(tf, target_dir)
             else:
                 raise ValueError(f"Unknown archive format: {source.archive_url}")
 

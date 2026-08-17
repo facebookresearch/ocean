@@ -13,7 +13,7 @@ This document describes the general process to build Ocean. Platform-specific in
 Before building Ocean, ensure you have the following:
 
 - **Git**: Required to clone the repository
-- **Python 3.8 or higher**: Required for the build scripts
+- **Python 3.10 or higher**: Required for the build scripts, along with their dependencies (`pip install -r build/python/requirements.txt`)
 - **CMake 3.26 or higher**: Build system generator
 - A compatible **C++ compiler** for your target platform
 

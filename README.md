@@ -15,7 +15,7 @@ For a general overview, the [project website](https://facebookresearch.github.io
 
 ## General Prerequisites
 
-- [Python](https://www.python.org/downloads/) 3.8 or higher (for the build scripts)
+- [Python](https://www.python.org/downloads/) 3.10 or higher (for the build scripts; install their dependencies with `pip install -r build/python/requirements.txt`)
 - [CMake](https://cmake.org/download/) 3.26 or higher
 - Ocean requires C++20
 - Ensure that the [Git](https://www.git-scm.com/downloads) executable is available in your path.

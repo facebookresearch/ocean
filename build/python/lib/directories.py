@@ -83,7 +83,7 @@ def remove_tree(path: Path) -> None:
         func(target)
 
     # `onexc` replaced `onerror` in 3.12 and `onerror` warns from 3.12 on, so
-    # neither spelling works across the documented 3.8+ range on its own.
+    # neither spelling works across the documented 3.10+ range on its own.
     if sys.version_info >= (3, 12):
         shutil.rmtree(path, onexc=_clear_readonly)
     else:
