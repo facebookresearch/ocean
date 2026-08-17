@@ -364,9 +364,16 @@ if (OCEAN_THIRD_PARTY_ROOT AND _ocean_3p_resolved_layout STREQUAL "external")
         endif()
     endforeach()
 
-    # For Android, also set CMAKE_FIND_ROOT_PATH
+    # The Android NDK toolchain sets CMAKE_FIND_ROOT_PATH_MODE_{PACKAGE,INCLUDE,
+    # LIBRARY} to ONLY, which confines find_* to paths at or below a find root.
+    # A find root is a path prefix, so this one entry exposes every
+    # <lib>/h/<platform> and <lib>/lib/<target> beneath it, including the
+    # prefixes added to CMAKE_PREFIX_PATH above that find_package(... CONFIG)
+    # needs. Keeping the mode at ONLY is deliberate: it is what makes our
+    # libz.a win over the NDK sysroot's libz.so. Append rather than set, so the
+    # NDK's own entries and any -DCMAKE_FIND_ROOT_PATH survive.
     if (ANDROID)
-        set(CMAKE_FIND_ROOT_PATH ${CMAKE_INCLUDE_PATH} ${CMAKE_LIBRARY_PATH})
+        list(APPEND CMAKE_FIND_ROOT_PATH "${OCEAN_THIRD_PARTY_ROOT}")
     endif()
 
     # Add all 3P include paths to the global include directories
