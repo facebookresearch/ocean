@@ -8,8 +8,8 @@ This document describes the process to build Ocean for Windows. It covers:
 
 ## 1 Prerequisites
 
-* [General prerequisites listed on the main page](README.md)
-* Python 3.8 or higher
+* [General prerequisites listed on the main page](../README.md)
+* Python 3.8 or higher, plus the build scripts' dependencies: `pip install -r build/python/requirements.txt`
 * Visual Studio 2019 or later is required (2022 recommended). The build system will auto-detect the newest installed version.
 
 ### Enabling Long Path Support (Highly Recommended)
@@ -38,7 +38,7 @@ The third-party libraries are built using the Python-based build system. The sam
 ```powershell
 cd \path\to\ocean
 
-# Build all required third-party libraries for the host platform (debug + release, static + shared)
+# Build for every target this host supports (debug + release, static + shared)
 python build/python/build_ocean_3rdparty.py
 
 # Build for every Windows architecture the selected Visual Studio supports
@@ -66,9 +66,11 @@ It is advisable to place build and install directories as close to the root of a
 python build/python/build_ocean_3rdparty.py --output-dir C:\ocean_3rdparty
 ```
 
-Once the build is complete, the installed libraries can be found in `ocean_3rdparty/install/` (or the custom output directory). Headers are stored in `<lib>/h/<platform>/` and libraries in `<lib>/lib/<target>/` (e.g., `zlib/lib/win_x86_64_static_release/`).
+Once the build is complete, the installed libraries can be found in `ocean_3rdparty/install/` (or the custom output directory). Each library is a complete, relocatable CMake install prefix at `<target>/<library>/`, for example `win_x64_vc143_static/zlib/include/zlib.h` and `win_x64_vc143_static/zlib/lib/zlib.lib`. The target name carries the MSVC toolset (`vc143` for Visual Studio 2022, `vc145` for 2026); release targets have no suffix and debug targets add `_debug`.
 
-On Windows, the default is to build both static and shared libraries. On ARM64 systems, paths use `arm64` instead of `x86_64`.
+Passing `--for-external-integration` produces a different, flattened layout intended for non-CMake build systems, with headers shared across architectures: `<library>/h/win/` and `<library>/lib/<target>/`.
+
+On Windows, the default is to build both static and shared libraries. ARM64 targets use `arm64` in place of `x64`.
 
 Run `python build/python/build_ocean_3rdparty.py --help` to see all available options.
 
@@ -101,7 +103,7 @@ python build/python/build_ocean.py `
 python build/python/build_ocean.py --dry-run
 ```
 
-Once the build is complete, the compiled binaries can be found in `ocean_install/win_x86_64_static_debug` and `.../win_x86_64_static_release` (or with `arm64_` prefix on ARM64 systems).
+Once the build is complete, the compiled binaries can be found in `ocean_install/win_x64_vc143_static` (release) and `.../win_x64_vc143_static_debug` (or `win_arm64_vc143_static*` for ARM64 targets; the `vcNNN` component follows the Visual Studio version in use).
 
 Run `python build/python/build_ocean.py --help` to see all available options.
 
@@ -113,23 +115,19 @@ Alternatively, you can invoke CMake directly:
 cd \path\to\ocean
 
 # Configure
-cmake -S . -B build_win `
+cmake -S . -B build_win -G "Visual Studio 17 2022" -A x64 `
     -DCMAKE_BUILD_TYPE=Release `
     -DBUILD_SHARED_LIBS=OFF `
-    -DOCEAN_THIRD_PARTY_ROOT=.\ocean_3rdparty\install
+    -DOCEAN_THIRD_PARTY_ROOT=.\ocean_3rdparty\install `
+    -DCMAKE_INSTALL_PREFIX=.\ocean_install\win_x64_vc143_static
 
-# Build and install
-cmake --build build_win --target install
+# Build and install. Visual Studio is a multi-config generator, so --config must
+# repeat the configuration; without it MSBuild builds Debug against the release
+# libraries, which links and then fails at startup on a runtime mismatch.
+cmake --build build_win --config Release --target install
 ```
 
-To use a specific Visual Studio version with CMake directly, add the `-G` flag:
-
-```powershell
-cmake -S . -B build_win -G "Visual Studio 16 2019" `
-    -DCMAKE_BUILD_TYPE=Release `
-    -DBUILD_SHARED_LIBS=OFF `
-    -DOCEAN_THIRD_PARTY_ROOT=.\ocean_3rdparty\install
-```
+`-A` selects the target architecture (`x64`, `ARM64` or `Win32`) and must match the third-party libraries you built. Change `-G` to target another Visual Studio version, for example `"Visual Studio 18 2026"`; the toolset it implies (`vc143`, `vc145`) is part of the third-party directory name.
 
 ### Building with Visual Studio
 
@@ -140,7 +138,7 @@ To open the project in Visual Studio after configuration:
 python build/python/build_ocean.py --configure-only
 
 # Open in Visual Studio
-start ocean_build\win_x86_64_static_release\ocean.sln
+start ocean_build\win_x64_vc143_static\ocean.sln
 ```
 
 Then build and run the desired targets from within Visual Studio.

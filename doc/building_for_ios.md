@@ -9,8 +9,8 @@ This document describes the process of building Ocean for iOS. It covers:
 
 ## 1 Prerequisites
 
-* [General prerequisites listed on the main page](README.md)
-* Python 3.8 or higher
+* [General prerequisites listed on the main page](../README.md)
+* Python 3.8 or higher, plus the build scripts' dependencies: `pip install -r build/python/requirements.txt`
 * Create an [Apple Developer account](https://developer.apple.com/), if you haven't already
 * Retrieve the team ID of the above developer account. This will be an alphanumeric identifier of the form `XXXXXXXXXX`. Here are instructions to
   * [find it on the Apple page](https://developer.apple.com/help/account/manage-your-team/locate-your-team-id) and to
@@ -44,7 +44,9 @@ python build/python/build_ocean_3rdparty.py --target ios --target macos
 python build/python/build_ocean_3rdparty.py --target ios --dry-run
 ```
 
-Once the build is complete, the installed libraries can be found in `ocean_3rdparty/install/`. Headers are stored in `<lib>/h/ios/` and libraries in `<lib>/lib/ios_arm64_static_release/` (and `..._debug/`).
+Once the build is complete, the installed libraries can be found in `ocean_3rdparty/install/`. Each library is a complete, relocatable CMake install prefix at `<target>/<library>/`, for example `ios_arm64_static/zlib/include/zlib.h` and `ios_arm64_static/zlib/lib/libz.a`. Release targets have no suffix; debug targets add `_debug` (e.g., `ios_arm64_static_debug`).
+
+Passing `--for-external-integration` produces a different, flattened layout intended for non-CMake build systems, with headers shared across architectures: `<library>/h/ios/` and `<library>/lib/<target>/`.
 
 Run `python build/python/build_ocean_3rdparty.py --help` to see all available options.
 
@@ -73,7 +75,7 @@ python build/python/build_ocean.py --target ios_arm64 \
     --third-party-dir /path/to/ocean_3rdparty/install
 ```
 
-Once the build is complete, the compiled binaries can be found in `ocean_install/ios_arm64_static_release` (or with `_debug` suffix for debug builds).
+Once the build is complete, the compiled binaries can be found in `ocean_install/ios_arm64_static` (release) or `ocean_install/ios_arm64_static_debug`.
 
 Run `python build/python/build_ocean.py --help` to see all available options.
 
@@ -92,9 +94,12 @@ cmake -S . -B build_ios \
     -DDEPLOYMENT_TARGET=15.0 \
     -DCMAKE_BUILD_TYPE=Release \
     -DBUILD_SHARED_LIBS=OFF \
-    -DOCEAN_THIRD_PARTY_ROOT=./ocean_3rdparty/install
+    -DOCEAN_THIRD_PARTY_ROOT=./ocean_3rdparty/install \
+    -DCMAKE_INSTALL_PREFIX=./ocean_install/ios_arm64_static
 
-cmake --build build_ios --target install
+# Xcode is a multi-config generator, so --config must repeat the configuration;
+# without it Xcode builds Debug against the release libraries.
+cmake --build build_ios --config Release --target install
 ```
 
 From here, the Ocean binaries and include files can be used in any other project. Check out this guide on how to [include the CMake project of Ocean in an Xcode project](https://blog.tomtasche.at/2019/05/how-to-include-cmake-project-in-xcode.html).

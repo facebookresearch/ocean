@@ -13,9 +13,9 @@ To build the project, you need to satisfy the following prerequisites:
 
 ### General build prerequisites
 
-Please refer to the [main page](README.md) for general build prerequisites.
+Please refer to the [main page](../README.md) for general build prerequisites.
 
-* Python 3.8 or higher
+* Python 3.8 or higher, plus the build scripts' dependencies: `pip install -r build/python/requirements.txt`
 
 ### Android Setup
 
@@ -82,7 +82,8 @@ The third-party libraries are built using the Python-based build system. The sam
 ```bash
 cd /path/to/ocean
 
-# Build all required third-party libraries for Android (all ABIs, debug + release, static)
+# Build for arm64-v8a, armeabi-v7a and x86_64 (debug + release, static)
+# 32-bit x86 is emulator-only and must be requested explicitly with --target android_x86
 python build/python/build_ocean_3rdparty.py --target android
 
 # Build for a specific Android architecture
@@ -108,7 +109,9 @@ cd \path\to\ocean
 python build/python/build_ocean_3rdparty.py --target android
 ```
 
-Once the build is complete, the installed libraries can be found in `ocean_3rdparty/install/`. Headers are stored in `<lib>/h/android/` and libraries in `<lib>/lib/android_arm64_static_release/` (and similar paths for other architectures and configurations).
+Once the build is complete, the installed libraries can be found in `ocean_3rdparty/install/`. Each library is a complete, relocatable CMake install prefix at `<target>/<library>/`, for example `android_arm64_static/zlib/include/zlib.h` and `android_arm64_static/zlib/lib/libz.a`. Release targets have no suffix; debug targets add `_debug` (e.g., `android_arm64_static_debug`).
+
+Passing `--for-external-integration` produces a different, flattened layout intended for non-CMake build systems, with headers shared across architectures: `<library>/h/android/` and `<library>/lib/<target>/`.
 
 Run `python build/python/build_ocean_3rdparty.py --help` to see all available options.
 
@@ -136,7 +139,7 @@ python build/python/build_ocean.py --target android_arm64 \
     --third-party-dir /path/to/ocean_3rdparty/install
 ```
 
-Once the build is complete, the compiled binaries can be found in `ocean_install/android_arm64_static_release` (or with `_debug` suffix for debug builds).
+Once the build is complete, the compiled binaries can be found in `ocean_install/android_arm64_static` (release) or `ocean_install/android_arm64_static_debug`.
 
 Run `python build/python/build_ocean.py --help` to see all available options.
 
@@ -144,18 +147,26 @@ Run `python build/python/build_ocean.py --help` to see all available options.
 
 Alternatively, you can invoke CMake directly:
 
+The NDK toolchain file and `ANDROID_ABI` are both required. Without them CMake targets the host: the build succeeds and installs binaries built with the host compiler into a directory named after the Android target.
+
 ```bash
 cd /path/to/ocean
 
 # Configure and build
 cmake -S . -B build_android \
+    -DCMAKE_TOOLCHAIN_FILE="${ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake" \
+    -DANDROID_ABI=arm64-v8a \
+    -DANDROID_PLATFORM=android-32 \
+    -DANDROID_STL=c++_static \
     -DCMAKE_BUILD_TYPE=Release \
     -DBUILD_SHARED_LIBS=OFF \
     -DOCEAN_THIRD_PARTY_ROOT=./ocean_3rdparty/install \
-    -DANDROID_PLATFORM=android-32
+    -DCMAKE_INSTALL_PREFIX=./ocean_install/android_arm64_static
 
-cmake --build build_android --target install -j
+cmake --build build_android --target install --parallel 8
 ```
+
+Use the `ANDROID_ABI` that matches the third-party libraries you built: `arm64-v8a`, `armeabi-v7a`, `x86_64` or `x86`.
 
 Projects that use Gradle as their main build system can take advantage of `externalNativeBuild` to build Ocean directly by adding something similar to the following to their configuration:
 
@@ -170,13 +181,13 @@ externalNativeBuild {
 }
 ```
 
-For a full example, please take a look at the Gradle configuration of the Ocean Android apps.  For example, [`build/gradle/application/ocean/demo/base/console/android/app/build.gradle.kts`](build/gradle/application/ocean/demo/base/console/android/app/build.gradle.kts).
+For a full example, please take a look at the Gradle configuration of the Ocean Android apps.  For example, [`build/gradle/application/ocean/demo/base/console/android/app/build.gradle.kts`](../build/gradle/application/ocean/demo/base/console/android/app/build.gradle.kts).
 
 For projects using build systems other than Gradle, the precise details of the integration of Ocean are beyond the scope of this document and are left to the reader.
 
 ## 4 Building the Ocean Android demo/test apps
 
-First, build the required third-party libraries as described above for the required Android ABIs. Then find the Gradle configuration of an Ocean Android app that you want to build, for example [`build/gradle/application/ocean/demo/base/console/android/app/build.gradle.kts`](build/gradle/application/ocean/demo/base/console/android/app/build.gradle.kts).
+First, build the required third-party libraries as described above for the required Android ABIs. Then find the Gradle configuration of an Ocean Android app that you want to build, for example [`build/gradle/application/ocean/demo/base/console/android/app/build.gradle.kts`](../build/gradle/application/ocean/demo/base/console/android/app/build.gradle.kts).
 
 The APK (Android Package Kit) files generated by Ocean's test/demo Gradle configuration files can support four different Android ABIs (armeabi-v7a, arm64-v8a, x86, x86_64), allowing the Android package to run on devices with corresponding CPU architectures. But depending on the project, it may be desirable to limit the set of ABIs supported. Doing so reduces APK file size, reduces resources necessary for building third-party libraries, and reduces resources spent on building the Android package.
 
@@ -190,8 +201,12 @@ ndk { abiFilters.addAll(listOf("arm64-v8a")) }
 To build the APK, run "gradlew" from the directory in the manner exemplified below. Gradle will build the components of Ocean needed by the application being built in a temporary build directory. When building on Windows, for path length reasons, it should be placed close to the root of a filesystem. The default location on Windows is C:\tmp\ocean\gradle, on other build platforms the default build location is /tmp/ocean/gradle. This default can be overridden by either setting the environment variable OCEAN_GRADLE_BUILD_PATH or giving gradle the command line option -PoceanGradleBuildPath=${GRADLE_BUILD_PATH}.
 
 ```
+# Path to your Ocean checkout; the Gradle build locates Ocean's CMakeLists.txt
+# through it and fails immediately if it is not set
+export OCEAN_DEVELOPMENT_PATH="/path/to/ocean"
+
 # Adjust this to your location of the third-party libraries
-export OCEAN_THIRDPARTY_PATH="${HOME}/install_ocean_thirdparty_android"
+export OCEAN_THIRDPARTY_PATH="/path/to/ocean/ocean_3rdparty/install"
 
 cd /path/to/ocean/build/gradle/application/ocean/demo/base/console/android
 

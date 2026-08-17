@@ -9,8 +9,8 @@ This document describes the process to build Ocean for macOS. It covers:
 
 ## 1 Prerequisites
 
-* [General prerequisites listed on the main page](README.md)
-* Python 3.8 or higher
+* [General prerequisites listed on the main page](../README.md)
+* Python 3.8 or higher, plus the build scripts' dependencies: `pip install -r build/python/requirements.txt`
 * Xcode is required (recommended version: 15 or higher)
 
 ## 2 Building the third-party libraries
@@ -20,7 +20,7 @@ The third-party libraries are built using the Python-based build system. It hand
 ```bash
 cd /path/to/ocean
 
-# Build all required third-party libraries for the host platform (debug + release, static)
+# Build for every target this host supports (on macOS: macOS, iOS and Android if their SDKs are installed)
 python build/python/build_ocean_3rdparty.py
 
 # Build for macOS only (both arm64 and x86_64)
@@ -39,7 +39,9 @@ python build/python/build_ocean_3rdparty.py --target macos --with opencv
 python build/python/build_ocean_3rdparty.py --target macos --dry-run
 ```
 
-Once the build is complete, the installed libraries can be found in `ocean_3rdparty/install/`. Headers are stored in `<lib>/h/<platform>/` and libraries in `<lib>/lib/<target>/` (e.g., `zlib/lib/macos_arm64_static_release/`).
+Once the build is complete, the installed libraries can be found in `ocean_3rdparty/install/`. Each library is a complete, relocatable CMake install prefix at `<target>/<library>/`, for example `macos_arm64_static/zlib/include/zlib.h` and `macos_arm64_static/zlib/lib/libz.a`. Release targets have no suffix; debug targets add `_debug` (e.g., `macos_arm64_static_debug`).
+
+Passing `--for-external-integration` produces a different, flattened layout intended for non-CMake build systems, with headers shared across architectures: `<library>/h/<platform>/` and `<library>/lib/<target>/`.
 
 Run `python build/python/build_ocean_3rdparty.py --help` to see all available options.
 
@@ -64,7 +66,7 @@ python build/python/build_ocean.py --third-party-dir /path/to/ocean_3rdparty/ins
 python build/python/build_ocean.py --dry-run
 ```
 
-Once the build is complete, the compiled binaries can be found in `ocean_install/macos_arm64_static_debug` and `.../macos_arm64_static_release` (or `macos_x86_64_static_*` on Intel Macs).
+Once the build is complete, the compiled binaries can be found in `ocean_install/macos_arm64_static` (release) and `.../macos_arm64_static_debug` (or `macos_x86_64_static*` on Intel Macs).
 
 Run `python build/python/build_ocean.py --help` to see all available options.
 
@@ -80,10 +82,12 @@ cmake -S . -B build_macos \
     -G Xcode \
     -DCMAKE_BUILD_TYPE=Release \
     -DBUILD_SHARED_LIBS=OFF \
-    -DOCEAN_THIRD_PARTY_ROOT=./ocean_3rdparty/install
+    -DOCEAN_THIRD_PARTY_ROOT=./ocean_3rdparty/install \
+    -DCMAKE_INSTALL_PREFIX=./ocean_install/macos_arm64_static
 
-# Build
-cmake --build build_macos --target install -j
+# Build. Xcode is a multi-config generator, so --config must repeat the
+# configuration; without it Xcode builds Debug against the release libraries.
+cmake --build build_macos --config Release --target install --parallel 8
 ```
 
 ## 4 Building the Ocean macOS demo/test apps
@@ -97,8 +101,8 @@ Build Ocean and then open the generated Xcode project:
 ```bash
 cd /path/to/ocean
 
-# Configure only (to generate Xcode project)
-python build/python/build_ocean.py --configure-only
+# Configure only (to generate the Xcode project)
+python build/python/build_ocean.py --configure-only --generator Xcode
 
 # Open in Xcode
 open ocean_build/macos_arm64_static_debug/ocean.xcodeproj

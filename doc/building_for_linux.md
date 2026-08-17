@@ -4,8 +4,8 @@ This document describes the process to build Ocean on Linux.
 
 ## 1 Prerequisites
 
-* [General prerequisites listed on the main page](README.md)
-* Python 3.8 or higher
+* [General prerequisites listed on the main page](../README.md)
+* Python 3.8 or higher, plus the build scripts' dependencies: `pip install -r build/python/requirements.txt`
 * Currently some packages will have to be installed using the package manager of your distribution (example commands and package names given below are for Fedora and Ubuntu, but they should be similar for other distributions):
   ```
   # Fedora
@@ -26,7 +26,7 @@ The third-party libraries are built using the Python-based build system. It hand
 ```bash
 cd /path/to/ocean
 
-# Build all required third-party libraries for the host platform (debug + release, static)
+# Build for every target this host supports (debug + release, static)
 python build/python/build_ocean_3rdparty.py
 
 # Build release only
@@ -39,7 +39,9 @@ python build/python/build_ocean_3rdparty.py --with opencv
 python build/python/build_ocean_3rdparty.py --dry-run
 ```
 
-Once the build is complete, the installed libraries can be found in `ocean_3rdparty/install/`. Headers are stored in `<lib>/h/<platform>/` and libraries in `<lib>/lib/<target>/` (e.g., `zlib/lib/linux_x86_64_static_release/`). On ARM64 systems, paths use `arm64` instead of `x86_64`.
+Once the build is complete, the installed libraries can be found in `ocean_3rdparty/install/`. Each library is a complete, relocatable CMake install prefix at `<target>/<library>/`, for example `linux_x86_64_static/zlib/include/zlib.h` and `linux_x86_64_static/zlib/lib/libz.a`. Release targets have no suffix; debug targets add `_debug`. On ARM64 systems, paths use `arm64` instead of `x86_64`. On distributions that install into `lib64` (Fedora, RHEL and derivatives) the prefix contains `lib64/` rather than `lib/`, since the tree is copied as CMake produced it.
+
+Passing `--for-external-integration` produces a different, flattened layout intended for non-CMake build systems, with headers shared across architectures: `<library>/h/<platform>/` and `<library>/lib/<target>/`.
 
 Run `python build/python/build_ocean_3rdparty.py --help` to see all available options.
 
@@ -68,7 +70,7 @@ python build/python/build_ocean.py \
 python build/python/build_ocean.py --dry-run
 ```
 
-Once the build is complete, the compiled binaries can be found in `ocean_install/linux_x86_64_static_debug` and `.../linux_x86_64_static_release` (or `linux_arm64_static_*` on ARM64 systems).
+Once the build is complete, the compiled binaries can be found in `ocean_install/linux_x86_64_static` (release) and `.../linux_x86_64_static_debug` (or `linux_arm64_static*` on ARM64 systems).
 
 Run `python build/python/build_ocean.py --help` to see all available options.
 

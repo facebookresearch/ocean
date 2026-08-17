@@ -70,7 +70,7 @@ Building Android applications with Visual Studio uses Ocean's Android Extension,
 ### Prerequisites
 
 1. **Visual Studio 2022** with the **Visual Studio extension development** workload (also called the Visual Studio SDK)
-2. **Android SDK** and **JDK 17-24** - see the [extension README](../../build/visual_studio/extensions/vc143/android/README.md) for installation details
+2. **Android SDK** and **JDK 17-24** - see the [extension README](../build/visual_studio/extensions/vc143/android/README.md) for installation details
 3. **Android third-party libraries** built in the external-integration layout. Like the Windows solution above, the Android Visual Studio projects reference the per-library `3rdparty\<lib>\h\android\` / `3rdparty\<lib>\lib\android_<target>\` shape:
 
    ```powershell
@@ -111,7 +111,7 @@ This installs the OceanNDK Application Type into Visual Studio's MSBuild directo
 4. Connect an Android phone via USB (with USB debugging enabled)
 5. Press `F5` (Start Debugging) to build, deploy, and run the app
 
-> **Note:** For detailed configuration options (SDK paths, NDK detection, JDK setup, debugging, and troubleshooting), see the full [Ocean Android Extension README](../../build/visual_studio/extensions/vc143/android/README.md).
+> **Note:** For detailed configuration options (SDK paths, NDK detection, JDK setup, debugging, and troubleshooting), see the full [Ocean Android Extension README](../build/visual_studio/extensions/vc143/android/README.md).
 
 ---
 

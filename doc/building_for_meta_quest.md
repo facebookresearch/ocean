@@ -12,9 +12,9 @@ To build the project, you need to satisfy the following prerequisites:
 
 ### General build prerequisites
 
-Please refer to the [main page](README.md) for general build prerequisites.
+Please refer to the [main page](../README.md) for general build prerequisites.
 
-* Python 3.8 or higher
+* Python 3.8 or higher, plus the build scripts' dependencies: `pip install -r build/python/requirements.txt`
 
 ### Android Setup
 
@@ -72,7 +72,9 @@ This will build the third-party libraries with the following default settings wh
 * Linking type: `static`
 * Build config: `debug` and `release`
 
-Once the build is complete, the installed libraries can be found in `ocean_3rdparty/install/`. Headers are in `<lib>/h/android/` and libraries in `<lib>/lib/android_arm64_static_debug/` and `.../android_arm64_static_release/`.
+Once the build is complete, the installed libraries can be found in `ocean_3rdparty/install/`. Each library is a complete, relocatable CMake install prefix at `<target>/<library>/`, for example `android_arm64_static/zlib/include/zlib.h` and `android_arm64_static/zlib/lib/libz.a`. Release targets have no suffix; debug targets add `_debug` (e.g., `android_arm64_static_debug`).
+
+Passing `--for-external-integration` produces a different, flattened layout intended for non-CMake build systems, with headers shared across architectures: `<library>/h/android/` and `<library>/lib/<target>/`.
 
 Run `python build/python/build_ocean_3rdparty.py --help` to see all available options.
 
@@ -86,29 +88,35 @@ If you want to build Ocean libraries for Quest separately (not via Gradle), you 
 
 ```bash
 cd /path/to/ocean
-python build/python/build_ocean.py --quest```
+python build/python/build_ocean.py --quest
+```
 
 On Windows:
 
 ```powershell
 cd \path\to\ocean
-python build/python/build_ocean.py --quest```
+python build/python/build_ocean.py --quest
+```
 
-This will build Ocean using the Quest-specific CMake presets which configure additional Quest extensions.
+`--quest` targets Android arm64 and enables the Quest-specific components. It implies a static build of the demo applications, so it cannot be combined with `--minimal` or `--link shared`. The output goes to `ocean_install/quest_static_release` and `ocean_install/quest_static_debug`. Unlike the other targets, the Quest output directory carries an explicit `_release` suffix.
 
 ## 3 Building Quest demo apps that come with Ocean
 
-Please refer to the builds steps in the [instructions for Android](building_for_android.md#4-building-the-ocean-android-demo-test-apps) for details about building Ocean Android apps with Gradle.
+Please refer to the builds steps in the [instructions for Android](building_for_android.md#4-building-the-ocean-android-demotest-apps) for details about building Ocean Android apps with Gradle.
 
-The Gradle build configurations for Quest demo apps can be found under the directory structure at [`build/gradle/application/ocean/demo/platform/meta/quest/openxr/`](build/gradle/application/ocean/demo/platform/meta/quest/openxr/).
+The Gradle build configurations for Quest demo apps can be found under the directory structure at [`build/gradle/application/ocean/demo/platform/meta/quest/openxr/`](../build/gradle/application/ocean/demo/platform/meta/quest/openxr/).
 
-To build Quest demo apps, first build the required third-party libraries as described above. Then find the Gradle configuration of a Quest app that you want to build, for example [`build/gradle/application/ocean/demo/platform/meta/quest/openxr/renderer/quest/app/build.gradle.kts`](build/gradle/application/ocean/demo/platform/meta/quest/openxr/renderer/quest/app/build.gradle.kts).
+To build Quest demo apps, first build the required third-party libraries as described above. Then find the Gradle configuration of a Quest app that you want to build, for example [`build/gradle/application/ocean/demo/platform/meta/quest/openxr/renderer/quest/app/build.gradle.kts`](../build/gradle/application/ocean/demo/platform/meta/quest/openxr/renderer/quest/app/build.gradle.kts).
 
 To build the APK, run "gradlew" from the directory in the manner exemplified below.
 
 ```
 # Adjust this to your location of the third-party libraries
-export OCEAN_THIRDPARTY_PATH="${HOME}/install_ocean_thirdparty_android"
+# Path to your Ocean checkout; the Gradle build locates Ocean's CMakeLists.txt
+# through it and fails immediately if it is not set
+export OCEAN_DEVELOPMENT_PATH="/path/to/ocean"
+
+export OCEAN_THIRDPARTY_PATH="/path/to/ocean/ocean_3rdparty/install"
 
 cd /path/to/ocean/build/gradle/application/ocean/demo/platform/meta/quest/openxr/fingerdistance/quest
 
