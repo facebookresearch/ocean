@@ -10,11 +10,11 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Callable, Dict, Optional, TYPE_CHECKING
 
-from .platform import BuildTarget
+from .platform import BuildTarget, LinkType
 
 if TYPE_CHECKING:
     from .preflight import LogLevel
@@ -104,6 +104,18 @@ class BuildContext:
             )
             if lib_dir.exists():
                 return lib_dir
+            # Same fallback as DirectoryManager.get_dependency_dirs: a
+            # link_types: [static] dependency has no shared build, and its
+            # static one is what a shared consumer must link.
+            if self.target.link_type == LinkType.SHARED:
+                static_target = replace(self.target, link_type=LinkType.STATIC)
+                lib_dir = (
+                    self.dependency_dirs[dep]
+                    / "lib"
+                    / static_target.to_path_component()
+                )
+                if lib_dir.exists():
+                    return lib_dir
             # Standard layout: lib/ directly under the per-library prefix
             lib_dir = self.dependency_dirs[dep] / "lib"
             if lib_dir.exists():

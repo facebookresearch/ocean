@@ -14,12 +14,12 @@ import os
 import shutil
 import stat
 import threading
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, Optional
 
-from .platform import BuildTarget
+from .platform import BuildTarget, LinkType
 
 # Cross-platform file locking
 if os.name == "nt":
@@ -421,6 +421,19 @@ class DirectoryManager:
         """
         result = {}
         for dep in dependencies:
-            if dep in version_map:
-                result[dep] = self.get_final_dir(dep, version_map[dep], target)
+            if dep not in version_map:
+                continue
+            dep_dir = self.get_final_dir(dep, version_map[dep], target)
+            if not dep_dir.exists() and target.link_type == LinkType.SHARED:
+                # A dependency restricted to link_types: [static] is never built
+                # for a shared target, so its per-target directory does not
+                # exist. Linking that static build into the shared consumer is
+                # the intended outcome (mbedtls inside libcurl.so), so fall back
+                # to it rather than handing the consumer a path to nothing.
+                static_dir = self.get_final_dir(
+                    dep, version_map[dep], replace(target, link_type=LinkType.STATIC)
+                )
+                if static_dir.exists():
+                    dep_dir = static_dir
+            result[dep] = dep_dir
         return result
