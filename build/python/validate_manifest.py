@@ -17,6 +17,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import sys
 from pathlib import Path
@@ -32,6 +33,18 @@ try:
 except ImportError:
     print("Error: jsonschema not installed. Run: pip install jsonschema")
     sys.exit(1)
+
+# Imported by path rather than through `lib`, whose __init__ pulls in the whole
+# build system, so validating a manifest stays a standalone operation.
+_platform_spec = importlib.util.spec_from_file_location(
+    "ocean_platform", Path(__file__).parent / "lib" / "platform.py"
+)
+_platform_module = importlib.util.module_from_spec(_platform_spec)
+# Registered before exec_module: the module defines dataclasses, whose field
+# resolution looks itself up in sys.modules by __module__ name.
+sys.modules[_platform_spec.name] = _platform_module
+_platform_spec.loader.exec_module(_platform_module)
+configure_console_encoding = _platform_module.configure_console_encoding
 
 
 def load_schema() -> dict:
@@ -143,6 +156,11 @@ def validate_urls(manifest: dict) -> list[str]:
 
 
 def main() -> int:
+    # The success line ends in U+2713, which cp1252 cannot encode: without this
+    # a fully valid manifest still exits non-zero on Windows, from the print
+    # rather than from any validation failure.
+    configure_console_encoding()
+
     parser = argparse.ArgumentParser(description="Validate dependencies.yaml")
     parser.add_argument(
         "manifest",

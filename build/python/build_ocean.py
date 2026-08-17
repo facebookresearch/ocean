@@ -88,6 +88,19 @@ def _dedup(values: List) -> List:
     return list(dict.fromkeys(values))
 
 
+def _non_negative_int(value: str) -> int:
+    """argparse type for job counts: reject negatives, keep 0 as "auto-detect"."""
+    try:
+        parsed = int(value)
+    except ValueError:
+        raise argparse.ArgumentTypeError(f"expected an integer, got {value!r}")
+    if parsed < 0:
+        raise argparse.ArgumentTypeError(
+            f"must be 0 (auto-detect) or positive, got {parsed}"
+        )
+    return parsed
+
+
 def _resolve_android_api_level(args: argparse.Namespace) -> Optional[int]:
     """Resolve the Android API level from the current and the deprecated flag.
 
@@ -717,7 +730,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--parallel",
         "-j",
-        type=int,
+        type=_non_negative_int,
         default=0,
         help="Maximum parallel compile jobs (default: auto-detect)",
     )
@@ -857,14 +870,20 @@ def main() -> int:
     else:
         third_party_dir = cwd / "ocean_3rdparty" / "install"
 
-    # Parse build configuration
-    configs = parse_configs(args.config)
-    link_types = parse_link_types(args.link)
-    platforms = (
-        parse_platforms(args.target, args.vs_version)
-        if args.target
-        else get_default_platforms()
-    )
+    # Parse build configuration. A typo in --config/--link/--target is a user
+    # error, so report it the way build_ocean_3rdparty.py does rather than
+    # letting the ValueError reach the top level as a traceback.
+    try:
+        configs = parse_configs(args.config)
+        link_types = parse_link_types(args.link)
+        platforms = (
+            parse_platforms(args.target, args.vs_version)
+            if args.target
+            else get_default_platforms()
+        )
+    except ValueError as e:
+        print(f"Error: {e}")
+        return 1
 
     # Handle Quest mode
     if args.quest:

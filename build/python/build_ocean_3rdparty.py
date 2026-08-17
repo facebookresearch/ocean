@@ -321,6 +321,19 @@ def _dedup(values: List) -> List:
     return list(dict.fromkeys(values))
 
 
+def _non_negative_int(value: str) -> int:
+    """argparse type for job counts: reject negatives, keep 0 as "auto-detect"."""
+    try:
+        parsed = int(value)
+    except ValueError:
+        raise argparse.ArgumentTypeError(f"expected an integer, got {value!r}")
+    if parsed < 0:
+        raise argparse.ArgumentTypeError(
+            f"must be 0 (auto-detect) or positive, got {parsed}"
+        )
+    return parsed
+
+
 def _split_list_arg(values: Optional[List[str]]) -> List[str]:
     """Flatten repeated and comma-separated occurrences of a list-valued flag."""
     result = []
@@ -1647,7 +1660,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--parallel",
         "-j",
-        type=int,
+        type=_non_negative_int,
         default=0,
         help="Maximum parallel build jobs (default: auto-detect)",
     )
