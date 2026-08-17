@@ -181,6 +181,9 @@ DEFAULT_SOURCE_DIR = DEFAULT_BASE_DIR / "source"
 
 # Platform group shortcuts: map OS group name to all (OS, Arch) tuples
 PLATFORM_GROUPS: Dict[str, List[tuple[OS, Arch]]] = {
+    # 32-bit x86 is deliberately absent: it is emulator-only, and build_ocean.py
+    # keeps the same set so the two scripts agree on what "all Android" means.
+    # `--target android_x86` still builds it for anyone who asks explicitly.
     "android": [
         (OS.ANDROID, Arch.ARM64),
         (OS.ANDROID, Arch.ARMV7),

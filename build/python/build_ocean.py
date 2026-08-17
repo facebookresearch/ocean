@@ -141,14 +141,18 @@ def get_all_supported_platforms(
             if (OS.WINDOWS, arch) not in platforms:
                 platforms.append((OS.WINDOWS, arch))
 
-    # All platforms can cross-compile to Android if NDK is available
+    # All platforms can cross-compile to Android if NDK is available.
+    # Deliberately the same ABI set as build_ocean_3rdparty.py's "android"
+    # group: this list drives --target all_supported, and offering an ABI whose
+    # third-party libraries a default 3P run never produces just fails later.
+    # 32-bit x86 is excluded because it is emulator-only; `--target android_x86`
+    # still works on both scripts for anyone who wants it.
     if get_android_ndk_path():
         platforms.extend(
             [
                 (OS.ANDROID, Arch.ARM64),
                 (OS.ANDROID, Arch.ARMV7),
                 (OS.ANDROID, Arch.X86_64),
-                (OS.ANDROID, Arch.X86),
             ]
         )
 
