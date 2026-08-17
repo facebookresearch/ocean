@@ -54,7 +54,11 @@ if os.name == "nt":
             if _k32.GetConsoleMode(handle, _ctypes_import.byref(mode)):
                 new_mode = mode.value | _ENABLE_VT_PROCESSING
                 if _k32.SetConsoleMode(handle, new_mode):
-                    _WIN_VT_ENABLED = True
+                    # Only stdout decides: Rich renders there, so a console
+                    # stderr alongside a redirected stdout must not make us
+                    # write escape sequences into the redirected file.
+                    if std_handle_id == -11:
+                        _WIN_VT_ENABLED = True
 
         if _WIN_VT_ENABLED:
             # Save references for use in _reenable_win_vt()
@@ -168,6 +172,11 @@ class ProgressDisplay:
         self.completed_count = 0
         self.failed_count = 0
         self._lock = threading.RLock()  # Reentrant lock for nested acquisition
+        # Guards _live only. Never acquired while _lock is held: Live.stop()
+        # joins Rich's refresh thread, and that thread renders through
+        # _build_active_display(), which takes _lock — holding _lock across a
+        # stop inverts the order and deadlocks.
+        self._live_lock = threading.Lock()
 
         # Job tracking
         self._active_jobs: Dict[str, JobStatus] = {}
@@ -248,23 +257,34 @@ class ProgressDisplay:
             return output
 
     def _start_live(self) -> None:
-        """Start the live display."""
-        if self._use_rich and self._console and not self._live:
-            # Use _ActiveJobsRenderer so Rich calls _build_active_display() on each refresh
-            renderer = _ActiveJobsRenderer(self)
-            self._live = Live(
-                renderer,
-                console=self._console,
-                refresh_per_second=10,  # Faster refresh for responsive counter updates
-                transient=True,  # Disappears when stopped
-            )
-            self._live.start()
+        """Start the live display. Must not be called while holding _lock."""
+        with self._live_lock:
+            if self._use_rich and self._console and not self._live:
+                # Use _ActiveJobsRenderer so Rich calls _build_active_display() on each refresh
+                renderer = _ActiveJobsRenderer(self)
+                self._live = Live(
+                    renderer,
+                    console=self._console,
+                    refresh_per_second=10,  # Faster refresh for responsive counter updates
+                    transient=True,  # Disappears when stopped
+                )
+                self._live.start()
 
     def _stop_live(self) -> None:
-        """Stop the live display."""
-        if self._live:
-            self._live.stop()
-            self._live = None
+        """Stop the live display. Must not be called while holding _lock."""
+        with self._live_lock:
+            if self._live:
+                self._live.stop()
+                self._live = None
+
+    def stop(self) -> None:
+        """Tear the live region down.
+
+        Idempotent, and safe to call from a finally block. Without it a failed
+        or interrupted build leaves Rich's hidden cursor and an un-erased live
+        region behind, so the user's shell comes back with no visible cursor.
+        """
+        self._stop_live()
 
     def _print_job_completion(self, job: JobStatus) -> None:
         """Print a completed job as permanent output above the live region."""
@@ -410,10 +430,10 @@ class ProgressDisplay:
         libraries: List[str],
     ) -> None:
         """Print a level header."""
-        with self._lock:
-            # Stop live display
-            self._stop_live()
+        # Outside the lock: see the note on _live_lock.
+        self._stop_live()
 
+        with self._lock:
             # Clear active jobs for new level
             self._active_jobs.clear()
 
@@ -438,10 +458,10 @@ class ProgressDisplay:
 
     def print_summary(self) -> None:
         """Print final summary."""
-        with self._lock:
-            # Stop live
-            self._stop_live()
+        # Outside the lock: see the note on _live_lock.
+        self._stop_live()
 
+        with self._lock:
             if self._use_rich and self._console:
                 self._console.print()
                 if self.failed_count == 0:

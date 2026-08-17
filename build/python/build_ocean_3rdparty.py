@@ -1275,77 +1275,118 @@ def build_all(
     # Create progress display
     progress = ProgressDisplay(total_jobs)
 
-    for level_idx, level_libs in enumerate(levels):
-        # Create all jobs for this level, filtering by platform and link type support
-        jobs: List[BuildJob] = [
-            BuildJob(library=libraries[lib_name], target=target)
-            for lib_name in level_libs
-            for target in targets
-            if libraries[lib_name].supports_platform(target.os.value)
-            and libraries[lib_name].supports_link_type(target.link_type.value)
-        ]
+    first_error: Optional[BaseException] = None
 
-        if not jobs:
-            continue
+    try:
+        for level_idx, level_libs in enumerate(levels):
+            # Create all jobs for this level, filtering by platform and link type support
+            jobs: List[BuildJob] = [
+                BuildJob(library=libraries[lib_name], target=target)
+                for lib_name in level_libs
+                for target in targets
+                if libraries[lib_name].supports_platform(target.os.value)
+                and libraries[lib_name].supports_link_type(target.link_type.value)
+            ]
 
-        level_lib_count = len({j.library.name for j in jobs})
-        level_target_count = len({j.target.to_path_component() for j in jobs})
-        level_libraries = sorted({j.library.name for j in jobs})
+            if not jobs:
+                continue
 
-        # Print level header through progress display
-        progress.print_level_header(
-            level_idx, level_lib_count, level_target_count, len(jobs), level_libraries
-        )
+            level_lib_count = len({j.library.name for j in jobs})
+            level_target_count = len({j.target.to_path_component() for j in jobs})
+            level_libraries = sorted({j.library.name for j in jobs})
 
-        # Execute all jobs in parallel
-        with ThreadPoolExecutor(max_workers=min(max_parallel, len(jobs))) as executor:
-            futures = {
-                executor.submit(
-                    execute_build_job,
-                    job,
-                    dir_manager,
-                    fetcher,
-                    completed[job.target.to_path_component()],
-                    version_map,
-                    jobs_per_lib,
-                    include_cmake_configs,
-                    log_level,
-                    progress,
-                    vs_version,
-                    android_api_level,
-                ): job
-                for job in jobs
-            }
+            # Print level header through progress display
+            progress.print_level_header(
+                level_idx,
+                level_lib_count,
+                level_target_count,
+                len(jobs),
+                level_libraries,
+            )
 
-            for future in as_completed(futures):
-                job = futures[future]
-                target = job.target
-                target_str = target.to_path_component()
-                # Include both OS and arch to match the key used in start_job
-                platform = f"{target.os.value}_{target.arch.value}"
-                config = target.build_config.value
-                link = target.link_type.value
-                try:
-                    result = future.result()
-                    completed[target_str][job.library.name] = result.install_path
-                    stats.add_result(result)
-                    completed_jobs += 1
-                    progress.complete_job(
-                        job.library.name,
-                        platform,
-                        config,
-                        link,
-                        result.duration_seconds,
-                    )
-                except Exception as e:
-                    progress.fail_job(
-                        job.library.name,
-                        platform,
-                        config,
-                        link,
-                        str(e),
-                    )
-                    raise
+            # Execute all jobs in parallel. Not a `with` block: its __exit__
+            # calls shutdown(wait=True) without cancel_futures, so every queued
+            # job would still run to completion after a failure.
+            executor = ThreadPoolExecutor(max_workers=min(max_parallel, len(jobs)))
+            futures: Dict = {}
+            try:
+                futures = {
+                    executor.submit(
+                        execute_build_job,
+                        job,
+                        dir_manager,
+                        fetcher,
+                        completed[job.target.to_path_component()],
+                        version_map,
+                        jobs_per_lib,
+                        include_cmake_configs,
+                        log_level,
+                        progress,
+                        vs_version,
+                        android_api_level,
+                    ): job
+                    for job in jobs
+                }
+
+                for future in as_completed(futures):
+                    job = futures[future]
+                    target = job.target
+                    target_str = target.to_path_component()
+                    # Include both OS and arch to match the key used in start_job
+                    platform = f"{target.os.value}_{target.arch.value}"
+                    config = target.build_config.value
+                    link = target.link_type.value
+                    try:
+                        result = future.result()
+                        completed[target_str][job.library.name] = result.install_path
+                        stats.add_result(result)
+                        completed_jobs += 1
+                        progress.complete_job(
+                            job.library.name,
+                            platform,
+                            config,
+                            link,
+                            result.duration_seconds,
+                        )
+                    except Exception as e:
+                        progress.fail_job(
+                            job.library.name,
+                            platform,
+                            config,
+                            link,
+                            str(e),
+                        )
+                        # Stop scheduling instead of re-raising here: raising
+                        # from inside the loop leaves the remaining queued jobs
+                        # to run to completion, so the build appears to carry on
+                        # for another twenty minutes after the fatal error and
+                        # only the first failure is ever reported.
+                        if first_error is None:
+                            first_error = e
+                        for pending in futures:
+                            pending.cancel()
+                        break
+            except KeyboardInterrupt as e:
+                for pending in futures:
+                    pending.cancel()
+                first_error = e
+                raise
+            finally:
+                # wait=True so in-flight compilers finish rather than being
+                # orphaned; cancel_futures drops everything not yet started.
+                executor.shutdown(wait=True, cancel_futures=True)
+
+            if first_error is not None:
+                break
+    finally:
+        # Always tear the live region down, even on failure or Ctrl-C: Rich
+        # hides the cursor while it is running, and skipping stop() leaves the
+        # user's shell with an invisible cursor and a stale display.
+        progress.stop()
+
+    if first_error is not None:
+        _cleanup_lock_files(dir_manager.install_dir)
+        raise first_error
 
     stats.finish()
     progress.print_summary()
@@ -2185,8 +2226,16 @@ def main() -> int:  # noqa: C901
         if not args.for_external_integration:
             _print_post_build_instructions(install_dir)
         return 0
+    except KeyboardInterrupt:
+        # Ctrl-C during a multi-hour first build is expected, not exceptional.
+        # Reported as a normal outcome rather than a traceback, with 130 (the
+        # shell convention for SIGINT) so wrapper scripts can tell it apart
+        # from a build failure.
+        print("\n✗ Interrupted. Partial results are kept; re-run to continue.")
+        return 130
     except Exception as e:
         print(f"\n✗ Build failed: {e}")
+        print(f"  Full output for each job: {build_dir}/<library>/<version>/<target>/build.log")
         if log_level >= LogLevel.VERBOSE:
             import traceback
 
