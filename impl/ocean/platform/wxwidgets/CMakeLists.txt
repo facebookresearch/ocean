@@ -36,15 +36,17 @@ if (MACOS OR WIN32)
 
         if (MACOS)
             set(_wx_platform "macos")
-            if (CMAKE_SYSTEM_PROCESSOR MATCHES "arm64|aarch64|ARM64")
-                set(_wx_arch "arm64")
-            else()
-                set(_wx_arch "x86_64")
-            endif()
         elseif (WIN32)
             set(_wx_platform "windows")
-            set(_wx_arch "x86_64")
         endif()
+
+        # Architecture comes from the root CMakeLists.txt, which already applies the
+        # Apple rule that CMAKE_OSX_ARCHITECTURES, not CMAKE_SYSTEM_PROCESSOR, names
+        # the target. Deriving it again here read the host architecture instead, so a
+        # macOS x86_64 build resolved wxWidgets from the arm64 tree while every other
+        # third-party library came from the x86_64 one. Hard-coding it for Windows
+        # likewise sent an ARM64 build to windows_x86_64.
+        set(_wx_arch "${_ocean_3p_arch}")
 
         # Use the toolset string from root CMakeLists.txt (e.g., "_vc143", "_vc145")
         set(_wx_target "${_wx_platform}_${_wx_arch}${_ocean_3p_toolset}_${_wx_link}${_wx_config}")

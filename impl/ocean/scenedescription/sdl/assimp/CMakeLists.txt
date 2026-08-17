@@ -49,19 +49,11 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
             set(_assimp_platform "windows")
         endif()
 
-        if (ANDROID)
-            if (ANDROID_ABI STREQUAL "arm64-v8a")
-                set(_assimp_arch "arm64")
-            elseif (ANDROID_ABI STREQUAL "armeabi-v7a")
-                set(_assimp_arch "armv7")
-            else()
-                set(_assimp_arch "x86_64")
-            endif()
-        elseif (CMAKE_SYSTEM_PROCESSOR MATCHES "arm64|aarch64|ARM64")
-            set(_assimp_arch "arm64")
-        else()
-            set(_assimp_arch "x86_64")
-        endif()
+        # Architecture comes from the root CMakeLists.txt. Deriving it here missed the
+        # Apple rule that CMAKE_OSX_ARCHITECTURES names the target, so a macOS x86_64
+        # build looked for assimp in the arm64 tree, and Android x86 fell through to
+        # x86_64.
+        set(_assimp_arch "${_ocean_3p_arch}")
 
         set(_assimp_target "${_assimp_platform}_${_assimp_arch}_${_assimp_link}${_assimp_config}")
         set(_assimp_root "${OCEAN_THIRD_PARTY_ROOT}/assimp")
