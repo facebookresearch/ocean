@@ -965,6 +965,14 @@ def _install_standard_layout(
     keeps only the requested kind so consumers cannot accidentally link
     the wrong variant.
 
+    Windows is exempt. There the filter cannot work: a static library and the
+    import library for a DLL are both `.lib`, so an extension test cannot tell
+    them apart. Filtering a static target dropped `foo.dll` and kept both
+    `foo.lib` (its import library) and `foostatic.lib`, leaving a prefix that
+    links successfully and then fails at process start with a missing DLL --
+    a state that would not exist if nothing had been filtered at all. Keeping
+    both variants is untidy; publishing a dangling import library is broken.
+
     Args:
         install_dir: Source directory containing cmake --install output.
         final_dir: Destination directory (<install_root>/<target>/<library>/).
@@ -979,7 +987,9 @@ def _install_standard_layout(
 
     is_shared = target.link_type == LinkType.SHARED
     skip_patterns: List[str] = []
-    if is_shared and has_static_libs and has_shared_libs:
+    if target.os == OS.WINDOWS:
+        skip_extensions = set()
+    elif is_shared and has_static_libs and has_shared_libs:
         skip_extensions = {".a"}
     elif not is_shared and has_static_libs and has_shared_libs:
         skip_extensions = {".dylib", ".so", ".dll"}
@@ -1113,7 +1123,14 @@ def reorganize_output(  # noqa: C901
         # that ships a single kind (an imported_shared .so like ARCore) would
         # otherwise be filtered down to an empty directory.
         has_static_libs, has_shared_libs = _detect_installed_library_kinds(install_dir)
-        if not (has_static_libs and has_shared_libs):
+        if target.os == OS.WINDOWS:
+            # A static library and a DLL's import library are both `.lib`, so
+            # the extension cannot distinguish them and filtering a static
+            # target deleted the DLL while keeping its import library. See
+            # _install_standard_layout for the full reasoning.
+            skip_extensions = set()
+            skip_patterns = []
+        elif not (has_static_libs and has_shared_libs):
             skip_extensions = set()
             skip_patterns = []
         elif target.link_type == LinkType.STATIC:
