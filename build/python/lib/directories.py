@@ -17,7 +17,7 @@ import threading
 from dataclasses import dataclass, replace
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict, Optional, Set
 
 from .platform import BuildTarget, LinkType, OS
 
@@ -422,6 +422,66 @@ class DirectoryManager:
                     temp_file.rename(metadata_file)
                 finally:
                     _unlock_file(lock_f)
+
+    def _install_entries(self) -> list:
+        """Visible top-level directories in the install tree."""
+        if not self.install_dir.exists():
+            return []
+        return sorted(
+            entry
+            for entry in self.install_dir.iterdir()
+            if entry.is_dir() and not entry.name.startswith(".")
+        )
+
+    def find_unrecognized_install_entries(self, known_libraries: Set[str]) -> list:
+        """Directories in the install tree that no manifest library explains.
+
+        The tree is deliberately additive: targets, link types and build
+        configurations are separate directories so they accumulate across runs,
+        which is why --clean leaves it alone. "Not built this time" is therefore
+        normal and is never reported.
+
+        A directory whose name matches no library in the manifest is different —
+        no invocation can produce it. It is left over from a library that was
+        renamed or removed, and because Ocean's CMake puts every directory in
+        the tree on CMAKE_PREFIX_PATH, it stays visible to find_package.
+        """
+        unknown = []
+        for entry in self._install_entries():
+            if entry.name in known_libraries:
+                continue  # external-integration layout: <install>/<library>/
+            # Otherwise a per-target directory: <install>/<target>/<library>/
+            try:
+                children = sorted(entry.iterdir())
+            except OSError:
+                continue
+            unknown.extend(
+                child
+                for child in children
+                if child.is_dir()
+                and not child.name.startswith(".")
+                and child.name not in known_libraries
+            )
+        return unknown
+
+    def find_mixed_install_layouts(self, known_libraries: Set[str]) -> list:
+        """Detect both install layouts coexisting in one tree.
+
+        Ocean's layout auto-detection tests for a per-target directory first, so
+        when both shapes are present the standard tree wins even if the external
+        one was built more recently — the fresh output is ignored wholesale.
+        """
+        external = [e for e in self._install_entries() if e.name in known_libraries]
+        standard = [
+            entry
+            for entry in self._install_entries()
+            if entry.name not in known_libraries
+            and any(
+                child.is_dir() and child.name in known_libraries
+                for child in entry.iterdir()
+            )
+        ]
+        return [external, standard] if external and standard else []
 
     def find_android_api_level_conflicts(
         self, libraries: Dict, targets: list, api_level: int

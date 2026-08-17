@@ -1903,6 +1903,51 @@ def parse_platforms(
     return ParsedPlatforms(platforms, explicit) if platforms else None
 
 
+def _report_install_tree_drift(
+    dir_manager: DirectoryManager, known_libraries: set
+) -> None:
+    """Point out install-tree content the manifest can no longer explain.
+
+    The tree is additive by design and --clean deliberately leaves it alone, so
+    it is never pruned automatically — reporting is the honest middle ground.
+    Only content that *no* invocation could produce is mentioned; output from a
+    target or configuration you simply did not build this time is normal and
+    stays quiet.
+    """
+    unknown = dir_manager.find_unrecognized_install_entries(known_libraries)
+    mixed = dir_manager.find_mixed_install_layouts(known_libraries)
+    if not unknown and not mixed:
+        return
+
+    print(f"\n{'─' * 70}")
+    print("Note: the install tree contains entries this manifest cannot explain")
+    print(f"{'─' * 70}")
+
+    if unknown:
+        print("  Not built by any library in the manifest (renamed or removed?):")
+        for entry in unknown[:10]:
+            print(f"    {entry}")
+        if len(unknown) > 10:
+            print(f"    ... and {len(unknown) - 10} more")
+        print(
+            "  Ocean's CMake puts every directory in the install tree on\n"
+            "  CMAKE_PREFIX_PATH, so these are still visible to find_package."
+        )
+
+    if mixed:
+        external, standard = mixed
+        print("  Both install layouts are present in one tree:")
+        print(f"    per-library (--for-external-integration): {external[0]}")
+        print(f"    per-target (standard):                    {standard[0]}")
+        print(
+            "  Ocean's layout detection checks for a per-target directory "
+            "first, so\n  the standard tree wins even if the other was built "
+            "more recently."
+        )
+
+    print("  Nothing was deleted. Remove them by hand if they are stale.")
+
+
 def _print_post_build_instructions(install_dir: Path) -> None:
     """Print next-step instructions after a successful 3rd-party build.
 
@@ -2391,6 +2436,7 @@ def main() -> int:  # noqa: C901
             android_api_level=android_api_level,
         )
         print("\n✓ Build completed successfully!")
+        _report_install_tree_drift(dir_manager, set(manifest.libraries))
         if not args.for_external_integration:
             _print_post_build_instructions(install_dir)
         return 0
