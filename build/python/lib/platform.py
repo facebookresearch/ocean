@@ -379,8 +379,30 @@ def detect_host_target(
     )
 
 
+def _is_ndk_root(path: str) -> bool:
+    """An NDK root is identified by the CMake toolchain file we hand to CMake."""
+    return os.path.isfile(
+        os.path.join(path, "build", "cmake", "android.toolchain.cmake")
+    )
+
+
+def _ndk_version_key(name: str) -> tuple:
+    """Sort key for NDK directory names such as '27.0.12077973' or 'r21e'.
+
+    Compared numerically per component: a lexicographic sort puts '9.x' above
+    '27.x', which would pick a years-old NDK on a host that has both.
+    """
+    parts = re.findall(r"\d+", name)
+    return tuple(int(p) for p in parts) if parts else (0,)
+
+
 def get_android_ndk_path() -> Optional[str]:
     """Get Android NDK path from environment or common locations.
+
+    Every candidate is validated by looking for android.toolchain.cmake, so a
+    stale environment variable or an unrelated directory does not produce a
+    path the build only rejects much later. When several NDKs are installed
+    side by side the newest wins, compared numerically.
 
     Checks the following environment variables (in order):
     - ANDROID_NDK_HOME (official recommended name)
@@ -389,41 +411,52 @@ def get_android_ndk_path() -> Optional[str]:
     - ANDROID_NDK_ROOT (used in some documentation)
     - NDK_ROOT (used in some build systems)
 
-    Then checks common installation paths:
-    - ~/Library/Android/sdk/ndk/ (macOS default)
-    - ~/Android/Sdk/ndk/ (Linux default)
-    - /opt/android-ndk/
+    Then SDK roots (ANDROID_HOME, ANDROID_SDK_ROOT and the per-platform
+    defaults), looking at both the modern ndk/<version>/ layout and the legacy
+    ndk-bundle/ one, and finally /opt/android-ndk.
     """
-    # Check environment variables (in order of preference)
-    env_vars = [
+    for var in (
         "ANDROID_NDK_HOME",
         "ANDROID_NDK",
         "NDK_HOME",
         "ANDROID_NDK_ROOT",
         "NDK_ROOT",
-    ]
-
-    for var in env_vars:
+    ):
         ndk_path = os.environ.get(var)
-        if ndk_path and os.path.isdir(ndk_path):
+        if ndk_path and _is_ndk_root(ndk_path):
             return ndk_path
 
-    # Check common locations
-    common_paths = [
-        os.path.expanduser("~/Library/Android/sdk/ndk"),  # macOS
-        os.path.expanduser("~/Android/Sdk/ndk"),  # Linux
-        "/opt/android-ndk",
+    sdk_roots = [
+        os.environ.get("ANDROID_HOME"),
+        os.environ.get("ANDROID_SDK_ROOT"),
+        os.path.expanduser("~/Library/Android/sdk"),  # macOS
+        os.path.expanduser("~/Android/Sdk"),  # Linux
+        os.path.expanduser("~/AppData/Local/Android/Sdk"),  # Windows
     ]
 
-    for base_path in common_paths:
-        if os.path.isdir(base_path):
-            # Get the latest NDK version
-            try:
-                versions = sorted(os.listdir(base_path), reverse=True)
-                if versions:
-                    return os.path.join(base_path, versions[0])
-            except OSError:
-                continue
+    candidates = []
+    for sdk_root in sdk_roots:
+        if sdk_root:
+            candidates.append(os.path.join(sdk_root, "ndk"))
+            candidates.append(os.path.join(sdk_root, "ndk-bundle"))
+    candidates.append("/opt/android-ndk")
+
+    for base in candidates:
+        # ndk-bundle (and a directly-pointed-at NDK) is itself the root.
+        if _is_ndk_root(base):
+            return base
+        if not os.path.isdir(base):
+            continue
+        try:
+            versions = [
+                name
+                for name in os.listdir(base)
+                if _is_ndk_root(os.path.join(base, name))
+            ]
+        except OSError:
+            continue
+        if versions:
+            return os.path.join(base, max(versions, key=_ndk_version_key))
 
     return None
 
