@@ -87,8 +87,18 @@ set(OCEAN_IMPL_DIR "${CMAKE_CURRENT_LIST_DIR}/impl")
 ocean_translate_system_name(${CMAKE_HOST_SYSTEM_NAME} OCEAN_HOST_SYSTEM_NAME)
 ocean_translate_system_name(${CMAKE_SYSTEM_NAME} OCEAN_TARGET_SYSTEM_NAME)
 
-set(OCEAN_HOST_PROCESSOR_TYPE ${CMAKE_HOST_SYSTEM_PROCESSOR})
-set(OCEAN_TARGET_PROCESSOR_TYPE ${CMAKE_SYSTEM_PROCESSOR})
+ocean_translate_processor_type("${CMAKE_HOST_SYSTEM_PROCESSOR}" OCEAN_HOST_PROCESSOR_TYPE)
+
+# On Apple platforms CMAKE_OSX_ARCHITECTURES, not CMAKE_SYSTEM_PROCESSOR, decides what the
+# compiler targets. CMAKE_SYSTEM_PROCESSOR stays at the host architecture even for a cross
+# build, so it reports arm64 for an x86_64 build on an Apple silicon Mac and vice versa.
+# A multi-architecture list resolves to arm64, matching the third-party resolution below;
+# Ocean does not support universal binaries.
+if (APPLE AND CMAKE_OSX_ARCHITECTURES)
+    ocean_translate_processor_type("${CMAKE_OSX_ARCHITECTURES}" OCEAN_TARGET_PROCESSOR_TYPE)
+else()
+    ocean_translate_processor_type("${CMAKE_SYSTEM_PROCESSOR}" OCEAN_TARGET_PROCESSOR_TYPE)
+endif()
 
 get_ocean_preprocessor_flags(OCEAN_PREPROCESSOR_FLAGS)
 get_ocean_compiler_flags(OCEAN_COMPILER_FLAGS)

@@ -62,6 +62,39 @@ function(ocean_translate_system_name system_name_string translated_system_name_v
     endif()
 endfunction()
 
+# Translates the processor architecture names CMake uses to the names Ocean prefers
+#
+# The same architecture is spelled differently depending on the toolchain that reports it.
+# The Android NDK and the vendored ios.toolchain.cmake report "aarch64" where Apple and Ocean say "arm64".
+# Windows reports "AMD64" where Ocean says "x86_64".
+#
+# The mapping is defined as follows (CMake -> Ocean):
+#   arm64, aarch64, ARM64 -> arm64
+#   x86_64, AMD64, amd64 -> x86_64
+#   x86, i686, i386 -> x86
+#
+# Parameters:
+#   processor_string: The name of the architecture that will be translated as a string, may be a list
+#
+# Output:
+#   translated_processor_variable: The name of variable where the result should be stored
+#
+# Unknown names are passed through unchanged, so that architectures Ocean has no opinion about
+# do not turn into a configure failure.
+#
+# Example: ocean_translate_processor_type("aarch64" output_variable)
+function(ocean_translate_processor_type processor_string translated_processor_variable)
+    if (processor_string MATCHES "arm64|aarch64|ARM64")
+        set(${translated_processor_variable} "arm64" PARENT_SCOPE)
+    elseif (processor_string MATCHES "x86_64|AMD64|amd64")
+        set(${translated_processor_variable} "x86_64" PARENT_SCOPE)
+    elseif (processor_string MATCHES "x86|i686|i386")
+        set(${translated_processor_variable} "x86" PARENT_SCOPE)
+    else()
+        set(${translated_processor_variable} "${processor_string}" PARENT_SCOPE)
+    endif()
+endfunction()
+
 # Creates the default preprocessor flags for Ocean
 #
 # Output:
