@@ -363,9 +363,11 @@ bool TestNonLinearOptimizationPose::testNonLinearOptimizationPosePinholeCamera(c
 	Log::info() << "Performance: Best: " << String::toAString(performance.bestMseconds(), 4u) << "ms, worst: " << String::toAString(performance.worstMseconds(), 4u) << "ms, average: " << String::toAString(performance.averageMseconds(), 4u) << "ms, median: " << String::toAString(performance.medianMseconds(), 4u) << "ms";
 	Log::info() << "Validation: " << validation;
 
+	const bool validationSucceeded = validation.succeeded();
+
 	if (std::is_same<double, Scalar>::value && standardDeviation == 0 && numberOutliers == 0u)
 	{
-		return validation.succeeded();
+		return validationSucceeded;
 	}
 
 	return true;
@@ -675,9 +677,11 @@ bool TestNonLinearOptimizationPose::testNonLinearOptimizationPoseAnyCamera(const
 		Log::info() << indentation << "Performance: " << performance;
 		Log::info() << indentation << "Validation: " << validation;
 
+		const bool validationSucceeded = validation.succeeded();
+
 		if (std::is_same<double, Scalar>::value && standardDeviation == 0 && numberOutliers == 0u)
 		{
-			if (!validation.succeeded())
+			if (!validationSucceeded)
 			{
 				OCEAN_SET_FAILED(outerValidation);
 			}
