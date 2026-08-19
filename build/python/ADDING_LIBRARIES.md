@@ -104,6 +104,7 @@ Common issues and fixes:
 | CMake version error | Add `CMAKE_POLICY_VERSION_MINIMUM: "3.5"` |
 | Tests use x86 assembly | Add `BUILD_TESTING: OFF` |
 | Uses bundled dependency | Add `USE_BUNDLED_X: OFF` or `X_BUILD_BUNDLED: OFF` |
+| Installs both static and shared variants | Gate the install on the requested link type. On Windows, both static archives and DLL import libraries use `.lib`, so extensions cannot distinguish them. |
 | Can't find dependency | Check dependency is listed and builds first |
 
 ## Updating a Library Version
