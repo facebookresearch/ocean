@@ -26,7 +26,7 @@
       <AdditionalIncludeDirectories>$(OceanRootPath)3rdparty\wxwidgets\lib\$(OceanConfigFolder);$(OceanRootPath)3rdparty\wxwidgets\h\win;$(OceanRootPath)3rdparty\wxwidgets\h\win\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>wxbase33ud.lib;wxmsw33ud_core.lib;libpng16_staticd.lib;zlibstaticd.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>wxbase33ud.lib;wxmsw33ud_core.lib;libpng16_staticd.lib;zlibd.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\wxwidgets\lib\$(OceanConfigFolder);$(OceanRootPath)3rdparty\libpng\lib\$(Ocean3rdPartyConfigFolder);$(OceanRootPath)3rdparty\zlib\lib\$(Ocean3rdPartyConfigFolder);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -46,7 +46,7 @@
       <AdditionalIncludeDirectories>$(OceanRootPath)3rdparty\wxwidgets\lib\$(OceanConfigFolder);$(OceanRootPath)3rdparty\wxwidgets\h\win;$(OceanRootPath)3rdparty\wxwidgets\h\win\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>wxbase33u.lib;wxmsw33u_core.lib;libpng16_static.lib;zlibstatic.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>wxbase33u.lib;wxmsw33u_core.lib;libpng16_static.lib;zlib.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\wxwidgets\lib\$(OceanConfigFolder);$(OceanRootPath)3rdparty\libpng\lib\$(Ocean3rdPartyConfigFolder);$(OceanRootPath)3rdparty\zlib\lib\$(Ocean3rdPartyConfigFolder);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>

@@ -25,7 +25,9 @@ libraries:
       # zlib declares both targets with an explicit keyword
       # (add_library(zlib SHARED ...) / add_library(zlibstatic STATIC ...)),
       # so BUILD_SHARED_LIBS does not select between them and it installs both
-      # regardless. The patch gates the install rule on BUILD_SHARED_LIBS.
+      # regardless. The patch gates the install rule on BUILD_SHARED_LIBS and
+      # uses zlib.lib for the Windows static archive, which also works with
+      # assimp's bundled FindZLIB module.
       patch: patches/zlib.patch
     build:
       system: cmake
