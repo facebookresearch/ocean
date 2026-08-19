@@ -1,4 +1,4 @@
-#!/usr/bin/env fbpython
+#!/usr/bin/env python3
 # Copyright (c) Meta Platforms, Inc. and affiliates.
 #
 # This source code is licensed under the MIT license found in the
@@ -28,9 +28,15 @@ Usage:
     ./build_ocean_3rdparty.py --target macos_arm64 --config release --link static
     ./build_ocean_3rdparty.py --target macos_arm64 --config release --link shared
 
-    # Then audit them
+    # Audit what is there. This reports on the scope it found and nothing more.
     ./audit_link_variants.py --build-dir ocean_3rdparty/build
-    ./audit_link_variants.py --build-dir ocean_3rdparty/build --json audit.json
+
+    # Evaluate the filter-removal gate. The matrix says which results are
+    # supposed to exist, so a platform nobody built is a failure rather than
+    # a requirement that quietly disappears with it.
+    ./build_ocean_3rdparty.py --target macos_arm64 --emit-expected-matrix matrix.json
+    ./audit_link_variants.py --build-dir ocean_3rdparty/build \
+        --expected-matrix matrix.json --json audit.json
 """
 
 from __future__ import annotations
@@ -58,6 +64,7 @@ _shapes_spec.loader.exec_module(_shapes)
 framework_binary_name = _shapes.framework_binary_name
 is_shared_library_name = _shapes.is_shared_library_name
 strip_version = _shapes.strip_version
+target_without_link_type = _shapes.target_without_link_type
 
 # Trailing markers producers use to name the alternate variant of the same
 # library. Only used to pair artifacts for reporting -- never to delete
@@ -270,6 +277,7 @@ def public_stem(name: str) -> str:
 @dataclass
 class Finding:
     library: str
+    version: str
     target: str
     requested: str
     verdict: str
@@ -374,7 +382,9 @@ def _classify_groups(
     return dual, orphan_static, wrong_only, unclassified, artifacts
 
 
-def audit_staging(staging: Path, library: str, target: str, requested: str) -> Finding:
+def audit_staging(
+    staging: Path, library: str, version: str, target: str, requested: str
+) -> Finding:
     """Classify one library's unfiltered install tree."""
     is_windows = target.startswith("win")
     grouped, imports = _collect(staging, is_windows)
@@ -438,6 +448,7 @@ def audit_staging(staging: Path, library: str, target: str, requested: str) -> F
 
     return Finding(
         library=library,
+        version=version,
         target=target,
         requested=requested,
         verdict=verdict,
@@ -447,62 +458,144 @@ def audit_staging(staging: Path, library: str, target: str, requested: str) -> F
     )
 
 
-def discover(build_dir: Path) -> List[Tuple[Path, str, str]]:
-    """Find (staging, library, target) for every _install tree under build_dir."""
+def discover(build_dir: Path) -> Tuple[List[Tuple[Path, str, str, str]], List[Path]]:
+    """Find (staging, library, version, target) for every _install tree.
+
+    The version is part of the key: a static result from one version must not
+    complete the pairing for a shared result from another, and stale trees for
+    an older version outlive a version bump in the same build directory.
+
+    Only `<build>/<library>/<version>/<target>/_install` counts. A nested
+    `_install` -- one a subproject wrote inside its own build tree -- would
+    otherwise be read with its parent directory standing in for the target,
+    inventing a result for a target that was never built. Anything else found
+    is returned separately so it can be reported rather than dropped in
+    silence.
+    """
     found = []
+    unexpected = []
     for staging in sorted(build_dir.rglob("_install")):
         if not staging.is_dir():
             continue
-        # <build>/<library>/<version>/<target>/_install
-        try:
-            target = staging.parent.name
-            library = staging.relative_to(build_dir).parts[0]
-        except (IndexError, ValueError):
+        relative = staging.relative_to(build_dir).parts
+        if len(relative) != 4:
+            unexpected.append(staging)
             continue
-        found.append((staging, library, target))
-    return found
+        library, version, target, _ = relative
+        found.append((staging, library, version, target))
+    return found, unexpected
 
 
-def _find_missing_coverage(findings: List[Finding]) -> List[str]:
-    """Libraries audited for only one link type.
-
-    The question this tool answers -- does a producer install both public
-    variants -- cannot be answered from one link type alone. Without this a run
-    that only built static prints "every audited tree installs exactly the
-    requested variant" and exits 0, which is the same false all-clear the
-    verdicts were hardened against.
-    """
-    seen: Dict[str, set] = {}
+def audited_scope(findings: List[Finding]) -> Dict[Tuple[str, str, str], set]:
+    """Which link types were audited, per (library, version, target-minus-link)."""
+    scope: Dict[Tuple[str, str, str], set] = {}
     for finding in findings:
-        seen.setdefault(finding.library, set()).add(finding.requested)
-    return sorted(
-        name for name, kinds in seen.items() if {LibKind.STATIC, LibKind.SHARED} - kinds
-    )
+        key = (
+            finding.library,
+            finding.version,
+            target_without_link_type(finding.target),
+        )
+        scope.setdefault(key, set()).add(finding.requested)
+    return scope
 
 
-def report(
-    findings: List[Finding],
-    build_dir: Path,
-    missing_coverage: Optional[List[str]] = None,
-) -> List[str]:
-    """Print the audit, worst first. Returns the producers that need fixing."""
-    order = {
-        "BROKEN_PAIR": 0,
-        "DUAL_PUBLIC": 1,
-        "WRONG_ONLY": 2,
-        "UNCLASSIFIED": 3,
-        "DANGLING_METADATA": 4,
-        "REVIEW": 5,
-        "OK": 6,
-        "NO_LIBRARIES": 7,
-    }
-    findings.sort(key=lambda f: (order.get(f.verdict, 9), f.library, f.target))
+def _unpaired(findings: List[Finding]) -> List[Tuple[str, str, str, str]]:
+    """Entries audited for one link type only, as (library, version, target, missing)."""
+    unpaired = []
+    for (library, version, base), kinds in sorted(audited_scope(findings).items()):
+        for missing in sorted({LibKind.STATIC, LibKind.SHARED} - kinds):
+            unpaired.append((library, version, base, missing))
+    return unpaired
 
-    print(f"Audited {len(findings)} staging trees under {build_dir}\n")
+
+def load_expected_matrix(path: Path) -> List[dict]:
+    """Read the matrix of results the audit is supposed to see.
+
+    The gate cannot infer what should exist from what does exist: if the
+    Windows half of a stack was never built, deriving the requirement from the
+    findings makes Windows silently stop being required and the run still
+    reports clean. So the expectation is declared, not observed.
+
+    Each entry names one (library, version, target) that must be audited, and
+    the link types it must be audited for. Producers that legitimately ship
+    only one variant -- mbedtls, directshow and android_native_app_glue are
+    static-only in the manifest -- list just that one, rather than being held
+    to a build that cannot happen.
+
+        {"expected": [
+            {"library": "zlib", "version": "1.3.1",
+             "target": "macos_arm64", "link_types": ["static", "shared"]}
+        ]}
+
+    Generate it with `build_ocean_3rdparty.py --emit-expected-matrix`.
+    """
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        raise RuntimeError(f"cannot read expected matrix {path}: {exc}") from exc
+
+    entries = raw.get("expected") if isinstance(raw, dict) else None
+    if not isinstance(entries, list) or not entries:
+        raise RuntimeError(f"{path}: expected a non-empty 'expected' list")
+
+    valid = {LibKind.STATIC, LibKind.SHARED}
+    for index, entry in enumerate(entries):
+        if not isinstance(entry, dict):
+            raise RuntimeError(f"{path}: entry {index} is not an object")
+        for field_name in ("library", "version", "target"):
+            if not isinstance(entry.get(field_name), str) or not entry[field_name]:
+                raise RuntimeError(f"{path}: entry {index} lacks a '{field_name}'")
+        kinds = entry.get("link_types")
+        if not isinstance(kinds, list) or not kinds or set(kinds) - valid:
+            raise RuntimeError(
+                f"{path}: entry {index} needs a 'link_types' list drawn from "
+                f"{sorted(valid)}"
+            )
+    return entries
+
+
+def check_expected_matrix(findings: List[Finding], expected: List[dict]) -> List[str]:
+    """Expected results that were never audited, worst first."""
+    scope = audited_scope(findings)
+    gaps = []
+    for entry in expected:
+        key = (
+            entry["library"],
+            entry["version"],
+            target_without_link_type(entry["target"]),
+        )
+        audited = scope.get(key, set())
+        for kind in sorted(set(entry["link_types"]) - audited):
+            gaps.append(f"{entry['library']} {entry['version']} {key[2]} ({kind})")
+    return sorted(gaps)
+
+
+_VERDICT_ORDER = {
+    "BROKEN_PAIR": 0,
+    "DUAL_PUBLIC": 1,
+    "WRONG_ONLY": 2,
+    "UNCLASSIFIED": 3,
+    "DANGLING_METADATA": 4,
+    "REVIEW": 5,
+    "OK": 6,
+    "NO_LIBRARIES": 7,
+}
+
+# The two verdicts that describe a tree needing no action. Everything else
+# blocks, REVIEW included: "we could not classify this with confidence" means
+# removing the filter would not be byte-identical, so it must not read as a
+# clean bill of health.
+_CLEAN_VERDICTS = ("OK", "NO_LIBRARIES")
+
+
+def _print_findings(findings: List[Finding]) -> None:
+    """Every non-clean finding, worst first."""
     for f in findings:
         if f.verdict == "OK":
             continue
-        print(f"[{f.verdict}] {f.library} ({f.target}, requested {f.requested})")
+        print(
+            f"[{f.verdict}] {f.library} {f.version} ({f.target}, requested {f.requested})"
+        )
         print(f"    {f.detail}")
         for stem, items in sorted(f.artifacts.items()):
             print(f"      {stem}: {', '.join(items)}")
@@ -515,42 +608,93 @@ def report(
         counts[f.verdict] = counts.get(f.verdict, 0) + 1
     print("Summary: " + ", ".join(f"{v}={c}" for v, c in sorted(counts.items())))
 
-    # Everything except OK and NO_LIBRARIES blocks. REVIEW means "this tree has
-    # artifacts we could not classify with confidence" -- removing the filter
-    # would not be byte-identical, so an unresolved REVIEW must not read as a
-    # clean bill of health.
-    blocking = sorted(
-        {f.library for f in findings if f.verdict not in ("OK", "NO_LIBRARIES")}
-        | set(missing_coverage or [])
+
+def _print_producers_needing_attention(findings: List[Finding]) -> List[str]:
+    """The libraries with a blocking verdict, and why. Returns their names."""
+    needs_fixing = sorted(
+        {f.library for f in findings if f.verdict not in _CLEAN_VERDICTS}
     )
-    if missing_coverage:
-        print(
-            "\nAudited for only one link type, so nothing can be concluded about these:"
+    if not needs_fixing:
+        print("\nEvery audited tree installs exactly the requested variant.")
+        return needs_fixing
+
+    print("\nProducers needing attention:")
+    for name in needs_fixing:
+        verdicts = sorted(
+            {
+                f.verdict
+                for f in findings
+                if f.library == name and f.verdict not in _CLEAN_VERDICTS
+            }
         )
-        for name in missing_coverage:
-            print(f"  - {name}")
-        print("  Build both --link static and --link shared, or pass --allow-partial.")
-    if blocking:
-        print("\nProducers needing attention before the filter can be removed:")
-        for name in blocking:
-            verdicts = sorted(
-                {
-                    f.verdict
-                    for f in findings
-                    if f.library == name and f.verdict not in ("OK", "NO_LIBRARIES")
-                }
-            )
-            if name in (missing_coverage or []):
-                verdicts.append("ONE_LINK_TYPE_ONLY")
-            print(f"  - {name} ({', '.join(verdicts)})")
+        print(f"  - {name} ({', '.join(verdicts)})")
+    print("\nA REVIEW entry must be resolved or explicitly allowlisted, not ignored.")
+    return needs_fixing
+
+
+def _print_scope(findings: List[Finding]) -> None:
+    """What was actually covered.
+
+    Printed whether or not it is complete: a conclusion drawn from one link
+    type is only valid for that link type, and the reader has to be able to
+    see which is which.
+    """
+    print("\nAudited scope:")
+    for (library, version, base), kinds in sorted(audited_scope(findings).items()):
+        print(f"  {library} {version} {base}: {', '.join(sorted(kinds))}")
+
+    unpaired = _unpaired(findings)
+    if unpaired:
+        print("\nAudited for one link type only, so the pairing question is")
+        print("unanswered for these -- this is expected for a static-only producer")
+        print("and a gap for anything else:")
+        for library, version, base, missing in unpaired:
+            print(f"  - {library} {version} {base}: no {missing} result")
+
+
+def _print_gate(blocked: bool, matrix_gaps: Optional[List[str]]) -> None:
+    """The verdict the exit code carries."""
+    if matrix_gaps:
+        print("\nExpected results that were never audited:")
+        for gap in matrix_gaps:
+            print(f"  - {gap}")
+    if blocked:
         print(
-            "\nThe post-install link-type filter cannot be removed on macOS/Linux "
-            "until this list is empty. A REVIEW entry must be resolved or "
-            "explicitly allowlisted, not ignored."
+            "\nFilter-removal gate: BLOCKED. The post-install link-type filter "
+            "cannot be removed on macOS/Linux until the lists above are empty."
         )
     else:
-        print("\nEvery audited tree installs exactly the requested variant.")
-    return blocking
+        print(
+            "\nFilter-removal gate: PASS. Every expected result was audited and "
+            "installs exactly the requested variant."
+        )
+
+
+def report(
+    findings: List[Finding],
+    build_dir: Path,
+    matrix_gaps: Optional[List[str]] = None,
+    gate_evaluated: bool = False,
+) -> bool:
+    """Print the audit, worst first. Returns True if anything blocks."""
+    findings.sort(key=lambda f: (_VERDICT_ORDER.get(f.verdict, 9), f.library, f.target))
+    print(f"Audited {len(findings)} staging trees under {build_dir}\n")
+
+    _print_findings(findings)
+    needs_fixing = _print_producers_needing_attention(findings)
+    _print_scope(findings)
+
+    if not gate_evaluated:
+        print(
+            "\nFilter-removal gate: NOT EVALUATED. This run only speaks for the "
+            "scope above. Pass --expected-matrix to check it against the results "
+            "that are supposed to exist."
+        )
+        return bool(needs_fixing)
+
+    blocked = bool(needs_fixing or matrix_gaps)
+    _print_gate(blocked, matrix_gaps)
+    return blocked
 
 
 def main() -> int:
@@ -570,9 +714,13 @@ def main() -> int:
     )
     parser.add_argument("--json", type=Path, default=None, help="Also write JSON here")
     parser.add_argument(
-        "--allow-partial",
-        action="store_true",
-        help="Do not require every library to be audited for both link types",
+        "--expected-matrix",
+        type=Path,
+        default=None,
+        help=(
+            "JSON listing the results that must exist. Without it the run "
+            "reports only on what it found and does not evaluate the gate."
+        ),
     )
     args = parser.parse_args()
 
@@ -580,7 +728,17 @@ def main() -> int:
         print(f"Error: build directory not found: {args.build_dir}")
         return 1
 
-    trees = discover(args.build_dir)
+    trees, unexpected = discover(args.build_dir)
+    if unexpected:
+        print(
+            f"Ignoring {len(unexpected)} '_install' directories that are not at "
+            "<library>/<version>/<target>/_install:"
+        )
+        for path in unexpected[:10]:
+            print(f"  {path.relative_to(args.build_dir)}")
+        if len(unexpected) > 10:
+            print(f"  ... and {len(unexpected) - 10} more")
+        print()
     if args.library:
         wanted = set(args.library)
         trees = [t for t in trees if t[1] in wanted]
@@ -590,13 +748,23 @@ def main() -> int:
         print("Run build_ocean_3rdparty.py first, once per link type.")
         return 1
 
-    findings = []
-    for staging, library, target in trees:
-        requested = LibKind.SHARED if "shared" in target else LibKind.STATIC
-        findings.append(audit_staging(staging, library, target, requested))
+    expected = None
+    if args.expected_matrix:
+        try:
+            expected = load_expected_matrix(args.expected_matrix)
+        except RuntimeError as exc:
+            print(f"Error: {exc}")
+            return 1
 
-    missing_coverage = [] if args.allow_partial else _find_missing_coverage(findings)
-    blocking = report(findings, args.build_dir, missing_coverage)
+    findings = []
+    for staging, library, version, target in trees:
+        requested = LibKind.SHARED if "shared" in target else LibKind.STATIC
+        findings.append(audit_staging(staging, library, version, target, requested))
+
+    matrix_gaps = check_expected_matrix(findings, expected) if expected else None
+    blocking = report(
+        findings, args.build_dir, matrix_gaps, gate_evaluated=expected is not None
+    )
 
     if args.json:
         args.json.write_text(

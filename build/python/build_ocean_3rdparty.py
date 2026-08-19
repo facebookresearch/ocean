@@ -69,6 +69,7 @@ from __future__ import annotations
 
 import argparse
 import atexit
+import json
 import os
 import sys
 import time
@@ -155,6 +156,7 @@ from lib import (
     run_preflight_checks,
     SourceFetcher,
 )
+from lib.artifact_shapes import target_without_link_type
 from lib.builder_base import BuildContext, Builder
 from lib.directories import remove_tree
 from lib.platform import (
@@ -343,6 +345,53 @@ def _split_list_arg(values: Optional[List[str]]) -> List[str]:
             if item:
                 result.append(item)
     return _dedup(result)
+
+
+def write_expected_matrix(path: Path, libraries, targets) -> None:
+    """Write the matrix of results `audit_link_variants.py` must find.
+
+    The audit cannot infer what should exist from what does exist -- if nobody
+    built Windows, a requirement derived from the results would quietly stop
+    covering Windows. So the expectation is generated here, from the manifest,
+    where the answer is actually known.
+
+    Both link types are emitted for every library that supports both, whatever
+    `--link` this particular invocation used: the matrix describes the intended
+    build, not the one run that produced it. It is still scoped to `--target`,
+    so generate it with the full set of targets the audit is meant to cover.
+    """
+    # A base target is one target minus its link type; the link types allowed
+    # against it come from the manifest, not from this invocation's --link.
+    base_os: Dict[str, str] = {}
+    for target in targets:
+        base_os[target_without_link_type(target.to_path_component())] = target.os.value
+
+    entries = []
+    for name, lib in sorted(libraries.items()):
+        for base, os_value in sorted(base_os.items()):
+            if not lib.supports_platform(os_value):
+                continue
+            kinds = [
+                kind
+                for kind in ("static", "shared")
+                if lib.supports_link_type(kind)
+                # iOS shared builds are excluded for code-signing and Swift
+                # module reasons, so requiring one would never be satisfiable.
+                and not (kind == "shared" and os_value == OS.IOS.value)
+            ]
+            if kinds:
+                entries.append(
+                    {
+                        "library": name,
+                        "version": lib.version,
+                        "target": base,
+                        "link_types": kinds,
+                    }
+                )
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({"expected": entries}, indent=2) + "\n", encoding="utf-8")
+    print(f"Wrote expected matrix for {len(entries)} results to {path}")
 
 
 def get_equivalent_command(
@@ -1734,6 +1783,15 @@ def parse_args() -> argparse.Namespace:
         help="Show build plan without building",
     )
     parser.add_argument(
+        "--emit-expected-matrix",
+        type=Path,
+        default=None,
+        help=(
+            "Write the matrix of results audit_link_variants.py must find, "
+            "then exit without building"
+        ),
+    )
+    parser.add_argument(
         "--clean",
         action="store_true",
         help="Remove the source and build caches before building. The install "
@@ -2063,12 +2121,31 @@ def main() -> int:  # noqa: C901
         print(f"Error: {e}")
         return 1
 
+    # Without --target the platform set defaults to what this host supports,
+    # which is the one thing an expected matrix must never be. The matrix is a
+    # statement about the intended build, and its scope has to be stated.
+    if args.emit_expected_matrix and not args.target:
+        print(
+            "Error: --emit-expected-matrix needs an explicit --target.\n"
+            "  Without one the matrix would cover only the platforms this host\n"
+            "  happens to support, and the gate reading it would silently stop\n"
+            "  covering the rest."
+        )
+        return 1
+
     # Resolved once so the level the builder passes to CMake and the level
     # recorded in the build metadata cannot drift apart.
     android_api_level = args.android_api_level or DEFAULT_ANDROID_API_LEVEL
 
-    # Run pre-flight checks (unless skipped or just listing)
-    if not args.skip_preflight and not args.list_optional and not args.dry_run:
+    # Run pre-flight checks (unless skipped, just listing, or only describing
+    # the build). --emit-expected-matrix states what the build is supposed to
+    # produce, which is a property of the manifest, not of this host.
+    if (
+        not args.skip_preflight
+        and not args.list_optional
+        and not args.dry_run
+        and not args.emit_expected_matrix
+    ):
         if not run_preflight_checks(log_level):
             return 1
         print()
@@ -2145,7 +2222,16 @@ def main() -> int:  # noqa: C901
     # Determine targets
     if requested_platforms is not None:
         platforms = requested_platforms.platforms
-        unbuildable = find_unbuildable_windows_targets(platforms, args.vs_version)
+        # Skipped when emitting the matrix: this prunes Windows architectures
+        # whose MSVC tools are missing *on this machine*, so `--target win
+        # --emit-expected-matrix` on a host without the ARM64 tools would drop
+        # win_arm64 from the matrix -- and the gate would then pass having never
+        # covered it.
+        unbuildable = (
+            []
+            if args.emit_expected_matrix
+            else find_unbuildable_windows_targets(platforms, args.vs_version)
+        )
 
         # Reject only what the user named by architecture.
         named = [
@@ -2273,8 +2359,14 @@ def main() -> int:  # noqa: C901
         if ndk_path:
             print(f"Android NDK: {ndk_path}")
 
-    # Check toolchains for target platforms (unless skipped)
-    if not args.skip_preflight and not args.dry_run:
+    # Check toolchains for target platforms (unless skipped).
+    #
+    # Deliberately not run when emitting the expected matrix. This block drops
+    # targets whose toolchain is missing, so generating the matrix here would
+    # quietly omit every platform the generating host happens not to support --
+    # and the gate that matrix feeds would then pass without ever covering them.
+    # The matrix has to describe the intended build, not one machine's reach.
+    if not args.skip_preflight and not args.dry_run and not args.emit_expected_matrix:
         target_strs = [t.to_path_component() for t in targets]
         all_available, available_target_strs = check_toolchains(target_strs, log_level)
 
@@ -2381,6 +2473,10 @@ def main() -> int:  # noqa: C901
     if not libraries:
         print("Error: no libraries are selected for the requested targets.")
         return 1
+
+    if args.emit_expected_matrix:
+        write_expected_matrix(args.emit_expected_matrix, libraries, targets)
+        return 0
 
     # Handle --dry-run
     if args.dry_run:

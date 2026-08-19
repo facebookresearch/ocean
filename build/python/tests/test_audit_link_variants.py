@@ -18,7 +18,10 @@ Run with:
 
 from __future__ import annotations
 
+import contextlib
 import importlib.util
+import io
+import json
 import struct
 import sys
 import tempfile
@@ -95,7 +98,7 @@ class TempTree(unittest.TestCase):
 
     def verdict(self, library: str, target: str, requested: str) -> str:
         staging = self.root / library / "1.0" / target / "_install"
-        return audit.audit_staging(staging, library, target, requested).verdict
+        return audit.audit_staging(staging, library, "1.0", target, requested).verdict
 
 
 class TestClassifyWindowsLib(TempTree):
@@ -264,6 +267,7 @@ class TestFrameworkRecognition(TempTree):
         finding = audit.audit_staging(
             self.root / "png" / "1.0" / "macos_arm64_static" / "_install",
             "png",
+            "1.0",
             "macos_arm64_static",
             "static",
         )
@@ -372,6 +376,7 @@ class TestVerdicts(TempTree):
         finding = audit.audit_staging(
             self.root / "case" / "1.0" / "win_x64_vc143_shared" / "_install",
             "case",
+            "1.0",
             "win_x64_vc143_shared",
             "shared",
         )
@@ -436,6 +441,7 @@ class TestGating(TempTree):
     def _finding(self, verdict: str, library: str = "lib") -> audit.Finding:
         return audit.Finding(
             library=library,
+            version="1.0",
             target="linux_x86_64_static",
             requested="static",
             verdict=verdict,
@@ -444,11 +450,11 @@ class TestGating(TempTree):
 
     def test_clean_verdicts_do_not_block(self) -> None:
         findings = [self._finding("OK", "a"), self._finding("NO_LIBRARIES", "b")]
-        self.assertEqual(self._report(findings), [])
+        self.assertFalse(self._report(findings))
 
     def test_review_blocks(self) -> None:
         # "We could not classify this" must not read as a clean bill of health.
-        self.assertEqual(self._report([self._finding("REVIEW", "r")]), ["r"])
+        self.assertTrue(self._report([self._finding("REVIEW", "r")]))
 
     def test_every_problem_verdict_blocks(self) -> None:
         for verdict in (
@@ -460,9 +466,8 @@ class TestGating(TempTree):
             "REVIEW",
         ):
             with self.subTest(verdict=verdict):
-                self.assertEqual(
+                self.assertTrue(
                     self._report([self._finding(verdict, "x")]),
-                    ["x"],
                     f"{verdict} should block",
                 )
 
@@ -471,9 +476,16 @@ class TestDiscovery(TempTree):
     def test_finds_staging_trees_and_infers_target(self) -> None:
         self.staging("foo", "macos_arm64_static")
         self.staging("bar", "win_x64_vc143_shared")
-        found = {(lib, target) for _, lib, target in audit.discover(self.root)}
+        found = {
+            (lib, version, target)
+            for _, lib, version, target in audit.discover(self.root)[0]
+        }
         self.assertEqual(
-            found, {("foo", "macos_arm64_static"), ("bar", "win_x64_vc143_shared")}
+            found,
+            {
+                ("foo", "1.0", "macos_arm64_static"),
+                ("bar", "1.0", "win_x64_vc143_shared"),
+            },
         )
 
 
@@ -490,31 +502,243 @@ class TestNegativeSize(TempTree):
         )
 
 
-class TestCoverage(TempTree):
-    """A run covering only one link type cannot answer the audit's question."""
+class TestPairing(TempTree):
+    """Two results pair only when they differ solely by link type."""
 
-    def _finding(self, library: str, requested: str) -> audit.Finding:
+    def _finding(
+        self, library: str, target: str, requested: str, version: str = "1.0"
+    ) -> audit.Finding:
         return audit.Finding(
             library=library,
-            target=f"linux_x86_64_{requested}",
+            version=version,
+            target=target,
             requested=requested,
             verdict="OK",
             detail="",
         )
 
-    def test_one_link_type_only_is_flagged(self) -> None:
-        findings = [self._finding("zlib", "static")]
-        self.assertEqual(audit._find_missing_coverage(findings), ["zlib"])
+    def _unpaired(self, *findings) -> set:
+        return set(audit._unpaired(list(findings)))
 
-    def test_both_link_types_is_complete(self) -> None:
-        findings = [self._finding("zlib", "static"), self._finding("zlib", "shared")]
-        self.assertEqual(audit._find_missing_coverage(findings), [])
+    def test_same_target_differing_only_by_link_type_pairs(self) -> None:
+        self.assertEqual(
+            self._unpaired(
+                self._finding("zlib", "macos_arm64_static", "static"),
+                self._finding("zlib", "macos_arm64_shared", "shared"),
+            ),
+            set(),
+        )
 
-    def test_partial_coverage_blocks_even_when_every_verdict_is_ok(self) -> None:
-        import contextlib
-        import io
+    def test_one_link_type_only_is_unpaired(self) -> None:
+        self.assertEqual(
+            self._unpaired(self._finding("zlib", "macos_arm64_static", "static")),
+            {("zlib", "1.0", "macos_arm64", "shared")},
+        )
 
-        findings = [self._finding("zlib", "static")]
-        with contextlib.redirect_stdout(io.StringIO()):
-            blocking = audit.report(findings, self.root, ["zlib"])
-        self.assertEqual(blocking, ["zlib"])
+    def test_different_os_does_not_pair(self) -> None:
+        # The bug this replaces: keying coverage on the library name alone let a
+        # static macOS result complete the pairing for a shared Linux result, so
+        # neither platform was ever actually checked.
+        self.assertEqual(
+            self._unpaired(
+                self._finding("zlib", "macos_arm64_static", "static"),
+                self._finding("zlib", "linux_x86_64_shared", "shared"),
+            ),
+            {
+                ("zlib", "1.0", "macos_arm64", "shared"),
+                ("zlib", "1.0", "linux_x86_64", "static"),
+            },
+        )
+
+    def test_different_arch_does_not_pair(self) -> None:
+        self.assertEqual(
+            self._unpaired(
+                self._finding("zlib", "macos_arm64_static", "static"),
+                self._finding("zlib", "macos_x86_64_shared", "shared"),
+            ),
+            {
+                ("zlib", "1.0", "macos_arm64", "shared"),
+                ("zlib", "1.0", "macos_x86_64", "static"),
+            },
+        )
+
+    def test_different_config_does_not_pair(self) -> None:
+        self.assertEqual(
+            self._unpaired(
+                self._finding("zlib", "macos_arm64_static", "static"),
+                self._finding("zlib", "macos_arm64_shared_debug", "shared"),
+            ),
+            {
+                ("zlib", "1.0", "macos_arm64", "shared"),
+                ("zlib", "1.0", "macos_arm64_debug", "static"),
+            },
+        )
+
+    def test_different_version_does_not_pair(self) -> None:
+        # discover() used to drop the version entirely, so a static result for
+        # one version silently answered for a shared result of another.
+        self.assertEqual(
+            self._unpaired(
+                self._finding("zlib", "macos_arm64_static", "static", version="1.3"),
+                self._finding("zlib", "macos_arm64_shared", "shared", version="1.2"),
+            ),
+            {
+                ("zlib", "1.3", "macos_arm64", "shared"),
+                ("zlib", "1.2", "macos_arm64", "static"),
+            },
+        )
+
+    def test_windows_toolset_stays_in_the_key(self) -> None:
+        self.assertEqual(
+            self._unpaired(
+                self._finding("zlib", "win_x64_vc143_static", "static"),
+                self._finding("zlib", "win_x64_vc142_shared", "shared"),
+            ),
+            {
+                ("zlib", "1.0", "win_x64_vc143", "shared"),
+                ("zlib", "1.0", "win_x64_vc142", "static"),
+            },
+        )
+
+
+class TestExpectedMatrix(TempTree):
+    """The gate compares against a declared matrix, never against itself."""
+
+    def _finding(self, library: str, target: str, requested: str) -> audit.Finding:
+        return audit.Finding(
+            library=library,
+            version="1.0",
+            target=target,
+            requested=requested,
+            verdict="OK",
+            detail="",
+        )
+
+    def _entry(self, library: str, target: str, kinds: list) -> dict:
+        return {
+            "library": library,
+            "version": "1.0",
+            "target": target,
+            "link_types": kinds,
+        }
+
+    def _matrix(self, *entries) -> list:
+        path = self.root / "matrix.json"
+        path.write_text(json.dumps({"expected": list(entries)}), encoding="utf-8")
+        return audit.load_expected_matrix(path)
+
+    def test_absent_platform_is_still_required(self) -> None:
+        # Deriving the requirement from the findings would make Windows stop
+        # being required the moment nobody built it, and the run still pass.
+        expected = self._matrix(
+            self._entry("zlib", "macos_arm64", ["static", "shared"]),
+            self._entry("zlib", "win_x64_vc143", ["static", "shared"]),
+        )
+        findings = [
+            self._finding("zlib", "macos_arm64_static", "static"),
+            self._finding("zlib", "macos_arm64_shared", "shared"),
+        ]
+        self.assertEqual(
+            audit.check_expected_matrix(findings, expected),
+            ["zlib 1.0 win_x64_vc143 (shared)", "zlib 1.0 win_x64_vc143 (static)"],
+        )
+
+    def test_static_only_producer_is_not_held_to_an_impossible_build(self) -> None:
+        # mbedtls, directshow and android_native_app_glue are static-only in
+        # the manifest; requiring a shared result would never be satisfiable.
+        expected = self._matrix(self._entry("mbedtls", "macos_arm64", ["static"]))
+        findings = [self._finding("mbedtls", "macos_arm64_static", "static")]
+        self.assertEqual(audit.check_expected_matrix(findings, expected), [])
+
+    def test_full_coverage_passes(self) -> None:
+        expected = self._matrix(
+            self._entry("zlib", "macos_arm64", ["static", "shared"])
+        )
+        findings = [
+            self._finding("zlib", "macos_arm64_static", "static"),
+            self._finding("zlib", "macos_arm64_shared", "shared"),
+        ]
+        self.assertEqual(audit.check_expected_matrix(findings, expected), [])
+
+    def test_gate_is_not_evaluated_without_a_matrix(self) -> None:
+        findings = [self._finding("zlib", "macos_arm64_static", "static")]
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            blocked = audit.report(findings, self.root)
+        self.assertFalse(blocked)
+        self.assertIn("NOT EVALUATED", out.getvalue())
+
+    def test_gate_blocks_on_a_matrix_gap(self) -> None:
+        findings = [self._finding("zlib", "macos_arm64_static", "static")]
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            blocked = audit.report(
+                findings,
+                self.root,
+                ["zlib 1.0 macos_arm64 (shared)"],
+                gate_evaluated=True,
+            )
+        self.assertTrue(blocked)
+        self.assertIn("BLOCKED", out.getvalue())
+
+    def test_gate_passes_on_a_complete_matrix(self) -> None:
+        findings = [
+            self._finding("zlib", "macos_arm64_static", "static"),
+            self._finding("zlib", "macos_arm64_shared", "shared"),
+        ]
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            blocked = audit.report(findings, self.root, [], gate_evaluated=True)
+        self.assertFalse(blocked)
+        self.assertIn("PASS", out.getvalue())
+
+    def test_malformed_matrix_is_rejected(self) -> None:
+        bad_inputs = (
+            {},
+            {"expected": []},
+            {"expected": [{"library": "z"}]},
+            {"expected": [self._entry("z", "t", [])]},
+            {"expected": [self._entry("z", "t", ["bogus"])]},
+            {"expected": ["not an object"]},
+        )
+        for bad in bad_inputs:
+            with self.subTest(bad=bad):
+                path = self.root / "bad.json"
+                path.write_text(json.dumps(bad), encoding="utf-8")
+                with self.assertRaises(RuntimeError):
+                    audit.load_expected_matrix(path)
+
+
+class TestDiscoveryPathShape(TempTree):
+    """Only <library>/<version>/<target>/_install is a result."""
+
+    def test_nested_install_is_not_mistaken_for_a_result(self) -> None:
+        # A subproject's own _install would otherwise be read with its parent
+        # standing in for the target, inventing a result for a target nobody
+        # built -- and, before the matrix gate, one that could pair with a real
+        # result and mark it covered.
+        self.staging("zlib", "macos_arm64_static")
+        nested = (
+            self.root / "zlib" / "1.3.1" / "macos_arm64_static" / "sub" / "_install"
+        )
+        nested.mkdir(parents=True)
+        found, unexpected = audit.discover(self.root)
+        self.assertEqual(
+            {(lib, version, target) for _, lib, version, target in found},
+            {("zlib", "1.0", "macos_arm64_static")},
+        )
+        self.assertEqual(unexpected, [nested])
+
+    def test_shallow_install_is_not_a_result(self) -> None:
+        shallow = self.root / "stray" / "_install"
+        shallow.mkdir(parents=True)
+        found, unexpected = audit.discover(self.root)
+        self.assertEqual(found, [])
+        self.assertEqual(unexpected, [shallow])
+
+    def test_well_shaped_trees_produce_no_complaints(self) -> None:
+        self.staging("zlib", "macos_arm64_static")
+        self.staging("zlib", "macos_arm64_shared")
+        found, unexpected = audit.discover(self.root)
+        self.assertEqual(len(found), 2)
+        self.assertEqual(unexpected, [])

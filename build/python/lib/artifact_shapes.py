@@ -68,6 +68,18 @@ def strip_version(name: str) -> str:
     return name
 
 
+def target_without_link_type(target: str) -> str:
+    """A build-target name with its link-type component removed.
+
+    `macos_arm64_static_debug` -> `macos_arm64_debug`. Callers use this to pair
+    the two link-type variants of one target, so everything else -- OS,
+    architecture, configuration, MSVC toolset -- has to survive it.
+    """
+    return "_".join(
+        part for part in target.split("_") if part not in ("static", "shared")
+    )
+
+
 def framework_binary_name(path: Path) -> Optional[str]:
     """The framework name if `path` is a framework's binary, else None.
 
