@@ -22,25 +22,44 @@ namespace Platform
 namespace Win
 {
 
+// Forward declaration.
+class PopupMenu;
+
+/**
+ * Definition of a unique pointer holding a popup menu.
+ * @ingroup platformwin
+ */
+using UniquePopupMenu = std::unique_ptr<PopupMenu>;
+
+/**
+ * Definition of a vector holding popup menus.
+ * @ingroup platformwin
+ */
+using PopupMenus = std::vector<UniquePopupMenu>;
+
 /**
  * This class implements a popup menu.
  * @ingroup platformwin
  */
 class OCEAN_PLATFORM_WIN_EXPORT PopupMenu
 {
-	protected:
-
-		/**
-		 * Definition of a vector holding popup menus.
-		 */
-		using PopupMenus = std::vector<std::unique_ptr<PopupMenu>>;
-
 	public:
 
 		/**
 		 * Creates a new popup menu object.
 		 */
 		PopupMenu();
+
+		/**
+		 * Disabled copy constructor.
+		 * A sub-menu's handle stays attached to the handle of its parent menu, so the ownership of a menu must never leave the object holding it.
+		 */
+		PopupMenu(const PopupMenu&) = delete;
+
+		/**
+		 * Disabled move constructor.
+		 */
+		PopupMenu(PopupMenu&&) = delete;
 
 		/**
 		 * Destructs a popup menu object.
@@ -92,6 +111,26 @@ class OCEAN_PLATFORM_WIN_EXPORT PopupMenu
 		unsigned int show(const HWND parent);
 
 	protected:
+
+		/**
+		 * Disabled copy operator.
+		 * @return Reference to this object
+		 */
+		PopupMenu& operator=(const PopupMenu&) = delete;
+
+		/**
+		 * Disabled move operator.
+		 * @return Reference to this object
+		 */
+		PopupMenu& operator=(PopupMenu&&) = delete;
+
+	protected:
+
+		/**
+		 * Releases this menu and all of its sub-menus.
+		 * Beware: This menu does not hold a valid handle afterwards and must not be used anymore!
+		 */
+		void release();
 
 		/// The handle of this menu.
 		HMENU handle_ = nullptr;

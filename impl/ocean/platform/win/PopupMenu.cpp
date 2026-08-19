@@ -25,13 +25,7 @@ PopupMenu::PopupMenu()
 
 PopupMenu::~PopupMenu()
 {
-	// the sub menus have to go before this menu's handle is destroyed, as they are attached to it
-	subMenus_.clear();
-
-	if (handle_)
-	{
-		DestroyMenu(handle_);
-	}
+	release();
 }
 
 size_t PopupMenu::size() const
@@ -74,7 +68,7 @@ PopupMenu& PopupMenu::addMenu(const std::wstring& text)
 {
 	ocean_assert(handle_);
 
-	std::unique_ptr<PopupMenu> menu = std::make_unique<PopupMenu>();
+	UniquePopupMenu menu = std::make_unique<PopupMenu>();
 
 	const bool result = AppendMenuW(handle_, MF_POPUP, UINT_PTR(menu->handle_), text.c_str()) == TRUE;
 	ocean_assert_and_suppress_unused(result, result);
@@ -98,6 +92,18 @@ unsigned int PopupMenu::show(const HWND parent)
 
 	const VectorI2 cursorPosition(Mouse::screenPosition());
 	return show(cursorPosition.x(), cursorPosition.y(), parent);
+}
+
+void PopupMenu::release()
+{
+	// the sub menus have to go before this menu's handle is destroyed, as they are attached to it
+	subMenus_.clear();
+
+	if (handle_)
+	{
+		DestroyMenu(handle_);
+		handle_ = nullptr;
+	}
 }
 
 }
