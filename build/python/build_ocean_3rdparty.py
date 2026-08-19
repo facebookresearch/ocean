@@ -676,6 +676,10 @@ def execute_build_job(
     builder.build(ctx)
 
     report_phase(BuildPhase.INSTALLING)
+    # cmake --install and equivalent installers are additive. Recreate this
+    # job's private staging prefix so removed artifacts cannot be republished.
+    if paths.install_dir.exists():
+        remove_tree(paths.install_dir)
     builder.install(ctx)
 
     # Post-install: either reorganize for external integration, or preserve
