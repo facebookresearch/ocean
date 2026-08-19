@@ -407,6 +407,33 @@ def get_third_party_paths_external_layout(
     return prefix_paths, include_paths, library_paths
 
 
+def uses_multi_config_generator(build_dir: Path, generator: str) -> bool:
+    """Whether the configured build tree holds several configurations at once.
+
+    Read out of the cache CMake just wrote, not matched against a list of
+    generator names. `--generator` accepts anything CMake supports, so a name
+    list is wrong as soon as someone passes `Ninja Multi-Config`, and it was
+    already wrong for `--target macos_arm64 --generator Xcode`.
+
+    Single-config generators leave `CMAKE_CONFIGURATION_TYPES` out of the cache
+    entirely; multi-config generators set it to the list they support.
+    """
+    cache = build_dir / "CMakeCache.txt"
+    try:
+        for line in cache.read_text(encoding="utf-8", errors="replace").splitlines():
+            if line.startswith("CMAKE_CONFIGURATION_TYPES:"):
+                _, _, value = line.partition("=")
+                return bool(value.strip())
+        return False
+    except OSError:
+        # No readable cache to consult, so fall back to the generators CMake
+        # documents as multi-config.
+        return any(
+            name in generator
+            for name in ("Xcode", "Visual Studio", "Multi-Config", "Green Hills MULTI")
+        )
+
+
 def run_cmake_build(
     target: BuildTarget,
     ocean_source_dir: Path,
@@ -585,9 +612,14 @@ def run_cmake_build(
         str(jobs if jobs > 0 else (os.cpu_count() or 4)),
     ]
 
-    # Add config for multi-config generators
-    if target.os in (OS.IOS, OS.WINDOWS):
-        build_args.extend(["--config", target.build_config.value.capitalize()])
+    # Multi-config generators ignore CMAKE_BUILD_TYPE and pick the configuration
+    # at build time, so the requested one has to be named here. Keyed on the
+    # generator rather than the OS: those agreed only while iOS and Windows were
+    # the sole users of Xcode and Visual Studio, and `--generator Xcode` on macOS
+    # -- which the build documentation suggests -- silently built whichever
+    # configuration Xcode defaulted to.
+    if uses_multi_config_generator(config_build_dir, cmake_generator):
+        build_args.extend(["--config", build_type])
 
     # Run build
     print(f"\n{'=' * 60}")
