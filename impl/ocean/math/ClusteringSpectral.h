@@ -20,7 +20,7 @@ namespace Ocean
  * This class implements spectral clustering.
  * @ingroup math
  */
-class ClusteringSpectral
+class OCEAN_MATH_EXPORT ClusteringSpectral
 {
 	public:
 
