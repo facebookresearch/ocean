@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import shutil
 
+from lib.artifact_shapes import is_shared_library_name
 from lib.builder_base import BuildContext, Builder
 from lib.directories import remove_tree
 from lib.platform import Arch
@@ -41,7 +42,8 @@ class ImportedSharedBuilder(Builder):
                     Supports "{android_abi}" placeholder for Android ABI names
                     (e.g., "jni/{android_abi}" -> "jni/arm64-v8a").
         lib_files: List of specific library filenames to copy.
-                   If not set, all .so/.dylib/.dll files in lib_subdir are copied.
+                   If not set, every shared library in lib_subdir is copied,
+                   including versioned names such as libfoo.so.1.2.3.
     """
 
     def configure(self, ctx: BuildContext) -> None:
@@ -94,11 +96,20 @@ class ImportedSharedBuilder(Builder):
                     raise RuntimeError(f"Library file not found: {src_file}")
                 shutil.copy2(src_file, dst_lib / filename)
         else:
-            # Copy all shared library files
-            shared_extensions = {".so", ".dylib", ".dll"}
+            # Copy all shared library files. The name test is shared with the
+            # audit tool rather than an extension check: `Path("libfoo.so.1.2").
+            # suffix` is ".2", so a versioned ELF library would be skipped and
+            # the prefix published empty.
+            copied = 0
             for item in src_lib.iterdir():
-                if item.is_file() and item.suffix in shared_extensions:
+                if item.is_file() and is_shared_library_name(item.name):
                     shutil.copy2(item, dst_lib / item.name)
+                    copied += 1
+            if copied == 0:
+                raise RuntimeError(
+                    f"No shared libraries found in {src_lib}. Set 'lib_files' in "
+                    "the manifest to name them explicitly, or check lib_subdir."
+                )
 
         if not ctx.progress_callback:
             print(f"    Installed pre-built shared libraries from {lib_subdir}/")

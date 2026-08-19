@@ -236,6 +236,63 @@ class TestPublicStem(unittest.TestCase):
         )
 
 
+class TestFrameworkRecognition(TempTree):
+    """A framework binary has no extension, so nothing else identifies it."""
+
+    def _tree(self, versioned: bool) -> Path:
+        staging = self.staging("png", "macos_arm64_static")
+        lib = staging / "lib"
+        lib.mkdir()
+        framework = lib / "libpng16.framework"
+        if versioned:
+            (framework / "Versions" / "A").mkdir(parents=True)
+            (framework / "Versions" / "A" / "libpng16").write_text("binary")
+            # The two symlinks a real bundle carries; the collector skips them,
+            # so the binary must not be counted three times.
+            (framework / "Versions" / "Current").symlink_to("A")
+            (framework / "libpng16").symlink_to("Versions/Current/libpng16")
+        else:
+            framework.mkdir(parents=True)
+            (framework / "libpng16").write_text("binary")
+        (lib / "libpng16.a").write_text("static")
+        return staging
+
+    def test_versioned_framework_beside_static_is_dual_public(self) -> None:
+        # libpng really does this on macOS; build_ocean_3rdparty.py skips
+        # .framework bundles when packaging for exactly this reason.
+        self._tree(versioned=True)
+        finding = audit.audit_staging(
+            self.root / "png" / "1.0" / "macos_arm64_static" / "_install",
+            "png",
+            "macos_arm64_static",
+            "static",
+        )
+        self.assertEqual(finding.verdict, "DUAL_PUBLIC")
+        self.assertEqual(len(finding.artifacts), 1, finding.artifacts)
+        self.assertEqual(len(finding.artifacts["png"]), 2, finding.artifacts)
+
+    def test_flat_framework_beside_static_is_dual_public(self) -> None:
+        self._tree(versioned=False)
+        self.assertEqual(
+            self.verdict("png", "macos_arm64_static", "static"), "DUAL_PUBLIC"
+        )
+
+    def test_unrelated_extensionless_files_are_still_ignored(self) -> None:
+        # Only the binary matching the bundle name is the library. Headers,
+        # resources and helper executables must stay invisible.
+        staging = self.staging("thing", "macos_arm64_static")
+        lib = staging / "lib"
+        lib.mkdir()
+        (lib / "libthing.a").write_text("static")
+        (lib / "README").write_text("not a library")
+        (lib / "LICENSE").write_text("not a library")
+        framework = lib / "libthing.framework"
+        (framework / "Versions" / "A" / "Resources").mkdir(parents=True)
+        (framework / "Versions" / "A" / "Resources" / "Info").write_text("plist")
+        (framework / "Versions" / "A" / "helper").write_text("not the library")
+        self.assertEqual(self.verdict("thing", "macos_arm64_static", "static"), "OK")
+
+
 class TestArtifactKind(unittest.TestCase):
     """Suffix classification. Nothing else tests these directly."""
 

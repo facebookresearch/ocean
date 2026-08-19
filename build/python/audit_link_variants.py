@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env fbpython
 # Copyright (c) Meta Platforms, Inc. and affiliates.
 #
 # This source code is licensed under the MIT license found in the
@@ -36,6 +36,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import re
 import sys
@@ -43,13 +44,20 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
-SHARED_SUFFIXES = {".dylib", ".so", ".dll"}
-STATIC_SUFFIXES = {".a", ".lib"}
+# Loaded by path rather than through `lib`, whose __init__ imports the whole
+# build system and with it PyYAML. This tool only inspects directories and must
+# keep running without it.
+_shapes_spec = importlib.util.spec_from_file_location(
+    "ocean_artifact_shapes",
+    Path(__file__).resolve().parent / "lib" / "artifact_shapes.py",
+)
+_shapes = importlib.util.module_from_spec(_shapes_spec)
+sys.modules[_shapes_spec.name] = _shapes
+_shapes_spec.loader.exec_module(_shapes)
 
-# `libfoo.so.1.2.3` and `libfoo.1.2.3.dylib` are shared libraries whose suffix
-# is not the last component.
-_VERSIONED_SO = re.compile(r"\.so(\.\d+)+$")
-_VERSIONED_DYLIB = re.compile(r"\.(\d+)(\.\d+)*\.dylib$")
+framework_binary_name = _shapes.framework_binary_name
+is_shared_library_name = _shapes.is_shared_library_name
+strip_version = _shapes.strip_version
 
 # Trailing markers producers use to name the alternate variant of the same
 # library. Only used to pair artifacts for reporting -- never to delete
@@ -191,20 +199,33 @@ def classify_windows_lib(path: Path) -> Tuple[str, Optional[str]]:
         return LibKind.UNKNOWN, None
 
 
-def artifact_kind(path: Path, is_windows: bool) -> Tuple[Optional[str], Optional[str]]:
-    """Classify one file, returning (kind, dll_name); (None, None) if not a library."""
+def artifact_kind(
+    path: Path, is_windows: bool, relative_to: Optional[Path] = None
+) -> Tuple[Optional[str], Optional[str]]:
+    """Classify one file, returning (kind, dll_name); (None, None) if not a library.
+
+    `relative_to` is the staging root, used to spot a framework binary from its
+    position in the bundle. Without it a framework is invisible: its binary has
+    no extension, so a tree holding both `libpng16.a` and
+    `libpng16.framework/Versions/A/libpng16` would report a single variant.
+    """
     name = path.name
-    if _VERSIONED_SO.search(name) or _VERSIONED_DYLIB.search(name):
+    if is_shared_library_name(name):
         return LibKind.SHARED, None
     suffix = path.suffix
-    if suffix in SHARED_SUFFIXES:
-        return LibKind.SHARED, None
     if suffix == ".lib":
         if is_windows:
             return classify_windows_lib(path)
         return LibKind.STATIC, None
     if suffix == ".a":
         return LibKind.STATIC, None
+    if relative_to is not None:
+        try:
+            inside = path.relative_to(relative_to)
+        except ValueError:
+            inside = path
+        if framework_binary_name(inside) is not None:
+            return LibKind.SHARED, None
     return None, None
 
 
@@ -225,9 +246,7 @@ def public_stem(name: str) -> str:
     Over-merging two genuinely different libraries only produces a spurious
     report, so the order below deliberately errs towards merging.
     """
-    stem = name.casefold()
-    for pattern in (_VERSIONED_SO, _VERSIONED_DYLIB):
-        stem = pattern.sub("", stem)
+    stem = strip_version(name.casefold())
     for suffix in (".dylib", ".so", ".dll", ".lib", ".a"):
         if stem.endswith(suffix):
             stem = stem[: -len(suffix)]
@@ -274,7 +293,7 @@ def _collect(
     for path in sorted(staging.rglob("*")):
         if not path.is_file() or path.is_symlink():
             continue
-        kind, dll = artifact_kind(path, is_windows)
+        kind, dll = artifact_kind(path, is_windows, relative_to=staging)
         if kind is None:
             continue
         stem = (
