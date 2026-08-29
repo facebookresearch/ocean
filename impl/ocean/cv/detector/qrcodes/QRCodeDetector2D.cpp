@@ -27,7 +27,7 @@ namespace Detector
 namespace QRCodes
 {
 
-QRCodes QRCodeDetector2D::detectQRCodes(const AnyCamera& anyCamera, const uint8_t* const yFrame, const unsigned int width, const unsigned int height, const unsigned int paddingElements, Observations* observations, Worker* worker)
+QRCodes QRCodeDetector2D::detectQRCodes(const AnyCamera& anyCamera, const uint8_t* const yFrame, const unsigned int width, const unsigned int height, const unsigned int paddingElements, Observations* observations, Worker* worker, const bool detectInvertedReflectance)
 {
 	ocean_assert(anyCamera.isValid());
 	ocean_assert(yFrame != nullptr);
@@ -37,7 +37,7 @@ QRCodes QRCodeDetector2D::detectQRCodes(const AnyCamera& anyCamera, const uint8_
 		return QRCodes();
 	}
 
-	const FinderPatterns finderPatterns = FinderPatternDetector::detectFinderPatterns(yFrame, width, height, /* minimumDistance */ 10u, paddingElements, worker);
+	const FinderPatterns finderPatterns = FinderPatternDetector::detectFinderPatterns(yFrame, width, height, /* minimumDistance */ 10u, paddingElements, worker, detectInvertedReflectance);
 
 	if (finderPatterns.size() < 3)
 	{

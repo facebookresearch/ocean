@@ -19,7 +19,17 @@ namespace Detector
 namespace QRCodes
 {
 
-FinderPatterns FinderPatternDetector::detectFinderPatterns(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, const unsigned int minimumDistance, const unsigned int paddingElements, Worker* worker)
+namespace
+{
+
+bool isBackgroundReflectancePixel(const uint8_t* const pixel, const uint8_t threshold, const bool isNormalReflectance)
+{
+	return isNormalReflectance ? TransitionDetector::isWhitePixel(pixel, threshold) : TransitionDetector::isBlackPixel(pixel, threshold);
+}
+
+} // namespace
+
+FinderPatterns FinderPatternDetector::detectFinderPatterns(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, const unsigned int minimumDistance, const unsigned int paddingElements, Worker* worker, const bool detectInvertedReflectance)
 {
 	ocean_assert(yFrame != nullptr);
 
@@ -35,11 +45,11 @@ FinderPatterns FinderPatternDetector::detectFinderPatterns(const uint8_t* const 
 	if (worker && height >= 600u)
 	{
 		Lock multiThreadLock;
-		worker->executeFunction(Worker::Function::createStatic(&detectFinderPatternsSubset, yFrame, width, height, &finderPatterns, &multiThreadLock, paddingElements, 0u, 0u), 7u, height - 14u, 6u, 7u);
+		worker->executeFunction(Worker::Function::createStatic(&detectFinderPatternsSubset, yFrame, width, height, &finderPatterns, &multiThreadLock, paddingElements, 0u, 0u, detectInvertedReflectance), 7u, height - 14u, 6u, 7u);
 	}
 	else
 	{
-		detectFinderPatternsSubset(yFrame, width, height, &finderPatterns, nullptr, paddingElements, 7u, height - 14u);
+		detectFinderPatternsSubset(yFrame, width, height, &finderPatterns, nullptr, paddingElements, 7u, height - 14u, detectInvertedReflectance);
 	}
 
 	// Filter the finder patterns
@@ -80,7 +90,7 @@ FinderPatterns FinderPatternDetector::detectFinderPatterns(const uint8_t* const 
 	return finderPatterns;
 }
 
-void FinderPatternDetector::detectFinderPatternsSubset(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, FinderPatterns* finderPatterns, Lock* multiThreadLock, const unsigned int paddingElements, const unsigned int firstRow, const unsigned int numberRows)
+void FinderPatternDetector::detectFinderPatternsSubset(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, FinderPatterns* finderPatterns, Lock* multiThreadLock, const unsigned int paddingElements, const unsigned int firstRow, const unsigned int numberRows, const bool detectInvertedReflectance)
 {
 	ocean_assert(yFrame != nullptr);
 	ocean_assert(width >= 15u && height >= 15u);
@@ -91,7 +101,11 @@ void FinderPatternDetector::detectFinderPatternsSubset(const uint8_t* const yFra
 
 	for (unsigned int y = firstRow; y < firstRow + numberRows; ++y)
 	{
-		detectFinderPatternInRow(yFrame, width, height, y, localFinderPatterns, paddingElements);
+		detectFinderPatternInRow(yFrame, width, height, y, localFinderPatterns, paddingElements, true);
+		if (detectInvertedReflectance)
+		{
+			detectFinderPatternInRow(yFrame, width, height, y, localFinderPatterns, paddingElements, false);
+		}
 	}
 
 	if (localFinderPatterns.empty() == false)
@@ -107,7 +121,77 @@ void FinderPatternDetector::detectFinderPatternsSubset(const uint8_t* const yFra
 	}
 }
 
-void FinderPatternDetector::detectFinderPatternInRow(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, const unsigned int y, FinderPatterns& finderPatterns, const unsigned int paddingElements)
+
+bool FinderPatternDetector::findNextTransitionInRow(const uint8_t* const yRow, const unsigned int width, unsigned int& x, bool (*transitionDetector)(const uint8_t*, TransitionHistory&))
+{
+	ocean_assert(yRow != nullptr);
+	ocean_assert(width >= 1u);
+	ocean_assert(x <= width);
+	ocean_assert(transitionDetector != nullptr);
+
+	TransitionHistory history;
+	while (x < width && transitionDetector(yRow + x, history) == false)
+	{
+		++x;
+	}
+
+	return x < width;
+}
+
+void FinderPatternDetector::addFinderPatternCandidateInRow(const uint8_t* const yFrame, const uint8_t* const yRow, const unsigned int width, const unsigned int height, const unsigned int y, const unsigned int paddingElements, const unsigned int segment1StartForeground, const unsigned int segment3StartForeground, const unsigned int segment4StartBackground, const unsigned int segment1Size, const unsigned int segment2Size, const unsigned int segment3Size, const unsigned int segment4Size, const unsigned int segment5Size, const unsigned int foregroundSquareSegmentMin, const unsigned int foregroundSquareSegmentMax, const unsigned int backgroundSquareSegmentMin, const unsigned int backgroundSquareSegmentMax, const unsigned int centerSegmentMin, const unsigned int centerSegmentMax, const bool isNormalReflectance, FinderPatterns& finderPatterns)
+{
+	ocean_assert(yFrame != nullptr);
+	ocean_assert(yRow != nullptr);
+	ocean_assert(width >= 15u && height >= 15u);
+	ocean_assert(y >= 7u && y < height - 7u);
+
+	const unsigned int yFrameStrideElements = width + paddingElements;
+	const unsigned int xCenter = (segment3StartForeground + segment4StartBackground + 1u) / 2u;
+
+	const unsigned int centerIntensity = yFrame[y * yFrameStrideElements + xCenter];
+	const unsigned int grayThreshold = determineThreshold(yRow + segment1StartForeground, segment1Size, segment2Size, segment3Size, segment4Size, segment5Size, isNormalReflectance);
+
+	if (grayThreshold > 255u || TransitionDetector::isBlack(centerIntensity, grayThreshold) != isNormalReflectance)
+	{
+		return;
+	}
+
+	const unsigned int diameter = segment4StartBackground + segment4Size + segment5Size - segment1StartForeground;
+	ocean_assert(diameter >= 6u);
+
+	const unsigned int diameter3_4 = (diameter * 3u + 2u) / 4u;
+
+	if (xCenter < diameter3_4 || y < diameter3_4 || xCenter >= width - diameter3_4 || y >= height - diameter3_4)
+	{
+		return;
+	}
+
+	Scalar symmetryScore;
+	Vector2 edgePoints[16];
+
+	if (!checkFinderPatternInNeighborhood(yFrame, width, height, paddingElements, xCenter, y, grayThreshold, foregroundSquareSegmentMin * 217u / 512u, foregroundSquareSegmentMax * 1280u / 512u, backgroundSquareSegmentMin * 217u / 512u, backgroundSquareSegmentMax * 1280u / 512u, centerSegmentMin * 217u / 512u, centerSegmentMax * 1280u / 512u, isNormalReflectance, symmetryScore, edgePoints))
+	{
+		return;
+	}
+
+	Vector2 location;
+	Vector2 corners[4];
+	Vector2 orientation;
+	Scalar moduleSize;
+
+	if (!estimateFinderPatternCorners(xCenter, y, edgePoints, 16u, location, corners, orientation, moduleSize))
+	{
+		return;
+	}
+
+	ocean_assert(xCenter <= width && y <= height);
+	ocean_assert(Numeric::isNotEqualEps(orientation.length()));
+	ocean_assert(Numeric::isNotEqualEps(moduleSize));
+
+	finderPatterns.emplace_back(location, moduleSize * Scalar(7), centerIntensity, grayThreshold, symmetryScore, corners, orientation, moduleSize);
+}
+
+void FinderPatternDetector::detectFinderPatternInRow(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, const unsigned int y, FinderPatterns& finderPatterns, const unsigned int paddingElements, const bool isNormalReflectance)
 {
 	ocean_assert(yFrame != nullptr);
 	ocean_assert(width >= 15u && height >= 15u);
@@ -117,124 +201,104 @@ void FinderPatternDetector::detectFinderPatternInRow(const uint8_t* const yFrame
 
 	const uint8_t* const yRow = yFrame + yFrameStrideElements * y;
 
-	// Scanning for the following 1D pattern: white, black, white, black, white, black, white
-	// Ratios:                                 >=1 :   1  :   1  :   3  :   1  :  1   :  >=1
-	// Segments:                                       1      2      3      4     5      6
+	using TransitionFunc = bool (*)(const uint8_t*, TransitionHistory&);
+	const TransitionFunc isTransitionToForeground = isNormalReflectance ? isTransitionToBlack : isTransitionToWhite;
+	const TransitionFunc isTransitionToBackground = isNormalReflectance ? isTransitionToWhite : isTransitionToBlack;
+
+	// Scanning for the following 1D pattern: background, foreground, background, foreground, background, foreground, background
+	// Ratios:                                      >=1 :          1  :          1  :          3  :          1  :          1  :      >=1
+	// Segments:                                                     1             2             3             4             5           6
 
 	const unsigned int invalidSegmentStart = (unsigned int)(-1);
 
-	unsigned int segment_1_start_black = invalidSegmentStart;
-	unsigned int segment_2_start_white = invalidSegmentStart;
+	unsigned int segment_1_start_foreground = invalidSegmentStart;
+	unsigned int segment_2_start_background = invalidSegmentStart;
 
 	unsigned int x = 1u;
 
-	// Start segment 1: find the first pixel of the first black segment
+	// Start segment 1: find the first pixel of the first foreground segment
 
-	TransitionHistory history;
-	while (x < width && isTransitionToBlack(yRow + x, history) == false)
-	{
-		++x;
-	}
-
-	if (x >= width)
+	if (!findNextTransitionInRow(yRow, width, x, isTransitionToForeground))
 	{
 		return;
 	}
 
-	ocean_assert(segment_1_start_black == invalidSegmentStart);
-	segment_1_start_black = x;
+	ocean_assert(segment_1_start_foreground == invalidSegmentStart);
+	segment_1_start_foreground = x;
 
 	while (x < width)
 	{
-		// Start segment 2: find the first pixel of the first white segment
-		if (segment_2_start_white == invalidSegmentStart)
+		// Start segment 2: find the first pixel of the first background segment
+		if (segment_2_start_background == invalidSegmentStart)
 		{
-			history.reset();
-			while (x < width && isTransitionToWhite(yRow + x, history) == false)
-			{
-				++x;
-			}
-
-			if (x >= width)
+			if (!findNextTransitionInRow(yRow, width, x, isTransitionToBackground))
 			{
 				break;
 			}
 
-			ocean_assert(segment_2_start_white == invalidSegmentStart);
-			segment_2_start_white = x;
+			ocean_assert(segment_2_start_background == invalidSegmentStart);
+			segment_2_start_background = x;
 		}
 
-		ocean_assert(segment_1_start_black < segment_2_start_white);
-		const unsigned int segment_1_size = segment_2_start_white - segment_1_start_black;
+		ocean_assert(segment_1_start_foreground < segment_2_start_background);
+		const unsigned int segment_1_size = segment_2_start_background - segment_1_start_foreground;
 
-		const unsigned int blackSquareSegmentMin = max(1u, segment_1_size * 384u / 512u); // 0.75 ~ 384/512
-		const unsigned int blackSquareSegmentMax = max(segment_1_size + 3u, segment_1_size * 640u / 512u); // 1.25 ~ 640/512
+		const unsigned int foregroundSquareSegmentMin = max(1u, segment_1_size * 384u / 512u); // 0.75 ~ 384/512
+		const unsigned int foregroundSquareSegmentMax = max(segment_1_size + 3u, segment_1_size * 640u / 512u); // 1.25 ~ 640/512
 
-		// Start segment 3: find the first pixel of the second black segment (the big black square in the middle)
+		// Start segment 3: find the first pixel of the second foreground segment
 
-		history.reset();
-		while (x < width && isTransitionToBlack(yRow + x, history) == false)
-		{
-			++x;
-		}
-
-		if (x >= width)
+		if (!findNextTransitionInRow(yRow, width, x, isTransitionToForeground))
 		{
 			break;
 		}
 
-		ocean_assert(segment_2_start_white < x);
-		const unsigned int segment_2_size = x - segment_2_start_white;
+		ocean_assert(segment_2_start_background < x);
+		const unsigned int segment_2_size = x - segment_2_start_background;
 
 		// Check if the size of segments 1 and 2 is approximately identical
 
-		ocean_assert(segment_1_start_black < segment_2_start_white);
-		ocean_assert(segment_2_start_white < x);
+		ocean_assert(segment_1_start_foreground < segment_2_start_background);
+		ocean_assert(segment_2_start_background < x);
 
-		const unsigned int whiteSquareSegmentMin = max(1u, segment_1_size * 384u / 512u); // 0.75 ~ 384/512
-		const unsigned int whiteSquareSegmentMax = max(segment_1_size + 6u, segment_1_size * 640u / 512u); // 1.25 ~ 640/512
+		const unsigned int backgroundSquareSegmentMin = max(1u, segment_1_size * 384u / 512u); // 0.75 ~ 384/512
+		const unsigned int backgroundSquareSegmentMax = max(segment_1_size + 6u, segment_1_size * 640u / 512u); // 1.25 ~ 640/512
 
-		if (segment_2_size < whiteSquareSegmentMin || segment_2_size > whiteSquareSegmentMax)
+		if (segment_2_size < backgroundSquareSegmentMin || segment_2_size > backgroundSquareSegmentMax)
 		{
 			// The first two segments are too different. Discard them and use the current location, x,
 			// as the start of segment 1. Then continue the search.
 
-			segment_1_start_black = x;
-			segment_2_start_white = invalidSegmentStart;
+			segment_1_start_foreground = x;
+			segment_2_start_background = invalidSegmentStart;
 
 			// x stays untouched
 
 			continue;
 		}
 
-		const unsigned int segment_3_start_black = x;
+		const unsigned int segment_3_start_foreground = x;
 
-		// Start segment 4: find the first pixel of the second white segment
+		// Start segment 4: find the first pixel of the second background segment
 
-		history.reset();
-		while (x < width && isTransitionToWhite(yRow + x, history) == false)
-		{
-			++x;
-		}
-
-		if (x >= width)
+		if (!findNextTransitionInRow(yRow, width, x, isTransitionToBackground))
 		{
 			break;
 		}
 
-		ocean_assert(segment_3_start_black < x);
-		const unsigned int segment_3_size = x - segment_3_start_black;
+		ocean_assert(segment_3_start_foreground < x);
+		const unsigned int segment_3_size = x - segment_3_start_foreground;
 
-		const unsigned int segment_4_start_white = x;
+		const unsigned int segment_4_start_background = x;
 
 		// Check if the size of segment 3 (center square) is approximately three times that of the first two segments
 
-		ocean_assert(segment_1_start_black < segment_2_start_white);
-		ocean_assert(segment_2_start_white < segment_3_start_black);
-		ocean_assert(segment_3_start_black < segment_4_start_white);
+		ocean_assert(segment_1_start_foreground < segment_2_start_background);
+		ocean_assert(segment_2_start_background < segment_3_start_foreground);
+		ocean_assert(segment_3_start_foreground < segment_4_start_background);
 
-		const unsigned int centerSegmentMin = std::max((unsigned int)std::max(1, int(3 * blackSquareSegmentMin) - 6), blackSquareSegmentMin * 1280u / 512u); // 2.5 ~ 1280/512;
-		const unsigned int centerSegmentMax = blackSquareSegmentMax * 1664u / 512u; // 3.25 ~ 1664/512;
+		const unsigned int centerSegmentMin = std::max((unsigned int)std::max(1, int(3 * foregroundSquareSegmentMin) - 6), foregroundSquareSegmentMin * 1280u / 512u); // 2.5 ~ 1280/512;
+		const unsigned int centerSegmentMax = foregroundSquareSegmentMax * 1664u / 512u; // 3.25 ~ 1664/512;
 
 		if (segment_3_size < centerSegmentMin || segment_3_size > centerSegmentMax)
 		{
@@ -242,34 +306,28 @@ void FinderPatternDetector::detectFinderPatternInRow(const uint8_t* const yFrame
 			// Discard the first two segments and start again with the start of center square (segment 3)
 			// as the new segment 1. Segment 4 will be the new segment 2.
 
-			segment_1_start_black = segment_3_start_black;
-			segment_2_start_white = segment_4_start_white;
+			segment_1_start_foreground = segment_3_start_foreground;
+			segment_2_start_background = segment_4_start_background;
 
 			// Reset x as well
-			x = segment_2_start_white;
+			x = segment_2_start_background;
 
 			continue;
 		}
 
-		// Start segment 5: find the first pixel of the third black segment
+		// Start segment 5: find the first pixel of the third foreground segment
 
-		history.reset();
-		while (x < width && isTransitionToBlack(yRow + x, history) == false)
-		{
-			++x;
-		}
-
-		if (x == width)
+		if (!findNextTransitionInRow(yRow, width, x, isTransitionToForeground))
 		{
 			break;
 		}
 
-		ocean_assert(segment_4_start_white < x);
-		const unsigned int segment_4_size = x - segment_4_start_white;
+		ocean_assert(segment_4_start_background < x);
+		const unsigned int segment_4_size = x - segment_4_start_background;
 
 		// Check if segment 4 has approximately the same size as the first two segments
 
-		if (segment_4_size < whiteSquareSegmentMin || segment_4_size > whiteSquareSegmentMax)
+		if (segment_4_size < backgroundSquareSegmentMin || segment_4_size > backgroundSquareSegmentMax)
 		{
 			// Two options to proceed:
 			// a. if segment 4 has the same size as segment 3, reassign segments 3 -> 1, 4 -> 2
@@ -280,8 +338,8 @@ void FinderPatternDetector::detectFinderPatternInRow(const uint8_t* const yFrame
 			{
 				// Option b. - continue with segment 5 as the new segment 1
 
-				segment_1_start_black = x;
-				segment_2_start_white = invalidSegmentStart;
+				segment_1_start_foreground = x;
+				segment_2_start_background = invalidSegmentStart;
 
 				// x remains unchanged
 			}
@@ -289,83 +347,43 @@ void FinderPatternDetector::detectFinderPatternInRow(const uint8_t* const yFrame
 			{
 				// Option a. - continue with segments 3 -> 1 and 4 -> 2
 
-				segment_1_start_black = segment_3_start_black;
-				segment_2_start_white = segment_4_start_white;
+				segment_1_start_foreground = segment_3_start_foreground;
+				segment_2_start_background = segment_4_start_background;
 
 				// Reset x as well
-				x = segment_2_start_white;
+				x = segment_2_start_background;
 			}
 
 			continue;
 		}
 
-		const unsigned int segment_5_start_black = x;
+		const unsigned int segment_5_start_foreground = x;
 
-		// Start "segment 6": find the beginning of next white segment
+		// Start "segment 6": find the beginning of next background segment
 
-		history.reset();
-		while (x < width && isTransitionToWhite(yRow + x, history) == false)
-		{
-			++x;
-		}
-
-		if (x == width)
+		if (!findNextTransitionInRow(yRow, width, x, isTransitionToBackground))
 		{
 			break;
 		}
 
-		ocean_assert(segment_5_start_black < x);
-		const unsigned int segment_5_size = x - segment_5_start_black;
+		ocean_assert(segment_5_start_foreground < x);
+		const unsigned int segment_5_size = x - segment_5_start_foreground;
 
 		// Check if segment 5 has approximately the same size as the first two segments
 
-		if (segment_5_size >= blackSquareSegmentMin && segment_5_size <= blackSquareSegmentMax)
+		if (segment_5_size >= foregroundSquareSegmentMin && segment_5_size <= foregroundSquareSegmentMax)
 		{
-			// Found the correct 1D signal of a finder pattern
-
-			const unsigned int xCenter = (segment_3_start_black + segment_4_start_white + 1u) / 2u;
-
-			const unsigned int centerIntensity = yFrame[y * yFrameStrideElements + xCenter];
-			const unsigned int grayThreshold = determineThreshold(yRow + segment_1_start_black, segment_1_size, segment_2_size, segment_3_size, segment_4_size, segment_5_size);
-
-			if (grayThreshold <= 255u && TransitionDetector::isBlack(centerIntensity, grayThreshold))
-			{
-				const unsigned int diameter = x - segment_1_start_black;
-				ocean_assert(diameter >= 6u);
-
-				const unsigned int diameter3_4 = (diameter * 3u + 2u) / 4u;
-
-				Scalar symmetryScore;
-				Vector2 edgePoints[16];
-
-				if (xCenter >= diameter3_4 && y >= diameter3_4 && xCenter < width - diameter3_4 && y < height - diameter3_4
-					&& checkFinderPatternInNeighborhood(yFrame, width, height, paddingElements, xCenter, y, grayThreshold, blackSquareSegmentMin * 217u / 512u, blackSquareSegmentMax * 1280u / 512u, whiteSquareSegmentMin * 217u / 512u, whiteSquareSegmentMax * 1280u / 512u, centerSegmentMin * 217u / 512u, centerSegmentMax * 1280u / 512u, symmetryScore, edgePoints))
-				{
-					Vector2 location;
-					Vector2 corners[4];
-					Vector2 orientation;
-					Scalar moduleSize;
-
-					if (estimateFinderPatternCorners(xCenter, y, edgePoints, 16u, location, corners, orientation, moduleSize))
-					{
-						ocean_assert(x >= Scalar(0) && x <= Scalar(width) && y >= Scalar(0) && y <= Scalar(height));
-						ocean_assert(Numeric::isNotEqualEps(orientation.length()));
-						ocean_assert(Numeric::isNotEqualEps(moduleSize));
-
-						finderPatterns.emplace_back(location, moduleSize * Scalar(7), centerIntensity, grayThreshold, symmetryScore, corners, orientation, moduleSize);
-					}
-				}
-			}
+			addFinderPatternCandidateInRow(yFrame, yRow, width, height, y, paddingElements, segment_1_start_foreground, segment_3_start_foreground, segment_4_start_background, segment_1_size, segment_2_size, segment_3_size, segment_4_size, segment_5_size, foregroundSquareSegmentMin, foregroundSquareSegmentMax, backgroundSquareSegmentMin, backgroundSquareSegmentMax, centerSegmentMin, centerSegmentMax, isNormalReflectance, finderPatterns);
 		}
 
 		// Regardless of whether a marker has been found, continue the search in the current after
 		// reassigning segments 3 -> 1 and 4 -> 2
 
-		segment_1_start_black = segment_3_start_black;
-		segment_2_start_white = segment_4_start_white;
+		segment_1_start_foreground = segment_3_start_foreground;
+		segment_2_start_background = segment_4_start_background;
 
 		// Reset x as well
-		x = segment_2_start_white;
+		x = segment_2_start_background;
 	}
 
 	// TODO Enough to assert std::is_sorted(...)? Should be.
@@ -632,6 +650,49 @@ bool FinderPatternDetector::estimateFinderPatternCorners(const unsigned int xCen
 	return true;
 }
 
+
+bool FinderPatternDetector::findRefinementEdgeTransition(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, const unsigned int paddingElements, const FinderPattern& finderPattern, const Vector2& point, const Vector2& perpendicularOut, const unsigned int maxPerpendicularSearchDistance, VectorT2<unsigned int>& pixelLocationIn, VectorT2<unsigned int>& pixelLocationOut)
+{
+	ocean_assert(yFrame != nullptr);
+	ocean_assert(width >= 1u && height >= 1u);
+	ocean_assert(finderPattern.grayThreshold() <= 255u);
+
+	const unsigned int frameStrideElements = width + paddingElements;
+	const unsigned int x = (unsigned int)Numeric::round32(point.x());
+	const unsigned int y = (unsigned int)Numeric::round32(point.y());
+
+	if (x >= width || y >= height)
+	{
+		return false;
+	}
+
+	unsigned int columns = 0u;
+	unsigned int rows = 0u;
+
+	const bool isNormalReflectance = finderPattern.isNormalReflectance();
+	const TransitionDetector::PixelBinaryThresholdFunc isForegroundPixel = isNormalReflectance ? TransitionDetector::isBlackPixel : TransitionDetector::isWhitePixel;
+	const TransitionDetector::PixelBinaryThresholdFunc isBackgroundPixel = isNormalReflectance ? TransitionDetector::isWhitePixel : TransitionDetector::isBlackPixel;
+	const TransitionDetector::FindNextPixelFunc findNextForegroundPixel = isNormalReflectance ? TransitionDetector::findNextPixel<true> : TransitionDetector::findNextPixel<false>;
+	const TransitionDetector::FindNextPixelFunc findNextBackgroundPixel = isNormalReflectance ? TransitionDetector::findNextPixel<false> : TransitionDetector::findNextPixel<true>;
+
+	if (isForegroundPixel(yFrame + y * frameStrideElements + x, uint8_t(finderPattern.grayThreshold())))
+	{
+		Bresenham bresenham(int(x), int(y), Numeric::round32(point.x() + perpendicularOut.x()), Numeric::round32(point.y() + perpendicularOut.y()));
+
+		return bresenham.isValid() && findNextBackgroundPixel(yFrame, x, y, width, height, paddingElements, bresenham, maxPerpendicularSearchDistance, finderPattern.grayThreshold(), columns, rows, pixelLocationIn, pixelLocationOut);
+	}
+
+	if (isBackgroundPixel(yFrame + y * frameStrideElements + x, uint8_t(finderPattern.grayThreshold())))
+	{
+		Bresenham bresenham(int(x), int(y), Numeric::round32(point.x() - perpendicularOut.x()), Numeric::round32(point.y() - perpendicularOut.y()));
+
+		return bresenham.isValid() && findNextForegroundPixel(yFrame, x, y, width, height, paddingElements, bresenham, maxPerpendicularSearchDistance, finderPattern.grayThreshold(), columns, rows, pixelLocationOut, pixelLocationIn);
+	}
+
+	ocean_assert(false && "A pixel must be either foreground or background");
+	return false;
+}
+
 bool FinderPatternDetector::refineFinderPatternLocation(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, FinderPattern& finderPattern, const unsigned int yFramePaddingElements)
 {
 	constexpr unsigned int tMaxSupportPoints = 11u;
@@ -672,7 +733,6 @@ bool FinderPatternDetector::refineFinderPatternLocation(const uint8_t* const yFr
 	const unsigned int frameStrideElements = width + yFramePaddingElements;
 
 	const unsigned int maxPerpendicularSearchDistance = std::max(1u, (unsigned int)Numeric::round32(finderPattern.moduleSize() * Scalar(0.25)));
-
 	for (size_t i = 0; i < 4; ++i)
 	{
 		const size_t j = (i + 1) & 0b0011; // ~ j = (i + 1) % 4
@@ -696,41 +756,7 @@ bool FinderPatternDetector::refineFinderPatternLocation(const uint8_t* const yFr
 		{
 			const Vector2 point = corners[i] + stepWidth * Scalar(k + 1u);
 
-			const unsigned int x = (unsigned int)Numeric::round32(point.x());
-			const unsigned int y = (unsigned int)Numeric::round32(point.y());
-
-			if (x >= width || y >= height)
-			{
-				continue;
-			}
-
-			unsigned int columns = 0u;
-			unsigned int rows = 0u;
-			bool foundTransition = false;
-
-			// If the value of the current pixel (x, y) is below the threshold, search in the outward direction (perpendicular to edge and away from the center of the finder pattern), otherwise search in the inward direction
-
-			if (TransitionDetector::isBlackPixel(yFrame + y * frameStrideElements + x, uint8_t(finderPattern.grayThreshold())))
-			{
-				Bresenham bresenham(int(x), int(y), Numeric::round32(point.x() + perpendicularOut.x()), Numeric::round32(point.y() + perpendicularOut.y()));
-
-				if (bresenham.isValid())
-				{
-					foundTransition = TransitionDetector::findNextPixel<false>(yFrame, x, y, width, height, yFramePaddingElements, bresenham, maxPerpendicularSearchDistance, finderPattern.grayThreshold(), columns, rows, pixelLocationsIn[linePointsCount], pixelLocationsOut[linePointsCount]);
-				}
-			}
-			else
-			{
-				ocean_assert(TransitionDetector::isWhitePixel(yFrame + y * frameStrideElements + x, uint8_t(finderPattern.grayThreshold())));
-				Bresenham bresenham(int(x), int(y), Numeric::round32(point.x() - perpendicularOut.x()), Numeric::round32(point.y() - perpendicularOut.y()));
-
-				if (bresenham.isValid())
-				{
-					foundTransition = TransitionDetector::findNextPixel<true>(yFrame, x, y, width, height, yFramePaddingElements, bresenham, maxPerpendicularSearchDistance, finderPattern.grayThreshold(), columns, rows, pixelLocationsOut[linePointsCount], pixelLocationsIn[linePointsCount]);
-				}
-			}
-
-			if (foundTransition == false)
+			if (!findRefinementEdgeTransition(yFrame, width, height, yFramePaddingElements, finderPattern, point, perpendicularOut, maxPerpendicularSearchDistance, pixelLocationsIn[linePointsCount], pixelLocationsOut[linePointsCount]))
 			{
 				continue;
 			}
@@ -741,8 +767,6 @@ bool FinderPatternDetector::refineFinderPatternLocation(const uint8_t* const yFr
 
 			pixelValuesIn[linePointsCount] = Scalar(yFrame[pixelLocationsIn[linePointsCount].y() * frameStrideElements + pixelLocationsIn[linePointsCount].x()]);
 			pixelValuesOut[linePointsCount] = Scalar(yFrame[pixelLocationsOut[linePointsCount].y() * frameStrideElements + pixelLocationsOut[linePointsCount].x()]);
-			ocean_assert(TransitionDetector::isBlack(pixelValuesIn[linePointsCount], Scalar(finderPattern.grayThreshold())) && TransitionDetector::isWhite(pixelValuesOut[linePointsCount], Scalar(finderPattern.grayThreshold())));
-
 			interpolationWeights[linePointsCount] = (pixelValuesOut[linePointsCount] - Scalar(finderPattern.grayThreshold())) / (pixelValuesOut[linePointsCount] - pixelValuesIn[linePointsCount]);
 			ocean_assert(interpolationWeights[linePointsCount] >= 0 && interpolationWeights[linePointsCount] <= 1);
 
@@ -881,7 +905,7 @@ bool FinderPatternDetector::refineFinderPatternLocation(const uint8_t* const yFr
 	return true;
 }
 
-bool FinderPatternDetector::checkFinderPatternInNeighborhood(const uint8_t* const yFrame, const unsigned width, const unsigned height, const unsigned int paddingElements, const unsigned int xCenter, const unsigned int yCenter, const unsigned int threshold, const unsigned int blackSquareSegmentMin, const unsigned int blackSquareSegmentMax, const unsigned int whiteSquareSegmentMin, const unsigned int whiteSquareSegmentMax, const unsigned int centerSegmentMin, const unsigned int centerSegmentMax, Scalar& symmetryScore, Vector2* edgePoints)
+bool FinderPatternDetector::checkFinderPatternInNeighborhood(const uint8_t* const yFrame, const unsigned width, const unsigned height, const unsigned int paddingElements, const unsigned int xCenter, const unsigned int yCenter, const unsigned int threshold, const unsigned int blackSquareSegmentMin, const unsigned int blackSquareSegmentMax, const unsigned int whiteSquareSegmentMin, const unsigned int whiteSquareSegmentMax, const unsigned int centerSegmentMin, const unsigned int centerSegmentMax, const bool isNormalReflectance, Scalar& symmetryScore, Vector2* edgePoints)
 {
 	ocean_assert(yFrame != nullptr);
 	ocean_assert(width >= 15u && height >= 15u);
@@ -926,7 +950,7 @@ bool FinderPatternDetector::checkFinderPatternInNeighborhood(const uint8_t* cons
 
 	for (unsigned int i = 0u; i < 8; ++i)
 	{
-		if (checkFinderPatternDirectional(yFrame, width, height, paddingElements, xCenter, yCenter, angles[i], threshold, blackSquareSegmentMin, blackSquareSegmentMax, whiteSquareSegmentMin, whiteSquareSegmentMax, centerSegmentMin, centerSegmentMax, edgePoints[i], edgePoints[i + 8]) == false)
+		if (checkFinderPatternDirectional(yFrame, width, height, paddingElements, xCenter, yCenter, angles[i], threshold, blackSquareSegmentMin, blackSquareSegmentMax, whiteSquareSegmentMin, whiteSquareSegmentMax, centerSegmentMin, centerSegmentMax, isNormalReflectance, edgePoints[i], edgePoints[i + 8]) == false)
 		{
 			return false;
 		}
@@ -958,7 +982,7 @@ bool FinderPatternDetector::checkFinderPatternInNeighborhood(const uint8_t* cons
 	}
 	ocean_assert(sumSymmetricAbsoluteSquareDistanceDifferences >= Scalar(0));
 
-	// Make sure the ratio of min length to max length is reasonable and check if the center block contains enough black pixels
+	// Make sure the ratio of min length to max length is reasonable and check if the center block contains enough foreground pixels
 
 	if (minSquareDistance > Scalar(0) && minSquareDistance <= maxSquareDistance && minSquareDistance / maxSquareDistance >= Scalar(0.15))
 	{
@@ -976,7 +1000,7 @@ bool FinderPatternDetector::checkFinderPatternInNeighborhood(const uint8_t* cons
 				{
 					ocean_assert(x >= 0 && x < int(width));
 
-					if (TransitionDetector::isWhitePixel(yRow + x, uint8_t(threshold)))
+					if (isBackgroundReflectancePixel(yRow + x, uint8_t(threshold), isNormalReflectance))
 					{
 						return false;
 					}
@@ -992,7 +1016,51 @@ bool FinderPatternDetector::checkFinderPatternInNeighborhood(const uint8_t* cons
 	return false;
 }
 
-bool FinderPatternDetector::checkFinderPatternDirectional(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, const unsigned int paddingElements, const unsigned int xCenter, const unsigned int yCenter, const Scalar angle, const unsigned int threshold, const unsigned int blackSquareSegmentMin, const unsigned int blackSquareSegmentMax, const unsigned int whiteSquareSegmentMin, const unsigned int whiteSquareSegmentMax, const unsigned int centerSegmentMin, const unsigned int centerSegmentMax, Vector2& topBorder, Vector2& bottomBorder)
+
+bool FinderPatternDetector::checkCenterSegmentDirectional(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, const unsigned int paddingElements, const unsigned int xCenter, const unsigned int yCenter, const unsigned int threshold, const unsigned int centerSegmentMin, const unsigned int centerSegmentMax, TransitionDetector::FindNextPixelFunc findNextBackgroundPixel, Bresenham& bresenhamTop, Bresenham& bresenhamBottom, unsigned int& topColumns, unsigned int& topRows, unsigned int& bottomColumns, unsigned int& bottomRows, VectorT2<unsigned int>& topIn, VectorT2<unsigned int>& topOut, VectorT2<unsigned int>& bottomIn, VectorT2<unsigned int>& bottomOut)
+{
+	const unsigned int centerSegmentMaxHalf = (centerSegmentMax + 1u) / 2u;
+	const unsigned int centerSegmentSymmetricTolerance = max(1u, centerSegmentMax * 179u / 512u); // ~ 35%
+
+	if (findNextBackgroundPixel(yFrame, xCenter, yCenter, width, height, paddingElements, bresenhamTop, centerSegmentMaxHalf + 1u, threshold, topColumns, topRows, topIn, topOut) == false
+		|| findNextBackgroundPixel(yFrame, xCenter, yCenter, width, height, paddingElements, bresenhamBottom, centerSegmentMaxHalf + 1u, threshold, bottomColumns, bottomRows, bottomIn, bottomOut) == false)
+	{
+		return false;
+	}
+
+	const unsigned int topSquareDistance = topRows * topRows + topColumns * topColumns;
+	const unsigned int bottomSquareDistance = bottomRows * bottomRows + bottomColumns * bottomColumns;
+
+	if (NumericT<unsigned int>::isNotEqual(topSquareDistance, bottomSquareDistance, centerSegmentSymmetricTolerance * centerSegmentSymmetricTolerance))
+	{
+		return false;
+	}
+
+	const unsigned int combinedColumns = topColumns + bottomColumns - 1u;
+	const unsigned int combinedRows = topRows + bottomRows - 1u;
+	const unsigned int combinedSquareDistance = combinedColumns * combinedColumns + combinedRows * combinedRows;
+
+	return combinedSquareDistance >= centerSegmentMin * centerSegmentMin && combinedSquareDistance <= centerSegmentMax * centerSegmentMax;
+}
+
+bool FinderPatternDetector::checkSegmentDirectional(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, const unsigned int paddingElements, const unsigned int threshold, const unsigned int segmentMin, const unsigned int segmentMax, TransitionDetector::FindNextPixelFunc findNextPixel, Bresenham& bresenhamTop, Bresenham& bresenhamBottom, unsigned int& topColumns, unsigned int& topRows, unsigned int& bottomColumns, unsigned int& bottomRows, VectorT2<unsigned int>& topIn, VectorT2<unsigned int>& topOut, VectorT2<unsigned int>& bottomIn, VectorT2<unsigned int>& bottomOut)
+{
+	if (findNextPixel(yFrame, topOut.x(), topOut.y(), width, height, paddingElements, bresenhamTop, segmentMax + 1u, threshold, topColumns, topRows, topIn, topOut) == false
+		|| findNextPixel(yFrame, bottomOut.x(), bottomOut.y(), width, height, paddingElements, bresenhamBottom, segmentMax + 1u, threshold, bottomColumns, bottomRows, bottomIn, bottomOut) == false)
+	{
+		return false;
+	}
+
+	const unsigned int topSquareDistance = topColumns * topColumns + topRows * topRows;
+	const unsigned int bottomSquareDistance = bottomColumns * bottomColumns + bottomRows * bottomRows;
+
+	return topSquareDistance >= segmentMin * segmentMin
+		&& bottomSquareDistance >= segmentMin * segmentMin
+		&& topSquareDistance <= segmentMax * segmentMax
+		&& bottomSquareDistance <= segmentMax * segmentMax;
+}
+
+bool FinderPatternDetector::checkFinderPatternDirectional(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, const unsigned int paddingElements, const unsigned int xCenter, const unsigned int yCenter, const Scalar angle, const unsigned int threshold, const unsigned int blackSquareSegmentMin, const unsigned int blackSquareSegmentMax, const unsigned int whiteSquareSegmentMin, const unsigned int whiteSquareSegmentMax, const unsigned int centerSegmentMin, const unsigned int centerSegmentMax, const bool isNormalReflectance, Vector2& topBorder, Vector2& bottomBorder)
 {
 	ocean_assert(yFrame != nullptr);
 	ocean_assert(xCenter < width && yCenter < height);
@@ -1015,10 +1083,10 @@ bool FinderPatternDetector::checkFinderPatternDirectional(const uint8_t* const y
 		return false;
 	}
 
-	// The black center square
+	const TransitionDetector::FindNextPixelFunc findNextForegroundPixel = isNormalReflectance ? TransitionDetector::findNextPixel<true> : TransitionDetector::findNextPixel<false>;
+	const TransitionDetector::FindNextPixelFunc findNextBackgroundPixel = isNormalReflectance ? TransitionDetector::findNextPixel<false> : TransitionDetector::findNextPixel<true>;
 
-	const unsigned int centerSegmentMaxHalf = (centerSegmentMax + 1u) / 2u;
-	const unsigned int centerSegmentSymmetricTolerance = max(1u, centerSegmentMax * 179u / 512u); // ~ 35%
+	// The center foreground square
 
 	unsigned int topColumns;
 	unsigned int topRows;
@@ -1031,12 +1099,7 @@ bool FinderPatternDetector::checkFinderPatternDirectional(const uint8_t* const y
 	VectorT2<unsigned int> bottomIn;
 	VectorT2<unsigned int> bottomOut;
 
-	if (TransitionDetector::findNextPixel<false>(yFrame, xCenter, yCenter, width, height, paddingElements, bresenhamTop, centerSegmentMaxHalf + 1u, threshold, topColumns, topRows, topIn, topOut) == false
-		|| TransitionDetector::findNextPixel<false>(yFrame, xCenter, yCenter, width, height, paddingElements, bresenhamBottom, centerSegmentMaxHalf + 1u, threshold, bottomColumns, bottomRows, bottomIn, bottomOut) == false
-		|| NumericT<unsigned int>::isNotEqual(topRows * topRows + topColumns * topColumns, bottomRows * bottomRows + bottomColumns * bottomColumns, centerSegmentSymmetricTolerance * centerSegmentSymmetricTolerance)
-		|| (topColumns + bottomColumns - 1u) * (topColumns + bottomColumns - 1u) + (topRows + bottomRows - 1u) * (topRows + bottomRows - 1u) < centerSegmentMin * centerSegmentMin // (topColumns + bottomColums - 1): as top and bottom include the center pixel
-		|| (topColumns + bottomColumns - 1u) * (topColumns + bottomColumns - 1u) + (topRows + bottomRows - 1u) * (topRows + bottomRows - 1u) > centerSegmentMax * centerSegmentMax
-		)
+	if (!checkCenterSegmentDirectional(yFrame, width, height, paddingElements, xCenter, yCenter, threshold, centerSegmentMin, centerSegmentMax, findNextBackgroundPixel, bresenhamTop, bresenhamBottom, topColumns, topRows, bottomColumns, bottomRows, topIn, topOut, bottomIn, bottomOut))
 	{
 		return false;
 	}
@@ -1044,15 +1107,9 @@ bool FinderPatternDetector::checkFinderPatternDirectional(const uint8_t* const y
 	ocean_assert(topIn.x() < width && topIn.y() < height && topOut.x() < width && topOut.y() < height);
 	ocean_assert(bottomIn.x() < width && bottomIn.y() < height && bottomOut.x() < width && bottomOut.y() < height);
 
-	// The inner white square
+	// The inner background square
 
-	if (TransitionDetector::findNextPixel<true>(yFrame, topOut.x(), topOut.y(), width, height, paddingElements, bresenhamTop, whiteSquareSegmentMax + 1u, threshold, topColumns, topRows, topIn, topOut) == false
-		|| TransitionDetector::findNextPixel<true>(yFrame, bottomOut.x(), bottomOut.y(), width, height, paddingElements, bresenhamBottom, whiteSquareSegmentMax + 1u, threshold, bottomColumns, bottomRows, bottomIn, bottomOut) == false
-		|| topColumns * topColumns + topRows * topRows < whiteSquareSegmentMin * whiteSquareSegmentMin
-		|| bottomColumns * bottomColumns + bottomRows * bottomRows < whiteSquareSegmentMin * whiteSquareSegmentMin
-		|| topColumns * topColumns + topRows * topRows > whiteSquareSegmentMax * whiteSquareSegmentMax
-		|| bottomColumns * bottomColumns + bottomRows * bottomRows > whiteSquareSegmentMax * whiteSquareSegmentMax
-		)
+	if (!checkSegmentDirectional(yFrame, width, height, paddingElements, threshold, whiteSquareSegmentMin, whiteSquareSegmentMax, findNextForegroundPixel, bresenhamTop, bresenhamBottom, topColumns, topRows, bottomColumns, bottomRows, topIn, topOut, bottomIn, bottomOut))
 	{
 		return false;
 	}
@@ -1060,15 +1117,9 @@ bool FinderPatternDetector::checkFinderPatternDirectional(const uint8_t* const y
 	ocean_assert(topIn.x() < width && topIn.y() < height && topOut.x() < width && topOut.y() < height);
 	ocean_assert(bottomIn.x() < width && bottomIn.y() < height && bottomOut.x() < width && bottomOut.y() < height);
 
-	// The outer black square
+	// The outer foreground square
 
-	if (TransitionDetector::findNextPixel<false>(yFrame, topOut.x(), topOut.y(), width, height, paddingElements, bresenhamTop, blackSquareSegmentMax + 1u, threshold, topColumns, topRows, topIn, topOut) == false
-		|| TransitionDetector::findNextPixel<false>(yFrame, bottomOut.x(), bottomOut.y(), width, height, paddingElements, bresenhamBottom, blackSquareSegmentMax + 1u, threshold, bottomColumns, bottomRows, bottomIn, bottomOut) == false
-		|| topColumns * topColumns + topRows * topRows < blackSquareSegmentMin * blackSquareSegmentMin
-		|| bottomColumns * bottomColumns + bottomRows * bottomRows < blackSquareSegmentMin * blackSquareSegmentMin
-		|| topColumns * topColumns + topRows * topRows > blackSquareSegmentMax * blackSquareSegmentMax
-		|| bottomColumns * bottomColumns + bottomRows * bottomRows > blackSquareSegmentMax * blackSquareSegmentMax
-		)
+	if (!checkSegmentDirectional(yFrame, width, height, paddingElements, threshold, blackSquareSegmentMin, blackSquareSegmentMax, findNextBackgroundPixel, bresenhamTop, bresenhamBottom, topColumns, topRows, bottomColumns, bottomRows, topIn, topOut, bottomIn, bottomOut))
 	{
 		return false;
 	}

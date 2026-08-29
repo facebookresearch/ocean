@@ -57,7 +57,7 @@ class OCEAN_TRACKING_QRCODES_EXPORT QRCodeTracker3D : public CV::Detector::QRCod
 		using ObjectId = uint32_t;
 
 		/// Definition of a pointer to the function that provides new 6DOF detections of QR codes, QRCodeDetector3D::detectQRCodes()
-		using CallbackQRCodeDetection3D = std::function<bool(const SharedAnyCameras&, const Frames&, const HomogenousMatrix4&, const HomogenousMatrices4&, CV::Detector::QRCodes::QRCodes&, HomogenousMatrices4&, Scalars&, Worker*, const bool)>;
+		using CallbackQRCodeDetection3D = std::function<bool(const SharedAnyCameras&, const Frames&, const HomogenousMatrix4&, const HomogenousMatrices4&, CV::Detector::QRCodes::QRCodes&, HomogenousMatrices4&, Scalars&, Worker*, const bool, const bool)>;
 
 		/// Definition of a function pointer that is called in the event a new QR code is detected for the first time.
 		using CallbackNewQRCode = std::function<void(const CV::Detector::QRCodes::QRCode&, const HomogenousMatrix4&, const Scalar, const ObjectId)>;
@@ -81,6 +81,9 @@ class OCEAN_TRACKING_QRCODES_EXPORT QRCodeTracker3D : public CV::Detector::QRCod
 
 			/// The maximum amount of outliers (points) that different observations may have to be counted as identical, in percent, range: [0, 1]
 			Scalar observationHistoryMaxOutliersPercent = Scalar(0.1);
+
+			/// True to additionally detect bright QR codes on a dark background.
+			bool detectInvertedReflectance_ = false;
 		};
 
 		/**

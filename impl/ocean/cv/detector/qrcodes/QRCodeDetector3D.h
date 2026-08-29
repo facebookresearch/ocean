@@ -52,9 +52,10 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeDetector3D : public QRCodeDetector
 		 * @param codeSizes The resulting edge lengths of the detected QR codes in meters, number of elements will be identical to `codes`
 		 * @param worker Optional worker instance for parallelization
 		 * @param allow2DCodes If true, the detector will also report back QR codes which have been detected in only one camera (2D detections), however, their 6-DOF pose and size (edge length) will not be accurate; otherwise only 3D detection will be reported
+		 * @param detectInvertedReflectance True to additionally detect bright QR codes on a dark background
 		 * @return True if one or more QR code has been detected, otherwise false
 		 */
-		static bool detectQRCodes(const SharedAnyCameras& sharedAnyCameras, const Frames& yFrames, const HomogenousMatrix4& world_T_device, const HomogenousMatrices4& device_T_cameras, QRCodes& codes, HomogenousMatrices4& world_T_codes, Scalars& codeSizes, Worker* worker = nullptr, const bool allow2DCodes = false);
+		static bool detectQRCodes(const SharedAnyCameras& sharedAnyCameras, const Frames& yFrames, const HomogenousMatrix4& world_T_device, const HomogenousMatrices4& device_T_cameras, QRCodes& codes, HomogenousMatrices4& world_T_codes, Scalars& codeSizes, Worker* worker = nullptr, const bool allow2DCodes = false, const bool detectInvertedReflectance = false);
 
 		/**
 		 * Detects QR codes their 6-DOF poses in two synchronized 8-bit grayscale images
@@ -67,9 +68,10 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeDetector3D : public QRCodeDetector
 		 * @param codeSizes The resulting edge lengths of the detected QR codes in meters, number of elements will be identical to `codes`
 		 * @param worker Optional worker instance for parallelization
 		 * @param allow2DCodes If true, the detector will also report back QR codes which have been detected in only one camera (2D detections), however, their 6-DOF pose and size (edge length) will not be accurate; otherwise only 3D detection will be reported
+		 * @param detectInvertedReflectance True to additionally detect bright QR codes on a dark background
 		 * @return True if one or more QR code has been detected, otherwise false
 		 */
-		static bool detectQRCodesWithPyramids(const SharedAnyCameras& sharedAnyCameras, const Frames& yFrames, const HomogenousMatrix4& world_T_device, const HomogenousMatrices4& device_T_cameras, QRCodes& codes, HomogenousMatrices4& world_T_codes, Scalars& codeSizes, Worker* worker = nullptr, const bool allow2DCodes = false);
+		static bool detectQRCodesWithPyramids(const SharedAnyCameras& sharedAnyCameras, const Frames& yFrames, const HomogenousMatrix4& world_T_device, const HomogenousMatrices4& device_T_cameras, QRCodes& codes, HomogenousMatrices4& world_T_codes, Scalars& codeSizes, Worker* worker = nullptr, const bool allow2DCodes = false, const bool detectInvertedReflectance = false);
 
 		/**
 		 * Returns an invalid size for QR codes

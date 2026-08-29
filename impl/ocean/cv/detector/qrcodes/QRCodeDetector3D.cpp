@@ -35,7 +35,7 @@ namespace Detector
 namespace QRCodes
 {
 
-bool QRCodeDetector3D::detectQRCodes(const SharedAnyCameras& sharedAnyCameras, const Frames& yFrames, const HomogenousMatrix4& world_T_device, const HomogenousMatrices4& device_T_cameras, QRCodes& codes, HomogenousMatrices4& world_T_codes, Scalars& codeSizes, Worker* worker, const bool allow2DCodes)
+bool QRCodeDetector3D::detectQRCodes(const SharedAnyCameras& sharedAnyCameras, const Frames& yFrames, const HomogenousMatrix4& world_T_device, const HomogenousMatrices4& device_T_cameras, QRCodes& codes, HomogenousMatrices4& world_T_codes, Scalars& codeSizes, Worker* worker, const bool allow2DCodes, const bool detectInvertedReflectance)
 {
 	ocean_assert(sharedAnyCameras.size() == yFrames.size());
 	ocean_assert(device_T_cameras.size() == yFrames.size());
@@ -76,7 +76,7 @@ bool QRCodeDetector3D::detectQRCodes(const SharedAnyCameras& sharedAnyCameras, c
 	{
 		const Frame& yFrame = yFrames[iCamera];
 
-		finderPatterns[iCamera] = FinderPatternDetector::detectFinderPatterns(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), /* minimumDistance */ 10u, yFrame.paddingElements(), worker);
+		finderPatterns[iCamera] = FinderPatternDetector::detectFinderPatterns(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), /* minimumDistance */ 10u, yFrame.paddingElements(), worker, detectInvertedReflectance);
 
 		constexpr size_t maximumNumberOfDetectableCodes = 5;
 		constexpr size_t maximumNumberOfFinderPatterns = 3 * maximumNumberOfDetectableCodes;
@@ -186,7 +186,7 @@ bool QRCodeDetector3D::detectQRCodes(const SharedAnyCameras& sharedAnyCameras, c
 			const AnyCamera& camera = *sharedAnyCameras[iCamera];
 			const Frame& yFrame = yFrames[iCamera];
 
-			QRCodes codes2D = QRCodeDetector2D::detectQRCodes(camera, yFrame, /* observations */ nullptr, worker);
+			QRCodes codes2D = QRCodeDetector2D::detectQRCodes(camera, yFrame, /* observations */ nullptr, worker, detectInvertedReflectance);
 
 			// TODO Use the observations to see if it's possible to estimate a rough size and pose of the current code (e.g. using the other camera image)
 
@@ -225,7 +225,7 @@ bool QRCodeDetector3D::detectQRCodes(const SharedAnyCameras& sharedAnyCameras, c
 	return true;
 }
 
-bool QRCodeDetector3D::detectQRCodesWithPyramids(const SharedAnyCameras& sharedAnyCameras, const Frames& yFrames, const HomogenousMatrix4& world_T_device, const HomogenousMatrices4& device_T_cameras, QRCodes& codes, HomogenousMatrices4& world_T_codes, Scalars& codeSizes, Worker* worker, const bool allow2DCodes)
+bool QRCodeDetector3D::detectQRCodesWithPyramids(const SharedAnyCameras& sharedAnyCameras, const Frames& yFrames, const HomogenousMatrix4& world_T_device, const HomogenousMatrices4& device_T_cameras, QRCodes& codes, HomogenousMatrices4& world_T_codes, Scalars& codeSizes, Worker* worker, const bool allow2DCodes, const bool detectInvertedReflectance)
 {
 	ocean_assert(sharedAnyCameras.size() == 2);
 	ocean_assert(sharedAnyCameras.size() == yFrames.size());
@@ -337,7 +337,7 @@ bool QRCodeDetector3D::detectQRCodesWithPyramids(const SharedAnyCameras& sharedA
 		QRCodes newCodes;
 		Scalars newCodeSizes;
 		HomogenousMatrices4 world_T_newCodes;
-		if (detectQRCodes(layerCameras, layerFrames, world_T_device, device_T_cameras, newCodes, world_T_newCodes, newCodeSizes, worker, allow2DCodes))
+		if (detectQRCodes(layerCameras, layerFrames, world_T_device, device_T_cameras, newCodes, world_T_newCodes, newCodeSizes, worker, allow2DCodes, detectInvertedReflectance))
 		{
 			for (size_t newCodeIndex = 0; newCodeIndex < newCodes.size(); ++newCodeIndex)
 			{

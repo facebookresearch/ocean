@@ -100,9 +100,10 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeDetector2D : public QRCodeDetector
 		 * @param observations Optional observations of the detected QR codes that will be returned, will be ignored for `nullptr`
 		 * @param worker Optional worker instance for parallelization
 		 * @param anyCamera The optionally returned camera profile that has been assumed internally
+		 * @param detectInvertedReflectance True to additionally detect bright QR codes on a dark background
 		 * @return The list of detected QR codes
 		 */
-		static inline QRCodes detectQRCodes(const Frame& yFrame, Observations* observations = nullptr, Worker* worker = nullptr, SharedAnyCamera* anyCamera = nullptr);
+		static inline QRCodes detectQRCodes(const Frame& yFrame, Observations* observations = nullptr, Worker* worker = nullptr, SharedAnyCamera* anyCamera = nullptr, const bool detectInvertedReflectance = false);
 
 		/**
 		 * Detects QR codes in an 8-bit grayscale image with lens distortions
@@ -111,9 +112,10 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeDetector2D : public QRCodeDetector
 		 * @param yFrame The frame in which QR codes will be detected, must be valid, match the camera size, have its origin in the upper left corner, and have a pixel format that is compatible with Y8, minimum size is 29 x 29 pixels
 		 * @param observations Optional observations of the detected QR codes that will be returned, will be ignored for `nullptr`
 		 * @param worker Optional worker instance for parallelization
+		 * @param detectInvertedReflectance True to additionally detect bright QR codes on a dark background
 		 * @return The list of detected QR codes
 		 */
-		static inline QRCodes detectQRCodes(const AnyCamera& anyCamera, const Frame& yFrame, Observations* observations = nullptr, Worker* worker = nullptr);
+		static inline QRCodes detectQRCodes(const AnyCamera& anyCamera, const Frame& yFrame, Observations* observations = nullptr, Worker* worker = nullptr, const bool detectInvertedReflectance = false);
 
 		/**
 		 * Detects QR codes in an 8-bit grayscale image
@@ -124,9 +126,10 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeDetector2D : public QRCodeDetector
 		 * @param paddingElements The number of padding elements of the input frame, range: [0, infinity)
 		 * @param observations Optional observations of the detected QR codes that will be returned, will be ignored for `nullptr`
 		 * @param worker Optional worker instance for parallelization
+		 * @param detectInvertedReflectance True to additionally detect bright QR codes on a dark background
 		 * @return The list of detected QR codes
 		 */
-		static QRCodes detectQRCodes(const AnyCamera& anyCamera, const uint8_t* const yFrame, const unsigned int width, const unsigned int height, const unsigned int paddingElements, Observations* observations = nullptr, Worker* worker = nullptr);
+		static QRCodes detectQRCodes(const AnyCamera& anyCamera, const uint8_t* const yFrame, const unsigned int width, const unsigned int height, const unsigned int paddingElements, Observations* observations = nullptr, Worker* worker = nullptr, const bool detectInvertedReflectance = false);
 };
 
 inline QRCodeDetector2D::Observation::Observation(const HomogenousMatrix4& code_T_camera, FinderPatternTriplet&& finderPatterns) :
@@ -159,7 +162,7 @@ inline const FinderPatternTriplet& QRCodeDetector2D::Observation::finderPatterns
 	return finderPatterns_;
 }
 
-inline QRCodes QRCodeDetector2D::detectQRCodes(const Frame& yFrame, Observations* observations, Worker* worker, SharedAnyCamera* sharedAnyCamera)
+inline QRCodes QRCodeDetector2D::detectQRCodes(const Frame& yFrame, Observations* observations, Worker* worker, SharedAnyCamera* sharedAnyCamera, const bool detectInvertedReflectance)
 {
 	if (!yFrame.isValid() || !FrameType::arePixelFormatsCompatible(yFrame.pixelFormat(), FrameType::FORMAT_Y8) || yFrame.pixelOrigin() != FrameType::ORIGIN_UPPER_LEFT)
 	{
@@ -179,7 +182,7 @@ inline QRCodes QRCodeDetector2D::detectQRCodes(const Frame& yFrame, Observations
 
 	AnyCameraPinhole anyCamera(PinholeCamera(yFrame.width(), yFrame.height(), fovX));
 
-	QRCodes codes = detectQRCodes(anyCamera, yFrame, observations, worker);
+	QRCodes codes = detectQRCodes(anyCamera, yFrame, observations, worker, detectInvertedReflectance);
 
 	if (sharedAnyCamera)
 	{
@@ -189,7 +192,7 @@ inline QRCodes QRCodeDetector2D::detectQRCodes(const Frame& yFrame, Observations
 	return codes;
 }
 
-inline QRCodes QRCodeDetector2D::detectQRCodes(const AnyCamera& anyCamera, const Frame& yFrame, Observations* observations, Worker* worker)
+inline QRCodes QRCodeDetector2D::detectQRCodes(const AnyCamera& anyCamera, const Frame& yFrame, Observations* observations, Worker* worker, const bool detectInvertedReflectance)
 {
 	if (!yFrame.isValid() || !FrameType::arePixelFormatsCompatible(yFrame.pixelFormat(), FrameType::FORMAT_Y8) || yFrame.pixelOrigin() != FrameType::ORIGIN_UPPER_LEFT)
 	{
@@ -197,7 +200,7 @@ inline QRCodes QRCodeDetector2D::detectQRCodes(const AnyCamera& anyCamera, const
 		return QRCodes();
 	}
 
-	return detectQRCodes(anyCamera, yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), observations, worker);
+	return detectQRCodes(anyCamera, yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), observations, worker, detectInvertedReflectance);
 }
 
 } // namespace QRCodes

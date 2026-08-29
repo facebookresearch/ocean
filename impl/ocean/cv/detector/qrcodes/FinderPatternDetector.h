@@ -278,9 +278,10 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT FinderPatternDetector
 		 * @param minimumDistance The minimum distance in pixels that is enforced between any pair of finder patterns, range: [0, infinity), default: 10
 		 * @param paddingElements Optional number of padding elements at the end of each image row, in elements, with range [0, infinity), default: 0
 		 * @param worker Optional worker to distribute the computation
+		 * @param detectInvertedReflectance True to additionally detect bright finder patterns on a dark background
 		 * @return The detected finder patterns
 		 */
-		static FinderPatterns detectFinderPatterns(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, const unsigned int minimumDistance = 10u, const unsigned int paddingElements = 0u, Worker* worker = nullptr);
+		static FinderPatterns detectFinderPatterns(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, const unsigned int minimumDistance = 10u, const unsigned int paddingElements = 0u, Worker* worker = nullptr, const bool detectInvertedReflectance = false);
 
 		/**
 		 * Extract 3-tuples of finder patterns that form good (plausible) candidates for QR code symbols
@@ -304,8 +305,9 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT FinderPatternDetector
 		 * @param paddingElements Optional number of padding elements at the end of each image row, in elements, with range [0, infinity)
 		 * @param firstRow The first row to be handled, with range [7, height - 7)
 		 * @param numberRows The number of rows to be handled, with range [1, height - 7 - firstRow]
+		 * @param detectInvertedReflectance True to additionally detect bright finder patterns on a dark background
 		 */
-		static void detectFinderPatternsSubset(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, FinderPatterns* finderPatterns, Lock* multiThreadLock, const unsigned int paddingElements, const unsigned int firstRow, const unsigned int numberRows);
+		static void detectFinderPatternsSubset(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, FinderPatterns* finderPatterns, Lock* multiThreadLock, const unsigned int paddingElements, const unsigned int firstRow, const unsigned int numberRows, const bool detectInvertedReflectance);
 
 		/**
 		 * Detects finder patterns of QR codes in a single row of an grayscale image.
@@ -315,8 +317,46 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT FinderPatternDetector
 		 * @param y The index of the row in which the finder patterns will be detected, with range [7, height - 8]
 		 * @param finderPatterns The resulting detected finder patterns, will be added to the end of the vector
 		 * @param paddingElements Optional number of padding elements at the end of each image row, in elements, with range [0, infinity)
+		 * @param isNormalReflectance True to detect dark finder patterns on a bright background, false for bright finder patterns on a dark background
 		 */
-		static void detectFinderPatternInRow(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, const unsigned int y, FinderPatterns& finderPatterns, const unsigned int paddingElements);
+		static void detectFinderPatternInRow(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, const unsigned int y, FinderPatterns& finderPatterns, const unsigned int paddingElements, const bool isNormalReflectance);
+
+		/**
+		 * Finds the next transition in a row.
+		 * @param yRow The current row, must be valid
+		 * @param width The row width in pixels, range: [1, infinity)
+		 * @param x The search position, will be advanced to the transition or to width
+		 * @param transitionDetector The transition detector to use, must be valid
+		 * @return True if a transition was found, otherwise false
+		 */
+		static bool findNextTransitionInRow(const uint8_t* const yRow, const unsigned int width, unsigned int& x, bool (*transitionDetector)(const uint8_t*, TransitionHistory&));
+
+		/**
+		 * Validates and adds a finder pattern candidate from a 1D row match.
+		 * @param yFrame The 8 bit grayscale frame in which the finder patterns will be detected, must be valid
+		 * @param yRow The row containing the 1D match, must be valid
+		 * @param width The width of the given grayscale frame in pixel, with range [15, infinity)
+		 * @param height The height of the given grayscale frame in pixel, with range [15, infinity)
+		 * @param y The index of the row in which the finder patterns will be detected, with range [7, height - 8]
+		 * @param paddingElements Optional number of padding elements at the end of each image row, in elements, with range [0, infinity)
+		 * @param segment1StartForeground The start of the first foreground segment
+		 * @param segment3StartForeground The start of the center foreground segment
+		 * @param segment4StartBackground The start of the second background segment
+		 * @param segment1Size The size of the first foreground segment
+		 * @param segment2Size The size of the first background segment
+		 * @param segment3Size The size of the center foreground segment
+		 * @param segment4Size The size of the second background segment
+		 * @param segment5Size The size of the third foreground segment
+		 * @param foregroundSquareSegmentMin Minimum diameter of the outer foreground square in pixels
+		 * @param foregroundSquareSegmentMax Maximum diameter of the outer foreground square in pixels
+		 * @param backgroundSquareSegmentMin Minimum diameter of the inner background square in pixels
+		 * @param backgroundSquareSegmentMax Maximum diameter of the inner background square in pixels
+		 * @param centerSegmentMin Minimum diameter of the center foreground square in pixels
+		 * @param centerSegmentMax Maximum diameter of the center foreground square in pixels
+		 * @param isNormalReflectance True to detect dark foreground on bright background, false for bright foreground on dark background
+		 * @param finderPatterns The resulting detected finder patterns, will be added to the end of the vector
+		 */
+		static void addFinderPatternCandidateInRow(const uint8_t* const yFrame, const uint8_t* const yRow, const unsigned int width, const unsigned int height, const unsigned int y, const unsigned int paddingElements, const unsigned int segment1StartForeground, const unsigned int segment3StartForeground, const unsigned int segment4StartBackground, const unsigned int segment1Size, const unsigned int segment2Size, const unsigned int segment3Size, const unsigned int segment4Size, const unsigned int segment5Size, const unsigned int foregroundSquareSegmentMin, const unsigned int foregroundSquareSegmentMax, const unsigned int backgroundSquareSegmentMin, const unsigned int backgroundSquareSegmentMax, const unsigned int centerSegmentMin, const unsigned int centerSegmentMax, const bool isNormalReflectance, FinderPatterns& finderPatterns);
 
 		/**
 		 * Estimates the locations of the corners of finder pattern and computes the dominant orientation of the finder pattern from those corners
@@ -347,6 +387,11 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT FinderPatternDetector
 		static bool refineFinderPatternLocation(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, FinderPattern& finderPattern, const unsigned int yFramePaddingElements = 0u);
 
 		/**
+		 * Finds a foreground/background edge transition used to refine finder-pattern edges.
+		 */
+		static bool findRefinementEdgeTransition(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, const unsigned int paddingElements, const FinderPattern& finderPattern, const Vector2& point, const Vector2& perpendicularOut, const unsigned int maxPerpendicularSearchDistance, VectorT2<unsigned int>& pixelLocationIn, VectorT2<unsigned int>& pixelLocationOut);
+
+		/**
 		 * Performs a check around a given candidate location looking for a correct configuration of light and dark pixels (testing 8 angles each yielding 2 edge points)
 		 * @param yFrame The 8 bit grayscale frame in which the finder pattern candidate will be tested, must be valid
 		 * @param width The width of the given grayscale frame in pixels, range: [15, infinity)
@@ -355,17 +400,18 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT FinderPatternDetector
 		 * @param xCenter The horizontal location within the frame at which the existence of the finder pattern will be checked, in pixels, with range [0, width - 1]
 		 * @param yCenter The vertical location within the frame at which the existence of the finder pattern will be checked, in pixels, with range [0, height - 1]
 		 * @param threshold The grayscale threshold separating a bright pixel from a dark pixel, with range [0, 255]
-		 * @param blackSquareSegmentMin Minimum diameter of the outer black square in pixels, range: [1, infinity)
-		 * @param blackSquareSegmentMax Maximum diameter of the outer black square in pixels, range: [blackSquareSegmentMin, infinity)
-		 * @param whiteSquareSegmentMin Minimum diameter of the inner white square in pixels, range: [1, infinity)
-		 * @param whiteSquareSegmentMax Maximum diameter of the inner white square in pixels, range: [whiteSquareSegmentMin, infinity)
-		 * @param centerSegmentMin Minimum diameter of the center black square in pixels, range: [1, infinity)
-		 * @param centerSegmentMax Maximum diameter of the center black square in pixels, range: [centerSegmentMin, infinity)
+		 * @param blackSquareSegmentMin Minimum diameter of the outer foreground square in pixels, range: [1, infinity)
+		 * @param blackSquareSegmentMax Maximum diameter of the outer foreground square in pixels, range: [blackSquareSegmentMin, infinity)
+		 * @param whiteSquareSegmentMin Minimum diameter of the inner background square in pixels, range: [1, infinity)
+		 * @param whiteSquareSegmentMax Maximum diameter of the inner background square in pixels, range: [whiteSquareSegmentMin, infinity)
+		 * @param centerSegmentMin Minimum diameter of the center foreground square in pixels, range: [1, infinity)
+		 * @param centerSegmentMax Maximum diameter of the center foreground square in pixels, range: [centerSegmentMin, infinity)
+		 * @param isNormalReflectance True for dark foreground on bright background, false for bright foreground on dark background
 		 * @param symmetryScore The resulting symmetry score that is computed for the current candidate location `(xCenter, yCenter)`; this score is based on distances so the lower the score, the better. Range: [0, infinity)
 		 * @param edgePoints If specified, will hold the resulting points detected during the directional checks on the outside border of the finder pattern candidate. Must be valid, expected size: `2 * angles`
 		 * @return True if all edge points of the finder pattern are found in all scanline directions, otherwise false
 		 */
-		static bool checkFinderPatternInNeighborhood(const uint8_t* const yFrame, const unsigned width, const unsigned height, const unsigned int paddingElements, const unsigned int xCenter, const unsigned int yCenter, const unsigned int threshold, const unsigned int blackSquareSegmentMin, const unsigned int blackSquareSegmentMax, const unsigned int whiteSquareSegmentMin, const unsigned int whiteSquareSegmentMax, const unsigned int centerSegmentMin, const unsigned int centerSegmentMax, Scalar& symmetryScore, Vector2* edgePoints);
+		static bool checkFinderPatternInNeighborhood(const uint8_t* const yFrame, const unsigned width, const unsigned height, const unsigned int paddingElements, const unsigned int xCenter, const unsigned int yCenter, const unsigned int threshold, const unsigned int blackSquareSegmentMin, const unsigned int blackSquareSegmentMax, const unsigned int whiteSquareSegmentMin, const unsigned int whiteSquareSegmentMax, const unsigned int centerSegmentMin, const unsigned int centerSegmentMax, const bool isNormalReflectance, Scalar& symmetryScore, Vector2* edgePoints);
 
 		/**
 		 * Performs a check for a given candidate location in a specified direction (yielding 2 edge points)
@@ -377,17 +423,28 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT FinderPatternDetector
 		 * @param yCenter The vertical location within the frame at which the existence of the finder pattern will be checked, in pixels, with range [0, height - 1]
 		 * @param angle The angle in Radian defining the directions in which edge points will be searched, range: [0, pi)
 		 * @param threshold The grayscale threshold separating a bright pixel from a dark pixel, with range [0, 255]
-		 * @param blackSquareSegmentMin Minimum diameter of the outer black square in pixels, range: [1, infinity)
-		 * @param blackSquareSegmentMax Maximum diameter of the outer black square in pixels, range: [blackSquareSegmentMin, infinity)
-		 * @param whiteSquareSegmentMin Minimum diameter of the inner white square in pixels, range: [1, infinity)
-		 * @param whiteSquareSegmentMax Maximum diameter of the inner white square in pixels, range: [whiteSquareSegmentMin, infinity)
-		 * @param centerSegmentMin Minimum diameter of the center black square in pixels, range: [1, infinity)
-		 * @param centerSegmentMax Maximum diameter of the center black square in pixels, range: [centerSegmentMin, infinity)
+		 * @param blackSquareSegmentMin Minimum diameter of the outer foreground square in pixels, range: [1, infinity)
+		 * @param blackSquareSegmentMax Maximum diameter of the outer foreground square in pixels, range: [blackSquareSegmentMin, infinity)
+		 * @param whiteSquareSegmentMin Minimum diameter of the inner background square in pixels, range: [1, infinity)
+		 * @param whiteSquareSegmentMax Maximum diameter of the inner background square in pixels, range: [whiteSquareSegmentMin, infinity)
+		 * @param centerSegmentMin Minimum diameter of the center foreground square in pixels, range: [1, infinity)
+		 * @param centerSegmentMax Maximum diameter of the center foreground square in pixels, range: [centerSegmentMin, infinity)
+		 * @param isNormalReflectance True for dark foreground on bright background, false for bright foreground on dark background
 		 * @param topBorder The resulting location of the last pixel on the current finder pattern in the specified direction of the scanline
 		 * @param bottomBorder The resulting location of the last pixel on the current finder pattern in the opposite direction (`angle + pi`) of the specified direction of the scanline
 		 * @return True if the two edge points of the finder pattern are found in the specified scanline direction, otherwise false
 		 */
-		static bool checkFinderPatternDirectional(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, const unsigned int paddingElements, const unsigned int xCenter, const unsigned int yCenter, const Scalar angle, const unsigned int threshold, const unsigned int blackSquareSegmentMin, const unsigned int blackSquareSegmentMax, const unsigned int whiteSquareSegmentMin, const unsigned int whiteSquareSegmentMax, const unsigned int centerSegmentMin, const unsigned int centerSegmentMax, Vector2& topBorder, Vector2& bottomBorder);
+		static bool checkFinderPatternDirectional(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, const unsigned int paddingElements, const unsigned int xCenter, const unsigned int yCenter, const Scalar angle, const unsigned int threshold, const unsigned int blackSquareSegmentMin, const unsigned int blackSquareSegmentMax, const unsigned int whiteSquareSegmentMin, const unsigned int whiteSquareSegmentMax, const unsigned int centerSegmentMin, const unsigned int centerSegmentMax, const bool isNormalReflectance, Vector2& topBorder, Vector2& bottomBorder);
+
+		/**
+		 * Checks the center foreground segment in both scanline directions.
+		 */
+		static bool checkCenterSegmentDirectional(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, const unsigned int paddingElements, const unsigned int xCenter, const unsigned int yCenter, const unsigned int threshold, const unsigned int centerSegmentMin, const unsigned int centerSegmentMax, TransitionDetector::FindNextPixelFunc findNextBackgroundPixel, Bresenham& bresenhamTop, Bresenham& bresenhamBottom, unsigned int& topColumns, unsigned int& topRows, unsigned int& bottomColumns, unsigned int& bottomRows, VectorT2<unsigned int>& topIn, VectorT2<unsigned int>& topOut, VectorT2<unsigned int>& bottomIn, VectorT2<unsigned int>& bottomOut);
+
+		/**
+		 * Checks a non-center finder-pattern segment in both scanline directions.
+		 */
+		static bool checkSegmentDirectional(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, const unsigned int paddingElements, const unsigned int threshold, const unsigned int segmentMin, const unsigned int segmentMax, TransitionDetector::FindNextPixelFunc findNextPixel, Bresenham& bresenhamTop, Bresenham& bresenhamBottom, unsigned int& topColumns, unsigned int& topRows, unsigned int& bottomColumns, unsigned int& bottomRows, VectorT2<unsigned int>& topIn, VectorT2<unsigned int>& topOut, VectorT2<unsigned int>& bottomIn, VectorT2<unsigned int>& bottomOut);
 
 		/**
 		 * Checks whether the given pixel is a transition-to-black pixel (whether the direct left neighbor is a bright pixel).
@@ -410,15 +467,16 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT FinderPatternDetector
 		 * The threshold is based on already actual pixel values for which the association is known already.<br>
 		 * The provided start position is a pointer to any pixel within the image, with horizontal range [1, width - segmentSize1 - segmentSize2 - segmentSize3 - segmentSize4 - segmentSize5 - 2].
 		 * In addition to the pixels covered by the five segments, the fist pixel left of the segments and the last pixel right of the segments are also used for estimation of the threshold.
-		 * @param yPosition The first pixel within an 8 bit grayscale image for which 5 connected segments are known with black, white, black, white, and black pixels, must be valid
-		 * @param segmentSize1 The number of pixels covering dark pixels, with range [1, width - ...)
-		 * @param segmentSize2 The number of pixels covering bright pixels, with range [1, width - ...)
-		 * @param segmentSize3 The number of pixels covering dark pixels, with range [1, width - ...)
-		 * @param segmentSize4 The number of pixels covering bright pixels, with range [1, width - ...)
-		 * @param segmentSize5 The number of pixels covering dark pixels, with range [1, width - segmentSize1 - segmentSize2 - segmentSize3 - segmentSize4 - 2]
+		 * @param yPosition The first pixel within an 8 bit grayscale image for which 5 connected segments are known with foreground, background, foreground, background, and foreground pixels, must be valid
+		 * @param segmentSize1 The number of pixels covering foreground pixels, with range [1, width - ...)
+		 * @param segmentSize2 The number of pixels covering background pixels, with range [1, width - ...)
+		 * @param segmentSize3 The number of pixels covering foreground pixels, with range [1, width - ...)
+		 * @param segmentSize4 The number of pixels covering background pixels, with range [1, width - ...)
+		 * @param segmentSize5 The number of pixels covering foreground pixels, with range [1, width - segmentSize1 - segmentSize2 - segmentSize3 - segmentSize4 - 2]
+		 * @param isNormalReflectance True when foreground pixels are dark, false when foreground pixels are bright
 		 * @return The threshold separating bright pixels from dark pixels, with range [0, 255], -1 if no valid threshold could be determined
 		 */
-		static inline unsigned int determineThreshold(const uint8_t* yPosition, const unsigned int segmentSize1, const unsigned int segmentSize2, const unsigned int segmentSize3, const unsigned int segmentSize4, const unsigned int segmentSize5);
+		static inline unsigned int determineThreshold(const uint8_t* yPosition, const unsigned int segmentSize1, const unsigned int segmentSize2, const unsigned int segmentSize3, const unsigned int segmentSize4, const unsigned int segmentSize5, const bool isNormalReflectance);
 
 		/**
 		 * Returns true if a pair of finder patterns is in parallel configuration, i.e., if one is above/below/left of/right of the other (and vice versa)
@@ -652,42 +710,44 @@ inline bool FinderPatternDetector::isTransitionToWhite(const uint8_t* pixel, Tra
 	return result;
 }
 
-inline unsigned int FinderPatternDetector::determineThreshold(const uint8_t* yPosition, const unsigned int segmentSize1, const unsigned int segmentSize2, const unsigned int segmentSize3, const unsigned int segmentSize4, const unsigned int segmentSize5)
+inline unsigned int FinderPatternDetector::determineThreshold(const uint8_t* yPosition, const unsigned int segmentSize1, const unsigned int segmentSize2, const unsigned int segmentSize3, const unsigned int segmentSize4, const unsigned int segmentSize5, const bool isNormalReflectance)
 {
-	unsigned int sumBlack = 0u;
-	unsigned int sumWhite = 0u;
+	unsigned int sumForeground = 0u;
+	unsigned int sumBackground = 0u;
 
-	sumWhite += *(yPosition - 1);
+	sumBackground += *(yPosition - 1);
 
 	for (unsigned int n = 0u; n < segmentSize1; ++n)
 	{
-		sumBlack += *yPosition++;
+		sumForeground += *yPosition++;
 	}
 
 	for (unsigned int n = 0u; n < segmentSize2; ++n)
 	{
-		sumWhite += *yPosition++;
+		sumBackground += *yPosition++;
 	}
 
 	for (unsigned int n = 0u; n < segmentSize3; ++n)
 	{
-		sumBlack += *yPosition++;
+		sumForeground += *yPosition++;
 	}
 
 	for (unsigned int n = 0u; n < segmentSize4; ++n)
 	{
-		sumWhite += *yPosition++;
+		sumBackground += *yPosition++;
 	}
 
 	for (unsigned int n = 0u; n < segmentSize5; ++n)
 	{
-		sumBlack += *yPosition++;
+		sumForeground += *yPosition++;
 	}
 
-	sumWhite += *yPosition;
+	sumBackground += *yPosition;
 
-	const unsigned int averageBlack = sumBlack / (segmentSize1 + segmentSize3 + segmentSize5);
-	const unsigned int averageWhite = sumWhite / (segmentSize2 + segmentSize4 + 2u);
+	const unsigned int averageForeground = sumForeground / (segmentSize1 + segmentSize3 + segmentSize5);
+	const unsigned int averageBackground = sumBackground / (segmentSize2 + segmentSize4 + 2u);
+	const unsigned int averageBlack = isNormalReflectance ? averageForeground : averageBackground;
+	const unsigned int averageWhite = isNormalReflectance ? averageBackground : averageForeground;
 
 	if (averageBlack + 2u >= averageWhite)
 	{

@@ -153,6 +153,36 @@ TEST(TestQRCodeDetector2D, TestDetectQRCodesSmallImageSyntheticDataNoGaussianFil
 	EXPECT_TRUE(TestQRCodeDetector2D::testDetectQRCodesSmallImageSyntheticData(0u, GTEST_TEST_DURATION, worker));
 }
 
+TEST(TestQRCodeDetector2D, DetectsInvertedReflectanceSyntheticData)
+{
+	QRCode groundtruthCode;
+	QRCodeEncoder::encodeText("INVERTED-REFLECTANCE", QRCode::ECC_15, groundtruthCode);
+	ASSERT_TRUE(groundtruthCode.isValid());
+
+	constexpr unsigned int codeBorderModules = 4u;
+	constexpr unsigned int moduleSizePixels = 8u;
+	const unsigned int codeWithBorderModulesPerSide = 2u * codeBorderModules + groundtruthCode.modulesPerSide();
+	const unsigned int targetFrameWithCodeSize = moduleSizePixels * codeWithBorderModulesPerSide;
+
+	const Frame frame = CV::Detector::QRCodes::Utilities::draw(
+			groundtruthCode,
+			targetFrameWithCodeSize,
+			/* allowTrueMultiple */ true,
+			/* border */ codeBorderModules,
+			/* worker */ nullptr,
+			/* foregroundValue */ 255u,
+			/* backgroundValue */ 0u);
+
+	ASSERT_TRUE(frame.isValid());
+
+	EXPECT_TRUE(QRCodeDetector2D::detectQRCodes(frame).empty());
+
+	const QRCodes codes = QRCodeDetector2D::detectQRCodes(frame, nullptr, nullptr, nullptr, /* detectInvertedReflectance */ true);
+
+	ASSERT_EQ(codes.size(), 1);
+	EXPECT_TRUE(codes[0].isSame(groundtruthCode, true));
+}
+
 TEST(TestQRCodeDetector2D, TestDetectQRCodesSmallImageSyntheticDataGaussianFilter1)
 {
 	Worker worker;
@@ -358,7 +388,7 @@ bool TestQRCodeDetector2D::testDetectQRCodesSyntheticData_Internal(const unsigne
 		const uint8_t highIntensity = uint8_t(RandomI::random(randomGenerator, (unsigned int)(lowIntensity + minimumContrast), 255u));
 		ocean_assert(highIntensity > lowIntensity && highIntensity - lowIntensity >= minimumContrast);
 
-		constexpr bool isNormalReflectance = true; // TODO Enable random reflectance once the finder pattern detector supports it
+		constexpr bool isNormalReflectance = true;
 
 		const uint8_t foregroundValue = isNormalReflectance ? lowIntensity : highIntensity;
 		const uint8_t backgroundValue = isNormalReflectance ? highIntensity : lowIntensity;

@@ -314,7 +314,7 @@ const QRCodeTracker3D::TrackedQRCodesMap& QRCodeTracker3D::trackQRCodes(const Sh
 
 		const bool allow2DCodes = forceDetectionOnlyAndAllow2DCodes_;
 
-		if (callbackQRCodeDetection3D_(sharedAnyCameras, yFrames, world_T_device, device_T_cameras, newCodes, world_T_newCodes, newCodeSizes, worker, allow2DCodes))
+		if (callbackQRCodeDetection3D_(sharedAnyCameras, yFrames, world_T_device, device_T_cameras, newCodes, world_T_newCodes, newCodeSizes, worker, allow2DCodes, parameters_.detectInvertedReflectance_))
 		{
 			ocean_assert(newCodes.size() == world_T_newCodes.size());
 			ocean_assert(newCodes.size() == newCodeSizes.size());
