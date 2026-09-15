@@ -252,13 +252,13 @@ inline bool DisassemblerAndroid::isBranchInstruction(const char* token, const si
 					return true;
 				}
 
-				// b.hs Branch higher or same (unsigned comparision)
+				// b.hs Branch higher or same (unsigned comparison)
 				if (token[2] == 'h' && token[3] == 's')
 				{
 					return true;
 				}
 
-				// b.lo Branch lower (unsigned comparision)
+				// b.lo Branch lower (unsigned comparison)
 				if (token[2] == 'l' && token[3] == 'o')
 				{
 					return true;
@@ -294,13 +294,13 @@ inline bool DisassemblerAndroid::isBranchInstruction(const char* token, const si
 					return true;
 				}
 
-				// b.ls Branch lower or same (unsigned comparision)
+				// b.ls Branch lower or same (unsigned comparison)
 				if (token[2] == 'l' && token[3] == 's')
 				{
 					return true;
 				}
 
-				// b.ge Branch greater or equal (signed comparision)
+				// b.ge Branch greater or equal (signed comparison)
 				if (token[2] == 'g' && token[3] == 'e')
 				{
 					return true;
