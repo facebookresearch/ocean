@@ -110,6 +110,37 @@ endif()
 get_ocean_preprocessor_flags(OCEAN_PREPROCESSOR_FLAGS)
 get_ocean_compiler_flags(OCEAN_COMPILER_FLAGS)
 
+if (EMSCRIPTEN)
+    # Emscripten links executables with a fixed 16 MB heap by default. Ocean's test
+    # executables, and any real computer-vision workload, allocate well past that and
+    # abort at runtime with "Cannot enlarge memory arrays" -- a failure that looks like
+    # a bug in the code doing the allocating rather than a link-time setting.
+    #
+    # This is a linker option, so it belongs here rather than in
+    # get_ocean_compiler_flags().
+    string(APPEND CMAKE_EXE_LINKER_FLAGS " -sALLOW_MEMORY_GROWTH=1")
+
+    # Emscripten's default stack is 64 KB, against the 8 MB a Linux main thread gets
+    # and the 1 MB on Windows. Ocean's code is written against those, so routines that
+    # put a matrix or an image tile on the stack overflow it. In a release build
+    # Emscripten does not check for that, so the overflow surfaces as
+    # "RuntimeError: memory access out of bounds" somewhere unrelated rather than as a
+    # stack diagnostic. Matching the common native size removes a whole class of
+    # false leads.
+    string(APPEND CMAKE_EXE_LINKER_FLAGS " -sSTACK_SIZE=8MB")
+
+    # Optimization has to be repeated on the link line. Unlike a native toolchain,
+    # where -O affects only compilation, emcc also runs Binaryen's wasm-opt over the
+    # whole module at link time and takes its level from the link command; CMake puts
+    # CMAKE_CXX_FLAGS_RELEASE on compile lines only. The objects are already optimized
+    # by LLVM either way, so this buys the whole-module passes rather than the
+    # difference between optimized and unoptimized code -- worth having, but do not
+    # expect it to transform runtimes.
+    string(APPEND CMAKE_EXE_LINKER_FLAGS_RELEASE " -O3")
+    string(APPEND CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO " -O3")
+    string(APPEND CMAKE_EXE_LINKER_FLAGS_MINSIZEREL " -Oz")
+endif()
+
 if (IOS OR MACOS)
     # Enable Automatic Reference Counting (-fobjc-arc).  Disabling will result in memory leaks in some builds.
     # ARC adds to exception handling code by default for Objective-C++.  Disabling here (-fno-objc-arc-exceptions) to reduce binary size.  Use "-fobjc-arc-exceptions" to override.
