@@ -94,7 +94,14 @@ ocean_translate_processor_type("${CMAKE_HOST_SYSTEM_PROCESSOR}" OCEAN_HOST_PROCE
 # build, so it reports arm64 for an x86_64 build on an Apple silicon Mac and vice versa.
 # A multi-architecture list resolves to arm64, matching the third-party resolution below;
 # Ocean does not support universal binaries.
-if (APPLE AND CMAKE_OSX_ARCHITECTURES)
+# Emscripten reports "x86" in CMAKE_SYSTEM_PROCESSOR but compiles to 32-bit
+# WebAssembly. ocean_translate_processor_type() is generic and is not told the target
+# platform, so it would faithfully translate that to "x86" -- a wrong answer no amount
+# of work inside the translator can fix. Forcing the value here is the same treatment
+# Apple already gets immediately below, and for the same reason.
+if (EMSCRIPTEN)
+    set(OCEAN_TARGET_PROCESSOR_TYPE "wasm32")
+elseif (APPLE AND CMAKE_OSX_ARCHITECTURES)
     ocean_translate_processor_type("${CMAKE_OSX_ARCHITECTURES}" OCEAN_TARGET_PROCESSOR_TYPE)
 else()
     ocean_translate_processor_type("${CMAKE_SYSTEM_PROCESSOR}" OCEAN_TARGET_PROCESSOR_TYPE)
@@ -162,12 +169,20 @@ if (OCEAN_THIRD_PARTY_ROOT)
         set(_ocean_3p_platform "linux")
     elseif (WIN32)
         set(_ocean_3p_platform "win")
+    elseif (EMSCRIPTEN)
+        set(_ocean_3p_platform "emscripten")
     else()
         message(FATAL_ERROR "Unsupported platform for OCEAN_THIRD_PARTY_ROOT")
     endif()
 
     # Determine architecture string
-    if (ANDROID)
+    if (EMSCRIPTEN)
+        # Must be tested first. Emscripten reports "x86" in CMAKE_SYSTEM_PROCESSOR, so
+        # the generic "x86|i686|i386" branch further down would match and name a
+        # directory of native 32-bit x86 libraries that has nothing to do with the
+        # WebAssembly build.
+        set(_ocean_3p_arch "wasm32")
+    elseif (ANDROID)
         # Map Android ABI to our arch names
         if (ANDROID_ABI STREQUAL "arm64-v8a")
             set(_ocean_3p_arch "arm64")
@@ -326,9 +341,9 @@ if (OCEAN_THIRD_PARTY_ROOT AND _ocean_3p_resolved_layout STREQUAL "standard")
         endif()
     endforeach()
 
-    # The Android NDK toolchain restricts find_* to its sysroot by default.
-    # Allow lookups outside it so our 3P prefixes are visible.
-    if (ANDROID)
+    # The Android NDK and Emscripten toolchains both restrict find_* to their sysroot
+    # by default. Allow lookups outside it so our 3P prefixes are visible.
+    if (ANDROID OR EMSCRIPTEN)
         list(APPEND CMAKE_FIND_ROOT_PATH ${CMAKE_PREFIX_PATH})
         set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE BOTH)
         set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE BOTH)
