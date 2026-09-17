@@ -51,12 +51,32 @@ if (MACOS OR LINUX OR WIN32 OR EMSCRIPTEN)
         # and a POST_BUILD step would simply never run again. configure_file() makes
         # CMake track the file and re-copy whenever it changes.
         #
-        # CMAKE_CURRENT_BINARY_DIR is where the executable lands because Emscripten
-        # builds always use a single-config generator (see get_cmake_generator()).
+        # The destination assumes the executable lands in CMAKE_CURRENT_BINARY_DIR,
+        # which holds unless a consumer sets CMAKE_RUNTIME_OUTPUT_DIRECTORY. Ocean
+        # only does that for WIN32. $<TARGET_FILE_DIR:> would be robust against it but
+        # needs file(GENERATE), which is more machinery than a copied shell warrants.
         configure_file(
             "${CMAKE_CURRENT_LIST_DIR}/wasm/index.html"
             "${CMAKE_CURRENT_BINARY_DIR}/index.html"
             COPYONLY
+        )
+
+        # install(TARGETS) installs only what CMake considers the target's file, and
+        # the Emscripten toolchain sets CMAKE_EXECUTABLE_SUFFIX to ".js". The .wasm
+        # beside it is a side file CMake knows nothing about, so without this the
+        # install tree holds a loader that aborts with ENOENT on the module it loads.
+        install(FILES
+                "$<TARGET_FILE_DIR:${OCEAN_TARGET_NAME}>/$<TARGET_FILE_BASE_NAME:${OCEAN_TARGET_NAME}>.wasm"
+            DESTINATION bin
+        )
+
+        # The shell goes with it, or the installed tree cannot be opened in a browser.
+        # Renamed on the way in: every test application installs into the same bin/,
+        # so shells kept as index.html would silently overwrite one another and leave
+        # a single page pointing at whichever target CMake happened to install last.
+        install(FILES "${CMAKE_CURRENT_LIST_DIR}/wasm/index.html"
+            DESTINATION bin
+            RENAME "${OCEAN_TARGET_NAME}.html"
         )
     endif()
 

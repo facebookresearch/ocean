@@ -99,7 +99,7 @@ These are set for every Emscripten executable, in the root `CMakeLists.txt`:
 |---------|-----|
 | `-sALLOW_MEMORY_GROWTH=1` | Emscripten's default heap is a fixed 16 MB. Ocean's test executables exhaust it and abort with `Cannot enlarge memory arrays`. |
 | `-sSTACK_SIZE=8MB` | The default is 64 KB, against the 8 MB a Linux main thread gets. Release builds do not check for overflow, so exceeding it surfaces as `RuntimeError: memory access out of bounds` somewhere unrelated. |
-| `-O3` on the link line | `emcc` runs Binaryen's `wasm-opt` over the whole module at link time and takes its level from there, while CMake puts the release flags on compile lines only. |
+| `-O3` on the link line | `emcc` runs Binaryen's `wasm-opt` over the whole module at link time and takes its level from there, while CMake puts the release flags on compile lines only. Set per configuration, so a configure with no `CMAKE_BUILD_TYPE` links unoptimized — as it also compiles unoptimized, which is consistent. |
 
 ## 4 Running the tests
 
@@ -115,6 +115,13 @@ Each executable accepts `--duration` (`-d`) for the per-test duration in seconds
 The default duration is 2 seconds per test, which over a full suite runs for a long time under WebAssembly. `-d 0.1` exercises every test with less sampling and is usually what you want while developing:
 
 ```bash
+node application_ocean_test_math_testmath.js -d 0.1
+```
+
+The install tree works the same way. Each executable is installed as a `.js` / `.wasm` pair, with its browser shell alongside, named after the target rather than `index.html` so that the shells of different applications do not collide in a shared `bin/`:
+
+```bash
+cd ocean_install/emscripten_wasm32_static/bin
 node application_ocean_test_math_testmath.js -d 0.1
 ```
 
@@ -176,5 +183,7 @@ The cost traces to WebAssembly SIMD being disabled: native builds compile with `
 Unsupported modules are excluded by their CMake guards, so they are absent from the build rather than failing in it.
 
 **Single-threaded.** Ocean is built without `-pthread`. `Worker` detects a single core and runs work inline on the calling thread, so code that takes an optional `Worker*` behaves correctly; code that creates threads directly does not. A pthreads build would require the hosting page to serve `Cross-Origin-Opener-Policy: same-origin` and `Cross-Origin-Embedder-Policy: require-corp`, which many deployment targets cannot.
+
+**Static libraries only.** `--link shared` is not supported. Under `emcc` it would mean SIDE_MODULE builds, which this port has not attempted; nothing currently rejects the option, so pass `--link static`.
 
 **No WebAssembly SIMD.** `-msimd128` is not enabled. It would produce a `.wasm` that does not run in browsers lacking SIMD support, and that Node.js rejects without an explicit flag.
