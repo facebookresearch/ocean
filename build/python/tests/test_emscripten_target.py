@@ -172,5 +172,44 @@ class TestOptInPlatforms(unittest.TestCase):
         self.assertFalse(library.supports_platform("emscripten_wasm32_static_release"))
 
 
+preflight_module = _load("preflight")
+
+
+class TestEmscriptenPreflight(unittest.TestCase):
+    def test_target_requires_the_emsdk(self):
+        self.assertEqual(
+            preflight_module.get_required_toolchains(["emscripten_wasm32"]),
+            ["emsdk"],
+        )
+
+    def test_other_targets_do_not_require_the_emsdk(self):
+        for target in ("android_arm64", "macos_arm64", "win_x64", "linux_x86_64"):
+            self.assertNotIn(
+                "emsdk",
+                preflight_module.get_required_toolchains([target]),
+                f"{target} must not require the emsdk",
+            )
+
+    def test_missing_emsdk_is_reported_not_assumed_available(self):
+        with unittest.mock.patch.dict("os.environ", {}, clear=True):
+            info = preflight_module.check_emsdk()
+        self.assertFalse(info.is_available)
+        self.assertIn("EMSDK", info.error)
+
+    def test_nonexistent_emsdk_path_is_reported(self):
+        with unittest.mock.patch.dict(
+            "os.environ", {"EMSDK": "/nonexistent/emsdk"}, clear=True
+        ):
+            info = preflight_module.check_emsdk()
+        self.assertFalse(info.is_available)
+        self.assertIn("does not exist", info.error)
+
+    def test_emsdk_is_registered_with_a_checker(self):
+        # get_required_toolchains() naming a toolchain that check_toolchains() has no
+        # checker for would make the target silently unavailable rather than checked.
+        source = (_LIB_DIR / "preflight.py").read_text(encoding="utf-8")
+        self.assertIn('"emsdk": check_emsdk,', source)
+
+
 if __name__ == "__main__":
     unittest.main()
