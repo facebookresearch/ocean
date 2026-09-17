@@ -22,6 +22,7 @@ Run with:
 from __future__ import annotations
 
 import importlib.util
+import sys
 import unittest
 import unittest.mock
 from pathlib import Path
@@ -30,8 +31,20 @@ _LIB_DIR = Path(__file__).resolve().parents[1] / "lib"
 
 
 def _load(name: str):
-    spec = importlib.util.spec_from_file_location(name, _LIB_DIR / f"{name}.py")
+    """Load a module from build/python/lib under a prefixed name.
+
+    The prefix matters twice. It keeps lib/platform.py from shadowing the standard
+    library's `platform`, which lib/platform.py itself imports. And registering the
+    result in sys.modules is required, not cosmetic: dataclasses resolves a class's
+    annotations through sys.modules[cls.__module__], so an unregistered module makes
+    every @dataclass in it raise AttributeError on None.
+    """
+    registered_name = f"ocean_build_{name}"
+    spec = importlib.util.spec_from_file_location(
+        registered_name, _LIB_DIR / f"{name}.py"
+    )
     module = importlib.util.module_from_spec(spec)
+    sys.modules[registered_name] = module
     spec.loader.exec_module(module)
     return module
 
@@ -122,6 +135,41 @@ class TestEmscriptenToolchain(unittest.TestCase):
         ):
             generator = platform_module.get_cmake_generator(self.target)
         self.assertEqual(generator, "Ninja")
+
+
+manifest_module = _load("manifest")
+
+
+class TestOptInPlatforms(unittest.TestCase):
+    def _library(self, platforms):
+        return manifest_module.LibraryConfig.from_dict(
+            "example",
+            {"version": "1.0", "platforms": platforms},
+        )
+
+    def test_all_still_means_all_native_platforms(self):
+        library = self._library("all")
+        for native in ("macos", "ios", "linux", "android", "win"):
+            self.assertTrue(
+                library.supports_platform(native),
+                f"{native} should be covered by 'all'",
+            )
+
+    def test_all_does_not_cover_emscripten(self):
+        library = self._library("all")
+        self.assertFalse(library.supports_platform("emscripten"))
+
+    def test_explicit_mention_opts_in(self):
+        library = self._library(["linux", "emscripten"])
+        self.assertTrue(library.supports_platform("emscripten"))
+
+    def test_full_target_string_is_understood(self):
+        library = self._library(["emscripten"])
+        self.assertTrue(library.supports_platform("emscripten_wasm32_static_release"))
+
+    def test_all_does_not_cover_emscripten_target_string(self):
+        library = self._library("all")
+        self.assertFalse(library.supports_platform("emscripten_wasm32_static_release"))
 
 
 if __name__ == "__main__":
