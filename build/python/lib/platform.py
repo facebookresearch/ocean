@@ -621,9 +621,14 @@ def get_cmake_generator(target: BuildTarget, vs_version: Optional[str] = None) -
         vs_version: Optional Visual Studio version year (e.g., "2022", "2026").
                    If not specified, auto-detects the latest installed version.
     """
-    # Android and iOS cross-compilation always use Ninja or Makefiles,
-    # even when building on a Windows host
-    if target.os in (OS.ANDROID, OS.IOS):
+    # Android, iOS and Emscripten cross-compilation always use Ninja or Makefiles,
+    # even when building on a Windows host.
+    #
+    # Emscripten would otherwise reach the generic branch at the end, which falls back
+    # to "Unix Makefiles" whenever ninja is absent -- including on hosts that have no
+    # make either, turning a missing build tool into a confusing CMake failure much
+    # later. Here the finders are consulted and a missing tool is named immediately.
+    if target.os in (OS.ANDROID, OS.IOS, OS.EMSCRIPTEN):
         ninja = find_ninja_program()
         if ninja:
             return "Ninja"
@@ -631,7 +636,8 @@ def get_cmake_generator(target: BuildTarget, vs_version: Optional[str] = None) -
         if make:
             return "Unix Makefiles"
         raise RuntimeError(
-            "No suitable build tool found for Android/iOS cross-compilation.\n"
+            "No suitable build tool found for Android/iOS/Emscripten "
+            "cross-compilation.\n"
             "Neither Ninja nor Make were found on PATH or in the Android SDK/NDK.\n"
             "Install Ninja (recommended) or ensure the NDK's make.exe is accessible.\n"
             "  - Install CMake via Android Studio SDK Manager (includes Ninja)\n"
@@ -998,6 +1004,8 @@ def add_cross_compile_options(
         add_macos_options(cmd, target)
     elif target.os == OS.WINDOWS:
         add_windows_options(cmd, target)
+    elif target.os == OS.EMSCRIPTEN:
+        add_emscripten_options(cmd, target)
     # Linux native builds don't need special handling
 
 
@@ -1053,6 +1061,42 @@ def add_android_options(
         make_path = find_make_program()
         if make_path and make_path != "make":
             cmd.append(f"-DCMAKE_MAKE_PROGRAM={make_path}")
+
+
+def add_emscripten_options(cmd: List[str], target: BuildTarget) -> None:
+    """Add Emscripten toolchain options.
+
+    This sets CMAKE_TOOLCHAIN_FILE to the same file `emcmake` sets internally, so the
+    `emcmake` wrapper is not needed and the invocation stays symmetrical with every
+    other cross-compiled platform.
+
+    $EMSDK is the only contract. It is exported both by a native emsdk installation
+    (emsdk_env.sh) and by the official emscripten/emsdk Docker image, so nothing here
+    knows or cares which one is in use.
+    """
+    emsdk_path = os.environ.get("EMSDK")
+    if not emsdk_path:
+        raise RuntimeError(
+            "Emscripten SDK not found. Set the EMSDK environment variable.\n"
+            "  - Native install: source /path/to/emsdk/emsdk_env.sh\n"
+            "  - Or build inside the official image, which sets it for you:\n"
+            '      docker run --rm -v "$PWD":/src -w /src emscripten/emsdk:<version>'
+        )
+
+    # Not checked for existence on purpose: a wrong $EMSDK surfaces as CMake's own
+    # "toolchain file not found" error, which names the path, while a check here would
+    # make the function untestable without an emsdk installed.
+    toolchain = (
+        Path(emsdk_path)
+        / "upstream"
+        / "emscripten"
+        / "cmake"
+        / "Modules"
+        / "Platform"
+        / "Emscripten.cmake"
+    )
+
+    cmd.append(f"-DCMAKE_TOOLCHAIN_FILE={toolchain}")
 
 
 def add_ios_options(cmd: List[str], target: BuildTarget) -> None:

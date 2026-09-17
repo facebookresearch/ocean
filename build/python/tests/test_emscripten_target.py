@@ -77,5 +77,52 @@ class TestEmscriptenEnums(unittest.TestCase):
         self.assertEqual(target.to_platform_component(), "emscripten")
 
 
+class TestEmscriptenToolchain(unittest.TestCase):
+    def setUp(self):
+        self.target = platform_module.BuildTarget(
+            os=platform_module.OS.EMSCRIPTEN,
+            arch=platform_module.Arch.WASM32,
+        )
+
+    def test_missing_emsdk_raises_with_actionable_message(self):
+        with unittest.mock.patch.dict("os.environ", {}, clear=True):
+            with self.assertRaises(RuntimeError) as caught:
+                platform_module.add_emscripten_options([], self.target)
+        message = str(caught.exception)
+        self.assertIn("EMSDK", message)
+        self.assertIn("emsdk_env", message)
+        self.assertIn("emscripten/emsdk", message)
+
+    def test_toolchain_file_is_appended(self):
+        with unittest.mock.patch.dict(
+            "os.environ", {"EMSDK": "/opt/emsdk"}, clear=True
+        ):
+            cmd = []
+            platform_module.add_emscripten_options(cmd, self.target)
+        self.assertEqual(len(cmd), 1)
+        self.assertTrue(cmd[0].startswith("-DCMAKE_TOOLCHAIN_FILE="))
+        self.assertIn("Emscripten.cmake", cmd[0])
+        self.assertIn("emsdk", cmd[0])
+
+    def test_cross_compile_dispatch_reaches_emscripten(self):
+        with unittest.mock.patch.dict(
+            "os.environ", {"EMSDK": "/opt/emsdk"}, clear=True
+        ):
+            cmd = []
+            platform_module.add_cross_compile_options(cmd, self.target)
+        self.assertTrue(any("Emscripten.cmake" in entry for entry in cmd))
+
+    def test_generator_is_not_visual_studio(self):
+        # find_ninja_program() is patched so the test does not depend on what is
+        # installed on the machine running it -- without this the assertion would go
+        # red on a host with neither ninja nor make on PATH, for a reason that has
+        # nothing to do with Emscripten.
+        with unittest.mock.patch.object(
+            platform_module, "find_ninja_program", return_value="ninja"
+        ):
+            generator = platform_module.get_cmake_generator(self.target)
+        self.assertEqual(generator, "Ninja")
+
+
 if __name__ == "__main__":
     unittest.main()
