@@ -5,7 +5,7 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-if (MACOS OR LINUX OR WIN32)
+if (MACOS OR LINUX OR WIN32 OR EMSCRIPTEN)
 
     set(OCEAN_TARGET_NAME "application_ocean_test_math_testmath")
 
