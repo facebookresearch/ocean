@@ -10,7 +10,7 @@ add_subdirectory(testdetector)
 add_subdirectory(testsegmentation)
 add_subdirectory(testsynthesis)
 
-if (MACOS OR LINUX OR WIN32)
+if (MACOS OR LINUX OR WIN32 OR EMSCRIPTEN)
 
     set(OCEAN_TARGET_NAME "application_ocean_test_cv_testcv")
 

@@ -15,7 +15,7 @@ if (NOT OCEAN_BUILD_MINIMAL)
     add_subdirectory(synthesis)
 endif()
 
-if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
+if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32 OR EMSCRIPTEN)
 
     if (NOT TARGET Eigen3::Eigen)
         find_package(Eigen3 REQUIRED)
