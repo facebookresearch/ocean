@@ -127,6 +127,26 @@ bool Signal::wait(const unsigned int time) const
 
 	return true;
 
+#elif defined(__EMSCRIPTEN__) && !defined(__EMSCRIPTEN_PTHREADS__)
+
+	OCEAN_SUPPRESS_UNUSED_WARNING(time);
+
+	if (!semaphoreObjectReleased)
+	{
+		ocean_assert(semaphoreObjectState);
+
+		// Emscripten declares sem_timedwait() but does not define it; the POSIX branch
+		// below therefore links with an undefined symbol.
+		//
+		// sem_trywait() is not merely the available substitute but the correct answer:
+		// without pthreads nothing else runs while this call would block, so a signal
+		// not already pulsed can never be pulsed before the deadline. Waiting out the
+		// timeout would return the same false after freezing the page for `time` ms.
+		return sem_trywait(&semaphoreObject) == 0;
+	}
+
+	return true;
+
 #else
 
 	if (!semaphoreObjectReleased)
