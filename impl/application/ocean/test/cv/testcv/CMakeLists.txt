@@ -40,6 +40,26 @@ if (MACOS OR LINUX OR WIN32 OR EMSCRIPTEN)
             ocean_test_testcv
     )
 
+    if (EMSCRIPTEN)
+        # Put the browser shell beside the generated .js/.wasm so that serving the
+        # output directory is enough to run the tests in a browser. The android/ and
+        # ios/ shells are likewise consumed by their own builds rather than copied by
+        # hand.
+        #
+        # configure_file() rather than a POST_BUILD custom command: the shell is not an
+        # input to the executable, so editing it does not make the target out of date
+        # and a POST_BUILD step would simply never run again. configure_file() makes
+        # CMake track the file and re-copy whenever it changes.
+        #
+        # CMAKE_CURRENT_BINARY_DIR is where the executable lands because Emscripten
+        # builds always use a single-config generator (see get_cmake_generator()).
+        configure_file(
+            "${CMAKE_CURRENT_LIST_DIR}/wasm/index.html"
+            "${CMAKE_CURRENT_BINARY_DIR}/index.html"
+            COPYONLY
+        )
+    endif()
+
     # Installation
     install(TARGETS ${OCEAN_TARGET_NAME} DESTINATION bin)
 
