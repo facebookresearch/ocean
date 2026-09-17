@@ -54,6 +54,9 @@ class OS(Enum):
     LINUX = "linux"
     ANDROID = "android"
     WINDOWS = "win"
+    # Emscripten is a compilation target, never a host -- detect_host_os() must never
+    # return it. See the note in that function.
+    EMSCRIPTEN = "emscripten"
 
 
 class Arch(Enum):
@@ -63,6 +66,7 @@ class Arch(Enum):
     X86_64 = "x86_64"
     ARMV7 = "armv7"
     X86 = "x86"
+    WASM32 = "wasm32"
 
 
 class BuildConfig(Enum):
@@ -352,7 +356,12 @@ class BuildTarget:
 
 
 def detect_host_os() -> OS:
-    """Detect the host operating system."""
+    """Detect the host operating system.
+
+    OS.EMSCRIPTEN is deliberately never returned. Emscripten is only ever an
+    explicit cross-compilation target; nothing hosts a build on it. The asymmetry
+    with the OS enum is intentional -- do not "fix" it.
+    """
     system = platform.system().lower()
     if system == "darwin":
         return OS.MACOS
