@@ -5,7 +5,7 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-if (MACOS OR LINUX OR WIN32)
+if (MACOS OR LINUX OR WIN32 OR EMSCRIPTEN)
 
     set(OCEAN_TARGET_NAME "application_ocean_test_math_testmath")
 
@@ -32,6 +32,46 @@ if (MACOS OR LINUX OR WIN32)
             ocean_system
             ocean_test_testmath
     )
+
+    if (EMSCRIPTEN)
+        # Put the browser shell beside the generated .js/.wasm so that serving the
+        # output directory is enough to run the tests in a browser. The android/ and
+        # ios/ shells are likewise consumed by their own builds rather than copied by
+        # hand.
+        #
+        # configure_file() rather than a POST_BUILD custom command: the shell is not an
+        # input to the executable, so editing it does not make the target out of date
+        # and a POST_BUILD step would simply never run again. configure_file() makes
+        # CMake track the file and re-copy whenever it changes.
+        #
+        # The destination assumes the executable lands in CMAKE_CURRENT_BINARY_DIR,
+        # which holds unless a consumer sets CMAKE_RUNTIME_OUTPUT_DIRECTORY. Ocean
+        # only does that for WIN32. $<TARGET_FILE_DIR:> would be robust against it but
+        # needs file(GENERATE), which is more machinery than a copied shell warrants.
+        configure_file(
+            "${CMAKE_CURRENT_LIST_DIR}/wasm/index.html"
+            "${CMAKE_CURRENT_BINARY_DIR}/index.html"
+            COPYONLY
+        )
+
+        # install(TARGETS) installs only what CMake considers the target's file, and
+        # the Emscripten toolchain sets CMAKE_EXECUTABLE_SUFFIX to ".js". The .wasm
+        # beside it is a side file CMake knows nothing about, so without this the
+        # install tree holds a loader that aborts with ENOENT on the module it loads.
+        install(FILES
+                "$<TARGET_FILE_DIR:${OCEAN_TARGET_NAME}>/$<TARGET_FILE_BASE_NAME:${OCEAN_TARGET_NAME}>.wasm"
+            DESTINATION bin
+        )
+
+        # The shell goes with it, or the installed tree cannot be opened in a browser.
+        # Renamed on the way in: every test application installs into the same bin/,
+        # so shells kept as index.html would silently overwrite one another and leave
+        # a single page pointing at whichever target CMake happened to install last.
+        install(FILES "${CMAKE_CURRENT_LIST_DIR}/wasm/index.html"
+            DESTINATION bin
+            RENAME "${OCEAN_TARGET_NAME}.html"
+        )
+    endif()
 
     # Installation
     install(TARGETS ${OCEAN_TARGET_NAME} DESTINATION bin)
