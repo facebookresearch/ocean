@@ -257,7 +257,7 @@ void TracingMesh::setTriangles(const Vertices& vertices, const Normals& normals,
 			const Vertex vertex0(objectTransformation * localVertex0);
 			const Vertex vertex1(objectTransformation * localVertex1);
 			const Vertex vertex2(objectTransformation * localVertex2);
-			tracingTriangles.push_back(Triangle3(vertex0, vertex1, vertex2));
+			tracingTriangles.emplace_back(vertex0, vertex1, vertex2);
 
 			const Normal normal((vertex1 - vertex0).cross(vertex2 - vertex0).normalizedOrZero());
 			tracingNormals.push_back(normal);
@@ -298,7 +298,7 @@ void TracingMesh::setTriangles(const Vertices& vertices, const Normals& normals,
 			const Vertex vertex1(objectTransformation * localVertex1);
 			const Vertex vertex2(objectTransformation * localVertex2);
 
-			tracingTriangles.push_back(Triangle3(vertex0, vertex1, vertex2));
+			tracingTriangles.emplace_back(vertex0, vertex1, vertex2);
 
 			ocean_assert(i->index(0) < normals.size());
 			ocean_assert(i->index(1) < normals.size());
@@ -376,7 +376,7 @@ void TracingMesh::setTriangleStrips(const Vertices& vertices, const Normals& nor
 				const Vertex aVertex0(objectTransformation * aLocalVertex0);
 				const Vertex aVertex1(objectTransformation * aLocalVertex1);
 				const Vertex aVertex2(objectTransformation * aLocalVertex2);
-				tracingTriangles.push_back(Triangle3(aVertex0, aVertex1, aVertex2));
+				tracingTriangles.emplace_back(aVertex0, aVertex1, aVertex2);
 
 				const Normal aNormal((aVertex1 - aVertex0).cross(aVertex2 - aVertex0).normalizedOrZero());
 				tracingNormals.push_back(aNormal);
@@ -418,7 +418,7 @@ void TracingMesh::setTriangleStrips(const Vertices& vertices, const Normals& nor
 				const Vertex bVertex0(objectTransformation * bLocalVertex0);
 				const Vertex bVertex1(objectTransformation * bLocalVertex1);
 				const Vertex bVertex2(objectTransformation * bLocalVertex2);
-				tracingTriangles.push_back(Triangle3(bVertex0, bVertex1, bVertex2));
+				tracingTriangles.emplace_back(bVertex0, bVertex1, bVertex2);
 
 				const Normal bNormal((bVertex1 - bVertex0).cross(bVertex2 - bVertex0).normalizedOrZero());
 				tracingNormals.push_back(bNormal);
@@ -468,7 +468,7 @@ void TracingMesh::setTriangleStrips(const Vertices& vertices, const Normals& nor
 				const Vertex aVertex0(objectTransformation * aLocalVertex0);
 				const Vertex aVertex1(objectTransformation * aLocalVertex1);
 				const Vertex aVertex2(objectTransformation * aLocalVertex2);
-				tracingTriangles.push_back(Triangle3(aVertex0, aVertex1, aVertex2));
+				tracingTriangles.emplace_back(aVertex0, aVertex1, aVertex2);
 
 				ocean_assert(indices[n - 2] < normals.size());
 				ocean_assert(indices[n - 1] < normals.size());
@@ -517,7 +517,7 @@ void TracingMesh::setTriangleStrips(const Vertices& vertices, const Normals& nor
 				const Vertex bVertex0(objectTransformation * bLocalVertex0);
 				const Vertex bVertex1(objectTransformation * bLocalVertex1);
 				const Vertex bVertex2(objectTransformation * bLocalVertex2);
-				tracingTriangles.push_back(Triangle3(bVertex0, bVertex1, bVertex2));
+				tracingTriangles.emplace_back(bVertex0, bVertex1, bVertex2);
 
 				ocean_assert(index0 < normals.size());
 				ocean_assert(index1 < normals.size());
