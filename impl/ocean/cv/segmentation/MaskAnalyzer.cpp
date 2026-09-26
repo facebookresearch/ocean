@@ -445,7 +445,7 @@ void MaskAnalyzer::findOutline4(const uint8_t* mask, const unsigned int width, c
 
 		for (unsigned int x = std::max(1u, firstColumn); x < std::min(endColumn, width_1); ++x)
 		{
-			if (maskRow[x - 1u] != nonMaskValue || maskRow[x + 1u] != nonMaskValue || maskRowTop[x] != nonMaskValue || maskRowBottom[x] != nonMaskValue)
+			if (maskRow[x] == nonMaskValue && (maskRow[x - 1u] != nonMaskValue || maskRow[x + 1u] != nonMaskValue || maskRowTop[x] != nonMaskValue || maskRowBottom[x] != nonMaskValue))
 			{
 				outlinePixels4.emplace_back(x, y);
 			}
