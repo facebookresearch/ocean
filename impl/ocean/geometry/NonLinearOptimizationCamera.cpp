@@ -1044,7 +1044,7 @@ bool NonLinearOptimizationCamera::optimizeCameraOrientations(const PinholeCamera
 	for (size_t n = 0; n < world_R_cameras.size(); ++n)
 	{
 		const ExponentialMap exponentialMap(world_R_cameras[n]);
-		individualModels.push_back(IndividualModel(exponentialMap.data()));
+		individualModels.emplace_back(exponentialMap.data());
 	}
 
 	std::vector<size_t> numberElementsPerIndividualModel;
@@ -1932,7 +1932,7 @@ bool NonLinearOptimizationCamera::optimizeCameraObjectPointsPoses(const PinholeC
 	for (size_t n = 0; n < world_T_cameras.size(); ++n)
 	{
 		const Pose pose(world_T_cameras[n]);
-		firstIndividualModels.push_back(FirstIndividualModel(pose.data()));
+		firstIndividualModels.emplace_back(pose.data());
 	}
 
 	using SecondIndividualModel = StaticBuffer<Scalar, 3>;
@@ -1941,7 +1941,7 @@ bool NonLinearOptimizationCamera::optimizeCameraObjectPointsPoses(const PinholeC
 	SecondIndividualModels secondIndividualModels, optimizedSecondIndividualModels;
 	for (size_t n = 0; n < objectPoints.size(); ++n)
 	{
-		secondIndividualModels.push_back(SecondIndividualModel(objectPoints[n].data()));
+		secondIndividualModels.emplace_back(objectPoints[n].data());
 	}
 
 	std::vector<size_t> numberElementsPerIndividualModel;
@@ -2284,7 +2284,7 @@ void NonLinearOptimizationCamera::findInitialFieldOfViewSubset(const PinholeCame
 						const UniversalOptimization::IndividualModel& individualModel = optimizedIndividualModels[i];
 
 						const ExponentialMap exponentialMap(individualModel[0], individualModel[1], individualModel[2]);
-						localOrientations.push_back(SquareMatrix3(exponentialMap.rotation()));
+						localOrientations.emplace_back(exponentialMap.rotation());
 					}
 				}
 			}
