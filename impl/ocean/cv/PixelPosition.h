@@ -916,7 +916,7 @@ inline Vectors2 PixelPositionT<T>::pixelPositions2vectors(const std::vector<Pixe
 	for (typename std::vector<PixelPositionT<T>>::const_iterator i = pixelPositions.begin(); i != pixelPositions.end(); ++i)
 	{
 		ocean_assert(i->isValid());
-		result.push_back(Vector2(Scalar(i->x()), Scalar(i->y())));
+		result.emplace_back(Scalar(i->x()), Scalar(i->y()));
 	}
 
 	return result;
