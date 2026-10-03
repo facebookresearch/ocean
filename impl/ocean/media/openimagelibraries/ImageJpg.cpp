@@ -94,6 +94,16 @@ Frame ImageJpg::decodeImage(const void* buffer, const size_t size)
 		return Frame();
 	}
 
+	// the size check must happen before jpeg_start_decompress(), as the decompressor allocates buffers based on the image dimensions (whole-image coefficient buffers for progressive images)
+	jpeg_calc_output_dimensions(&decompressStruct);
+
+	// **TODO** hot fix to ensure that images cannot be larger than 2^32 bytes
+
+	if (uint64_t(decompressStruct.output_width) * uint64_t(decompressStruct.output_height) >= uint64_t(1431655764ull)) // width * height * 3 < 2^32
+	{
+		return Frame();
+	}
+
 	// we start the decompression
 	jpeg_start_decompress(&decompressStruct);
 
@@ -121,13 +131,7 @@ Frame ImageJpg::decodeImage(const void* buffer, const size_t size)
 	const FrameType frameType(width, height, pixelFormat, pixelOrigin);
 	ocean_assert(frameType.isValid());
 
-	// **TODO** hot fix to ensure that images cannot be larger than 2^32 bytes
-
 	ocean_assert(frameType.channels() <= 3u);
-	if (uint64_t(width) * uint64_t(height) >= uint64_t(1431655764ull)) // width * height * 3 < 2^32
-	{
-		return Frame();
-	}
 
 	ocean_assert(!result.isValid());
 	result.set(frameType, true /*forceOwner*/, true /*forceWritable*/);
