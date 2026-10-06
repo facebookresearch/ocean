@@ -910,7 +910,7 @@ bool SLAMPlaneTracker::PlaneTrackerComponent::optimizePlane(Plane3& optimizedPla
 		if (componentPoses_[i].isValid() && componentImagePointsPairs_[i].first.size() >= qualityThreshold)
 		{
 			// poses is not a shift vector so we have to adjust the index
-			poses.push_back(Pose(componentPoses_[i].transformation()));
+			poses.emplace_back(componentPoses_[i].transformation());
 			poseMapping.push_back((unsigned int)i);
 		}
 	}

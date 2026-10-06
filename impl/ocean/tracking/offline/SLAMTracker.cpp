@@ -293,7 +293,7 @@ bool SLAMTracker::extractPoses(const unsigned int lowerFrameIndex, const unsigne
 			// we add the already selected key frames (so that we can select further key frames most different to these)
 			for (Indices32::const_iterator i = keyFrameIds.begin(); i != keyFrameIds.end(); ++i)
 			{
-				keyFrameCandidatePoses.push_back(Pose(database_.pose<false>(*i)));
+				keyFrameCandidatePoses.emplace_back(database_.pose<false>(*i));
 				keyFrameCandidatePoseIds.push_back(*i);
 			}
 
@@ -301,7 +301,7 @@ bool SLAMTracker::extractPoses(const unsigned int lowerFrameIndex, const unsigne
 			{
 				if (database_.numberObservations<false>(keyFrameCandidateId, regionOfInterestObjectPointIds) >= halfCorrespondences)
 				{
-					keyFrameCandidatePoses.push_back(Pose(database_.pose<false>(keyFrameCandidateId)));
+					keyFrameCandidatePoses.emplace_back(database_.pose<false>(keyFrameCandidateId));
 					keyFrameCandidatePoseIds.push_back(keyFrameCandidateId);
 				}
 			}
