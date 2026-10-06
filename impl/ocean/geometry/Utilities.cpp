@@ -421,7 +421,7 @@ Triangles3 Utilities::backProjectTriangles(const PinholeCamera& pinholeCamera, c
 			ocean_assert(pinholeCamera.projectToImage<true>(pose, objectPoints[i], pinholeCamera.hasDistortionParameters()).sqrDistance(triangle[i]) < 1);
 		}
 
-		result.push_back(Triangle3(objectPoints[0], objectPoints[1], objectPoints[2]));
+		result.emplace_back(objectPoints[0], objectPoints[1], objectPoints[2]);
 	}
 
 	return result;

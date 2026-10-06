@@ -1081,7 +1081,7 @@ bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOrientations(const
 	for (size_t n = 0; n < orientations.size(); ++n)
 	{
 		const ExponentialMap exponentialMap(orientations[n]);
-		firstModels.push_back(FirstModel(exponentialMap.data()));
+		firstModels.emplace_back(exponentialMap.data());
 	}
 
 	SecondModels secondModels;
@@ -1089,7 +1089,7 @@ bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOrientations(const
 	for (size_t n = 0; n < objectPoints.size(); ++n)
 	{
 		const Vector2 model(ObjectPointsOrientationsData::objectPoint2model(objectPoints[n]));
-		secondModels.push_back(SecondModel(model.data()));
+		secondModels.emplace_back(model.data());
 	}
 
 	std::vector<size_t> numberElementsPerIndividualModel;
@@ -2291,32 +2291,32 @@ class NonLinearOptimizationObjectPoint::ObjectPointsTwoPosesProvider : public No
 
 				for (size_t e = 0; e < 6; ++e)
 				{
-					jacobianEntries.push_back(SparseMatrix::Entry(4 * n + 0, e, poseJacobianBuffer[0 + e]));
-					jacobianEntries.push_back(SparseMatrix::Entry(4 * n + 1, e, poseJacobianBuffer[6 + e]));
+					jacobianEntries.emplace_back(4 * n + 0, e, poseJacobianBuffer[0 + e]);
+					jacobianEntries.emplace_back(4 * n + 1, e, poseJacobianBuffer[6 + e]);
 				}
 
 				Jacobian::calculatePointJacobian2x3(pointJacobianBuffer, pointJacobianBuffer + 3, camera_, firstFlippedCamera_T_world_, objectPoint, useDistortionParameters_);
 
 				for (size_t e = 0; e < 3; ++e)
 				{
-					jacobianEntries.push_back(SparseMatrix::Entry(4 * n + 0, 12 + 3 * n + e, pointJacobianBuffer[0 + e]));
-					jacobianEntries.push_back(SparseMatrix::Entry(4 * n + 1, 12 + 3 * n + e, pointJacobianBuffer[3 + e]));
+					jacobianEntries.emplace_back(4 * n + 0, 12 + 3 * n + e, pointJacobianBuffer[0 + e]);
+					jacobianEntries.emplace_back(4 * n + 1, 12 + 3 * n + e, pointJacobianBuffer[3 + e]);
 				}
 
 				Jacobian::calculatePoseJacobianRodrigues2x6(poseJacobianBuffer, poseJacobianBuffer + 6, camera_, secondFlippedCamera_T_world_, objectPoint, useDistortionParameters_, secondRodriguesDerivatives[0], secondRodriguesDerivatives[1], secondRodriguesDerivatives[2]);
 
 				for (size_t e = 0; e < 6; ++e)
 				{
-					jacobianEntries.push_back(SparseMatrix::Entry(4 * n + 2, 6 + e, poseJacobianBuffer[0 + e]));
-					jacobianEntries.push_back(SparseMatrix::Entry(4 * n + 3, 6 + e, poseJacobianBuffer[6 + e]));
+					jacobianEntries.emplace_back(4 * n + 2, 6 + e, poseJacobianBuffer[0 + e]);
+					jacobianEntries.emplace_back(4 * n + 3, 6 + e, poseJacobianBuffer[6 + e]);
 				}
 
 				Jacobian::calculatePointJacobian2x3(pointJacobianBuffer, pointJacobianBuffer + 3, camera_, secondFlippedCamera_T_world_, objectPoint, useDistortionParameters_);
 
 				for (size_t e = 0; e < 3; ++e)
 				{
-					jacobianEntries.push_back(SparseMatrix::Entry(4 * n + 2, 12 + 3 * n + e, pointJacobianBuffer[0 + e]));
-					jacobianEntries.push_back(SparseMatrix::Entry(4 * n + 3, 12 + 3 * n + e, pointJacobianBuffer[3 + e]));
+					jacobianEntries.emplace_back(4 * n + 2, 12 + 3 * n + e, pointJacobianBuffer[0 + e]);
+					jacobianEntries.emplace_back(4 * n + 3, 12 + 3 * n + e, pointJacobianBuffer[3 + e]);
 				}
 			}
 
@@ -5184,10 +5184,10 @@ class NonLinearOptimizationObjectPoint::SlowObjectPointsPosesProvider : public N
 					for (size_t e = 0; e < 6; ++e)
 					{
 						// .insert(row + 0, poseId * 6u, poseJacobianBuffer, 6u);
-						jacobianEntries.push_back(SparseMatrix::Entry(row + 0, poseId * 6 + e, poseJacobianBuffer[0 + e]));
+						jacobianEntries.emplace_back(row + 0, poseId * 6 + e, poseJacobianBuffer[0 + e]);
 
 						// .insert(row + 1, poseId * 6u, poseJacobianBuffer + 6, 6u);
-						jacobianEntries.push_back(SparseMatrix::Entry(row + 1, poseId * 6 + e, poseJacobianBuffer[6 + e]));
+						jacobianEntries.emplace_back(row + 1, poseId * 6 + e, poseJacobianBuffer[6 + e]);
 					}
 
 					Jacobian::calculatePointJacobian2x3IF(camera_, flippedCameras_T_world_[poseId], objectPoint, pointJacobianBuffer, pointJacobianBuffer + 3);
@@ -5195,10 +5195,10 @@ class NonLinearOptimizationObjectPoint::SlowObjectPointsPosesProvider : public N
 					for (size_t e = 0; e < 3; ++e)
 					{
 						// .insert(row + 0, pointColumnStart + o * 3u, pointJacobianBuffer, 3u);
-						jacobianEntries.push_back(SparseMatrix::Entry(row + 0, pointColumnStart + o * 3 + e, pointJacobianBuffer[0 + e]));
+						jacobianEntries.emplace_back(row + 0, pointColumnStart + o * 3 + e, pointJacobianBuffer[0 + e]);
 
 						// .insert(row + 1, pointColumnStart + o * 3u, pointJacobianBuffer + 3, 3u);
-						jacobianEntries.push_back(SparseMatrix::Entry(row + 1, pointColumnStart + o * 3 + e, pointJacobianBuffer[3 + e]));
+						jacobianEntries.emplace_back(row + 1, pointColumnStart + o * 3 + e, pointJacobianBuffer[3 + e]);
 					}
 
 					row += 2;
