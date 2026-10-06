@@ -123,20 +123,20 @@ void GICone::rebuildPrimitives()
 		const Scalar valueX = Numeric::sin(angle);
 		const Scalar valueZ = Numeric::cos(angle);
 
-		vertices.push_back(Vertex(0, height2, 0));
-		vertices.push_back(Vertex(valueX * coneRadius, -height2, valueZ * coneRadius));
+		vertices.emplace_back(0, height2, 0);
+		vertices.emplace_back(valueX * coneRadius, -height2, valueZ * coneRadius);
 
 		Normal normal(Numeric::sin(angleHalf), normalY, Numeric::cos(angleHalf));
 		normals.push_back(normal.normalized());
 		normal = Normal(Normal(valueX, normalY, valueZ));
 		normals.push_back(normal.normalized());
 
-		textureCoordinates.push_back(TextureCoordinate(textureFactor * (Scalar(n) + Scalar(0.5)), 1));
-		textureCoordinates.push_back(TextureCoordinate(textureFactor * Scalar(n), 0));
+		textureCoordinates.emplace_back(textureFactor * (Scalar(n) + Scalar(0.5)), 1);
+		textureCoordinates.emplace_back(textureFactor * Scalar(n), 0);
 	}
 	vertices.push_back(vertices[1]);
 	normals.push_back(normals[1]);
-	textureCoordinates.push_back(TextureCoordinate(1, 0));
+	textureCoordinates.emplace_back(1, 0);
 
 	// vertices for the bottom
 	for (unsigned int n = 0u; n < steps; n++)
@@ -144,9 +144,9 @@ void GICone::rebuildPrimitives()
 		const Scalar angle = Scalar(n) * angleFactor;
 
 		vertices.push_back(vertices[(n << 1u) + 1u]); // n * 2 + 1
-		normals.push_back(Normal(0, -1, 0));
+		normals.emplace_back(0, -1, 0);
 
-		textureCoordinates.push_back(TextureCoordinate(Scalar(0.5) + Numeric::sin(angle) * Scalar(0.5), Scalar(0.5) + Numeric::cos(angle) * Scalar(0.5)));
+		textureCoordinates.emplace_back(Scalar(0.5) + Numeric::sin(angle) * Scalar(0.5), Scalar(0.5) + Numeric::cos(angle) * Scalar(0.5));
 	}
 
 	const VertexSetRef vertexSet = engine().factory().createVertexSet();
@@ -167,15 +167,15 @@ void GICone::rebuildPrimitives()
 	unsigned int index = 0;
 	for (unsigned int n = 0; n < steps - 1; n++)
 	{
-		faces.push_back(TriangleFace(index, index + 1, index + 3));
+		faces.emplace_back(index, index + 1, index + 3);
 		index += 2;
 	}
-	faces.push_back(TriangleFace(index, index + 1, index + 2));
+	faces.emplace_back(index, index + 1, index + 2);
 
 	// triangle faces for the bottom
 	for (unsigned int n = side + 1; n < side + bottom - 1; n++)
 	{
-		faces.push_back(TriangleFace(side, n + 1, n));
+		faces.emplace_back(side, n + 1, n);
 	}
 
 	ocean_assert(numberFaces == faces.size());
