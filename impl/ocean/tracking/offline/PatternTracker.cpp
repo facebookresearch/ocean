@@ -471,7 +471,7 @@ bool PatternTracker::FineTrackingComponent::optimizeCamera(const PinholeCamera& 
 		if (optimizedPoses_[i].isValid() && objectPointsSet_[i].size() >= qualityThreshold)
 		{
 			// poses is not a shift vector so we have to adjust the index
-			poses.push_back(Pose(optimizedPoses_[i].transformation()));
+			poses.emplace_back(optimizedPoses_[i].transformation());
 			poseMapping.push_back((unsigned int)i);
 		}
 	}
