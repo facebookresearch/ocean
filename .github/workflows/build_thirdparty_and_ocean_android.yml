@@ -1,0 +1,107 @@
+name: Build Third-Party Dependencies for Android
+
+on:
+  workflow_dispatch:
+    inputs:
+      abi:
+        description: 'ABI to build for'
+        required: true
+        default: 'arm64-v8a'
+        type: choice
+        options:
+          - arm64-v8a
+          - armeabi-v7a
+          - x86
+          - x86_64
+          - custom
+      custom_abi:
+        description: 'Custom ABI (if "custom" is selected)'
+        required: false
+        type: string
+      build_config:
+        description: 'Build configuration (debug or release)'
+        required: true
+        default: 'debug'
+        type: choice
+        options:
+          - debug
+          - release
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Create build directories
+        run: |
+          mkdir -p /home/runner/work/ocean/ocean/ocean_build_android/thirdparty
+          chmod -R 777 /home/runner/work/ocean/ocean/ocean_build_android/thirdparty
+          mkdir -p /home/runner/work/ocean/ocean/ocean_thirdparty_install_android
+          chmod -R 777 /home/runner/work/ocean/ocean/ocean_thirdparty_install_android
+
+      - name: Determine ABI
+        id: abi_selection
+        run: |
+          if [[ "${{ inputs.abi }}" == "custom" ]]; then
+            echo "ABI=${{ inputs.custom_abi }}" >> $GITHUB_ENV
+          else
+            echo "ABI=${{ inputs.abi }}" >> $GITHUB_ENV
+          fi
+
+      - name: Build Third-Party Dependencies
+        run: |
+          ./build/cmake/build_thirdparty_android.sh \
+            -c ${{ inputs.build_config }} \
+            -l static \
+            -b "/home/runner/work/ocean/ocean/ocean_build_android/thirdparty" \
+            -i "/home/runner/work/ocean/ocean/ocean_thirdparty_install_android" \
+            --abi $ABI
+        env:
+          OCEAN_LINK_TYPE: static
+          OCEAN_THIRDPARTY_INSTALL_PATH: /home/runner/work/ocean/ocean/ocean_thirdparty_install_android
+          OCEAN_BUILD_PATH: /home/runner/work/ocean/ocean/ocean_build_android
+          OCEAN_INSTALL_PATH: /home/runner/work/ocean/ocean/ocean_install_android
+          ANDROID_NDK_VERSION: 27.0.12077973
+          JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.14-7/x64
+          ANDROID_HOME: /usr/local/lib/android/sdk
+          ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+          ANDROID_NDK: /usr/local/lib/android/sdk/ndk/27.2.12479018
+
+      - name: Build Ocean Android Libraries
+        shell: bash
+        run: |
+          ./build/cmake/build_ocean_android.sh \
+          -c ${{ inputs.build_config }} \
+          -l static \
+          -b "/home/runner/work/ocean/ocean/ocean_build_android/ocean" \
+          -i "/home/runner/work/ocean/ocean/ocean_install_android" \
+          -t "/home/runner/work/ocean/ocean/ocean_thirdparty_install_android" \
+          --abi $ABI
+
+      - name: Archive built libraries
+        run: |
+          tar -czvf ocean_thirdparty_android_${{ inputs.build_config }}.tar.gz -C /home/runner/work/ocean/ocean/ocean_thirdparty_install_android .
+          tar -czvf ocean_android_library_${{ inputs.build_config }}.tar.gz -C /home/runner/work/ocean/ocean/ocean_install_android .
+
+      - name: Upload built libraries
+        uses: actions/upload-artifact@v4
+        with:
+          name: ocean-thirdparty-android-${{ inputs.build_config }}
+          path: ocean_thirdparty_android_${{ inputs.build_config }}.tar.gz
+
+      - name: Upload Android Library
+        uses: actions/upload-artifact@v4
+        with:
+          name: ocean-android-library-${{ inputs.build_config }}
+          path: ocean_android_library_${{ inputs.build_config }}.tar.gz
