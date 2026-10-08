@@ -2551,7 +2551,7 @@ inline HomogenousMatrices4 Database::poses(const Index32 lowerPoseId, const Inde
 		}
 		else
 		{
-			poses.push_back(HomogenousMatrix4(false));
+			poses.emplace_back(false);
 		}
 	}
 
@@ -5074,7 +5074,7 @@ Database::TopologyTriples Database::topologyTriples(const Indices32& poseIds) co
 
 			if (objectPointId != invalidId)
 			{
-				result.push_back(TopologyTriple(poseId, objectPointId, *iId));
+				result.emplace_back(poseId, objectPointId, *iId);
 			}
 		}
 	}
