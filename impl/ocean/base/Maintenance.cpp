@@ -168,7 +168,7 @@ bool Maintenance::send(const std::string& tag, const void* data, const size_t si
 	Buffer buffer(size);
 	memcpy(buffer.data(), data, size);
 
-	maintenanceElementQueue.push(Element(maintenanceName, maintenanceId, timestamp, tag, std::move(buffer)));
+	maintenanceElementQueue.emplace(maintenanceName, maintenanceId, timestamp, tag, std::move(buffer));
 	return true;
 }
 
@@ -181,7 +181,7 @@ bool Maintenance::send(const std::string& tag, const Buffer& buffer, const Times
 		return false;
 	}
 
-	maintenanceElementQueue.push(Element(maintenanceName, maintenanceId, timestamp, tag, buffer));
+	maintenanceElementQueue.emplace(maintenanceName, maintenanceId, timestamp, tag, buffer);
 	return true;
 }
 
@@ -194,7 +194,7 @@ bool Maintenance::send(const std::string& tag, Buffer&& buffer, const Timestamp 
 		return false;
 	}
 
-	maintenanceElementQueue.push(Element(maintenanceName, maintenanceId, timestamp, tag, std::move(buffer)));
+	maintenanceElementQueue.emplace(maintenanceName, maintenanceId, timestamp, tag, std::move(buffer));
 	return true;
 }
 
@@ -207,7 +207,7 @@ bool Maintenance::place(const std::string& name, const uint64_t id, const std::s
 		return false;
 	}
 
-	maintenanceElementQueue.push(Element(name, id, timestamp, tag, std::move(buffer)));
+	maintenanceElementQueue.emplace(name, id, timestamp, tag, std::move(buffer));
 	return true;
 }
 
