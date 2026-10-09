@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<!--
+  Copyright (c) Meta Platforms, Inc. and affiliates.
+
+  This source code is licensed under the MIT license found in the
+  LICENSE file in the root directory of this source tree.
+
+  Host page for the Math test executable built for Emscripten. It serves the same
+  purpose as the android/ and ios/ shells beside it: giving the test binary a home
+  in the environment it is built for.
+
+  This is a smoke test, not a replacement for the node run. main() executes
+  synchronously and blocks the page's main thread, so the reduced per-test duration
+  below is what keeps the browser from offering to kill the tab. Run the executable
+  under node for a full, trustworthy pass.
+
+  A .wasm cannot be instantiated from a file:// origin, so this directory has to be
+  served over HTTP. See doc/building_for_emscripten.md.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ocean Math tests (WebAssembly)</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #ffffff;
+        --fg: #1a1a1a;
+        --muted: #5a5a5a;
+        --border: #d4d4d4;
+        --panel: #f6f6f6;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #16181c;
+          --fg: #e8e8e8;
+          --muted: #9a9a9a;
+          --border: #33363d;
+          --panel: #1e2126;
+        }
+      }
+
+      body {
+        margin: 0;
+        padding: 2rem 1rem;
+        background: var(--bg);
+        color: var(--fg);
+        font: 16px/1.5 system-ui, -apple-system, Segoe UI, sans-serif;
+      }
+
+      main {
+        max-width: 60rem;
+        margin: 0 auto;
+      }
+
+      h1 {
+        font-size: 1.3rem;
+        margin: 0 0 0.25rem;
+      }
+
+      p {
+        margin: 0 0 1rem;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      #status {
+        font-weight: 600;
+        color: var(--fg);
+      }
+
+      #output {
+        white-space: pre-wrap;
+        font: 12px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 1rem;
+        max-height: 70vh;
+        overflow-y: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Ocean Math tests (WebAssembly)</h1>
+      <p>
+        Smoke test at reduced per-test duration &mdash; see
+        <code>doc/building_for_emscripten.md</code>.
+        Status: <span id="status">starting&hellip;</span>
+      </p>
+      <div id="output"></div>
+    </main>
+
+    <script>
+      var outputElement = document.getElementById("output");
+      var statusElement = document.getElementById("status");
+
+      // Ocean's own verdict line is the source of truth here. Emscripten links with
+      // EXIT_RUNTIME=0 by default, so returning from main() fires neither onExit nor
+      // sets Module.EXITSTATUS -- and adding -sEXIT_RUNTIME=1 to every executable
+      // just to colour a status line would be a poor trade.
+      var VERDICT = /^(?:Entire|Partial) .*test: (succeeded|FAILED)/;
+      var verdict = null;
+
+      function append(text) {
+        var match = VERDICT.exec(text);
+        if (match) {
+          verdict = match[1];
+        }
+
+        outputElement.textContent += text + "\n";
+        outputElement.scrollTop = outputElement.scrollHeight;
+      }
+
+      var Module = {
+        // "-d" is the per-test duration in seconds and "-f" selects suites; both are
+        // registered by TestMath.cpp via CommandArguments. Running all 49 suites at
+        // the default 2.0s holds the page's main thread for far too long -- even at
+        // 0.1s it is about two minutes, during which the tab is frozen. This handful
+        // covers the core numeric types and finishes quickly. Run the executable
+        // under node for full coverage.
+        arguments: [
+          "-d",
+          "0.1",
+          "-f",
+          "vector2,vector3,quaternion,squarematrix3,homogenousmatrix4,numeric,euler",
+        ],
+        print: function (text) {
+          append(text);
+          console.log(text);
+        },
+        printErr: function (text) {
+          append(text);
+          console.error(text);
+        },
+        onAbort: function (what) {
+          statusElement.textContent = "aborted";
+          append("ABORT: " + what);
+        },
+        onRuntimeInitialized: function () {
+          statusElement.textContent = "running (the page stays busy until this finishes)";
+        },
+        postRun: [
+          function () {
+            if (verdict === "succeeded") {
+              statusElement.textContent = "passed";
+            } else if (verdict === "FAILED") {
+              statusElement.textContent = "FAILED";
+            } else {
+              statusElement.textContent = "finished without a verdict line";
+            }
+          },
+        ],
+      };
+    </script>
+    <script src="application_ocean_test_math_testmath.js"></script>
+  </body>
+</html>

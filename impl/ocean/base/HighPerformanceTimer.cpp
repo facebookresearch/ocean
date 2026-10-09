@@ -141,6 +141,15 @@ HighPerformanceTimer::Ticks HighPerformanceTimer::ticksPerSecond()
 		value = (Ticks(1000000000) * Ticks(info.denom)) / Ticks(info.numer);
 	}
 
+#elif defined(__EMSCRIPTEN__)
+
+	// ticks() returns nanoseconds by construction, so that is the rate -- it must not
+	// be derived from clock_getres() here. Browsers coarsen timer resolution to blunt
+	// Spectre-style attacks, and Emscripten duly reports CLOCK_REALTIME as 1ms, which
+	// would yield 1000 rather than 1000000000 and inflate every measurement a
+	// millionfold. clock_gettime() itself still returns finer values than that.
+	value = Ticks(1000000000);
+
 #else
 
 	struct timespec resolution;

@@ -5,7 +5,7 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-if (MACOS OR LINUX OR WIN32)
+if (MACOS OR LINUX OR WIN32 OR EMSCRIPTEN)
 
     set(OCEAN_TARGET_NAME "application_ocean_test_geometry_testgeometry")
 
@@ -33,6 +33,17 @@ if (MACOS OR LINUX OR WIN32)
             ocean_system
             ocean_test_testgeometry
     )
+
+    if (EMSCRIPTEN)
+        # install(TARGETS) installs only what CMake considers the target's file, and
+        # the Emscripten toolchain sets CMAKE_EXECUTABLE_SUFFIX to ".js". The .wasm
+        # beside it is a side file CMake knows nothing about, so without this the
+        # install tree holds a loader that aborts with ENOENT on the module it loads.
+        install(FILES
+                "$<TARGET_FILE_DIR:${OCEAN_TARGET_NAME}>/$<TARGET_FILE_BASE_NAME:${OCEAN_TARGET_NAME}>.wasm"
+            DESTINATION bin
+        )
+    endif()
 
     # Installation
     install(TARGETS ${OCEAN_TARGET_NAME} DESTINATION bin)

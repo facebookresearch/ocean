@@ -9,7 +9,7 @@ add_subdirectory(barcodes)
 add_subdirectory(bullseyes)
 add_subdirectory(qrcodes)
 
-if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
+if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32 OR EMSCRIPTEN)
 
     if (NOT TARGET Eigen3::Eigen)
         find_package(Eigen3 REQUIRED)

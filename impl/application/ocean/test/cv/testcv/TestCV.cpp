@@ -28,8 +28,10 @@ using namespace Ocean;
 #if defined(_WINDOWS)
 	// main function on Windows platforms
 	int wmain(int argc, wchar_t* argv[])
-#elif defined(__APPLE__) || defined(__linux__)
-	// main function on non-Windows platforms
+#elif defined(__APPLE__) || defined(__linux__) || defined(__EMSCRIPTEN__)
+	// main function on non-Windows platforms.
+	// Emscripten needs naming explicitly: emcc defines __EMSCRIPTEN__ and __unix__ but
+	// not __linux__, which is why Base.h spells out the same pair.
 	int main(int argc, char* argv[])
 #else
 	#error Missing implementation.

@@ -663,6 +663,66 @@ def check_ios_simulator_sdk() -> ToolchainInfo:
         )
 
 
+def check_emsdk() -> ToolchainInfo:
+    """Check if the Emscripten SDK is available.
+
+    $EMSDK is the whole contract: it is exported both by a native emsdk
+    installation (emsdk_env.sh) and by the official emscripten/emsdk Docker image.
+    """
+    from pathlib import Path
+
+    emsdk_home = os.environ.get("EMSDK")
+
+    if not emsdk_home:
+        return ToolchainInfo(
+            name="emsdk",
+            is_available=False,
+            error="Emscripten SDK not found. Source emsdk_env.sh to set EMSDK",
+        )
+
+    emsdk_path = Path(emsdk_home)
+
+    if not emsdk_path.exists():
+        return ToolchainInfo(
+            name="emsdk",
+            is_available=False,
+            error=f"EMSDK path does not exist: {emsdk_home}",
+        )
+
+    toolchain = (
+        emsdk_path
+        / "upstream"
+        / "emscripten"
+        / "cmake"
+        / "Modules"
+        / "Platform"
+        / "Emscripten.cmake"
+    )
+    if not toolchain.exists():
+        return ToolchainInfo(
+            name="emsdk",
+            is_available=False,
+            error="Emscripten.cmake not found in EMSDK",
+        )
+
+    version = None
+    version_file = emsdk_path / "upstream" / "emscripten" / "emscripten-version.txt"
+    if version_file.exists():
+        try:
+            version = version_file.read_text(
+                encoding="utf-8", errors="replace"
+            ).strip().strip('"')
+        except Exception:
+            pass
+
+    return ToolchainInfo(
+        name="emsdk",
+        is_available=True,
+        path=str(emsdk_path),
+        version=version,
+    )
+
+
 def check_android_ndk() -> ToolchainInfo:
     """Check if Android NDK is available."""
     from pathlib import Path
@@ -915,6 +975,9 @@ def get_required_toolchains(targets: List[str]) -> List[str]:
         elif target_lower.startswith("android_"):
             required.add("android_ndk")
 
+        elif target_lower.startswith("emscripten_"):
+            required.add("emsdk")
+
         elif target_lower.startswith("win_") or target_lower.startswith("windows_"):
             required.add("visual_studio")
             required.add("windows_sdk")
@@ -958,6 +1021,8 @@ def check_toolchains(  # noqa: C901
         "ios_sdk": check_ios_sdk,
         "ios_simulator_sdk": check_ios_simulator_sdk,
         "android_ndk": check_android_ndk,
+        # No host restriction: the emsdk runs on every platform Ocean builds from.
+        "emsdk": check_emsdk,
         "visual_studio": check_visual_studio,
         "windows_sdk": check_windows_sdk,
     }
