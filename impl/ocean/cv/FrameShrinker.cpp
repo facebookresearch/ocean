@@ -1243,7 +1243,7 @@ inline void FrameShrinker::downsampleByTwoRowHorizontal8BitPerChannel14641NEON<1
 	 *
 	 */
 
-	constexpr uint8x8_t mask1233 = NEON::create_uint8x8(2, 3, 4, 5, 6, 7, 6, 7);
+	const uint8x8_t mask1233 = NEON::create_uint8x8(2, 3, 4, 5, 6, 7, 6, 7);
 
 	const uint16x8_t constant_6_u_16x8 = vdupq_n_u16(6u);
 
