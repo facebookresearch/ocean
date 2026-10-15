@@ -226,7 +226,7 @@ void GIFramebuffer::render()
 		const SmartObjectRef<GIView> view(framebufferView);
 		ocean_assert(view);
 
-		lightSources.push_back(LightPair(view->headlight(), HomogenousMatrix4(view->transformation().translation())));
+		lightSources.emplace_back(view->headlight(), HomogenousMatrix4(view->transformation().translation()));
 	}
 
 	const WorkerPool::ScopedWorker scopedWorker(WorkerPool::get().scopedWorker());
