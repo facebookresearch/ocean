@@ -25,6 +25,7 @@ For a general overview, the [project website](https://facebookresearch.github.io
 Please refer to the platform-specific instructions when building Ocean:
 
 * [Android](doc/building_for_android.md)
+* [Emscripten](doc/building_for_emscripten.md) (WebAssembly)
 * [iOS](doc/building_for_ios.md)
 * [Linux](doc/building_for_linux.md)
 * [macOS](doc/building_for_macos.md)

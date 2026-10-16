@@ -127,6 +127,29 @@ bool Signal::wait(const unsigned int time) const
 
 	return true;
 
+#elif defined(__EMSCRIPTEN__) && !defined(__EMSCRIPTEN_PTHREADS__)
+
+	OCEAN_SUPPRESS_UNUSED_WARNING(time);
+
+	if (!semaphoreObjectReleased)
+	{
+		ocean_assert(semaphoreObjectState);
+
+		// Emscripten declares sem_timedwait() but does not define it. sem_trywait() is
+		// the correct answer rather than a substitute: without pthreads nothing else
+		// runs while this call would block, so a signal not already pulsed cannot be
+		// pulsed before the deadline.
+		//
+		// Signals::wait(time) below does not carry this over: it infers timeout from
+		// elapsed time rather than from this return value, so it would report every
+		// signal as fired. It is unreachable while realCores() returns 1, since only
+		// Worker uses it and Worker creates no threads, and must be revisited
+		// alongside any -pthread build.
+		return sem_trywait(&semaphoreObject) == 0;
+	}
+
+	return true;
+
 #else
 
 	if (!semaphoreObjectReleased)
