@@ -50,18 +50,18 @@ OILBufferImageRecorder::Encoders OILBufferImageRecorder::frameEncoders() const
 
 	if (encoders.empty())
 	{
-		encoders.push_back("bmp");
-		encoders.push_back("dds");
-		encoders.push_back("jpg");
-		encoders.push_back("jpe");
-		encoders.push_back("jpeg");
-		encoders.push_back("pcx");
-		encoders.push_back("png");
-		encoders.push_back("raw");
-		encoders.push_back("tga");
-		encoders.push_back("tif");
-		encoders.push_back("tiff");
-		encoders.push_back("webp");
+		encoders.emplace_back("bmp");
+		encoders.emplace_back("dds");
+		encoders.emplace_back("jpg");
+		encoders.emplace_back("jpe");
+		encoders.emplace_back("jpeg");
+		encoders.emplace_back("pcx");
+		encoders.emplace_back("png");
+		encoders.emplace_back("raw");
+		encoders.emplace_back("tga");
+		encoders.emplace_back("tif");
+		encoders.emplace_back("tiff");
+		encoders.emplace_back("webp");
 	}
 
 	return encoders;
