@@ -364,7 +364,7 @@ void inline PosePointPairsObject::addPosePointPair(const PosePointPair& posePoin
 
 void inline PosePointPairsObject::addPosePointPair(const unsigned int poseId, const unsigned int imagePointId)
 {
-	dataPosePointPairs.push_back(PosePointPair(poseId, imagePointId));
+	dataPosePointPairs.emplace_back(poseId, imagePointId);
 }
 
 inline HomogenousMatrices4 PosePointPairsObject::poses(const Database& database) const
