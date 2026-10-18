@@ -11,7 +11,7 @@ add_subdirectory(testlibyuv)
 add_subdirectory(testsegmentation)
 add_subdirectory(testsynthesis)
 
-if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
+if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32 OR EMSCRIPTEN)
 
     set(OCEAN_TARGET_NAME "ocean_test_testcv")
 
