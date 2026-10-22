@@ -608,7 +608,7 @@ bool PlanarRectangleTracker::PlaneTrackerComponent::optimizeCamera(PinholeCamera
 		if (poses_[i].isValid() && imagePointsPairs_[i].first.size() >= qualityThreshold)
 		{
 			// poses is not a shift vector so we have to adjust the index
-			poses.push_back(Pose(poses_[i].transformation()));
+			poses.emplace_back(poses_[i].transformation());
 			poseMapping.push_back((unsigned int)i);
 		}
 	}
