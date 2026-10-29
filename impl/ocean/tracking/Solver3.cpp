@@ -990,7 +990,7 @@ bool Solver3::determineInitialObjectPointsFromSparseKeyFrames(const PinholeCamer
 	validPoseIndices.clear();
 	validPoseIndices.reserve(imagePointGroups.size());
 
-	poses.push_back(HomogenousMatrix4(true));
+	poses.emplace_back(true);
 	poses.push_back(secondPose);
 
 	validPoseIndices.push_back(firstGroupIndex);
@@ -1515,7 +1515,7 @@ bool Solver3::optimizeInitialObjectPoints(const Database& database, const AnyCam
 			}
 			else
 			{
-				remainingErrors.push_back(PoseErrorPair(n, optimizedErrors[poseId])); // we take the index and not the id as the index is needed later
+				remainingErrors.emplace_back(n, optimizedErrors[poseId]); // we take the index and not the id as the index is needed later
 			}
 		}
 
@@ -3121,7 +3121,7 @@ Indices32 Solver3::determineRepresentativePoses(const Database& database, const 
 
 		if (poseMatrix.isValid())
 		{
-			poses.push_back(Pose(poseMatrix));
+			poses.emplace_back(poseMatrix);
 			poseIds.push_back(n);
 		}
 	}
@@ -3142,7 +3142,7 @@ Indices32 Solver3::determineRepresentativePoses(const Database& database, const 
 		const HomogenousMatrix4& poseMatrix = database.pose<false>(*i);
 		ocean_assert(poseMatrix.isValid());
 
-		poses.push_back(Pose(poseMatrix));
+		poses.emplace_back(poseMatrix);
 	}
 
 	return Subset::subset(poseIds, Pose::representativePoses(poses, numberRepresentative));
