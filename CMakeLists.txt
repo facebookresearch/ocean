@@ -94,7 +94,14 @@ ocean_translate_processor_type("${CMAKE_HOST_SYSTEM_PROCESSOR}" OCEAN_HOST_PROCE
 # build, so it reports arm64 for an x86_64 build on an Apple silicon Mac and vice versa.
 # A multi-architecture list resolves to arm64, matching the third-party resolution below;
 # Ocean does not support universal binaries.
-if (APPLE AND CMAKE_OSX_ARCHITECTURES)
+# Emscripten reports "x86" in CMAKE_SYSTEM_PROCESSOR but compiles to 32-bit
+# WebAssembly. ocean_translate_processor_type() is generic and is not told the target
+# platform, so it would faithfully translate that to "x86" -- a wrong answer no amount
+# of work inside the translator can fix. Forcing the value here is the same treatment
+# Apple already gets immediately below, and for the same reason.
+if (EMSCRIPTEN)
+    set(OCEAN_TARGET_PROCESSOR_TYPE "wasm32")
+elseif (APPLE AND CMAKE_OSX_ARCHITECTURES)
     ocean_translate_processor_type("${CMAKE_OSX_ARCHITECTURES}" OCEAN_TARGET_PROCESSOR_TYPE)
 else()
     ocean_translate_processor_type("${CMAKE_SYSTEM_PROCESSOR}" OCEAN_TARGET_PROCESSOR_TYPE)
@@ -102,6 +109,37 @@ endif()
 
 get_ocean_preprocessor_flags(OCEAN_PREPROCESSOR_FLAGS)
 get_ocean_compiler_flags(OCEAN_COMPILER_FLAGS)
+
+if (EMSCRIPTEN)
+    # Emscripten links executables with a fixed 16 MB heap by default. Ocean's test
+    # executables, and any real computer-vision workload, allocate well past that and
+    # abort at runtime with "Cannot enlarge memory arrays" -- a failure that looks like
+    # a bug in the code doing the allocating rather than a link-time setting.
+    #
+    # This is a linker option, so it belongs here rather than in
+    # get_ocean_compiler_flags().
+    string(APPEND CMAKE_EXE_LINKER_FLAGS " -sALLOW_MEMORY_GROWTH=1")
+
+    # Emscripten's default stack is 64 KB, against the 8 MB a Linux main thread gets
+    # and the 1 MB on Windows. Ocean's code is written against those, so routines that
+    # put a matrix or an image tile on the stack overflow it. In a release build
+    # Emscripten does not check for that, so the overflow surfaces as
+    # "RuntimeError: memory access out of bounds" somewhere unrelated rather than as a
+    # stack diagnostic. Matching the common native size removes a whole class of
+    # false leads.
+    string(APPEND CMAKE_EXE_LINKER_FLAGS " -sSTACK_SIZE=8MB")
+
+    # Optimization has to be repeated on the link line. Unlike a native toolchain,
+    # where -O affects only compilation, emcc also runs Binaryen's wasm-opt over the
+    # whole module at link time and takes its level from the link command; CMake puts
+    # CMAKE_CXX_FLAGS_RELEASE on compile lines only. The objects are already optimized
+    # by LLVM either way, so this buys the whole-module passes rather than the
+    # difference between optimized and unoptimized code -- worth having, but do not
+    # expect it to transform runtimes.
+    string(APPEND CMAKE_EXE_LINKER_FLAGS_RELEASE " -O3")
+    string(APPEND CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO " -O3")
+    string(APPEND CMAKE_EXE_LINKER_FLAGS_MINSIZEREL " -Oz")
+endif()
 
 if (IOS OR MACOS)
     # Enable Automatic Reference Counting (-fobjc-arc).  Disabling will result in memory leaks in some builds.
@@ -162,12 +200,20 @@ if (OCEAN_THIRD_PARTY_ROOT)
         set(_ocean_3p_platform "linux")
     elseif (WIN32)
         set(_ocean_3p_platform "win")
+    elseif (EMSCRIPTEN)
+        set(_ocean_3p_platform "emscripten")
     else()
         message(FATAL_ERROR "Unsupported platform for OCEAN_THIRD_PARTY_ROOT")
     endif()
 
     # Determine architecture string
-    if (ANDROID)
+    if (EMSCRIPTEN)
+        # Must be tested first. Emscripten reports "x86" in CMAKE_SYSTEM_PROCESSOR, so
+        # the generic "x86|i686|i386" branch further down would match and name a
+        # directory of native 32-bit x86 libraries that has nothing to do with the
+        # WebAssembly build.
+        set(_ocean_3p_arch "wasm32")
+    elseif (ANDROID)
         # Map Android ABI to our arch names
         if (ANDROID_ABI STREQUAL "arm64-v8a")
             set(_ocean_3p_arch "arm64")
@@ -326,9 +372,9 @@ if (OCEAN_THIRD_PARTY_ROOT AND _ocean_3p_resolved_layout STREQUAL "standard")
         endif()
     endforeach()
 
-    # The Android NDK toolchain restricts find_* to its sysroot by default.
-    # Allow lookups outside it so our 3P prefixes are visible.
-    if (ANDROID)
+    # The Android NDK and Emscripten toolchains both restrict find_* to their sysroot
+    # by default. Allow lookups outside it so our 3P prefixes are visible.
+    if (ANDROID OR EMSCRIPTEN)
         list(APPEND CMAKE_FIND_ROOT_PATH ${CMAKE_PREFIX_PATH})
         set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE BOTH)
         set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE BOTH)

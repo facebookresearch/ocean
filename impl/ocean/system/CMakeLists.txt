@@ -7,7 +7,7 @@ cmake_minimum_required(VERSION 3.26)
 
 add_subdirectory(usb)
 
-if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
+if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32 OR EMSCRIPTEN)
 
     set(OCEAN_TARGET_NAME "ocean_system")
 
