@@ -297,9 +297,9 @@ bool& valueReference = ...;
 
 ### Pointer
 
-For the initialization, assignment, or comparison of pointers with the default pointer address `0`
-always use the statement `NULL`. This avoids confusion with *counter* variables. Conversely, the
-statement `NULL` must not be used with non-pointer variables.
+For the initialization, assignment, or comparison of pointers with a null pointer value,
+always use `nullptr`. This avoids confusion with *counter* variables. Conversely,
+`nullptr` must not be used with non-pointer variables.
 
 In declarations of pointers the symbol `*` is appended to the right side of the data, without any
 space. This avoid accidental confusion with the multiplication operator (`*`).
@@ -308,7 +308,7 @@ space. This avoid accidental confusion with the multiplication operator (`*`).
 
 ```cpp
 const std::string* stringPointer = ...;
-bool* value = NULL;
+bool* value = nullptr;
 ```
 
 The *address-of* operator (`&`) and dereferencing operator (`*`) are prepended to the variable in
