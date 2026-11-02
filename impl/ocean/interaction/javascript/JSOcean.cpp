@@ -188,8 +188,8 @@ std::vector< v8::Local<v8::Value> > JSOcean::OceanContainer::parameter(const App
 	JSContext::Values values;
 	values.reserve(2);
 
-	values.push_back(v8::Int32::New(v8::Isolate::GetCurrent(), int(eventId)));
-	values.push_back(v8::Boolean::New(v8::Isolate::GetCurrent(), state));
+	values.emplace_back(v8::Int32::New(v8::Isolate::GetCurrent(), int(eventId)));
+	values.emplace_back(v8::Boolean::New(v8::Isolate::GetCurrent(), state));
 
 	return values;
 }
