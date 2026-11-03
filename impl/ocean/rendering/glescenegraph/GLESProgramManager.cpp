@@ -1350,9 +1350,7 @@ const char* GLESProgramManager::programFragmentShaderTransparentTextY_ =
 
 GLESProgramManager::GLESProgramManager()
 {
-#ifdef OCEAN_DEBUG
-	debugReleased_ = false;
-#endif // OCEAN_DEBUG
+	// nothing to do here
 }
 
 GLESProgramManager::~GLESProgramManager()

@@ -158,7 +158,7 @@ class OCEAN_RENDERING_GLES_EXPORT GLESTexture :
 		MagFilterMode magnificationFilterMode_;
 
 		/// True, to create a mipmap for the texture.
-		bool useMipmap_;
+		bool useMipmap_ = false;
 };
 
 }

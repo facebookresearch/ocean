@@ -232,7 +232,7 @@ class OCEAN_RENDERING_GI_EXPORT GIFramebuffer :
 		Frame frame_;
 
 		/// Antialiasing enabled statement.
-		bool antialiasingEnabled_;
+		bool antialiasingEnabled_ = false;
 
 		/// Optional framebuffer frame holding the sobel response for antialiasing.
 		Frame sobelFrame_;

@@ -20,9 +20,7 @@ GLESBlendAttribute::GLESBlendAttribute() :
 	GLESAttribute(),
 	BlendAttribute(),
 	attributeSourceBlendingFunction(FUNCTION_SOURCE_ALPHA),
-	attributeDestinationBlendingFunction(FUNCTION_ONE_MINUS_SOURCE_ALPHA),
-	attributeGLESSourceBlendingFunction(GL_SRC_ALPHA),
-	attributeGLESDestinationBlendingFunction(GL_ONE_MINUS_SRC_ALPHA)
+	attributeDestinationBlendingFunction(FUNCTION_ONE_MINUS_SOURCE_ALPHA)
 {
 	// nothing to do here
 }

@@ -171,13 +171,13 @@ class OCEAN_RENDERING_GLES_EXPORT GLESLightSource :
 		RGBAColor specularColor_;
 
 		/// Light intensity.
-		Scalar intensity_;
+		Scalar intensity_ = 1;
 
 		/// The transformation type of this light source.
 		TransformationType transformationType_ = TT_PARENT;
 
 		/// Determines whether the light is enabled.
-		bool enabled_;
+		bool enabled_ = true;
 };
 
 }

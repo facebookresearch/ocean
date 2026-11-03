@@ -98,10 +98,10 @@ class OCEAN_RENDERING_GI_EXPORT GICone :
 	protected:
 
 		/// Holds the height of this cone.
-		Scalar coneHeight;
+		Scalar coneHeight = 1;
 
 		/// Holds the radius of this cone.
-		Scalar coneRadius;
+		Scalar coneRadius = 1;
 };
 
 }

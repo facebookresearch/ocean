@@ -211,8 +211,7 @@ TracingMesh::Octree::~Octree()
 	}
 }
 
-TracingMesh::TracingMesh() :
-	tracingOctree(nullptr)
+TracingMesh::TracingMesh()
 {
 	// nothing to do here
 }

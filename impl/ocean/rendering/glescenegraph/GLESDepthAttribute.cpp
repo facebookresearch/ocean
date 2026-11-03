@@ -19,10 +19,7 @@ namespace GLESceneGraph
 GLESDepthAttribute::GLESDepthAttribute() :
 	GLESAttribute(),
 	DepthAttribute(),
-	testingEnabled_(true),
-	writingEnabled_(true),
-	depthFunction_(FUNCTION_LESS),
-	glesDepthFunction(GL_LESS)
+	depthFunction_(FUNCTION_LESS)
 {
 	// nothing to do here
 }

@@ -18,8 +18,7 @@ namespace GlobalIllumination
 
 GINode::GINode() :
 	GIObject(),
-	Node(),
-	nodeVisible(true)
+	Node()
 {
 	// nothing to do here
 }

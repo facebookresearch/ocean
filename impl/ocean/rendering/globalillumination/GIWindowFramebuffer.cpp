@@ -27,14 +27,7 @@ GIWindowFramebuffer::GIWindowFramebuffer(const Engine::GraphicAPI preferredGraph
 	GIFramebuffer(preferredGraphicAPI),
 	WindowFramebuffer()
 {
-
-#if defined(_WINDOWS)
-	windowHandle = nullptr;
-	windowDC = nullptr;
-#elif defined(__APPLE__)
-	windowView = nullptr;
-#endif
-
+	// nothing to do here
 }
 
 GIWindowFramebuffer::~GIWindowFramebuffer()

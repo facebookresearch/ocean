@@ -18,8 +18,7 @@ namespace GLESceneGraph
 
 GLESNode::GLESNode() :
 	GLESObject(),
-	Node(),
-	visible_(true)
+	Node()
 {
 	// nothing to do here
 }

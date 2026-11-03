@@ -25,8 +25,7 @@ namespace GlobalIllumination
 GISphere::GISphere() :
 	GIShape(),
 	GITriangleStrips(),
-	Sphere(),
-	sphereRadius(1)
+	Sphere()
 {
 	rebuildPrimitives();
 }

@@ -156,7 +156,7 @@ class OCEAN_RENDERING_GI_EXPORT TracingMesh : public TracingObject
 		TextureCoordinates tracingTextureCoordinates;
 
 		/// The octree used to improved the performance of the intersection determination process.
-		Octree* tracingOctree;
+		Octree* tracingOctree = nullptr;
 };
 
 }

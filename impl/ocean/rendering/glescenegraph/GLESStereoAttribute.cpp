@@ -20,9 +20,7 @@ namespace GLESceneGraph
 GLESStereoAttribute::GLESStereoAttribute() :
 	GLESAttribute(),
 	StereoAttribute(),
-	stereoVisibility_(SV_LEFT_AND_RIGHT),
-	previousCullFaceValue_(GL_TRUE),
-	previousCullFaceMode_(0)
+	stereoVisibility_(SV_LEFT_AND_RIGHT)
 {
 	// nothing to do here
 }

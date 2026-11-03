@@ -18,8 +18,7 @@ namespace GLESceneGraph
 
 GLESPerspectiveView::GLESPerspectiveView() :
 	GLESView(),
-	PerspectiveView(),
-	fovX_(Numeric::deg2rad(60))
+	PerspectiveView()
 {
 	calculateProjectionMatrix();
 }

@@ -23,9 +23,7 @@ GLESPrimitiveAttribute::GLESPrimitiveAttribute() :
 	PrimitiveAttribute(),
 	faceMode_(MODE_DEFAULT),
 	cullingMode_(CULLING_BACK),
-	glesCullingMode_(GL_BACK),
-	lightingMode_(LM_SINGLE_SIDE_LIGHTING),
-	unbindNecessary_(false)
+	lightingMode_(LM_SINGLE_SIDE_LIGHTING)
 {
 	// nothing to do here
 }

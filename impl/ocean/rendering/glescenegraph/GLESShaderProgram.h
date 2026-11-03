@@ -361,7 +361,7 @@ class OCEAN_RENDERING_GLES_EXPORT GLESShaderProgram :
 	protected:
 
 		/// OpenGL ES shader program id.
-		GLuint id_;
+		GLuint id_ = 0;
 
 		/// The type of the shader program.
 		ProgramType programType_;

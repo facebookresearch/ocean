@@ -23,9 +23,7 @@ GLESMaterial::GLESMaterial() :
 	ambientColor_(0.2f, 0.2f, 0.2f),
 	diffuseColor_(0.8f, 0.8f, 0.8f),
 	emissiveColor_(0, 0, 0),
-	specularColor_(0, 0, 0),
-	specularExponent_(0.0f),
-	transparency_(0.0f)
+	specularColor_(0, 0, 0)
 {
 	// nothing to do here
 }

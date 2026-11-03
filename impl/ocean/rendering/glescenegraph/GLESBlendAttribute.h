@@ -103,10 +103,10 @@ class OCEAN_RENDERING_GLES_EXPORT GLESBlendAttribute :
 		BlendingFunction attributeDestinationBlendingFunction;
 
 		/// OpenGL ES source blending value.
-		GLenum attributeGLESSourceBlendingFunction;
+		GLenum attributeGLESSourceBlendingFunction = GL_SRC_ALPHA;
 
 		/// OpenGL ES destination blending value.
-		GLenum attributeGLESDestinationBlendingFunction;
+		GLenum attributeGLESDestinationBlendingFunction = GL_ONE_MINUS_SRC_ALPHA;
 };
 
 }

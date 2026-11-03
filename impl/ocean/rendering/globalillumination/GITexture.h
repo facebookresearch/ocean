@@ -122,8 +122,6 @@ class OCEAN_RENDERING_GI_EXPORT GITexture :
 		/// Texture magnification filter mode.
 		MagFilterMode textureMagnificationFilterMode;
 
-		/// Flag determining whether the texture should be a mipmap texture.
-		bool textureShouldUseMipmaps;
 
 		/// The name of the texture, actually not used.
 		std::string textureName_ = std::string("texture");

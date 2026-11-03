@@ -23,9 +23,7 @@ namespace GlobalIllumination
 GICone::GICone() :
 	GIShape(),
 	GITriangles(),
-	Cone(),
-	coneHeight(1),
-	coneRadius(1)
+	Cone()
 {
 	rebuildPrimitives();
 }

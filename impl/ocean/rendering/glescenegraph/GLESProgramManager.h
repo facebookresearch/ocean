@@ -113,7 +113,7 @@ class OCEAN_RENDERING_GLES_EXPORT GLESProgramManager : public Singleton<GLESProg
 #ifdef OCEAN_DEBUG
 
 		/// State determining whether this manager has been released.
-		bool debugReleased_;
+		bool debugReleased_ = false;
 
 #endif // OCEAN_DEBUG
 

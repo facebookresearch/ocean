@@ -24,7 +24,6 @@ namespace GLESceneGraph
 {
 
 GLESPhantomAttribute::GLESPhantomAttribute() :
-	phantomMode(PM_INVALID),
 	phantomBackgroundColor(0.0f, 0.0f, 0.0f)
 {
 	registerDynamicUpdateObject();

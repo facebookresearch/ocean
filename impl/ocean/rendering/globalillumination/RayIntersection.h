@@ -131,10 +131,10 @@ class RayIntersection
 		TextureCoordinate intersectionTextureCoordinate;
 
 		/// Intersection distance.
-		Scalar intersectionDistance;
+		Scalar intersectionDistance = Numeric::maxValue();
 
 		/// Renderable object.
-		const TracingObject* intersectionTracingObject;
+		const TracingObject* intersectionTracingObject = nullptr;
 
 		/// Light sources.
 		LightSources intersectionLightSources;
@@ -144,9 +144,7 @@ inline RayIntersection::RayIntersection() :
 	intersectionPosition(0, 0, 0),
 	intersectionDirection(0, 0, 0),
 	intersectionNormal(0, 0, 0),
-	intersectionTextureCoordinate(0, 0),
-	intersectionDistance(Numeric::maxValue()),
-	intersectionTracingObject(nullptr)
+	intersectionTextureCoordinate(0, 0)
 {
 	// nothing to do here
 }

@@ -19,9 +19,7 @@ namespace GLESceneGraph
 GLESSpotLight::GLESSpotLight() :
 	GLESPointLight(),
 	SpotLight(),
-	direction_(Vector3(0, 0, -1)),
-	coneAngle_(Numeric::deg2rad(45)),
-	spotExponent_(0)
+	direction_(Vector3(0, 0, -1))
 {
 	// nothing to do here
 }

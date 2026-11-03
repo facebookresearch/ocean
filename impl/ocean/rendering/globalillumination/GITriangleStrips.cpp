@@ -22,9 +22,7 @@ namespace GlobalIllumination
 
 GITriangleStrips::GITriangleStrips() :
 	GIPrimitive(),
-	TriangleStrips(),
-	triangleStripsNumberStrips(0),
-	triangleStripsNumberIndices(0)
+	TriangleStrips()
 {
 	// nothing to do here
 }

@@ -29,11 +29,7 @@ GIView::GIView() :
 	viewProjectionMatrix(false),
 	viewMatrix(true),
 	invertedViewMatrix(true),
-	viewAspectRatio(1),
-	viewNearDistance(Scalar(0.01)),
-	viewFarDistance(Scalar(1000)),
-	viewBackgroundColor(0, 0, 0),
-	viewUseHeadlight(true)
+	viewBackgroundColor(0, 0, 0)
 {
 	setUseHeadlight(true);
 

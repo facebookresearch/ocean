@@ -103,13 +103,13 @@ class OCEAN_RENDERING_GLES_EXPORT GLESPrimitiveAttribute :
 		CullingMode cullingMode_;
 
 		/// OpenGL ES culling mode.
-		GLenum glesCullingMode_;
+		GLenum glesCullingMode_ = GL_BACK;
 
 		/// Two sided lighting state.
 		LightingMode lightingMode_;
 
 		/// True, if a parameter unbind is necessary.
-		bool unbindNecessary_;
+		bool unbindNecessary_ = false;
 };
 
 }

@@ -22,11 +22,7 @@ GIMaterial::GIMaterial() :
 	materialAmbientColor(0.2f, 0.2f, 0.2f),
 	materialDiffuseColor(0.8f, 0.8f, 0.8f),
 	materialEmissiveColor(0, 0, 0),
-	materialSpecularColor(0, 0, 0),
-	materialSpecularExponent(0),
-	materialTransparency(0),
-	materialReflectivity(0),
-	materialRefractionIndex(1)
+	materialSpecularColor(0, 0, 0)
 {
 	// nothing to do here
 }

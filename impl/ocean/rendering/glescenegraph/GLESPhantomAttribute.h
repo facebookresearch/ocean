@@ -85,8 +85,6 @@ class GLESPhantomAttribute :
 		/// Timestamp of the last color change.
 		Timestamp phantomColorTimestamp;
 
-		/// Phantom mode.
-		unsigned int phantomMode;
 
 		/// Currently set background color; used for PM_COLOR
 		RGBAColor phantomBackgroundColor;

@@ -22,8 +22,7 @@ GLESTexture::GLESTexture() :
 	transformation_(true),
 	environmentMode_(MODE_REPLACE),
 	minificationFilterMode_(MIN_MODE_LINEAR),
-	magnificationFilterMode_(MAG_MODE_LINEAR),
-	useMipmap_(false)
+	magnificationFilterMode_(MAG_MODE_LINEAR)
 {
 	// nothing to do here
 }

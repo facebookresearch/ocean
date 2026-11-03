@@ -21,10 +21,7 @@ GLESLightSource::GLESLightSource() :
 	LightSource(),
 	ambientColor_(0, 0, 0),
 	diffuseColor_(1, 1, 1),
-	specularColor_(1, 1, 1),
-	intensity_(1),
-	transformationType_(TT_PARENT),
-	enabled_(true)
+	specularColor_(1, 1, 1)
 {
 	//  nothing to do here
 }

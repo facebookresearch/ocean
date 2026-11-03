@@ -166,10 +166,10 @@ class OCEAN_RENDERING_GLES_EXPORT GLESMaterial :
 		RGBAColor specularColor_;
 
 		/// Specular exponent.
-		float specularExponent_;
+		float specularExponent_ = 0.0f;
 
 		/// Transparency value, with range [0, 1]
-		float transparency_;
+		float transparency_ = 0.0f;
 };
 
 }

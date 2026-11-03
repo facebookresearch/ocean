@@ -23,12 +23,7 @@ namespace GlobalIllumination
 GICylinder::GICylinder() :
 	GIShape(),
 	GITriangleStrips(),
-	Cylinder(),
-	cylinderHeight(1),
-	cylinderRadius(1),
-	cylinderTop(true),
-	cylinderSide(true),
-	cylinderBottom(true)
+	Cylinder()
 {
 	rebuildPrimitives();
 }

@@ -36,7 +36,6 @@ namespace GLESceneGraph
 {
 
 GLESShaderProgram::GLESShaderProgram() :
-	id_(0),
 	programType_(PT_UNKNOWN)
 {
 	// nothing to do here

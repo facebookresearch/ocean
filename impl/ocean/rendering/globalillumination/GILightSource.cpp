@@ -21,9 +21,7 @@ GILightSource::GILightSource() :
 	LightSource(),
 	lightAmbientColor(0, 0, 0),
 	lightDiffuseColor(1, 1, 1),
-	lightSpecularColor(1, 1, 1),
-	lightIntensity(1),
-	lightEnabled(true)
+	lightSpecularColor(1, 1, 1)
 {
 	//  nothing to do here
 }

@@ -218,16 +218,16 @@ class OCEAN_RENDERING_GI_EXPORT GIMaterial :
 		RGBAColor materialSpecularColor;
 
 		/// Specular exponent.
-		float materialSpecularExponent;
+		float materialSpecularExponent = 0.0f;
 
 		/// Transparency value.
-		float materialTransparency;
+		float materialTransparency = 0.0f;
 
 		/// Specular exponent.
-		float materialReflectivity;
+		float materialReflectivity = 0.0f;
 
 		/// Transparency value.
-		float materialRefractionIndex;
+		float materialRefractionIndex = 1.0f;
 };
 
 inline const RGBAColor& GIMaterial::ambientColorInline() const

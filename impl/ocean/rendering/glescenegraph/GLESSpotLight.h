@@ -13,6 +13,8 @@
 
 #include "ocean/rendering/SpotLight.h"
 
+#include "ocean/math/Numeric.h"
+
 namespace Ocean
 {
 
@@ -94,10 +96,10 @@ class OCEAN_RENDERING_GLES_EXPORT GLESSpotLight :
 		Vector3 direction_;
 
 		/// Light cone angle.
-		Scalar coneAngle_;
+		Scalar coneAngle_ = Numeric::deg2rad(45);
 
 		/// Light spot exponent.
-		Scalar spotExponent_;
+		Scalar spotExponent_ = 0;
 };
 
 }

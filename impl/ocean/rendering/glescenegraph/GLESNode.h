@@ -77,7 +77,7 @@ class OCEAN_RENDERING_GLES_EXPORT GLESNode :
 	protected:
 
 		/// True, if the node and all child nodes are visible.
-		bool visible_;
+		bool visible_ = true;
 };
 
 }

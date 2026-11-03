@@ -13,6 +13,8 @@
 
 #include "ocean/rendering/SpotLight.h"
 
+#include "ocean/math/Numeric.h"
+
 namespace Ocean
 {
 
@@ -113,13 +115,13 @@ class OCEAN_RENDERING_GI_EXPORT GISpotLight :
 		Vector3 lightDirection;
 
 		/// Light cone angle.
-		Scalar lightConeAngle;
+		Scalar lightConeAngle = Numeric::deg2rad(45);
 
 		/// Cosine of the light cone angle.
-		Scalar lightConeAngleCos;
+		Scalar lightConeAngleCos = Numeric::cos(lightConeAngle);
 
 		/// Light spot exponent.
-		Scalar lightSpotExponent;
+		Scalar lightSpotExponent = 0;
 };
 
 inline Scalar GISpotLight::coneAngleCos() const

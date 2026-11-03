@@ -13,6 +13,8 @@
 
 #include "ocean/rendering/PerspectiveView.h"
 
+#include "ocean/math/Numeric.h"
+
 namespace Ocean
 {
 
@@ -79,7 +81,7 @@ class OCEAN_RENDERING_GLES_EXPORT GLESPerspectiveView :
 	protected:
 
 		/// The view's horizontal field of view in radian, with range (0, PI)
-		Scalar fovX_;
+		Scalar fovX_ = Numeric::deg2rad(60);
 };
 
 }

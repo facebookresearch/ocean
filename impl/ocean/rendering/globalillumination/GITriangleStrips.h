@@ -79,10 +79,10 @@ class OCEAN_RENDERING_GI_EXPORT GITriangleStrips :
 	protected:
 
 		/// Number of strip elements.
-		unsigned int triangleStripsNumberStrips;
+		unsigned int triangleStripsNumberStrips = 0u;
 
 		/// Number of indices for all strips.
-		unsigned int triangleStripsNumberIndices;
+		unsigned int triangleStripsNumberIndices = 0u;
 };
 
 }

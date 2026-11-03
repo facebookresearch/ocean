@@ -92,7 +92,7 @@ class OCEAN_RENDERING_GI_EXPORT GISphere :
 	private:
 
 		/// Radius of this sphere
-		Scalar sphereRadius;
+		Scalar sphereRadius = 1;
 };
 
 }

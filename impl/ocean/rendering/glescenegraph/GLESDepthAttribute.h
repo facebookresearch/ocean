@@ -104,16 +104,16 @@ class OCEAN_RENDERING_GLES_EXPORT GLESDepthAttribute :
 	protected:
 
 		/// True, to enable depth buffer testing.
-		bool testingEnabled_;
+		bool testingEnabled_ = true;
 
 		/// True, to enable depth buffer writing.
-		bool writingEnabled_;
+		bool writingEnabled_ = true;
 
 		/// Depth function value.
 		DepthFunction depthFunction_;
 
 		/// OpenGL ES depth function value.
-		GLenum glesDepthFunction;
+		GLenum glesDepthFunction = GL_LESS;
 };
 
 }

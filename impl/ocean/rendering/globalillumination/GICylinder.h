@@ -116,19 +116,19 @@ class OCEAN_RENDERING_GI_EXPORT GICylinder :
 	protected:
 
 		/// Holds the height of this cylinder.
-		Scalar cylinderHeight;
+		Scalar cylinderHeight = 1;
 
 		/// Holds the radius of this cylinder.
-		Scalar cylinderRadius;
+		Scalar cylinderRadius = 1;
 
 		/// Holds the state whether the top face is visible.
-		bool cylinderTop;
+		bool cylinderTop = true;
 
 		/// Holds the state whether the side face is visible.
-		bool cylinderSide;
+		bool cylinderSide = true;
 
 		/// Holds the state whether the bottom face is visible.
-		bool cylinderBottom;
+		bool cylinderBottom = true;
 };
 
 }

@@ -31,7 +31,6 @@ namespace GlobalIllumination
 GIFramebuffer::GIFramebuffer(const Engine::GraphicAPI preferredGraphicAPI) :
 	Framebuffer(),
 	preferredGraphicAPI_(preferredGraphicAPI),
-	antialiasingEnabled_(false),
 	lightingModes_(Lighting::LM_SHADING_FULL)
 {
 	// nothing to do here

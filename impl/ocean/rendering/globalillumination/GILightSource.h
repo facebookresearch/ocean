@@ -175,10 +175,10 @@ class OCEAN_RENDERING_GI_EXPORT GILightSource :
 		RGBAColor lightSpecularColor;
 
 		/// Light intensity.
-		Scalar lightIntensity;
+		Scalar lightIntensity = 1;
 
 		/// Determines whether the light is enabled.
-		bool lightEnabled;
+		bool lightEnabled = true;
 };
 
 inline const RGBAColor& GILightSource::ambientColorInline() const

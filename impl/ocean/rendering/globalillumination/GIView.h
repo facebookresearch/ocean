@@ -169,19 +169,19 @@ class OCEAN_RENDERING_GI_EXPORT GIView :
 		HomogenousMatrix4 invertedViewMatrix;
 
 		/// View aspect ratio defined by (width / height).
-		Scalar viewAspectRatio;
+		Scalar viewAspectRatio = 1;
 
 		/// View near clipping plane.
-		Scalar viewNearDistance;
+		Scalar viewNearDistance = Scalar(0.01);
 
 		/// View far clipping plane.
-		Scalar viewFarDistance;
+		Scalar viewFarDistance = Scalar(1000);
 
 		/// Holds the view background color.
 		RGBAColor viewBackgroundColor;
 
 		/// Determines whether the headlight is enabled.
-		bool viewUseHeadlight;
+		bool viewUseHeadlight = true;
 
 		/// View headlight object.
 		LightSourceRef viewHeadlight;

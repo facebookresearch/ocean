@@ -100,15 +100,15 @@ class OCEAN_RENDERING_GI_EXPORT GIWindowFramebuffer :
 #if defined(_WINDOWS)
 
 		/// Handle of this window.
-		HWND windowHandle;
+		HWND windowHandle = nullptr;
 
 		/// Device context of this window.
-		HDC windowDC;
+		HDC windowDC = nullptr;
 
 #elif defined(__APPLE__)
 
 		/// The view object of this window.
-		void* windowView;
+		void* windowView = nullptr;
 
 #endif
 

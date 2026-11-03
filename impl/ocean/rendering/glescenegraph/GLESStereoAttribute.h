@@ -76,10 +76,10 @@ class OCEAN_RENDERING_GLES_EXPORT GLESStereoAttribute :
 		StereoVisibility stereoVisibility_;
 
 		/// The previous cull face value, will be used to restore the previous state when unbinding.
-		GLboolean previousCullFaceValue_;
+		GLboolean previousCullFaceValue_ = GL_TRUE;
 
 		/// The previous cull face mode, will be used to restore the previous state when unbinding.
-		GLint previousCullFaceMode_;
+		GLint previousCullFaceMode_ = 0;
 };
 
 }

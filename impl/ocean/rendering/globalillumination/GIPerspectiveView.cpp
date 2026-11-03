@@ -18,8 +18,7 @@ namespace GlobalIllumination
 
 GIPerspectiveView::GIPerspectiveView() :
 	GIView(),
-	PerspectiveView(),
-	viewFovX(Numeric::deg2rad(60))
+	PerspectiveView()
 {
 	calculateProjectionMatrix();
 }

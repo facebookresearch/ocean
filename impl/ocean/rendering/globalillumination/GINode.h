@@ -71,7 +71,7 @@ class OCEAN_RENDERING_GI_EXPORT GINode :
 	protected:
 
 		/// Specifies whether this frame is visible.
-		bool nodeVisible;
+		bool nodeVisible = true;
 };
 
 }

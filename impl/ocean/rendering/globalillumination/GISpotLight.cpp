@@ -19,10 +19,7 @@ namespace GlobalIllumination
 GISpotLight::GISpotLight() :
 	GIPointLight(),
 	SpotLight(),
-	lightDirection(Vector3(0, 0, -1)),
-	lightConeAngle(Numeric::deg2rad(45)),
-	lightConeAngleCos(Numeric::cos(Numeric::deg2rad(45))),
-	lightSpotExponent(0)
+	lightDirection(Vector3(0, 0, -1))
 {
 	// nothing to do here
 }
