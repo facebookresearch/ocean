@@ -56,15 +56,15 @@ BoundingBox GITriangleStrips::boundingBox() const
 	BoundingBox boundingBox;
 	const Vertices vertices(vertexSet_->vertices());
 
-	for (VertexIndexGroups::const_iterator i = primitiveStrips.begin(); i != primitiveStrips.end(); ++i)
+	for (const VertexIndices& primitiveStrip : primitiveStrips)
 	{
-		const VertexIndices& indices = *i;
+		const VertexIndices& indices = primitiveStrip;
 
-		for (VertexIndices::const_iterator n = indices.begin(); n != indices.end(); ++n)
+		for (const VertexIndex& index : indices)
 		{
-			ocean_assert(*n < vertices.size());
+			ocean_assert(index < vertices.size());
 
-			boundingBox += vertices[*n];
+			boundingBox += vertices[index];
 		}
 	}
 

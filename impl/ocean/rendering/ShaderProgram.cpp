@@ -21,9 +21,9 @@ ShaderProgram::ShaderProgram() :
 
 ShaderProgram::~ShaderProgram()
 {
-	for (Textures::const_iterator i = shaderProgramTextures.begin(); i != shaderProgramTextures.end(); ++i)
+	for (const TextureRef& shaderProgramTexture : shaderProgramTextures)
 	{
-		unregisterThisObjectAsParent(*i);
+		unregisterThisObjectAsParent(shaderProgramTexture);
 	}
 }
 

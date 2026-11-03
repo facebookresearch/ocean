@@ -119,9 +119,9 @@ HomogenousMatrices4 X3DEnvironmentalSensorNode::sensorTransformations() const
 	HomogenousMatrices4 transformations;
 	const NodeRefs parents(parentNodes());
 
-	for (NodeRefs::const_iterator i = parents.begin(); i != parents.end(); ++i)
+	for (const NodeRef& parentRef : parents)
 	{
-		const SDXNodeRef parent(*i);
+		const SDXNodeRef parent(parentRef);
 		ocean_assert(parent);
 
 		const Rendering::NodeRef parentNode(parent->renderingObject());

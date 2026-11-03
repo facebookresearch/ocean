@@ -232,9 +232,9 @@ void GIFramebuffer::render()
 	const WorkerPool::ScopedWorker scopedWorker(WorkerPool::get().scopedWorker());
 
 	TracingGroup tracingGroup;
-	for (Scenes::const_iterator i = framebufferScenes.begin(); i != framebufferScenes.end(); ++i)
+	for (const SceneRef& framebufferScene : framebufferScenes)
 	{
-		SmartObjectRef<GIScene> scene(*i);
+		SmartObjectRef<GIScene> scene(framebufferScene);
 		ocean_assert(scene);
 
 		scene->buildTracing(tracingGroup, HomogenousMatrix4(true), lightSources);

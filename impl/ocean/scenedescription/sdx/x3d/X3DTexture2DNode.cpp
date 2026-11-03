@@ -125,11 +125,11 @@ void X3DTexture2DNode::applyUrl(const StringVector& resolvedURLs, const Media::F
 	bool shouldUseReplace = false;
 
 	const NodeRefs parents(parentNodes());
-	for (NodeRefs::const_iterator i = parents.begin(); i != parents.end(); ++i)
+	for (const NodeRef& parent : parents)
 	{
-		ocean_assert(*i);
+		ocean_assert(parent);
 
-		if ((*i)->hasField("material") && (*i)->field<SingleNode>("material").value())
+		if ((parent)->hasField("material") && (parent)->field<SingleNode>("material").value())
 		{
 			shouldUseModulate = true;
 		}

@@ -222,9 +222,9 @@ void GLESVertexSet::bindVertexSet(const GLuint programId)
 	bufferTextureCoordinates3D_.bind(programId, nullptr);
 	bufferColors_.bind(programId, nullptr);
 
-	for (VertexBufferObjectMap::const_iterator iObject = customVertexBufferObjectMap_.cbegin(); iObject != customVertexBufferObjectMap_.cend(); ++iObject)
+	for (const VertexBufferObjectMap::value_type& pair : customVertexBufferObjectMap_)
 	{
-		iObject->second->bind(programId);
+		pair.second->bind(programId);
 	}
 
 	const GLint locationUsePerVertexColors = glGetUniformLocation(programId, "usePerVertexColors");

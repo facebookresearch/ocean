@@ -181,9 +181,9 @@ void GLESWindowFramebuffer::render()
 
 		traverser_.clear();
 
-		for (Scenes::const_iterator i = framebufferScenes.begin(); i != framebufferScenes.end(); ++i)
+		for (const SceneRef& framebufferScene : framebufferScenes)
 		{
-			const SmartObjectRef<GLESScene> glesScene(*i);
+			const SmartObjectRef<GLESScene> glesScene(framebufferScene);
 			ocean_assert(glesScene);
 
 			Lights lights;

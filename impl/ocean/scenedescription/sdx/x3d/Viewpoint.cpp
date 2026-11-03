@@ -56,9 +56,9 @@ Timestamp Viewpoint::onPreUpdate(const Rendering::ViewRef& view, const Timestamp
 
 	const NodeRefs parents(parentNodes());
 
-	for (NodeRefs::const_iterator i = parents.begin(); i != parents.end(); ++i)
+	for (const NodeRef& parent : parents)
 	{
-		SDXNodeRef sdxNode(*i);
+		SDXNodeRef sdxNode(parent);
 		ocean_assert(sdxNode);
 
 		const Rendering::NodeRef renderingNode(sdxNode->renderingObject());

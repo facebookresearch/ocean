@@ -175,9 +175,9 @@ void X3DLightNode::registerLight(bool willBeGlobal)
 
 			const NodeRefs parents(parentNodes());
 
-			for (NodeRefs::const_iterator i = parents.begin(); i != parents.end(); ++i)
+			for (const NodeRef& parentRef : parents)
 			{
-				const SDXNodeRef parent(*i);
+				const SDXNodeRef parent(parentRef);
 				ocean_assert(parent);
 
 				const Rendering::GroupRef parentGroup(parent->renderingObject());
@@ -210,9 +210,9 @@ void X3DLightNode::unregisterLight(const bool wasGlobal)
 		{
 			const NodeRefs parents(parentNodes());
 
-			for (NodeRefs::const_iterator i = parents.begin(); i != parents.end(); ++i)
+			for (const NodeRef& parentRef : parents)
 			{
-				SDXNodeRef parent(*i);
+				SDXNodeRef parent(parentRef);
 				ocean_assert(parent);
 
 				const Rendering::GroupRef parentGroup(parent->renderingObject());

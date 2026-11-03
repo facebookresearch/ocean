@@ -387,13 +387,13 @@ bool Manager::registerLibrary(const std::string& name)
 
 	// first we check whether the library has been registered already
 
-	for (Libraries::iterator i = libraries_.begin(); i != libraries_.end(); ++i)
+	for (LibraryCounterPair& library : libraries_)
 	{
-		ocean_assert(i->first);
+		ocean_assert(library.first);
 
-		if (i->first->name() == name)
+		if (library.first->name() == name)
 		{
-			++i->second;
+			++library.second;
 			return false;
 		}
 	}

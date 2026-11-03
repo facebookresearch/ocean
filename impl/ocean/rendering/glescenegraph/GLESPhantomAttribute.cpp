@@ -142,9 +142,9 @@ void GLESPhantomAttribute::onDynamicUpdate(const ViewRef& view, const Timestamp 
 		attributePhantomMode = mode;
 
 		const ObjectRefs parents = parentObjects();
-		for (ObjectRefs::const_iterator i = parents.begin(); i != parents.end(); ++i)
+		for (const ObjectRef& parent : parents)
 		{
-			const SmartObjectRef<GLESAttributeSet> attributeSet(*i);
+			const SmartObjectRef<GLESAttributeSet> attributeSet(parent);
 
 			if (attributeSet)
 			{

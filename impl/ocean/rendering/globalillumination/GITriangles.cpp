@@ -55,15 +55,15 @@ BoundingBox GITriangles::boundingBox() const
 	BoundingBox boundingBox;
 	const Vertices vertices(vertexSet_->vertices());
 
-	for (TriangleFaces::const_iterator i = trianglesFaces.begin(); i != trianglesFaces.end(); ++i)
+	for (const TriangleFace& trianglesFace : trianglesFaces)
 	{
-		ocean_assert(i->index(0) < vertices.size());
-		ocean_assert(i->index(1) < vertices.size());
-		ocean_assert(i->index(2) < vertices.size());
+		ocean_assert(trianglesFace.index(0) < vertices.size());
+		ocean_assert(trianglesFace.index(1) < vertices.size());
+		ocean_assert(trianglesFace.index(2) < vertices.size());
 
-		boundingBox += vertices[i->index(0)];
-		boundingBox += vertices[i->index(1)];
-		boundingBox += vertices[i->index(2)];
+		boundingBox += vertices[trianglesFace.index(0)];
+		boundingBox += vertices[trianglesFace.index(1)];
+		boundingBox += vertices[trianglesFace.index(2)];
 	}
 
 	return boundingBox;

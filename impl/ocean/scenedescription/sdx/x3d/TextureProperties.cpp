@@ -67,9 +67,9 @@ void TextureProperties::onInitialize(const Rendering::SceneRef& scene, const Tim
 	{
 		const NodeRefs parents(parentNodes());
 
-		for (NodeRefs::const_iterator i = parents.begin(); i != parents.end(); ++i)
+		for (const NodeRef& parentRef : parents)
 		{
-			const SDXNodeRef parent(*i);
+			const SDXNodeRef parent(parentRef);
 			ocean_assert(parent);
 
 			Rendering::TextureRef texture(parent->renderingObject());
@@ -135,9 +135,9 @@ void TextureProperties::onFieldChanged(const std::string& fieldName)
 		{
 			const NodeRefs parents(parentNodes());
 
-			for (NodeRefs::const_iterator i = parents.begin(); i != parents.end(); ++i)
+			for (const NodeRef& parentRef : parents)
 			{
-				const SDXNodeRef parent(*i);
+				const SDXNodeRef parent(parentRef);
 				ocean_assert(parent);
 
 				Rendering::TextureRef texture(parent->renderingObject());

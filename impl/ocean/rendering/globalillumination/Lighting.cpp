@@ -42,9 +42,9 @@ bool Lighting::dampedLight(const Vector3& viewPosition, const Vector3& viewObjec
 
 	if (lightingModes & LM_SHADING_LAMBERT)
 	{
-		for (LightSources::const_iterator i = lightSources.begin(); i != lightSources.end(); ++i)
+		for (const LightPair& lightSource : lightSources)
 		{
-			ocean_assert(i->first);
+			ocean_assert(lightSource.first);
 
 			Scalar attenuationFactor = 0;
 			Scalar lightObjectDistance = 0;
@@ -52,14 +52,14 @@ bool Lighting::dampedLight(const Vector3& viewPosition, const Vector3& viewObjec
 			Vector3 lightPosition;
 			Vector3 lightObjectDirection;
 
-			switch (i->first->type())
+			switch (lightSource.first->type())
 			{
 				case Object::TYPE_POINT_LIGHT:
 				{
-					const SmartObjectRef<GIPointLight> pointLight(i->first);
+					const SmartObjectRef<GIPointLight> pointLight(lightSource.first);
 					ocean_assert(pointLight);
 
-					lightPosition = i->second * pointLight->positionInline();
+					lightPosition = lightSource.second * pointLight->positionInline();
 					lightObjectDirection = objectPosition - lightPosition;
 					lightObjectDistance = lightObjectDirection.length();
 
@@ -76,10 +76,10 @@ bool Lighting::dampedLight(const Vector3& viewPosition, const Vector3& viewObjec
 
 				case Object::TYPE_SPOT_LIGHT:
 				{
-					const SmartObjectRef<GISpotLight> spotLight(i->first);
+					const SmartObjectRef<GISpotLight> spotLight(lightSource.first);
 					ocean_assert(spotLight);
 
-					lightPosition = i->second * spotLight->positionInline();
+					lightPosition = lightSource.second * spotLight->positionInline();
 					lightObjectDirection = objectPosition - lightPosition;
 					lightObjectDistance = lightObjectDirection.length();
 
@@ -90,7 +90,7 @@ bool Lighting::dampedLight(const Vector3& viewPosition, const Vector3& viewObjec
 
 					lightObjectDirection /= lightObjectDistance;
 
-					Vector3 lightDirection = i->second.rotationMatrix() * spotLight->directionInline();
+					Vector3 lightDirection = lightSource.second.rotationMatrix() * spotLight->directionInline();
 
 					if (lightObjectDistance > Numeric::eps() && lightDirection.normalize())
 					{
@@ -112,7 +112,7 @@ bool Lighting::dampedLight(const Vector3& viewPosition, const Vector3& viewObjec
 
 			ocean_assert(lightObjectDistance > 0);
 
-			const RGBAColor dampingFactors(lightDampingFactors(lightPosition, lightObjectDirection, lightObjectDistance, i->first->diffuseColorInline(), root, lightingModes).damped(float(attenuationFactor)));
+			const RGBAColor dampingFactors(lightDampingFactors(lightPosition, lightObjectDirection, lightObjectDistance, lightSource.first->diffuseColorInline(), root, lightingModes).damped(float(attenuationFactor)));
 			if (dampingFactors.isBlack())
 			{
 				continue;
@@ -121,7 +121,7 @@ bool Lighting::dampedLight(const Vector3& viewPosition, const Vector3& viewObjec
 			RGBAColor diffuse(0, 0, 0);
 			RGBAColor specular(0, 0, 0);
 
-			if (directLight(viewObjectDirection, objectPosition, objectNormal, lightObjectDirection, i->first->diffuseColorInline() * material->diffuseColorInline(), i->first->specularColorInline() * material->specularColorInline(), material->specularExponentInline(), lightingModes, diffuse, specular))
+			if (directLight(viewObjectDirection, objectPosition, objectNormal, lightObjectDirection, lightSource.first->diffuseColorInline() * material->diffuseColorInline(), lightSource.first->specularColorInline() * material->specularColorInline(), material->specularExponentInline(), lightingModes, diffuse, specular))
 			{
 				diffuseColor.combine(diffuse * dampingFactors);
 				specularColor.combine(specular * dampingFactors);

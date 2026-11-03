@@ -110,9 +110,9 @@ void Framebuffer::addScene(const SceneRef& scene)
 
 #ifdef OCEAN_DEBUG
 
-	for (Scenes::const_iterator i = framebufferScenes.begin(); i != framebufferScenes.end(); ++i)
+	for (const SceneRef& framebufferScene : framebufferScenes)
 	{
-		ocean_assert(*i != scene);
+		ocean_assert(framebufferScene != scene);
 	}
 
 #endif
@@ -146,9 +146,9 @@ void Framebuffer::clearScenes()
 {
 	const ScopedLock scopedLock(objectLock_);
 
-	for (Scenes::const_iterator i = framebufferScenes.begin(); i != framebufferScenes.end(); ++i)
+	for (const SceneRef& framebufferScene : framebufferScenes)
 	{
-		unregisterThisObjectAsParent(*i);
+		unregisterThisObjectAsParent(framebufferScene);
 	}
 
 	framebufferScenes.clear();

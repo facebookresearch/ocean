@@ -181,9 +181,9 @@ bool Material::onFieldChanging(const std::string& fieldName, const Field& field)
 				{
 					const NodeRefs parents(parentNodes());
 
-					for (NodeRefs::const_iterator i = parents.begin(); i != parents.end(); ++i)
+					for (const NodeRef& parent : parents)
 					{
-						const SmartObjectRef<Appearance, Node> appearance(*i);
+						const SmartObjectRef<Appearance, Node> appearance(parent);
 
 						if (appearance)
 						{

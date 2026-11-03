@@ -259,9 +259,9 @@ void GLESFramebuffer::render()
 			glesUndistortedBackground->addToTraverser(*this, glesView->projectionMatrix(), view_T_world, lights, traverser_);
 		}
 
-		for (Scenes::const_iterator i = framebufferScenes.begin(); i != framebufferScenes.end(); ++i)
+		for (const SceneRef& framebufferScene : framebufferScenes)
 		{
-			const SmartObjectRef<GLESScene> glesScene(*i);
+			const SmartObjectRef<GLESScene> glesScene(framebufferScene);
 			ocean_assert(glesScene);
 
 			lights.clear();
@@ -303,9 +303,9 @@ bool GLESFramebuffer::intersection(const Line3& ray, RenderableRef& renderable, 
 		glesUndistortedBackground->addToTraverser(*this, glesView->projectionMatrix(), ray_T_world, lights, traverser_);
 	}
 
-	for (Scenes::const_iterator i = framebufferScenes.begin(); i != framebufferScenes.end(); ++i)
+	for (const SceneRef& framebufferScene : framebufferScenes)
 	{
-		const SmartObjectRef<GLESScene> glesScene(*i);
+		const SmartObjectRef<GLESScene> glesScene(framebufferScene);
 		ocean_assert(glesScene);
 
 		glesScene->addToTraverser(*this, glesView->projectionMatrix(), ray_T_world, lights, traverser_);

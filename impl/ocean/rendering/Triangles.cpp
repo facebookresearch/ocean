@@ -56,9 +56,9 @@ bool Triangles::createTriangleMesh(const Vertices& vertices, const TriangleFaces
 	triangleNormals.reserve(faces.size() * 3);
 	triangleFaces.reserve(faces.size());
 
-	for (TriangleFaces::const_iterator i = faces.begin(); i != faces.end(); ++i)
+	for (const TriangleFace& face : faces)
 	{
-		if (i->index(0) >= vertices.size() || i->index(1) >= vertices.size() || i->index(2) >= vertices.size())
+		if (face.index(0) >= vertices.size() || face.index(1) >= vertices.size() || face.index(2) >= vertices.size())
 		{
 			if (skipIrregularTriangles)
 			{
@@ -68,9 +68,9 @@ bool Triangles::createTriangleMesh(const Vertices& vertices, const TriangleFaces
 			return false;
 		}
 
-		const Vertex& vertex0 = vertices[i->index(0)];
-		const Vertex& vertex1 = vertices[i->index(1)];
-		const Vertex& vertex2 = vertices[i->index(2)];
+		const Vertex& vertex0 = vertices[face.index(0)];
+		const Vertex& vertex1 = vertices[face.index(1)];
+		const Vertex& vertex2 = vertices[face.index(2)];
 
 		Vector3 normal((vertex1 - vertex0).cross(vertex2 - vertex0));
 

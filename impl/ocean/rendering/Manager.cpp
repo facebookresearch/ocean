@@ -119,9 +119,9 @@ void Manager::registerEngine(const std::string& engineName, const Engine::Create
 	const ScopedLock scopedLock(lock_);
 
 #ifdef OCEAN_DEBUG
-	for (EngineMap::const_iterator i = engineMap_.begin(); i != engineMap_.end(); ++i)
+	for (const EngineMap::value_type& pair : engineMap_)
 	{
-		ocean_assert(i->second.name() != engineName);
+		ocean_assert(pair.second.name() != engineName);
 	}
 #endif
 
@@ -158,11 +158,11 @@ void Manager::onRemoveEngine(const Engine* engine)
 
 	const ScopedLock scopedLock(lock_);
 
-	for (EngineMap::iterator i = engineMap_.begin(); i != engineMap_.end(); ++i)
+	for (EngineMap::value_type& pair : engineMap_)
 	{
-		if (i->second.name() == engine->engineName())
+		if (pair.second.name() == engine->engineName())
 		{
-			i->second.release();
+			pair.second.release();
 			return;
 		}
 	}
@@ -174,9 +174,9 @@ void Manager::release()
 {
 	const ScopedLock scopedLock(lock_);
 
-	for (EngineMap::iterator i = engineMap_.begin(); i != engineMap_.end(); ++i)
+	for (EngineMap::value_type& pair : engineMap_)
 	{
-		ocean_assert(i->second.isNull());
+		ocean_assert_and_suppress_unused(pair.second.isNull(), pair);
 	}
 
 	engineMap_.clear();

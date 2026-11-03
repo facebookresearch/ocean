@@ -23,9 +23,9 @@ TracingMesh::Octree::Octree(const VertexIndices& indices, const TracingMesh& mes
 {
 	ocean_assert(!indices.empty());
 
-	for (VertexIndices::const_iterator i = indices.begin(); i != indices.end(); ++i)
+	for (const VertexIndex& index : indices)
 	{
-		const Triangle3& triangle = mesh.tracingTriangles[*i];
+		const Triangle3& triangle = mesh.tracingTriangles[index]; // NOLINT(facebook-hte-ParameterUncheckedArrayBounds)
 		octreeBoundingBox += triangle.point0();
 		octreeBoundingBox += triangle.point1();
 		octreeBoundingBox += triangle.point2();
@@ -54,9 +54,9 @@ TracingMesh::Octree::Octree(const VertexIndices& indices, const TracingMesh& mes
 				{
 					newIndices.clear();
 
-					for (VertexIndices::const_iterator i = indices.begin(); i != indices.end(); ++i)
+					for (const VertexIndex& index : indices)
 					{
-						const Triangle3& triangle = mesh.tracingTriangles[*i];
+						const Triangle3& triangle = mesh.tracingTriangles[index]; // NOLINT(facebook-hte-ParameterUncheckedArrayBounds)
 
 						if ((xArea == 0u && triangle.point0().x() <= center.x() && triangle.point1().x() <= center.x() && triangle.point2().x() <= center.x())
 									|| (xArea == 1u && (triangle.point0().x() > center.x() || triangle.point1().x() > center.x() || triangle.point2().x() > center.x())))
@@ -67,7 +67,7 @@ TracingMesh::Octree::Octree(const VertexIndices& indices, const TracingMesh& mes
 								if ((zArea == 0u && triangle.point0().z() <= center.z() && triangle.point1().z() <= center.z() && triangle.point2().z() <= center.z())
 											|| (zArea == 1u && (triangle.point0().z() > center.z() || triangle.point1().z() > center.z() || triangle.point2().z() > center.z())))
 								{
-									newIndices.push_back(*i);
+									newIndices.push_back(index);
 								}
 							}
 						}
@@ -123,16 +123,16 @@ void TracingMesh::Octree::findNearestIntersection(const Line3& ray, const Tracin
 		Vector3 intersectionBarycentric;
 		Scalar intersectionDistance;
 
-		for (VertexIndices::const_iterator i = octreeIndices.begin(); i != octreeIndices.end(); ++i)
+		for (const VertexIndex& octreeIndex : octreeIndices)
 		{
-			ocean_assert(*i < mesh.tracingTriangles.size());
-			const Triangle3& triangle = mesh.tracingTriangles[*i];
+			ocean_assert(octreeIndex < mesh.tracingTriangles.size());
+			const Triangle3& triangle = mesh.tracingTriangles[octreeIndex];
 
 			if (triangle.intersection(ray, intersectionPoint, intersectionBarycentric, intersectionDistance) && intersectionDistance > eps && intersectionDistance < intersection.distance())
 			{
-				const Normal& normal0 = mesh.tracingNormals[*i * 3 + 0];
-				const Normal& normal1 = mesh.tracingNormals[*i * 3 + 1];
-				const Normal& normal2 = mesh.tracingNormals[*i * 3 + 2];
+				const Normal& normal0 = mesh.tracingNormals[octreeIndex * 3 + 0]; // NOLINT(facebook-hte-ParameterUncheckedArrayBounds)
+				const Normal& normal1 = mesh.tracingNormals[octreeIndex * 3 + 1];
+				const Normal& normal2 = mesh.tracingNormals[octreeIndex * 3 + 2];
 
 				const Normal normal((normal0 * intersectionBarycentric[0] + normal1 * intersectionBarycentric[1] + normal2 * intersectionBarycentric[2]).normalizedOrZero());
 				ocean_assert(Numeric::isEqual(normal.length(), 1));
@@ -145,9 +145,9 @@ void TracingMesh::Octree::findNearestIntersection(const Line3& ray, const Tracin
 
 					if (!mesh.tracingTextureCoordinates.empty())
 					{
-						const TextureCoordinate& coordinate0 = mesh.tracingTextureCoordinates[*i * 3 + 0];
-						const TextureCoordinate& coordinate1 = mesh.tracingTextureCoordinates[*i * 3 + 1];
-						const TextureCoordinate& coordinate2 = mesh.tracingTextureCoordinates[*i * 3 + 2];
+						const TextureCoordinate& coordinate0 = mesh.tracingTextureCoordinates[octreeIndex * 3 + 0];
+						const TextureCoordinate& coordinate1 = mesh.tracingTextureCoordinates[octreeIndex * 3 + 1];
+						const TextureCoordinate& coordinate2 = mesh.tracingTextureCoordinates[octreeIndex * 3 + 2];
 
 						textureCoordinate = coordinate0 * intersectionBarycentric[0] + coordinate1 * intersectionBarycentric[1] + coordinate2 * intersectionBarycentric[2];
 					}
@@ -187,10 +187,10 @@ bool TracingMesh::Octree::hasIntersection(const Line3& ray, const TracingMesh& m
 		}
 		else
 		{
-			for (VertexIndices::const_iterator i = octreeIndices.begin(); i != octreeIndices.end(); ++i)
+			for (const VertexIndex& octreeIndex : octreeIndices)
 			{
-				ocean_assert(*i < mesh.tracingTriangles.size());
-				const Triangle3& triangle = mesh.tracingTriangles[*i];
+				ocean_assert(octreeIndex < mesh.tracingTriangles.size());
+				const Triangle3& triangle = mesh.tracingTriangles[octreeIndex]; // NOLINT(facebook-hte-ParameterUncheckedArrayBounds)
 
 				if (triangle.intersection(ray, intersectionPoint, intersectionDistance) && intersectionDistance < maximalDistance)
 				{
@@ -240,11 +240,11 @@ void TracingMesh::setTriangles(const Vertices& vertices, const Normals& normals,
 
 	if (normals.empty())
 	{
-		for (TriangleFaces::const_iterator i = faces.begin(); i != faces.end(); ++i)
+		for (const TriangleFace& face : faces)
 		{
-			const unsigned int index0 = i->index(0);
-			const unsigned int index1 = i->index(1);
-			const unsigned int index2 = i->index(2);
+			const unsigned int index0 = face.index(0);
+			const unsigned int index1 = face.index(1);
+			const unsigned int index2 = face.index(2);
 
 			ocean_assert(index0 < vertices.size());
 			ocean_assert(index1 < vertices.size());
@@ -280,11 +280,11 @@ void TracingMesh::setTriangles(const Vertices& vertices, const Normals& normals,
 	{
 		const SquareMatrix3 invertedTransposed(objectTransformation.rotationMatrix().inverted().transposed());
 
-		for (TriangleFaces::const_iterator i = faces.begin(); i != faces.end(); ++i)
+		for (const TriangleFace& face : faces)
 		{
-			const unsigned int index0 = i->index(0);
-			const unsigned int index1 = i->index(1);
-			const unsigned int index2 = i->index(2);
+			const unsigned int index0 = face.index(0);
+			const unsigned int index1 = face.index(1);
+			const unsigned int index2 = face.index(2);
 
 			ocean_assert(index0 < vertices.size());
 			ocean_assert(index1 < vertices.size());
@@ -300,9 +300,9 @@ void TracingMesh::setTriangles(const Vertices& vertices, const Normals& normals,
 
 			tracingTriangles.emplace_back(vertex0, vertex1, vertex2);
 
-			ocean_assert(i->index(0) < normals.size());
-			ocean_assert(i->index(1) < normals.size());
-			ocean_assert(i->index(2) < normals.size());
+			ocean_assert(face.index(0) < normals.size());
+			ocean_assert(face.index(1) < normals.size());
+			ocean_assert(face.index(2) < normals.size());
 
 			const Normal normal0((invertedTransposed * normals[index0]).normalizedOrZero());
 			const Normal normal1((invertedTransposed * normals[index1]).normalizedOrZero());
@@ -350,12 +350,12 @@ void TracingMesh::setTriangleStrips(const Vertices& vertices, const Normals& nor
 
 	if (normals.empty())
 	{
-		for (VertexIndexGroups::const_iterator i = indicesSet.begin(); i != indicesSet.end(); ++i)
+		for (const VertexIndices& index : indicesSet)
 		{
-			const VertexIndices& indices = *i;
+			const VertexIndices& indices = index;
 			ocean_assert(indices.size() >= 3);
 
-			for (size_t n = 2; n < i->size(); n += 2)
+			for (size_t n = 2; n < index.size(); n += 2)
 			{
 				size_t take0 = n - 2;
 				size_t take1 = n - 1;
@@ -394,7 +394,7 @@ void TracingMesh::setTriangleStrips(const Vertices& vertices, const Normals& nor
 					tracingTextureCoordinates.push_back(textureCoordinates[index2]);
 				}
 
-				if (n + 1 >= i->size())
+				if (n + 1 >= index.size())
 				{
 					break;
 				}
@@ -442,12 +442,12 @@ void TracingMesh::setTriangleStrips(const Vertices& vertices, const Normals& nor
 	{
 		const SquareMatrix3 invertedTransposed(objectTransformation.rotationMatrix().inverted().transposed());
 
-		for (VertexIndexGroups::const_iterator i = indicesSet.begin(); i != indicesSet.end(); ++i)
+		for (const VertexIndices& index : indicesSet)
 		{
-			const VertexIndices& indices = *i;
+			const VertexIndices& indices = index;
 			ocean_assert(indices.size() >= 3);
 
-			for (size_t n = 2; n < i->size(); n += 2)
+			for (size_t n = 2; n < index.size(); n += 2)
 			{
 				size_t take0 = n - 2;
 				size_t take1 = n - 1;
@@ -493,7 +493,7 @@ void TracingMesh::setTriangleStrips(const Vertices& vertices, const Normals& nor
 					tracingTextureCoordinates.push_back(textureCoordinates[index2]);
 				}
 
-				if (n + 1 >= i->size())
+				if (n + 1 >= index.size())
 				{
 					break;
 				}

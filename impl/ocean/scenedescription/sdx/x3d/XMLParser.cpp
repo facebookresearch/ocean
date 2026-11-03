@@ -211,9 +211,9 @@ NodeRef XMLParser::parseNode(const tinyxml2::XMLElement* xmlNode)
 				const std::string useName(xmlAttribute->Value());
 				const NodeRefs nodes(scene_->environment()->library()->nodes(useName));
 
-				for (NodeRefs::const_iterator i = nodes.begin(); i != nodes.end(); ++i)
+				for (const NodeRef& node : nodes)
 				{
-					SDXNodeRef localNode(*i);
+					SDXNodeRef localNode(node);
 					ocean_assert(localNode);
 
 					if (localNode->sceneId() == scene_->sceneId())

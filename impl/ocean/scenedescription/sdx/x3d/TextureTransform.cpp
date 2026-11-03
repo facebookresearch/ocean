@@ -111,9 +111,9 @@ void TextureTransform::applyTextureTransform()
 
 	const NodeRefs parents(parentNodes());
 
-	for (NodeRefs::const_iterator i = parents.begin(); i != parents.end(); ++i)
+	for (const NodeRef& parentRef : parents)
 	{
-		const SDXNodeRef parent(*i);
+		const SDXNodeRef parent(parentRef);
 		ocean_assert(parent);
 
 		if (parent->type() == "Appearance")
@@ -143,9 +143,9 @@ void TextureTransform::applyTextureTransform()
 				{
 					const NodeRefs multiTextureTransformParents(parent->parentNodes());
 
-					for (NodeRefs::const_iterator iM = multiTextureTransformParents.begin(); iM != multiTextureTransformParents.end(); ++iM)
+					for (const NodeRef& m : multiTextureTransformParents)
 					{
-						const SDXNodeRef multiTextureParent(*iM);
+						const SDXNodeRef multiTextureParent(m);
 						ocean_assert(multiTextureParent);
 
 						if (multiTextureParent->type() == "Appearance")

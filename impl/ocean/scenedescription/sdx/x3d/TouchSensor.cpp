@@ -136,9 +136,9 @@ bool TouchSensor::isSiblingNode(const Rendering::ObjectId objectId) const
 
 	const NodeRefs parents(parentNodes());
 
-	for (NodeRefs::const_iterator i = parents.begin(); i != parents.end(); ++i)
+	for (const NodeRef& parent : parents)
 	{
-		const SmartObjectRef<X3DGroupingNode, Node> group(*i);
+		const SmartObjectRef<X3DGroupingNode, Node> group(parent);
 
 		if (group)
 		{
@@ -149,7 +149,7 @@ bool TouchSensor::isSiblingNode(const Rendering::ObjectId objectId) const
 		}
 		else
 		{
-			const SmartObjectRef<Inline, Node> inlineNode(*i);
+			const SmartObjectRef<Inline, Node> inlineNode(parent);
 
 			if (inlineNode)
 			{
