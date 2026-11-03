@@ -136,12 +136,12 @@ bool TestNonLinearOptimizationLine::testOptimizeLineIdeal(const unsigned int num
 			outlierIndices.insert(RandomI::random(randomGenerator, numberPoints - 1u));
 		}
 
-		for (IndexSet32::const_iterator i = outlierIndices.begin(); i != outlierIndices.end(); ++i)
+		for (const Index32& outlierIndex : outlierIndices)
 		{
 			const Scalar outlierScale = Random::scalar(randomGenerator, Scalar(0.5), 1000);
 			const Scalar outlierSign = Random::sign(randomGenerator);
 
-			linePoints[*i] = line.nearestPoint(linePoints[*i]) + line.normal() * environmentRadius * outlierScale * outlierSign;
+			linePoints[outlierIndex] = line.nearestPoint(linePoints[outlierIndex]) + line.normal() * environmentRadius * outlierScale * outlierSign;
 		}
 
 		const Scalar offsetAngle = Random::scalar(randomGenerator, Numeric::deg2rad(5), Numeric::deg2rad(20));
@@ -242,12 +242,12 @@ bool TestNonLinearOptimizationLine::testOptimizeLineNoisy(const unsigned int num
 			outlierIndices.insert(RandomI::random(randomGenerator, numberPoints - 1u));
 		}
 
-		for (IndexSet32::const_iterator i = outlierIndices.begin(); i != outlierIndices.end(); ++i)
+		for (const Index32& outlierIndex : outlierIndices)
 		{
 			const Scalar outlierScale = Random::scalar(randomGenerator, Scalar(0.5), 1000);
 			const Scalar outlierSign = Random::sign(randomGenerator);
 
-			linePoints[*i] = line.nearestPoint(linePoints[*i]) + line.normal() * environmentRadius * outlierScale * outlierSign;
+			linePoints[outlierIndex] = line.nearestPoint(linePoints[outlierIndex]) + line.normal() * environmentRadius * outlierScale * outlierSign;
 		}
 
 		const Scalar offsetAngle = Random::scalar(randomGenerator, Numeric::deg2rad(5), Numeric::deg2rad(20));

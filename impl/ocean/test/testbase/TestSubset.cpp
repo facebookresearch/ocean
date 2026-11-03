@@ -277,9 +277,9 @@ bool TestSubset::testSubset(const double testDuration)
 
 			int value = -1;
 
-			for (Strings::const_iterator i = strings.begin(); i != strings.end(); ++i)
+			for (const std::string& string : strings)
 			{
-				OCEAN_EXPECT_TRUE(validation, String::isInteger32(*i, &value) && value >= 0 && subsetIndicesSet.find(TIndex(value)) != subsetIndicesSet.end());
+				OCEAN_EXPECT_TRUE(validation, String::isInteger32(string, &value) && value >= 0 && subsetIndicesSet.find(TIndex(value)) != subsetIndicesSet.end());
 			}
 		}
 		{
@@ -289,9 +289,9 @@ bool TestSubset::testSubset(const double testDuration)
 
 			int value = -1;
 
-			for (Strings::const_iterator i = strings.begin(); i != strings.end(); ++i)
+			for (const std::string& string : strings)
 			{
-				OCEAN_EXPECT_TRUE(validation, String::isInteger32(*i, &value) && value >= 0 && subsetIndicesSet.find(TIndex(value)) != subsetIndicesSet.end());
+				OCEAN_EXPECT_TRUE(validation, String::isInteger32(string, &value) && value >= 0 && subsetIndicesSet.find(TIndex(value)) != subsetIndicesSet.end());
 			}
 		}
 		{
@@ -301,9 +301,9 @@ bool TestSubset::testSubset(const double testDuration)
 
 			int value = -1;
 
-			for (Strings::const_iterator i = strings.begin(); i != strings.end(); ++i)
+			for (const std::string& string : strings)
 			{
-				OCEAN_EXPECT_TRUE(validation, String::isInteger32(*i, &value) && value >= 0 && subsetIndicesSet.find(TIndex(value)) != subsetIndicesSet.end());
+				OCEAN_EXPECT_TRUE(validation, String::isInteger32(string, &value) && value >= 0 && subsetIndicesSet.find(TIndex(value)) != subsetIndicesSet.end());
 			}
 		}
 		{
@@ -313,9 +313,9 @@ bool TestSubset::testSubset(const double testDuration)
 
 			int value = -1;
 
-			for (Strings::const_iterator i = strings.begin(); i != strings.end(); ++i)
+			for (const std::string& string : strings)
 			{
-				OCEAN_EXPECT_TRUE(validation, String::isInteger32(*i, &value) && value >= 0 && subsetIndicesSet.find(TIndex(value)) != subsetIndicesSet.end());
+				OCEAN_EXPECT_TRUE(validation, String::isInteger32(string, &value) && value >= 0 && subsetIndicesSet.find(TIndex(value)) != subsetIndicesSet.end());
 			}
 		}
 		{
@@ -325,9 +325,9 @@ bool TestSubset::testSubset(const double testDuration)
 
 			int value = -1;
 
-			for (Strings::const_iterator i = strings.begin(); i != strings.end(); ++i)
+			for (const std::string& string : strings)
 			{
-				OCEAN_EXPECT_TRUE(validation, String::isInteger32(*i, &value) && value >= 0 && subsetIndicesSet.find(TIndex(value)) != subsetIndicesSet.end());
+				OCEAN_EXPECT_TRUE(validation, String::isInteger32(string, &value) && value >= 0 && subsetIndicesSet.find(TIndex(value)) != subsetIndicesSet.end());
 			}
 		}
 
@@ -470,9 +470,9 @@ bool TestSubset::testInvertedSubset(const double testDuration)
 
 			int value = -1;
 
-			for (Strings::const_iterator i = strings.begin(); i != strings.end(); ++i)
+			for (const std::string& string : strings)
 			{
-				OCEAN_EXPECT_TRUE(validation, String::isInteger32(*i, &value) && value >= 0 && invertedSubsetIndicesSet.find(TIndex(value)) != invertedSubsetIndicesSet.end());
+				OCEAN_EXPECT_TRUE(validation, String::isInteger32(string, &value) && value >= 0 && invertedSubsetIndicesSet.find(TIndex(value)) != invertedSubsetIndicesSet.end());
 			}
 		}
 
@@ -483,9 +483,9 @@ bool TestSubset::testInvertedSubset(const double testDuration)
 
 			int value = -1;
 
-			for (Strings::const_iterator i = strings.begin(); i != strings.end(); ++i)
+			for (const std::string& string : strings)
 			{
-				OCEAN_EXPECT_TRUE(validation, String::isInteger32(*i, &value) && value >= 0 && invertedSubsetIndicesSet.find(TIndex(value)) != invertedSubsetIndicesSet.end());
+				OCEAN_EXPECT_TRUE(validation, String::isInteger32(string, &value) && value >= 0 && invertedSubsetIndicesSet.find(TIndex(value)) != invertedSubsetIndicesSet.end());
 			}
 		}
 

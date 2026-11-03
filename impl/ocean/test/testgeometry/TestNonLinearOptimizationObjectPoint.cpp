@@ -582,9 +582,9 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPoints
 		Box3 objectVolume(perfectObjectPoints);
 		const Scalar objectDimension = objectVolume.diagonal() * Scalar(0.01);
 
-		for (Vectors3::const_iterator i = perfectObjectPoints.begin(); i != perfectObjectPoints.end(); ++i)
+		for (const Vector3& perfectObjectPoint : perfectObjectPoints)
 		{
-			const Vector3 randomObjectPoint(*i + Random::vector3(randomGenerator, -objectDimension, objectDimension));
+			const Vector3 randomObjectPoint(perfectObjectPoint + Random::vector3(randomGenerator, -objectDimension, objectDimension));
 			objectPoints.push_back(randomObjectPoint);
 		}
 
@@ -641,10 +641,10 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPoints
 		for (unsigned int n = 0u; n < numberObjectPoints; ++n)
 		{
 			const IndexSet32 outlierSet(Utilities::randomIndices(numberPoses, numberOutliers, &randomGenerator));
-			for (IndexSet32::const_iterator i = outlierSet.begin(); i != outlierSet.end(); ++i)
+			for (const Index32& outlier : outlierSet)
 			{
 				const Vector2 outlierNoise(Random::gaussianNoiseVector2(randomGenerator, 100, 100));
-				imagePoints[*i * numberObjectPoints + n] += outlierNoise;
+				imagePoints[outlier * numberObjectPoints + n] += outlierNoise;
 			}
 		}
 
@@ -847,9 +847,9 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointF
 		}
 
 		const IndexSet32 outlierSet(Utilities::randomIndices(numberPoses, numberOutliers, &randomGenerator));
-		for (IndexSet32::const_iterator i = outlierSet.begin(); i != outlierSet.end(); ++i)
+		for (const Index32& outlier : outlierSet)
 		{
-			imagePoints[*i] = Random::vector2(randomGenerator, Scalar(5), Scalar(fisheyeCamera.width() - 5u), Scalar(5), Scalar(fisheyeCamera.height() - 5u));
+			imagePoints[outlier] = Random::vector2(randomGenerator, Scalar(5), Scalar(fisheyeCamera.width() - 5u), Scalar(5), Scalar(fisheyeCamera.height() - 5u));
 		}
 
 		performance.start();
@@ -1026,9 +1026,9 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointA
 		}
 
 		const IndexSet32 outlierSet(Utilities::randomIndices(numberPoses, numberOutliers, &randomGenerator));
-		for (IndexSet32::const_iterator i = outlierSet.begin(); i != outlierSet.end(); ++i)
+		for (const Index32& outlier : outlierSet)
 		{
-			imagePoints[*i] = Random::vector2(randomGenerator, Scalar(5), Scalar(anyCamera.width() - 5u), Scalar(5), Scalar(anyCamera.height() - 5u));
+			imagePoints[outlier] = Random::vector2(randomGenerator, Scalar(5), Scalar(anyCamera.width() - 5u), Scalar(5), Scalar(anyCamera.height() - 5u));
 		}
 
 		performance.start();
@@ -2243,9 +2243,9 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationTwoPosesObje
 
 		Vectors3 objectPoints;
 
-		for (Vectors3::const_iterator i = perfectObjectPoints.begin(); i != perfectObjectPoints.end(); ++i)
+		for (const Vector3& perfectObjectPoint : perfectObjectPoints)
 		{
-			const Vector3 randomObjectPoint(*i + Random::vector3(randomGenerator, -objectDimension, objectDimension));
+			const Vector3 randomObjectPoint(perfectObjectPoint + Random::vector3(randomGenerator, -objectDimension, objectDimension));
 			objectPoints.push_back(randomObjectPoint);
 		}
 
@@ -2343,10 +2343,10 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationTwoPosesObje
 		const HomogenousMatrix4 faultyPose1(faultyTranslation1, faultyRotation1);
 
 		const IndexSet32 outlierSet(Utilities::randomIndices(numberObjectPoints, numberOutliers, &randomGenerator));
-		for (IndexSet32::const_iterator i = outlierSet.begin(); i != outlierSet.end(); ++i)
+		for (const Index32& outlier : outlierSet)
 		{
-			imagePoints0[*i] += Random::gaussianNoiseVector2(randomGenerator, 100, 100);
-			imagePoints1[*i] += Random::gaussianNoiseVector2(randomGenerator, 100, 100);
+			imagePoints0[outlier] += Random::gaussianNoiseVector2(randomGenerator, 100, 100);
+			imagePoints1[outlier] += Random::gaussianNoiseVector2(randomGenerator, 100, 100);
 		}
 
 		Vectors3 optimizedObjectPoints(objectPoints.size());

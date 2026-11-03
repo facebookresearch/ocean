@@ -218,12 +218,12 @@ bool TestNonLinearOptimizationPlane::testOptimizePlaneIdeal(const unsigned int n
 		while (outlierIndices.size() < outliers)
 			outlierIndices.insert(RandomI::random(randomGenerator, numberPoints - 1u));
 
-		for (IndexSet32::const_iterator i = outlierIndices.begin(); i != outlierIndices.end(); ++i)
+		for (const Index32& outlierIndex : outlierIndices)
 		{
 			const Scalar randomScalar = Random::scalar(randomGenerator, 0.5, 1000);
 			const Scalar randomSign = Random::sign(randomGenerator);
 
-			planePoints[*i] = plane.projectOnPlane(planePoints[*i]) + plane.normal() * environmentRadius * randomScalar * randomSign;
+			planePoints[outlierIndex] = plane.projectOnPlane(planePoints[outlierIndex]) + plane.normal() * environmentRadius * randomScalar * randomSign;
 		}
 
 		const Quaternion planeOrientationOffset(Random::euler(randomGenerator, Numeric::deg2rad(5), Numeric::deg2rad(20)));
@@ -313,12 +313,12 @@ bool TestNonLinearOptimizationPlane::testOptimizePlaneNoisy(const unsigned int n
 		while (outlierIndices.size() < outliers)
 			outlierIndices.insert(RandomI::random(randomGenerator, numberPoints - 1u));
 
-		for (IndexSet32::const_iterator i = outlierIndices.begin(); i != outlierIndices.end(); ++i)
+		for (const Index32& outlierIndex : outlierIndices)
 		{
 			const Scalar randomScalar = Random::scalar(randomGenerator, 0.5, 1000);
 			const Scalar randomSign = Random::sign(randomGenerator);
 
-			planePoints[*i] = plane.projectOnPlane(planePoints[*i]) + plane.normal() * environmentRadius * randomScalar * randomSign;
+			planePoints[outlierIndex] = plane.projectOnPlane(planePoints[outlierIndex]) + plane.normal() * environmentRadius * randomScalar * randomSign;
 		}
 
 		performance.start();
@@ -532,10 +532,10 @@ bool TestNonLinearOptimizationPlane::testOptimizePosesOnePlane(const unsigned in
 			if (n == 0u)
 			{
 				Vectors2 imagePoints;
-				for (Vectors3::const_iterator i = volumeObjectPoints.begin(); i != volumeObjectPoints.end(); ++i)
+				for (const Vector3& volumeObjectPoint : volumeObjectPoints)
 				{
-					const Vector2 imagePoint(pinholeCamera.projectToImage<true>(initialPose, *i, pinholeCamera.hasDistortionParameters()));
-					const Line3 ray(pinholeCamera.ray(pinholeCamera.projectToImage<true>(initialPose, *i, false), initialPose));
+					const Vector2 imagePoint(pinholeCamera.projectToImage<true>(initialPose, volumeObjectPoint, pinholeCamera.hasDistortionParameters()));
+					const Line3 ray(pinholeCamera.ray(pinholeCamera.projectToImage<true>(initialPose, volumeObjectPoint, false), initialPose));
 
 					Vector3 objectPoint(0, 0, 0);
 
@@ -555,9 +555,9 @@ bool TestNonLinearOptimizationPlane::testOptimizePosesOnePlane(const unsigned in
 				const HomogenousMatrix4 faultyPose(Utilities::viewPosition(pinholeCamera, volumeObjectPoints, Quaternion(Random::euler(randomGenerator, Numeric::deg2rad(30))) * viewingDirection));
 
 				Vectors2 imagePoints;
-				for (Vectors3::const_iterator i = planeObjectPoints.begin(); i != planeObjectPoints.end(); ++i)
+				for (const Vector3& planeObjectPoint : planeObjectPoints)
 				{
-					const Vector2 imagePoint(pinholeCamera.projectToImage<true>(pose, *i, pinholeCamera.hasDistortionParameters()));
+					const Vector2 imagePoint(pinholeCamera.projectToImage<true>(pose, planeObjectPoint, pinholeCamera.hasDistortionParameters()));
 					imagePoints.push_back(imagePoint);
 				}
 

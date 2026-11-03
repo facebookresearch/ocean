@@ -266,12 +266,12 @@ bool TestNonLinearOptimizationPose::testNonLinearOptimizationPosePinholeCamera(c
 		}
 
 		const IndexSet32 outlierSet(Utilities::randomIndices(correspondences - 1, numberOutliers, &randomGenerator));
-		for (IndexSet32::const_iterator i = outlierSet.begin(); i != outlierSet.end(); ++i)
+		for (const Index32& outlier : outlierSet)
 		{
 			const Scalar outlierNoiseX = Random::gaussianNoise(randomGenerator, 100);
 			const Scalar outlierNoiseY = Random::gaussianNoise(randomGenerator, 100);
 			const Vector2 outlierNoise(outlierNoiseX, outlierNoiseY);
-			imagePoints[*i] += outlierNoise;
+			imagePoints[outlier] += outlierNoise;
 		}
 
 		const Vector3 errorTranslation(Random::vector3(randomGenerator, Scalar(-0.1), Scalar(0.1)));
@@ -555,9 +555,9 @@ bool TestNonLinearOptimizationPose::testNonLinearOptimizationPoseAnyCamera(const
 			}
 
 			const IndexSet32 outlierSet(Utilities::randomIndices(correspondences - 1u, numberOutliers, &randomGenerator));
-			for (IndexSet32::const_iterator i = outlierSet.begin(); i != outlierSet.end(); ++i)
+			for (const Index32& outlier : outlierSet)
 			{
-				noisyImagePoints[*i] = Random::vector2(randomGenerator, 50, Scalar(anyCamera.width() - 50u), 50, Scalar(anyCamera.height() - 50u));
+				noisyImagePoints[outlier] = Random::vector2(randomGenerator, 50, Scalar(anyCamera.width() - 50u), 50, Scalar(anyCamera.height() - 50u));
 			}
 
 			const Vector3 errorTranslation(Random::vector3(randomGenerator, Scalar(-0.1), Scalar(0.1)));
@@ -849,12 +849,12 @@ bool TestNonLinearOptimizationPose::testNonLinearOptimizationPoseZoom(const Pinh
 		}
 
 		const IndexSet32 outlierSet(Utilities::randomIndices(correspondences - 1, numberOutliers, &randomGenerator));
-		for (IndexSet32::const_iterator i = outlierSet.begin(); i != outlierSet.end(); ++i)
+		for (const Index32& outlier : outlierSet)
 		{
 			const Scalar outlierNoiseX = Random::gaussianNoise(randomGenerator, 100);
 			const Scalar outlierNoiseY = Random::gaussianNoise(randomGenerator, 100);
 			const Vector2 outlierNoise(outlierNoiseX, outlierNoiseY);
-			imagePoints[*i] += outlierNoise;
+			imagePoints[outlier] += outlierNoise;
 		}
 
 		const Vector3 errorTranslation(Random::vector3(randomGenerator, Scalar(-0.1), Scalar(0.1)));

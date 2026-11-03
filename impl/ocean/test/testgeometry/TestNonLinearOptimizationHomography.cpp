@@ -377,13 +377,13 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationHomography(co
 
 		// add outliers to the right points
 		const IndexSet32 outlierSet(Utilities::randomIndices(correspondences - 1, numberOutliers, &randomGenerator));
-		for (IndexSet32::const_iterator i = outlierSet.begin(); i != outlierSet.end(); ++i)
+		for (const Index32& outlier : outlierSet)
 		{
 			const Scalar noiseX = Random::gaussianNoise(randomGenerator, 100);
 			const Scalar noiseY = Random::gaussianNoise(randomGenerator, 100);
 
 			const Vector2 outlierNoise(noiseX, noiseY);
-			pointsRightNoised[*i] += outlierNoise;
+			pointsRightNoised[outlier] += outlierNoise;
 		}
 
 		// creating a faulty pose of the right camera
@@ -559,13 +559,13 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationSimilarity(co
 
 		// add outliers to the right points
 		const IndexSet32 outlierSet(Utilities::randomIndices(correspondences - 1, numberOutliers, &randomGenerator));
-		for (IndexSet32::const_iterator i = outlierSet.begin(); i != outlierSet.end(); ++i)
+		for (const Index32& outlier : outlierSet)
 		{
 			const Scalar noiseX = Random::gaussianNoise(randomGenerator, 100);
 			const Scalar noiseY = Random::gaussianNoise(randomGenerator, 100);
 
 			const Vector2 outlierNoise(noiseX, noiseY);
-			pointsRightNoised[*i] += outlierNoise;
+			pointsRightNoised[outlier] += outlierNoise;
 		}
 
 		// creating a faulty pose of the right camera

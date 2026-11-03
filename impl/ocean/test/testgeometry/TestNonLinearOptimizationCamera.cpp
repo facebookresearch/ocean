@@ -226,10 +226,10 @@ bool TestNonLinearOptimizationCamera::testNonLinearOptimizationCamera(const unsi
 		}
 
 		const IndexSet32 outlierSet(Utilities::randomIndices(correspondences - 1u, numberOutliers));
-		for (IndexSet32::const_iterator i = outlierSet.begin(); i != outlierSet.end(); ++i)
+		for (const Index32& outlier : outlierSet)
 		{
 			const Vector2 outlierNoise(Random::gaussianNoise(100), Random::gaussianNoise(100));
-			imagePoints[*i] += outlierNoise;
+			imagePoints[outlier] += outlierNoise;
 		}
 
 		PinholeCamera initialCamera(pinholeCamera.width(), pinholeCamera.height(), Numeric::deg2rad(60));

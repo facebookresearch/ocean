@@ -681,9 +681,9 @@ bool TestRANSAC::testP3PZoom(const double testDuration)
 				outlierIndices.insert(RandomI::random(randomGenerator, (unsigned int)objectPoints.size() - 1u));
 			}
 
-			for (IndexSet32::const_iterator i = outlierIndices.begin(); i != outlierIndices.end(); ++i)
+			for (const Index32& outlierIndex : outlierIndices)
 			{
-				imagePoints[*i] = Random::vector2(randomGenerator, Scalar(0), Scalar(pinholeCamera.width()), Scalar(0), Scalar(pinholeCamera.height()));
+				imagePoints[outlierIndex] = Random::vector2(randomGenerator, Scalar(0), Scalar(pinholeCamera.width()), Scalar(0), Scalar(pinholeCamera.height()));
 			}
 
 			performance.start();
@@ -696,9 +696,9 @@ bool TestRANSAC::testP3PZoom(const double testDuration)
 				performance.stop();
 
 				Scalar maximalError = 0;
-				for (Indices32::const_iterator i = validIndices.begin(); i != validIndices.end(); ++i)
+				for (const Index32& validIndex : validIndices)
 				{
-					maximalError = max(maximalError, imagePoints[*i].distance(pinholeCamera.projectToImage<true>(pose, objectPoints[*i], pinholeCamera.hasDistortionParameters(), zoom)));
+					maximalError = max(maximalError, imagePoints[validIndex].distance(pinholeCamera.projectToImage<true>(pose, objectPoints[validIndex], pinholeCamera.hasDistortionParameters(), zoom)));
 				}
 
 				if (maximalError > 1.5 || validIndices.size() + outlierIndices.size() < objectPoints.size())

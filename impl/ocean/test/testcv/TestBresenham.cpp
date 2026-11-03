@@ -258,9 +258,9 @@ bool TestBresenham::testIntegerBorderIntersection(const double testDuration)
 			{
 				ocean_assert(line.distance(Vector2(Scalar(x0), Scalar(y0))) <= 2 && line.distance(Vector2(Scalar(x1), Scalar(y1))) <= 2);
 
-				for (CoordinateSet::const_iterator i = testIntersectionSet.begin(); i != testIntersectionSet.end(); ++i)
+				for (const Coordinate& testIntersection : testIntersectionSet)
 				{
-					ocean_assert(i->first >= borderLeft && i->first <= borderRight && i->second >= borderTop && i->second <= borderBottom);
+					ocean_assert_and_suppress_unused(testIntersection.first >= borderLeft && testIntersection.first <= borderRight && testIntersection.second >= borderTop && testIntersection.second <= borderBottom, testIntersection);
 				}
 
 				if (testIntersectionSet.size() == 0 || testIntersectionSet.size() > 2)
@@ -450,9 +450,9 @@ bool TestBresenham::testFloatBorderIntersection(const double testDuration)
 			{
 				ocean_assert(line.distance(Vector2(Scalar(x0), Scalar(y0))) <= Scalar(0.001) && line.distance(Vector2(Scalar(x1), Scalar(y1))) <= Scalar(0.001));
 
-				for (Vectors2::const_iterator i = testIntersections.begin(); i != testIntersections.end(); ++i)
+				for (const Vector2& testIntersection : testIntersections)
 				{
-					ocean_assert(i->x() >= borderLeft && i->x() <= borderRight && i->y() >= borderTop && i->y() <= borderBottom);
+					ocean_assert_and_suppress_unused(testIntersection.x() >= borderLeft && testIntersection.x() <= borderRight && testIntersection.y() >= borderTop && testIntersection.y() <= borderBottom, testIntersection);
 				}
 
 				if (testIntersections.size() != 2)

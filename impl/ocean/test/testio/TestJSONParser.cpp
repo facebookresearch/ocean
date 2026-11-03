@@ -1310,9 +1310,9 @@ bool TestJSONParser::compareJSONValues(Validation& validation, const IO::JSONPar
 			return false;
 		}
 
-		for (IO::JSONParser::JSONValue::ObjectMap::const_iterator expectedIt = expectedObject.begin(); expectedIt != expectedObject.end(); ++expectedIt)
+		for (const IO::JSONParser::JSONValue::ObjectMap::value_type& pair : expectedObject)
 		{
-			const IO::JSONParser::JSONValue::ObjectMap::const_iterator parsedIt = parsedObject.find(expectedIt->first);
+			const IO::JSONParser::JSONValue::ObjectMap::const_iterator parsedIt = parsedObject.find(pair.first);
 			OCEAN_EXPECT_TRUE(validation, parsedIt != parsedObject.end());
 
 			if (parsedIt == parsedObject.end())
@@ -1320,7 +1320,7 @@ bool TestJSONParser::compareJSONValues(Validation& validation, const IO::JSONPar
 				return false;
 			}
 
-			if (!compareJSONValues(validation, parsedIt->second, expectedIt->second))
+			if (!compareJSONValues(validation, parsedIt->second, pair.second))
 			{
 				return false;
 			}

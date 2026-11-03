@@ -1206,23 +1206,23 @@ bool TestNonMaximumSuppression::testCandidate(const double testDuration)
 
 		// the map is sorted by (y, x), so iterating adds candidates row by row in ascending x order
 
-		for (GroundTruthMap::const_iterator i = groundTruth.cbegin(); i != groundTruth.cend(); ++i)
+		for (const GroundTruthMap::value_type& pair : groundTruth)
 		{
-			nonMaximumSuppression.addCandidate(i->first.first, i->first.second, i->second);
+			nonMaximumSuppression.addCandidate(pair.first.first, pair.first.second, pair.second);
 		}
 
 		// verify that every inserted candidate can be found with the correct strength
 
-		for (GroundTruthMap::const_iterator i = groundTruth.cbegin(); i != groundTruth.cend(); ++i)
+		for (const GroundTruthMap::value_type& pair : groundTruth)
 		{
 			uint32_t strength = 0u;
-			const bool found = nonMaximumSuppression.candidate(i->first.first, i->first.second, strength);
+			const bool found = nonMaximumSuppression.candidate(pair.first.first, pair.first.second, strength);
 
 			OCEAN_EXPECT_TRUE(validation, found);
 
 			if (found)
 			{
-				OCEAN_EXPECT_EQUAL(validation, strength, i->second);
+				OCEAN_EXPECT_EQUAL(validation, strength, pair.second);
 			}
 		}
 

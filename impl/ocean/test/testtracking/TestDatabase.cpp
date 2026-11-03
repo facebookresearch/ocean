@@ -454,12 +454,12 @@ Tracking::Database TestDatabase::createDatabaseWithRandomTopology(RandomGenerato
 		databasePoseIds.insert(RandomI::random(randomGenerator, lowerPoseId, upperPoseId));
 	}
 
-	for (IndexSet32::const_iterator i = databasePoseIds.cbegin(); i != databasePoseIds.cend(); ++i)
+	for (const Index32& databasePoseId : databasePoseIds)
 	{
-		ocean_assert(*i >= lowerPoseId && *i <= upperPoseId);
+		ocean_assert(databasePoseId >= lowerPoseId && databasePoseId <= upperPoseId);
 
 		// we encode the id of the pose as x-translation of the pose
-		database.addPose<false>(*i, HomogenousMatrix4(Vector3(Scalar(*i), 0, 0)));
+		database.addPose<false>(databasePoseId, HomogenousMatrix4(Vector3(Scalar(databasePoseId), 0, 0)));
 	}
 
 	// now, we create our object points
@@ -479,9 +479,9 @@ Tracking::Database TestDatabase::createDatabaseWithRandomTopology(RandomGenerato
 
 	// now, we create our observations (image points in each pose), and we create the topology
 
-	for (IndexSet32::const_iterator iP = databasePoseIds.cbegin(); iP != databasePoseIds.cend(); ++ iP)
+	for (const Index32& p : databasePoseIds)
 	{
-		const Index32& poseId = *iP;
+		const Index32& poseId = p;
 
 		const unsigned int numberImagePoints = RandomI::random(randomGenerator, minimalNumberObservations, maximalNumberObservations);
 
