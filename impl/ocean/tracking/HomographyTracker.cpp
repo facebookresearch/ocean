@@ -125,9 +125,9 @@ bool HomographyTracker::trackPoints(const Frame& yPreviousFrame, const CV::Frame
 		}
 
 		previousContourStrongest.clear();
-		for (IndexSet32::const_iterator i = subsetIndexSet.begin(); i != subsetIndexSet.end(); ++i)
+		for (const Index32& subsetIndex : subsetIndexSet)
 		{
-			previousContourStrongest.emplace_back(previousPositions[*i]);
+			previousContourStrongest.emplace_back(previousPositions[subsetIndex]);
 		}
 
 		bool pointTrackingSucceeded = false;

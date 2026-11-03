@@ -40,9 +40,9 @@ Database::PoseImagePointTopologyGroups Database::objectPointTopology(const Topol
 	}
 	else
 	{
-		for (TopologyTriples::const_iterator i = topologyTriples.begin(); i != topologyTriples.end(); ++i)
+		for (const TopologyTriple& topologyTriple : topologyTriples)
 		{
-			const TopologyTriple& triple = *i;
+			const TopologyTriple& triple = topologyTriple;
 
 			Index32To32Map::const_iterator iI = objectPointId2Index.find(triple.objectPointId());
 			if (iI == objectPointId2Index.end())

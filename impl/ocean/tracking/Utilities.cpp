@@ -1354,9 +1354,9 @@ void Utilities::visualizeDatabase(const Database& database, const Index32 poseId
 
 	if (!transformation.isIdentity())
 	{
-		for (Vectors2::iterator i = imagePoints.begin(); i != imagePoints.end(); ++i)
+		for (Vector2& imagePoint : imagePoints)
 		{
-			*i = transformation * *i;
+			imagePoint = transformation * imagePoint;
 		}
 	}
 
@@ -1377,19 +1377,19 @@ void Utilities::visualizeDatabase(const Database& database, const Index32 poseId
 
 	const Scalar invStablePathLength = Numeric::ratio(1, Scalar(stablePathLength));
 
-	for (Database::IdIdPointPairsMap::const_iterator i = featurePointPairsMap.begin(); i != featurePointPairsMap.end(); ++i)
+	for (const Database::IdIdPointPairsMap::value_type& pair : featurePointPairsMap)
 	{
 		Vectors2 imagePointsGroup;
-		imagePoints.reserve(i->second.size());
+		imagePoints.reserve(pair.second.size());
 
-		for (Database::IdPointPairs::const_iterator iI = i->second.begin(); imagePointsGroup.size() < maximalPathLength && iI != i->second.end(); ++iI)
+		for (Database::IdPointPairs::const_iterator iI = pair.second.begin(); imagePointsGroup.size() < maximalPathLength && iI != pair.second.end(); ++iI)
 		{
 			imagePointsGroup.push_back(transformation * iI->second);
 		}
 
 		imagePointGroups.push_back(std::move(imagePointsGroup));
 
-		factors.push_back(min(Scalar(i->second.size()) * invStablePathLength, Scalar(1)));
+		factors.push_back(min(Scalar(pair.second.size()) * invStablePathLength, Scalar(1)));
 	}
 
 	paintPaths<1u>(frame, imagePointGroups.data(), imagePointGroups.size(), colorImagePointsInstable, colorImagePointsStable, factors.data(), worker);

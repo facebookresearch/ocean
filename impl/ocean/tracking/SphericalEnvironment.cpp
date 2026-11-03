@@ -1293,10 +1293,10 @@ bool SphericalEnvironment::optimizeCamera(const PinholeCamera& pinholeCamera, co
 		{
 			const IndexPairs32 bijectiveCorrespondences = findBijectiveCorrespondences<15u>(pinholeCamera, pinholeCamera, frames.front().pixelFormat(), orientations[a], orientations[b], cloudBuffers[a], cloudBuffers[b], cloudPoints[a], cloudPoints[b], cloudDistributions[a], cloudDistributions[b], worker);
 
-			for (IndexPairs32::const_iterator i = bijectiveCorrespondences.begin(); i != bijectiveCorrespondences.end(); ++i)
+			for (const IndexPair32& bijectiveCorrespondence : bijectiveCorrespondences)
 			{
-				correspondenceMap.insert(std::make_pair(uniqueFeaturePointId(a, i->first), uniqueFeaturePointId(b, i->second)));
-				correspondenceMap.insert(std::make_pair(uniqueFeaturePointId(b, i->second), uniqueFeaturePointId(a, i->first)));
+				correspondenceMap.insert(std::make_pair(uniqueFeaturePointId(a, bijectiveCorrespondence.first), uniqueFeaturePointId(b, bijectiveCorrespondence.second)));
+				correspondenceMap.insert(std::make_pair(uniqueFeaturePointId(b, bijectiveCorrespondence.second), uniqueFeaturePointId(a, bijectiveCorrespondence.first)));
 			}
 		}
 	}
@@ -1455,9 +1455,9 @@ bool SphericalEnvironment::optimizeCamera(const PinholeCamera& pinholeCamera, co
 	pinholeCamera.copyElements(sharedModel.data());
 
 	UniversalOptimization::IndividualModels individualModels, optimizedIndividualModels;
-	for (SquareMatrices3::const_iterator i = orientations.begin(); i != orientations.end(); ++i)
+	for (const SquareMatrix3& orientationMatrix : orientations)
 	{
-		const Pose orientation = Pose(Rotation(*i));
+		const Pose orientation = Pose(Rotation(orientationMatrix));
 
 		UniversalOptimization::IndividualModel indiviudalModel(orientation.data() + 3);
 		individualModels.emplace_back(indiviudalModel);
@@ -1465,10 +1465,10 @@ bool SphericalEnvironment::optimizeCamera(const PinholeCamera& pinholeCamera, co
 
 	std::vector<size_t> numberElementsPerIndividualModel;
 	numberElementsPerIndividualModel.reserve(orientationImagePointPairGroups.size());
-	for (PoseImagePointPairGroups::const_iterator i = orientationImagePointPairGroups.begin(); i != orientationImagePointPairGroups.end(); ++i)
+	for (const IndexPairs32& orientationImagePointPair : orientationImagePointPairGroups)
 	{
-		ocean_assert(i->size() != 0);
-		numberElementsPerIndividualModel.push_back(i->size());
+		ocean_assert(orientationImagePointPair.size() != 0);
+		numberElementsPerIndividualModel.push_back(orientationImagePointPair.size());
 	}
 
 	CameraOrientationsData data(pinholeCamera, imagePoints, orientationImagePointPairGroups);
@@ -1546,9 +1546,9 @@ bool SphericalEnvironment::findInitialFieldOfView(const unsigned int width, cons
 		sharedModel[0] = pinholeCamera.focalLengthX();
 
 		UniversalOptimization::IndividualModels individualModels, optimizedIndividualModels;
-		for (SquareMatrices3::const_iterator i = orientations.begin(); i != orientations.end(); ++i)
+		for (const SquareMatrix3& orientationMatrix : orientations)
 		{
-			const Pose orientation = Pose(Rotation(*i));
+			const Pose orientation = Pose(Rotation(orientationMatrix));
 
 			UniversalOptimization::IndividualModel individualModel(orientation.data() + 3);
 			individualModels.emplace_back(individualModel);
@@ -1556,10 +1556,10 @@ bool SphericalEnvironment::findInitialFieldOfView(const unsigned int width, cons
 
 		std::vector<size_t> numberElementsPerIndividualModel;
 		numberElementsPerIndividualModel.reserve(orientationImagePointPairGroups.size());
-		for (PoseImagePointPairGroups::const_iterator i = orientationImagePointPairGroups.begin(); i != orientationImagePointPairGroups.end(); ++i)
+		for (const IndexPairs32& orientationImagePointPair : orientationImagePointPairGroups)
 		{
-			ocean_assert(i->size() != 0);
-			numberElementsPerIndividualModel.push_back(i->size());
+			ocean_assert(orientationImagePointPair.size() != 0);
+			numberElementsPerIndividualModel.push_back(orientationImagePointPair.size());
 		}
 
 		CameraFovData data(pinholeCamera, imagePoints, orientationImagePointPairGroups);
@@ -1742,13 +1742,13 @@ IndexPairs32 SphericalEnvironment::findBijectiveCorrespondences8BitPerChannel(co
 #ifdef OCEAN_DEBUG
 	// now the correspondences should also be bijective
 	IndexSet32 indexSet0, indexSet1;
-	for (IndexPairs32::const_iterator i = correspondences.begin(); i != correspondences.end(); ++i)
+	for (const IndexPair32& correspondence : correspondences)
 	{
-		ocean_assert(indexSet0.find(i->first) == indexSet0.end());
-		ocean_assert(indexSet1.find(i->second) == indexSet1.end());
+		ocean_assert(indexSet0.find(correspondence.first) == indexSet0.end());
+		ocean_assert(indexSet1.find(correspondence.second) == indexSet1.end());
 
-		indexSet0.insert(i->first);
-		indexSet1.insert(i->second);
+		indexSet0.insert(correspondence.first);
+		indexSet1.insert(correspondence.second);
 	}
 #endif
 
@@ -1832,14 +1832,14 @@ unsigned int SphericalEnvironment::findCorrespondingPoint8BitPerChannel(const ui
 	unsigned int ssdBest = tChannels * tSize * tSize * 7u * 7u;
 	unsigned int indexBest = (unsigned int)(-1);
 
-	for (Indices32::const_iterator i = indices.begin(); i != indices.end(); ++i)
+	for (const Index32& index : indices)
 	{
-		const unsigned int ssd = CV::ZeroMeanSumSquareDifferences::buffer8BitPerChannel<tChannels, tSize>(data0, datas1 + *i * tChannels * tSize * tSize);
+		const unsigned int ssd = CV::ZeroMeanSumSquareDifferences::buffer8BitPerChannel<tChannels, tSize>(data0, datas1 + index * tChannels * tSize * tSize);
 
 		if (ssd < ssdBest)
 		{
 			ssdBest = ssd;
-			indexBest = *i;
+			indexBest = index;
 		}
 	}
 

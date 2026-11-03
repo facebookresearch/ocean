@@ -183,9 +183,9 @@ bool NewTextureGenerator::processMeshes(Frustums &&cameraFrustums, Vectors3&& ve
 	}
 
 #ifdef OCEAN_DEBUG
-	for (KeyframeMap::const_iterator i = keyframeMap_.cbegin(); i != keyframeMap_.cend(); ++i)
+	for (const KeyframeMap::value_type& pair : keyframeMap_)
 	{
-		ocean_assert(i->second.isValid());
+		ocean_assert(pair.second.isValid());
 	}
 #endif
 
@@ -211,9 +211,9 @@ uint64_t NewTextureGenerator::memoryUsage() const
 
 	uint64_t result = 0;
 
-	for (KeyframeMap::const_iterator iKeyframe = keyframeMap_.cbegin(); iKeyframe != keyframeMap_.cend(); ++iKeyframe)
+	for (const KeyframeMap::value_type& pair : keyframeMap_)
 	{
-		const Keyframe& keyframe = iKeyframe->second;
+		const Keyframe& keyframe = pair.second;
 
 		constexpr unsigned int planeIndex = 0u;
 
@@ -231,25 +231,25 @@ uint64_t NewTextureGenerator::memoryUsage() const
 NewTextureGenerator::TriangleVoteMap NewTextureGenerator::determineBestVotesAcrossKeyframes(const KeyframeMap& keyframeMap)
 {
 	size_t expectedSize = 0;
-	for (KeyframeMap::const_iterator iMap = keyframeMap.cbegin(); iMap != keyframeMap.cend(); ++iMap)
+	for (const KeyframeMap::value_type& pair : keyframeMap)
 	{
-		expectedSize = std::max(expectedSize, iMap->second.triangleVoteMap_.size());
+		expectedSize = std::max(expectedSize, pair.second.triangleVoteMap_.size());
 	}
 
 	TriangleVoteMap bestTriangleVoteMap;
 	bestTriangleVoteMap.reserve(expectedSize);
 
-	for (KeyframeMap::const_iterator iMap = keyframeMap.cbegin(); iMap != keyframeMap.cend(); ++iMap)
+	for (const KeyframeMap::value_type& pair : keyframeMap)
 	{
-		const TriangleVoteMap& triangleVoteMap = iMap->second.triangleVoteMap_;
+		const TriangleVoteMap& triangleVoteMap = pair.second.triangleVoteMap_;
 
-		for (TriangleVoteMap::const_iterator iVote = triangleVoteMap.cbegin(); iVote != triangleVoteMap.cend(); ++iVote)
+		for (const TriangleVoteMap::value_type& triangleVotePair : triangleVoteMap)
 		{
-			Scalar& bestVote = bestTriangleVoteMap[iVote->first];
+			Scalar& bestVote = bestTriangleVoteMap[triangleVotePair.first];
 
-			if (iVote->second > bestVote)
+			if (triangleVotePair.second > bestVote)
 			{
-				bestVote = iVote->second;
+				bestVote = triangleVotePair.second;
 			}
 		}
 	}
@@ -261,18 +261,18 @@ void NewTextureGenerator::spreadBestVotesAcrossKeyframes(KeyframeMap& keyframeMa
 {
 	ocean_assert(acceptanceRatio > 0 && acceptanceRatio <= 1);
 
-	for (KeyframeMap::iterator iMap = keyframeMap.begin(); iMap != keyframeMap.end(); ++iMap)
+	for (KeyframeMap::value_type& pair : keyframeMap)
 	{
-		const TriangleVoteMap& triangleVoteMap = iMap->second.triangleVoteMap_;
+		const TriangleVoteMap& triangleVoteMap = pair.second.triangleVoteMap_;
 
-		UnorderedIndexSet64& acceptableTrianglesSet = iMap->second.acceptableTrianglesSet_;
+		UnorderedIndexSet64& acceptableTrianglesSet = pair.second.acceptableTrianglesSet_;
 		ocean_assert(acceptableTrianglesSet.empty());
 
 		acceptableTrianglesSet.reserve(triangleVoteMap.size() * 50 / 100);
 
-		for (TriangleVoteMap::const_iterator iVote = triangleVoteMap.cbegin(); iVote != triangleVoteMap.cend(); ++iVote)
+		for (const TriangleVoteMap::value_type& triangleVotePair : triangleVoteMap)
 		{
-			const Index64& triangleId = iVote->first;
+			const Index64& triangleId = triangleVotePair.first;
 
 			ocean_assert(bestVoteMap.find(triangleId) != bestVoteMap.cend());
 
@@ -281,7 +281,7 @@ void NewTextureGenerator::spreadBestVotesAcrossKeyframes(KeyframeMap& keyframeMa
 
 			const Scalar& bestVote = iBestVote->second;
 
-			if (iVote->second >= bestVote * acceptanceRatio)
+			if (triangleVotePair.second >= bestVote * acceptanceRatio)
 			{
 				acceptableTrianglesSet.emplace(triangleId);
 			}
@@ -306,11 +306,11 @@ bool NewTextureGenerator::extractRegionsFromKeyframes(KeyframeMap& keyframeMap, 
 	UnorderedIndexSet32 candidateKeyframeIds;
 	candidateKeyframeIds.reserve(keyframeMap.size());
 
-	for (KeyframeMap::const_iterator iKeyframe = keyframeMap.cbegin(); iKeyframe != keyframeMap.cend(); ++iKeyframe)
+	for (const KeyframeMap::value_type& pair : keyframeMap)
 	{
-		if (!iKeyframe->second.acceptableTrianglesSet_.empty())
+		if (!pair.second.acceptableTrianglesSet_.empty())
 		{
-			candidateKeyframeIds.emplace(iKeyframe->first);
+			candidateKeyframeIds.emplace(pair.first);
 		}
 	}
 
@@ -583,15 +583,15 @@ void NewTextureGenerator::convertToTexture(const TexturedRegionMap& texturedRegi
 
 	TexturedMeshes texturedMeshes(blockedMeshes_.size());
 
-	for (TexturedRegionMap::const_iterator iMap = texturedRegionMap.cbegin(); iMap != texturedRegionMap.cend(); ++iMap)
+	for (const TexturedRegionMap::value_type& pair : texturedRegionMap)
 	{
-		const TexturedRegion& region = iMap->second;
+		const TexturedRegion& region = pair.second;
 
 		if (!region.islandBoundingBoxes_.empty())
 		{
-			usedKeyframeIds.emplace_back(iMap->first);
+			usedKeyframeIds.emplace_back(pair.first);
 
-			const TexturedRegion& texturedRegion = iMap->second;
+			const TexturedRegion& texturedRegion = pair.second;
 
 			for (size_t nMesh = 0; nMesh < texturedRegion.vertices_.size(); ++nMesh)
 			{
@@ -605,11 +605,11 @@ void NewTextureGenerator::convertToTexture(const TexturedRegionMap& texturedRegi
 				ocean_assert(nMesh < texturedMeshes.size());
 				TexturedMesh& texturedMesh = texturedMeshes[nMesh];
 
-				texturedMesh.usedKeyframeIds_.emplace(iMap->first);
+				texturedMesh.usedKeyframeIds_.emplace(pair.first);
 			}
 		}
 
-		const KeyframeMap::const_iterator iKeyframe = keyframeMap_.find(iMap->first);
+		const KeyframeMap::const_iterator iKeyframe = keyframeMap_.find(pair.first);
 
 		ocean_assert(iKeyframe != keyframeMap_.cend());
 		if (iKeyframe == keyframeMap_.cend())
@@ -717,14 +717,14 @@ void NewTextureGenerator::convertToTexture(const TexturedRegionMap& texturedRegi
 
 	size_t regionCounter = 0;
 
-	for (TexturedRegionMap::const_iterator iMap = texturedRegionMap.cbegin(); iMap != texturedRegionMap.cend(); ++iMap)
+	for (const TexturedRegionMap::value_type& pair : texturedRegionMap)
 	{
 		ocean_assert(regionCounter < regionIslandIndices2globalIndices.size());
 		const Indices32& globalIndices = regionIslandIndices2globalIndices[regionCounter];
 
 		++regionCounter;
 
-		const TexturedRegion& texturedRegion = iMap->second;
+		const TexturedRegion& texturedRegion = pair.second;
 
 		for (size_t nMesh = 0; nMesh < texturedRegion.vertices_.size(); ++nMesh)
 		{
@@ -828,9 +828,9 @@ void NewTextureGenerator::threadRun()
 		// first, we determine the votes for all mesh triangles across all keyframes
 
 		performanceUpdate.start();
-			for (KeyframeMap::iterator iMap = keyframeMap_.begin(); iMap != keyframeMap_.end(); ++iMap)
+			for (KeyframeMap::value_type& pair : keyframeMap_)
 			{
-				iMap->second.updateVotes(blockedMeshes_);
+				pair.second.updateVotes(blockedMeshes_);
 			}
 		performanceUpdate.stop();
 
@@ -855,12 +855,12 @@ void NewTextureGenerator::threadRun()
 
 		UnorderedIndexSet32 usedKeyframeIds;
 
-		for (TexturedMeshMap::const_iterator iTexturedMesh = texturedMeshMap.cbegin(); iTexturedMesh != texturedMeshMap.end(); ++iTexturedMesh)
+		for (const TexturedMeshMap::value_type& pair : texturedMeshMap)
 		{
-			usedKeyframeIds.reserve(iTexturedMesh->second.usedKeyframeIds_.size());
+			usedKeyframeIds.reserve(pair.second.usedKeyframeIds_.size());
 			usedKeyframeIds.clear();
 
-			for (const Index32& usedKeyframeId : iTexturedMesh->second.usedKeyframeIds_)
+			for (const Index32& usedKeyframeId : pair.second.usedKeyframeIds_)
 			{
 				ocean_assert(keyframeMap_.find(usedKeyframeId) != keyframeMap_.cend());
 
@@ -879,7 +879,7 @@ void NewTextureGenerator::threadRun()
 
 			// we decease the counter for the old ids
 
-			UnorderedIndexSet32& oldUsedKeyframeIds = usedKeyframeIdsPerMeshMap_[iTexturedMesh->first];
+			UnorderedIndexSet32& oldUsedKeyframeIds = usedKeyframeIdsPerMeshMap_[pair.first];
 
 			for (const Index32& id : oldUsedKeyframeIds)
 			{
@@ -928,9 +928,9 @@ void NewTextureGenerator::threadRun()
 			Log::info() << " ";
 		}
 
-		for (TexturedMeshMap::const_iterator iMesh = texturedMeshMap.begin(); iMesh != texturedMeshMap.cend(); ++iMesh)
+		for (const TexturedMeshMap::value_type& pair : texturedMeshMap)
 		{
-			blockCoordinateSet_.emplace(iMesh->first);
+			blockCoordinateSet_.emplace(pair.first);
 		}
 
 		latestTexturedMeshMap_ = std::move(texturedMeshMap);

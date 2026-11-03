@@ -213,11 +213,11 @@ PointCorrespondences::RedundantCorrespondences PointCorrespondences::determineNe
 			{
 				const Indices32& indices = distributionCandidatePoints(x, y);
 
-				for (Indices32::const_iterator candidateIndex = indices.begin(); candidateIndex != indices.end(); ++candidateIndex)
+				for (const Index32& index : indices)
 				{
-					if (*candidateIndex < numberCandidatePoints)
+					if (index < numberCandidatePoints)
 					{
-						const Vector2& candidatePoint = candidatePoints[*candidateIndex];
+						const Vector2& candidatePoint = candidatePoints[index];
 
 						if (candidatePoint.x() >= left && candidatePoint.x() <= right && candidatePoint.y() >= top && candidatePoint.y() <= bottom)
 						{
@@ -229,12 +229,12 @@ PointCorrespondences::RedundantCorrespondences PointCorrespondences::determineNe
 								index1 = index0;
 
 								distance0 = sqrDistance;
-								index0 = *candidateIndex;
+								index0 = index;
 							}
 							else if (sqrDistance < distance1)
 							{
 								distance1 = sqrDistance;
-								index1 = *candidateIndex;
+								index1 = index;
 							}
 						}
 					}
@@ -305,14 +305,15 @@ PointCorrespondences::RedundantCorrespondences PointCorrespondences::determineNe
 			{
 				const Indices32& indices = distributionCandidatePoints(x, y);
 
-				for (Indices32::const_iterator i = indices.begin(); i != indices.end(); ++i)
-					if (*i < numberCandidatePoints)
+				for (const Index32& index : indices)
+				{
+					if (index < numberCandidatePoints)
 					{
-						const Vector2& candidatePoint = candidatePoints[*i];
+						const Vector2& candidatePoint = candidatePoints[index];
 
 						if (candidatePoint.x() >= left && candidatePoint.x() <= right && candidatePoint.y() >= top && candidatePoint.y() <= bottom)
 						{
-							if (!candidateLines[*i].isValid() || candidateLines[*i].sqrDistance(imagePoint) <= maximalLineSqrDistance)
+							if (!candidateLines[index].isValid() || candidateLines[index].sqrDistance(imagePoint) <= maximalLineSqrDistance)
 							{
 								const Scalar sqrDistance = imagePoint.sqrDistance(candidatePoint);
 
@@ -322,16 +323,17 @@ PointCorrespondences::RedundantCorrespondences PointCorrespondences::determineNe
 									index1 = index0;
 
 									distance0 = sqrDistance;
-									index0 = *i;
+									index0 = index;
 								}
 								else if (sqrDistance < distance1)
 								{
 									distance1 = sqrDistance;
-									index1 = *i;
+									index1 = index;
 								}
 							}
 						}
 					}
+				}
 			}
 
 		if (index0 != (unsigned int)(-1))
@@ -381,12 +383,12 @@ Indices32 PointCorrespondences::filterValidCorrespondences(const Vectors2& first
 	Scalars sqrErrors;
 	sqrErrors.reserve(subsetIndices.size());
 
-	for (Indices32::const_iterator i = subsetIndices.begin(); i != subsetIndices.end(); ++i)
+	for (const Index32& subsetIndex : subsetIndices)
 	{
-		ocean_assert(*i < firstPoints.size());
-		ocean_assert(*i < secondPoints.size());
+		ocean_assert(subsetIndex < firstPoints.size());
+		ocean_assert(subsetIndex < secondPoints.size());
 
-		sqrErrors.push_back(firstPoints[*i].sqrDistance(secondPoints[*i]));
+		sqrErrors.push_back(firstPoints[subsetIndex].sqrDistance(secondPoints[subsetIndex]));
 	}
 
 	Scalars tmpSqrErrors(sqrErrors);

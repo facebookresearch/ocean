@@ -295,14 +295,14 @@ bool MeshRenderer::render(const Rendering::Engine& /*engine*/, const Rendering::
 	Rendering::GLESceneGraph::GLESObject::setUniform(triangleStateTextureHeightLocation, glesTriangleStateTextureFramebuffer.height());
 
 
-	for (TextureFramebufferMap::const_iterator iTextureFramebuffer = textureFramebufferMap.cbegin(); iTextureFramebuffer != textureFramebufferMap.cend(); ++iTextureFramebuffer)
+	for (const TextureFramebufferMap::value_type& pair : textureFramebufferMap)
 	{
-		const Index32& meshId = iTextureFramebuffer->first;
+		const Index32& meshId = pair.first;
 
 		const unsigned int firstTriangleIdInMesh = meshId * textureAtlas.numberTriangles();
 		const unsigned int trianglesInMesh = std::min(numberTriangles - meshId * textureAtlas.numberTriangles(), textureAtlas.numberTriangles());
 
-		iTextureFramebuffer->second.force<Rendering::GLESceneGraph::GLESTextureFramebuffer>().bindTexture(glesShaderProgram, 1u);
+		pair.second.force<Rendering::GLESceneGraph::GLESTextureFramebuffer>().bindTexture(glesShaderProgram, 1u);
 		triangles.force<Rendering::GLESceneGraph::GLESTriangles>().drawTriangles(firstTriangleIdInMesh, trianglesInMesh);
 	}
 

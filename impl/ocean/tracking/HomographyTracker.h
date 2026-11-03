@@ -145,9 +145,9 @@ inline Vectors2 HomographyTracker::transformPoints(const Vectors2& points, const
 	Vectors2 result;
 	result.reserve(points.size());
 
-	for (Vectors2::const_iterator i = points.begin(); i != points.end(); ++i)
+	for (const Vector2& point : points)
 	{
-		result.emplace_back(transformation * *i);
+		result.emplace_back(transformation * point);
 	}
 
 	return result;

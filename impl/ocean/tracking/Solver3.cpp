@@ -228,11 +228,11 @@ Solver3::ObjectPointToPoseImagePointCorrespondenceAccessor::ObjectPointToPoseIma
 
 			internalUsedKeyFrameIds.push_back(newPoseId);
 
-			for (Indices32::const_iterator i = currentObjectPointIds.begin(); i != currentObjectPointIds.end(); ++i)
+			for (const Index32& currentObjectPointId : currentObjectPointIds)
 			{
-				if (++objectPointObservationCounterMap[*i] >= minimalObservationsInKeyframes)
+				if (++objectPointObservationCounterMap[currentObjectPointId] >= minimalObservationsInKeyframes)
 				{
-					pendingObjectPointIds.erase(*i);
+					pendingObjectPointIds.erase(currentObjectPointId);
 				}
 			}
 
@@ -497,9 +497,9 @@ bool Solver3::determineInitialObjectPointsFromSparseKeyFrames(const Database& da
 		ocean_assert(usedPoseIds->empty());
 		usedPoseIds->clear();
 
-		for (Indices32::const_iterator i = roughPoseIndices.begin(); i != roughPoseIndices.end(); ++i)
+		for (const Index32& roughPoseIndex : roughPoseIndices)
 		{
-			usedPoseIds->push_back(keyFrameIndices[*i]);
+			usedPoseIds->push_back(keyFrameIndices[roughPoseIndex]); // NOLINT(facebook-hte-LocalUncheckedArrayBounds)
 		}
 	}
 
@@ -699,8 +699,11 @@ bool Solver3::determineInitialObjectPointsFromDenseFrames(const Database& databa
 	std::vector<Vectors2> keyFrameImagePointGroups;
 	keyFrameImagePointGroups.reserve(keyFrameIndices.size());
 
-	for (Indices32::const_iterator i = keyFrameIndices.begin(); i != keyFrameIndices.end(); ++i)
-		keyFrameImagePointGroups.push_back(imagePointGroups[roughPoseIds[*i]]);
+	for (const Index32& keyFrameIndex : keyFrameIndices)
+	{
+		ocean_assert(keyFrameIndex < roughPoseIds.size());
+		keyFrameImagePointGroups.push_back(imagePointGroups[roughPoseIds[keyFrameIndex]]); // NOLINT(facebook-hte-LocalUncheckedArrayBounds)
+	}
 
 	const ObjectPointToPoseIndexImagePointCorrespondenceAccessor objectPointToPoseIndexImagePointCorrespondenceAccessor(keyFrameImagePointGroups, createIndices(keyFrameImagePointGroups.size(), 0u), roughObjectPointIndices);
 
@@ -1053,12 +1056,12 @@ bool Solver3::determineInitialObjectPointsFromSparseKeyFrames(const PinholeCamer
 		size_t bestCorrespondences = 0u;
 
 		// find the group of remaining indices with most entries
-		for (IndexSet32::const_iterator i = remainingIndices.begin(); i != remainingIndices.end(); ++i)
+		for (const Index32& remainingIndex : remainingIndices)
 		{
-			if (remainingValidObjectPointIndexGroups[*i].size() > bestCorrespondences)
+			if (remainingValidObjectPointIndexGroups[remainingIndex].size() > bestCorrespondences) // NOLINT(facebook-hte-LocalUncheckedArrayBounds)
 			{
-				bestIndex = *i;
-				bestCorrespondences = remainingValidObjectPointIndexGroups[*i].size();
+				bestIndex = remainingIndex;
+				bestCorrespondences = remainingValidObjectPointIndexGroups[remainingIndex].size();
 			}
 		}
 
@@ -1083,11 +1086,11 @@ bool Solver3::determineInitialObjectPointsFromSparseKeyFrames(const PinholeCamer
 
 		// now we have to update all sets of remaining correspondence indices so that each remaining set does not contain any index which is not in our target set
 
-		for (IndexSet32::const_iterator i = remainingIndices.begin(); i != remainingIndices.end(); ++i)
+		for (const Index32& remainingIndex : remainingIndices)
 		{
 			ocean_assert(unionCorrespondences.empty());
-			std::set_intersection(remainingValidObjectPointIndexGroups[*i].begin(), remainingValidObjectPointIndexGroups[*i].end(), validObjectPointIndexSet.begin(), validObjectPointIndexSet.end(), std::inserter(unionCorrespondences, unionCorrespondences.begin()));
-			remainingValidObjectPointIndexGroups[*i] = std::move(unionCorrespondences);
+			std::set_intersection(remainingValidObjectPointIndexGroups[remainingIndex].begin(), remainingValidObjectPointIndexGroups[remainingIndex].end(), validObjectPointIndexSet.begin(), validObjectPointIndexSet.end(), std::inserter(unionCorrespondences, unionCorrespondences.begin()));
+			remainingValidObjectPointIndexGroups[remainingIndex] = std::move(unionCorrespondences);
 		}
 	}
 
@@ -1101,10 +1104,10 @@ bool Solver3::determineInitialObjectPointsFromSparseKeyFrames(const PinholeCamer
 	validObjectPointIndices.clear();
 	validObjectPointIndices.reserve(validObjectPointIndexSet.size());
 
-	for (IndexSet32::const_iterator i = validObjectPointIndexSet.begin(); i != validObjectPointIndexSet.end(); ++i)
+	for (const Index32& validObjectPointIndex : validObjectPointIndexSet)
 	{
-		validObjectPointIndices.push_back(validCorrespondenceIndices[*i]);
-		objectPoints.push_back(validObjectPoints[*i]);
+		validObjectPointIndices.push_back(validCorrespondenceIndices[validObjectPointIndex]); // NOLINT(facebook-hte-LocalUncheckedArrayBounds)
+		objectPoints.push_back(validObjectPoints[validObjectPointIndex]);
 	}
 
 	ocean_assert(validObjectPointIndices.size() == objectPoints.size());
@@ -1525,14 +1528,14 @@ bool Solver3::optimizeInitialObjectPoints(const Database& database, const AnyCam
 		HomogenousMatrices4 inaccuratePoses;
 		inaccuratePoses.reserve(remainingErrors.size());
 
-		for (PoseErrorPairs::const_iterator i = remainingErrors.begin(); i != remainingErrors.end(); ++i)
+		for (const PoseErrorPair& remainingError : remainingErrors)
 		{
-			if (i->second < maxAverageSqrError * 2)
+			if (remainingError.second < maxAverageSqrError * 2)
 			{
 				break;
 			}
 
-			inaccuratePoses.push_back(poseMatrices[i->first + (unsigned int)poseMatrices.firstIndex()]);
+			inaccuratePoses.push_back(poseMatrices[remainingError.first + (unsigned int)poseMatrices.firstIndex()]);
 		}
 
 		Indices32 newKeyframeIndicesBlock(keyframeIndicesBlock);
@@ -1540,10 +1543,10 @@ bool Solver3::optimizeInitialObjectPoints(const Database& database, const AnyCam
 		{
 			remainingErrors = Subset::subset(remainingErrors, Pose::representativePoses(inaccuratePoses.data(), inaccuratePoses.size(), min(inaccuratePoses.size(), keyframeIndicesBlock.size())));
 
-			for (PoseErrorPairs::const_iterator i = remainingErrors.begin(); i != remainingErrors.end(); ++i)
+			for (const PoseErrorPair& remainingError : remainingErrors)
 			{
-				newKeyframeIndicesBlock.push_back(i->first);
-				optimizedPoses.push_back(poseMatrices[i->first + (unsigned int)poseMatrices.firstIndex()]);
+				newKeyframeIndicesBlock.push_back(remainingError.first);
+				optimizedPoses.push_back(poseMatrices[remainingError.first + (unsigned int)poseMatrices.firstIndex()]);
 			}
 		}
 
@@ -1644,13 +1647,13 @@ bool Solver3::determineUnknownObjectPoints(const Database& database, const AnyCa
 	// now we extract all object points which do not have a valid position
 
 	IndexSet32 objectPointIds;
-	for (Indices32::const_iterator i = reliableObjectPoints.begin(); i != reliableObjectPoints.end(); ++i)
+	for (const Index32& reliableObjectPoint : reliableObjectPoints)
 	{
-		const Vector3& objectPoint = database.objectPoint<false>(*i);
+		const Vector3& objectPoint = database.objectPoint<false>(reliableObjectPoint);
 
 		if (objectPoint == Vector3(Numeric::minValue(), Numeric::minValue(), Numeric::minValue()))
 		{
-			objectPointIds.insert(*i);
+			objectPointIds.insert(reliableObjectPoint);
 		}
 	}
 
@@ -1810,8 +1813,8 @@ bool Solver3::optimizeObjectPointsWithVariablePoses(const Database& database, co
 	const HomogenousMatrices4 keyFramePoses(database.poses<false>(keyFrameIds.data(), keyFrameIds.size()));
 
 #ifdef OCEAN_DEBUG
-	for (HomogenousMatrices4::const_iterator i = keyFramePoses.begin(); i != keyFramePoses.end(); ++i)
-		ocean_assert(i->isValid());
+	for (const HomogenousMatrix4& keyFramePose : keyFramePoses)
+		ocean_assert(keyFramePose.isValid());
 #endif
 
 	NonconstArrayAccessor<Vector3> optimizedObjectPointAccessor(optimizedObjectPoints, objectPoints.size());
@@ -1834,8 +1837,8 @@ bool Solver3::optimizeObjectPointsWithVariablePoses(const Database& database, co
 	const HomogenousMatrices4 keyFramePoses(database.poses<false>(usedKeyFrameIds.data(), usedKeyFrameIds.size()));
 
 #ifdef OCEAN_DEBUG
-	for (HomogenousMatrices4::const_iterator i = keyFramePoses.begin(); i != keyFramePoses.end(); ++i)
-		ocean_assert(i->isValid());
+	for (const HomogenousMatrix4& keyFramePose : keyFramePoses)
+		ocean_assert(keyFramePose.isValid());
 #endif
 
 	NonconstArrayAccessor<Vector3> optimizedObjectPointAccessor(optimizedObjectPoints, objectPoints.size());
@@ -2268,8 +2271,8 @@ bool Solver3::optimizeCameraWithVariableObjectPointsAndPoses(const Database& dat
 	const HomogenousMatrices4 keyFramePoses(database.poses<false>(keyFrameIds.data(), keyFrameIds.size()));
 
 #ifdef OCEAN_DEBUG
-	for (HomogenousMatrices4::const_iterator i = keyFramePoses.begin(); i != keyFramePoses.end(); ++i)
-		ocean_assert(i->isValid());
+	for (const HomogenousMatrix4& keyFramePose : keyFramePoses)
+		ocean_assert(keyFramePose.isValid());
 #endif
 
 	NonconstArrayAccessor<Vector3> optimizedObjectPointAccessor(optimizedObjectPoints, objectPoints.size());
@@ -2945,9 +2948,9 @@ bool Solver3::trackObjectPoints(const Database& database, const Indices32& objec
 	{
 #ifdef OCEAN_DEBUG
 		const IndexSet32 trackedObjectPointIdSet(trackedObjectPointIds.begin(), trackedObjectPointIds.end());
-		for (Indices32::const_iterator i = validIndices.begin(); i != validIndices.end(); ++i)
+		for (const Index32& validIndex : validIndices)
 		{
-			ocean_assert(trackedObjectPointIdSet.find(objectPointIds[*i]) != trackedObjectPointIdSet.end());
+			ocean_assert(trackedObjectPointIdSet.find(objectPointIds[validIndex]) != trackedObjectPointIdSet.end());
 		}
 #endif
 
@@ -3137,9 +3140,9 @@ Indices32 Solver3::determineRepresentativePoses(const Database& database, const 
 	Poses poses;
 	poses.reserve(poseIds.size());
 
-	for (Indices32::const_iterator i = poseIds.begin(); i != poseIds.end(); ++i)
+	for (const Index32& poseId : poseIds)
 	{
-		const HomogenousMatrix4& poseMatrix = database.pose<false>(*i);
+		const HomogenousMatrix4& poseMatrix = database.pose<false>(poseId);
 		ocean_assert(poseMatrix.isValid());
 
 		poses.emplace_back(poseMatrix);
@@ -3674,17 +3677,17 @@ void Solver3::determinePosesOrientation(const Database& database, const unsigned
 	Vector3 yMeanDirection(0, 0, 0);
 	Vector3 zMeanDirection(0, 0, 0);
 
-	for (HomogenousMatrices4::const_iterator i = poses.begin(); i != poses.end(); ++i)
+	for (const HomogenousMatrix4& pose : poses)
 	{
-		ocean_assert(i->isValid());
+		ocean_assert(pose.isValid());
 
-		ocean_assert(Vector3((*i)[0], (*i)[1], (*i)[2]) == i->rotationMatrix().xAxis());
-		ocean_assert(Vector3((*i)[4], (*i)[5], (*i)[6]) == i->rotationMatrix().yAxis());
-		ocean_assert(Vector3((*i)[8], (*i)[9], (*i)[10]) == i->rotationMatrix().zAxis());
+		ocean_assert(Vector3((pose)[0], (pose)[1], (pose)[2]) == pose.rotationMatrix().xAxis());
+		ocean_assert(Vector3((pose)[4], (pose)[5], (pose)[6]) == pose.rotationMatrix().yAxis());
+		ocean_assert(Vector3((pose)[8], (pose)[9], (pose)[10]) == pose.rotationMatrix().zAxis());
 
-		xMeanDirection += Vector3((*i)[0], (*i)[1], (*i)[2]);
-		yMeanDirection += Vector3((*i)[4], (*i)[5], (*i)[6]);
-		zMeanDirection += Vector3((*i)[8], (*i)[9], (*i)[10]);
+		xMeanDirection += Vector3((pose)[0], (pose)[1], (pose)[2]);
+		yMeanDirection += Vector3((pose)[4], (pose)[5], (pose)[6]);
+		zMeanDirection += Vector3((pose)[8], (pose)[9], (pose)[10]);
 	}
 
 	// if the mean directions cannot be normalized than the scalar product will be zero, thus we are fine and do not need further normalization-handling
@@ -3723,14 +3726,18 @@ bool Solver3::determineNumberCorrespondences(const Database& database, const boo
 	unsigned int minCorrespondences = 0xFFFFFFFFu;
 	unsigned int totalCorrespondences = 0u;
 	unsigned int maxCorrespondences = 0u;
-	for (Indices32::const_iterator i = posesCorrespondences.begin(); i != posesCorrespondences.end(); ++i)
+	for (const Index32& posesCorrespondence : posesCorrespondences)
 	{
-		if (*i < minCorrespondences)
-			minCorrespondences = *i;
-		if (*i > maxCorrespondences)
-			maxCorrespondences = *i;
+		if (posesCorrespondence < minCorrespondences)
+		{
+			minCorrespondences = posesCorrespondence;
+		}
+		if (posesCorrespondence > maxCorrespondences)
+		{
+			maxCorrespondences = posesCorrespondence;
+		}
 
-		totalCorrespondences += *i;
+		totalCorrespondences += posesCorrespondence;
 	}
 
 	ocean_assert(!posesCorrespondences.empty());

@@ -1935,10 +1935,10 @@ inline Solver3::ObjectPointToPoseImagePointCorrespondenceAccessor::ObjectPointTo
 {
 	elementGroups_.reserve(validGroupIndices.size());
 
-	for (Indices32::const_iterator i = validGroupIndices.begin(); i != validGroupIndices.end(); ++i)
+	for (const Index32& validGroupIndex : validGroupIndices)
 	{
-		ocean_assert(*i < accessor.elementGroups_.size());
-		elementGroups_.emplace_back(std::move(accessor.elementGroups_[*i]));
+		ocean_assert(validGroupIndex < accessor.elementGroups_.size());
+		elementGroups_.emplace_back(std::move(accessor.elementGroups_[validGroupIndex]));
 	}
 }
 

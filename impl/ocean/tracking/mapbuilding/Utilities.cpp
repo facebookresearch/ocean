@@ -50,10 +50,10 @@ bool Utilities::writeDescriptorMap(const UnifiedDescriptorMap& unifiedDescriptor
 		return false;
 	}
 
-	for (FreakMultiDescriptorMap256::const_iterator iFreak = descriptorMap.cbegin(); iFreak != descriptorMap.cend(); ++iFreak)
+	for (const FreakMultiDescriptorMap256::value_type& pair : descriptorMap)
 	{
-		const Index32& objectPointId = iFreak->first;
-		const CV::Detector::FREAKDescriptors32& freakDescriptors = iFreak->second;
+		const Index32& objectPointId = pair.first;
+		const CV::Detector::FREAKDescriptors32& freakDescriptors = pair.second;
 
 		if (!outputStream.write<unsigned int>(objectPointId))
 		{

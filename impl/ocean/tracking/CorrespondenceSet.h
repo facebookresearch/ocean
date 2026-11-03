@@ -317,8 +317,8 @@ bool CorrespondenceSet<T>::setFirstElements(const Elements& elements, const Indi
 		ocean_assert(*indexSet.rbegin() == validIndices.size() - 1);
 	else
 	{
-		for (Indices32::const_iterator i = validIndices.begin(); i != validIndices.end(); ++i)
-			ocean_assert(*i < elements.size());
+		for (const Index32& validIndex : validIndices)
+			ocean_assert(validIndex < elements.size());
 	}
 
 #endif // OCEAN_DEBUG
@@ -400,8 +400,8 @@ bool CorrespondenceSet<T>::setLastElements(const Elements& elements, const Indic
 		ocean_assert(*indexSet.rbegin() == validIndices.size() - 1);
 	else
 	{
-		for (Indices32::const_iterator i = validIndices.begin(); i != validIndices.end(); ++i)
-			ocean_assert(*i < elements.size());
+		for (const Index32& validIndex : validIndices)
+			ocean_assert(validIndex < elements.size());
 	}
 
 #endif // OCEAN_DEBUG
@@ -477,8 +477,8 @@ inline bool CorrespondenceSet<T>::addElements(const Elements& elements, const In
 		ocean_assert(*indexSet.rbegin() == validIndices.size() - 1);
 	else
 	{
-		for (Indices32::const_iterator i = validIndices.begin(); i != validIndices.end(); ++i)
-			ocean_assert(*i < elements.size());
+		for (const Index32& validIndex : validIndices)
+			ocean_assert(validIndex < elements.size());
 	}
 
 #endif // OCEAN_DEBUG
@@ -517,8 +517,8 @@ inline bool CorrespondenceSet<T>::reduce(const Indices32& validIndices)
 		ocean_assert(*indexSet.rbegin() == validIndices.size() - 1);
 	else
 	{
-		for (Indices32::const_iterator i = validIndices.begin(); i != validIndices.end(); ++i)
-			ocean_assert(*i < elements());
+		for (const Index32& validIndex : validIndices)
+			ocean_assert(validIndex < elements());
 	}
 
 #endif // OCEAN_DEBUG

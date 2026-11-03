@@ -2508,22 +2508,22 @@ inline HomogenousMatrices4 Database::poses(const HomogenousMatrix4& referencePos
 		poseIds->clear();
 		poseIds->reserve(poseMap_.size());
 
-		for (PoseMap::const_iterator iPose = poseMap_.cbegin(); iPose != poseMap_.cend(); ++iPose)
+		for (const PoseMap::value_type& pair : poseMap_)
 		{
-			if ((tMatchPose && iPose->second.pose() == referencePose) || (!tMatchPose && iPose->second.pose() != referencePose))
+			if ((tMatchPose && pair.second.pose() == referencePose) || (!tMatchPose && pair.second.pose() != referencePose))
 			{
-				poses.push_back(iPose->second.pose());
-				poseIds->push_back(iPose->first);
+				poses.push_back(pair.second.pose());
+				poseIds->push_back(pair.first);
 			}
 		}
 	}
 	else
 	{
-		for (PoseMap::const_iterator iPose = poseMap_.cbegin(); iPose != poseMap_.cend(); ++iPose)
+		for (const PoseMap::value_type& pair : poseMap_)
 		{
-			if ((tMatchPose && iPose->second.pose() == referencePose) || (!tMatchPose && iPose->second.pose() != referencePose))
+			if ((tMatchPose && pair.second.pose() == referencePose) || (!tMatchPose && pair.second.pose() != referencePose))
 			{
-				poses.push_back(iPose->second.pose());
+				poses.push_back(pair.second.pose());
 			}
 		}
 	}
@@ -2573,22 +2573,22 @@ inline Indices32 Database::poseIds(const HomogenousMatrix4& referencePose, Homog
 		poses->clear();
 		poses->reserve(poseMap_.size());
 
-		for (PoseMap::const_iterator iPose = poseMap_.cbegin(); iPose != poseMap_.cend(); ++iPose)
+		for (const PoseMap::value_type& pair : poseMap_)
 		{
-			if ((tMatchPose && iPose->second.pose() == referencePose) || (!tMatchPose && iPose->second.pose() != referencePose))
+			if ((tMatchPose && pair.second.pose() == referencePose) || (!tMatchPose && pair.second.pose() != referencePose))
 			{
-				poseIds.push_back(iPose->first);
-				poses->push_back(iPose->second.pose());
+				poseIds.push_back(pair.first);
+				poses->push_back(pair.second.pose());
 			}
 		}
 	}
 	else
 	{
-		for (PoseMap::const_iterator iPose = poseMap_.cbegin(); iPose != poseMap_.cend(); ++iPose)
+		for (const PoseMap::value_type& pair : poseMap_)
 		{
-			if ((tMatchPose && iPose->second.pose() == referencePose) || (!tMatchPose && iPose->second.pose() != referencePose))
+			if ((tMatchPose && pair.second.pose() == referencePose) || (!tMatchPose && pair.second.pose() != referencePose))
 			{
-				poseIds.push_back(iPose->first);
+				poseIds.push_back(pair.first);
 			}
 		}
 	}
@@ -2625,11 +2625,11 @@ inline bool Database::validPoseBorders(Index32& rangeLowerPoseId, Index32& range
 	rangeLowerPoseId = invalidId;
 	rangeUpperPoseId = invalidId;
 
-	for (PoseMap::const_iterator iPose = poseMap_.cbegin(); iPose != poseMap_.cend(); ++iPose)
+	for (const PoseMap::value_type& pair : poseMap_)
 	{
-		if (iPose->second.pose().isValid())
+		if (pair.second.pose().isValid())
 		{
-			rangeLowerPoseId = iPose->first;
+			rangeLowerPoseId = pair.first;
 			break;
 		}
 	}
@@ -3165,9 +3165,9 @@ inline Index32 Database::addObjectPointFromDatabase(const Database& secondDataba
 
 	const IndexSet32& secondDatabaseImagePointIds = secondDatabase.imagePointsFromObjectPoint<false>(secondDatabaseObjectPointId);
 
-	for (IndexSet32::const_iterator iId = secondDatabaseImagePointIds.cbegin(); iId != secondDatabaseImagePointIds.cend(); ++iId)
+	for (const Index32& id : secondDatabaseImagePointIds)
 	{
-		const Index32& secondDatabaseImagePointId = *iId;
+		const Index32& secondDatabaseImagePointId = id;
 
 		const Index32 poseId = secondDatabase.poseFromImagePoint<false>(secondDatabaseImagePointId);
 
@@ -3854,9 +3854,9 @@ inline void Database::setPoses(const HomogenousMatrix4& pose)
 {
 	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	for (PoseMap::iterator iPose = poseMap_.begin(); iPose != poseMap_.end(); ++iPose)
+	for (PoseMap::value_type& pair : poseMap_)
 	{
-		iPose->second.setPose(pose);
+		pair.second.setPose(pose);
 	}
 }
 
@@ -3914,18 +3914,18 @@ Indices32 Database::imagePointIds(Vectors2* imagePoints) const
 
 	if (imagePoints != nullptr)
 	{
-		for (ImagePointMap::const_iterator iImagePoint = imagePointMap_.cbegin(); iImagePoint != imagePointMap_.cend(); ++iImagePoint)
+		for (const ImagePointMap::value_type& pair : imagePointMap_)
 		{
-			result.emplace_back(iImagePoint->first);
+			result.emplace_back(pair.first);
 
-			imagePoints->emplace_back(iImagePoint->second.point());
+			imagePoints->emplace_back(pair.second.point());
 		}
 	}
 	else
 	{
-		for (ImagePointMap::const_iterator iImagePoint = imagePointMap_.cbegin(); iImagePoint != imagePointMap_.cend(); ++iImagePoint)
+		for (const ImagePointMap::value_type& pair : imagePointMap_)
 		{
-			result.emplace_back(iImagePoint->first);
+			result.emplace_back(pair.first);
 		}
 	}
 
@@ -4011,18 +4011,18 @@ Indices32 Database::poseIds(HomogenousMatrices4* world_T_cameras) const
 		world_T_cameras->clear();
 		world_T_cameras->reserve(poseMap_.size());
 
-		for (PoseMap::const_iterator iPose = poseMap_.cbegin(); iPose != poseMap_.cend(); ++iPose)
+		for (const PoseMap::value_type& pair : poseMap_)
 		{
-			result.emplace_back(iPose->first);
+			result.emplace_back(pair.first);
 
-			world_T_cameras->emplace_back(iPose->second.pose());
+			world_T_cameras->emplace_back(pair.second.pose());
 		}
 	}
 	else
 	{
-		for (PoseMap::const_iterator iPose = poseMap_.cbegin(); iPose != poseMap_.cend(); ++iPose)
+		for (const PoseMap::value_type& pair : poseMap_)
 		{
-			result.emplace_back(iPose->first);
+			result.emplace_back(pair.first);
 		}
 	}
 
@@ -4287,11 +4287,11 @@ Indices32 Database::objectPointIds(const Indices32 poseIds, Vectors3* objectPoin
 
 		const IndexSet32& imagePointIds = iPose->second.imagePointIds();
 
-		for (IndexSet32::const_iterator iId = imagePointIds.cbegin(); iId != imagePointIds.cend(); ++iId)
+		for (const Index32& id : imagePointIds)
 		{
-			ocean_assert(*iId != invalidId);
+			ocean_assert(id != invalidId);
 
-			const ImagePointMap::const_iterator iImagePoint = imagePointMap_.find(*iId);
+			const ImagePointMap::const_iterator iImagePoint = imagePointMap_.find(id);
 			ocean_assert(iImagePoint != imagePointMap_.end());
 
 			const Index32 objectPointId = iImagePoint->second.objectPointId();
@@ -4310,12 +4310,12 @@ Indices32 Database::objectPointIds(const Indices32 poseIds, Vectors3* objectPoin
 		result.reserve(objectPointIds.size());
 		objectPoints->reserve(objectPointIds.size());
 
-		for (IndexSet32::const_iterator iId = objectPointIds.cbegin(); iId != objectPointIds.cend(); ++iId)
+		for (const Index32& id : objectPointIds)
 		{
-			ocean_assert(objectPointMap_.find(*iId) != objectPointMap_.end());
+			ocean_assert(objectPointMap_.find(id) != objectPointMap_.end());
 
-			result.push_back(*iId);
-			objectPoints->push_back(objectPointMap_.find(*iId)->second.point());
+			result.push_back(id);
+			objectPoints->push_back(objectPointMap_.find(id)->second.point());
 		}
 	}
 	else
@@ -4715,15 +4715,15 @@ Database::ImagePointGroups Database::imagePointGroups(const Indices32 poseIds, I
 
 	ImagePointGroups result(poseIds.size());
 
-	for (ImagePointsMap::iterator iImagePoints = intermediate.begin(); iImagePoints != intermediate.end(); ++iImagePoints)
+	for (ImagePointsMap::value_type& pair : intermediate)
 	{
-		if (iImagePoints->second.size() == poseIds.size())
+		if (pair.second.size() == poseIds.size())
 		{
-			objectPointIds.push_back(iImagePoints->first);
+			objectPointIds.push_back(pair.first);
 
 			for (size_t n = 0; n < poseIds.size(); ++n)
 			{
-				result[n].push_back(iImagePoints->second[n]);
+				result[n].push_back(pair.second[n]);
 			}
 		}
 	}
@@ -5065,16 +5065,16 @@ Database::TopologyTriples Database::topologyTriples(const Indices32& poseIds) co
 
 		const IndexSet32& poseImagePoints = iPose->second.imagePointIds();
 
-		for (IndexSet32::const_iterator iId = poseImagePoints.cbegin(); iId != poseImagePoints.cend(); ++iId)
+		for (const Index32& id : poseImagePoints)
 		{
-			const ImagePointMap::const_iterator iImagePoint = imagePointMap_.find(*iId);
+			const ImagePointMap::const_iterator iImagePoint = imagePointMap_.find(id);
 			ocean_assert(iImagePoint != imagePointMap_.end());
 
 			const Index32 objectPointId = iImagePoint->second.objectPointId();
 
 			if (objectPointId != invalidId)
 			{
-				result.emplace_back(poseId, objectPointId, *iId);
+				result.emplace_back(poseId, objectPointId, id);
 			}
 		}
 	}
@@ -5108,9 +5108,9 @@ inline void Database::reset(const Vector3& referenceObjectPoint, const Homogenou
 		iObjectPoint->second.setPoint(referenceObjectPoint);
 	}
 
-	for (PoseMap::iterator iPose = poseMap_.begin(); iPose != poseMap_.end(); ++iPose)
+	for (PoseMap::value_type& pair : poseMap_)
 	{
-		iPose->second.setPose(referencePose);
+		pair.second.setPose(referencePose);
 	}
 }
 
@@ -5251,20 +5251,20 @@ inline Indices32 Database::reliableObjectPoints(const TopologyTriples& topologyT
 	ocean_assert(!topologyTriples.empty());
 
 	Index32To32Map objectPointCounterMap;
-	for (TopologyTriples::const_iterator iTopology = topologyTriples.cbegin(); iTopology != topologyTriples.cend(); ++iTopology)
+	for (const TopologyTriple& topology : topologyTriples)
 	{
-		ocean_assert(iTopology->objectPointId() != invalidId);
-		objectPointCounterMap[iTopology->objectPointId()]++;
+		ocean_assert(topology.objectPointId() != invalidId);
+		objectPointCounterMap[topology.objectPointId()]++;
 	}
 
 	Indices32 objectPointIds;
 	objectPointIds.reserve(objectPointCounterMap.size());
 
-	for (Index32To32Map::const_iterator iCounter = objectPointCounterMap.cbegin(); iCounter != objectPointCounterMap.cend(); ++iCounter)
+	for (const Index32To32Map::value_type& pair : objectPointCounterMap)
 	{
-		if (iCounter->second >= minimalObservations)
+		if (pair.second >= minimalObservations)
 		{
-			objectPointIds.push_back(iCounter->first);
+			objectPointIds.push_back(pair.first);
 		}
 	}
 
