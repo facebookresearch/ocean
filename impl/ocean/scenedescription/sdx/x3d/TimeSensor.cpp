@@ -26,8 +26,7 @@ TimeSensor::TimeSensor(const SDXEnvironment* environment) :
 	SDXUpdateNode(environment),
 	X3DTimeDependentNode(environment),
 	X3DSensorNode(environment),
-	cycleInterval_(Timestamp(1.0)),
-	lastFraction_(0)
+	cycleInterval_(Timestamp(1.0))
 {
 	static NodeSpecification specification(specifyNode());
 	specification_ = &specification;

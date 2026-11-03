@@ -19,9 +19,7 @@ namespace OculusTags
 {
 
 OculusTag::OculusTag() :
-	tagID_(uint32_t(-1)),
-	reflectanceType_(OculusTag::RT_REFLECTANCE_UNDEFINED),
-	tagSize_(-1)
+	reflectanceType_(OculusTag::RT_REFLECTANCE_UNDEFINED)
 {
 	ocean_assert(isValid() == false);
 }

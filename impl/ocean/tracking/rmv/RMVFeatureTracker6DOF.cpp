@@ -35,11 +35,6 @@ namespace RMV
 
 RMVFeatureTracker6DOF::RMVFeatureTracker6DOF(const RMVFeatureDetector::DetectorType detectorType) :
 	trackerDetectorType_(detectorType),
-	trackerFeatureDetectorStrength_(25),
-	trackerMaximalPoseProjectionFeatureNumber_(150),
-	trackerStrongCorrespondencesEmptyAreaRadius_(10.0),
-	trackerSemiStrongCorrespondencesEmptyAreaRadius_(6.0),
-	trackerAsynchronousDataProcessingActive_(false),
 	trackerAsynchronousDataProcessingFlippedCamera_T_world_(false)
 {
 	startThread();

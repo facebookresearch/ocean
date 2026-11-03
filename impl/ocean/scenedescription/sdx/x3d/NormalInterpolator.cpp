@@ -23,8 +23,7 @@ NormalInterpolator::NormalInterpolator(const SDXEnvironment* environment) :
 	SDXNode(environment),
 	X3DNode(environment),
 	X3DChildNode(environment),
-	X3DInterpolatorNode(environment),
-	interpolationValues_(0u)
+	X3DInterpolatorNode(environment)
 {
 	static NodeSpecification specification(specifyNode());
 	specification_ = &specification;

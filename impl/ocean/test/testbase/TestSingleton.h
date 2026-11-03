@@ -60,7 +60,7 @@ class OCEAN_TEST_BASE_EXPORT TestSingleton
 			protected:
 
 				/// Object value.
-				unsigned int userValue;
+				unsigned int userValue = (unsigned int)(-1);
 		};
 
 	public:

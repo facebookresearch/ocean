@@ -88,7 +88,7 @@ class OCEAN_SCENEDESCRIPTION_SDX_X3D_EXPORT X3DEnvironmentalSensorNode :
 		SingleBool isActive_;
 
 		/// State determining the enter state.
-		bool sensorEntered_;
+		bool sensorEntered_ = false;
 };
 
 }

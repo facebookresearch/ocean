@@ -117,7 +117,7 @@ class OCEAN_SCENEDESCRIPTION_SDX_X3D_EXPORT TimeSensor :
 		SingleTime time_;
 
 		/// Last fraction value.
-		Scalar lastFraction_;
+		Scalar lastFraction_ = 0;
 };
 
 }

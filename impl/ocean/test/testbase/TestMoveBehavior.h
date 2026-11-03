@@ -95,19 +95,19 @@ class OCEAN_TEST_BASE_EXPORT TestMoveBehavior
 			protected:
 
 				/// The constructor counter.
-				size_t constructor_;
+				size_t constructor_ = 0;
 
 				/// The copyConstructor counter.
-				size_t copyConstructor_;
+				size_t copyConstructor_ = 0;
 
 				/// The moveConstructor counter.
-				size_t moveConstructor_;
+				size_t moveConstructor_ = 0;
 
 				/// The assignOperator counter.
-				size_t assignOperator_;
+				size_t assignOperator_ = 0;
 
 				/// The moveOperator counter.
-				size_t moveOperator_;
+				size_t moveOperator_ = 0;
 
 				/// The lock object.
 				mutable Lock lock_;

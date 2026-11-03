@@ -114,7 +114,7 @@ class OCEAN_TRACKING_OCULUSTAGS_EXPORT OculusTag
 	protected:
 
 		/// The ID of this tag
-		uint32_t tagID_;
+		uint32_t tagID_ = uint32_t(-1);
 
 		/// The reflectance type of this tag instance
 		ReflectanceType reflectanceType_;
@@ -126,7 +126,7 @@ class OCEAN_TRACKING_OCULUSTAGS_EXPORT OculusTag
 		HomogenousMatrix4 world_T_tag_;
 
 		/// The edge length of the tag in 3D object space
-		Scalar tagSize_;
+		Scalar tagSize_ = -1;
 };
 
 /**

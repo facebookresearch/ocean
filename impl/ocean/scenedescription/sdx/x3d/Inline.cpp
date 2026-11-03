@@ -29,8 +29,7 @@ Inline::Inline(const SDXEnvironment* environment) :
 	X3DChildNode(environment),
 	X3DBoundedObject(environment),
 	X3DUrlObject(environment),
-	load_(true),
-	hasScenes_(false)
+	load_(true)
 {
 	static NodeSpecification specification(specifyNode());
 	specification_ = &specification;

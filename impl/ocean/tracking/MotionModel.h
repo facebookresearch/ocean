@@ -139,7 +139,7 @@ class OCEAN_TRACKING_EXPORT MotionModel
 		Pose modelPredictedVelocity;
 
 		/// State determining whether at least one pose has been registered
-		bool modelHasPose;
+		bool modelHasPose = false;
 };
 
 inline const HomogenousMatrix4& MotionModel::pose() const

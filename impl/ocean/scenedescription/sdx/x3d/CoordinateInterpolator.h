@@ -84,7 +84,7 @@ class OCEAN_SCENEDESCRIPTION_SDX_X3D_EXPORT CoordinateInterpolator : virtual pub
 		MultiVector3 valueChanged_;
 
 		/// Number of parallel interpolation values.
-		unsigned int interpolationValues_;
+		unsigned int interpolationValues_ = 0u;
 };
 
 }

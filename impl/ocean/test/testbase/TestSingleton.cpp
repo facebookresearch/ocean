@@ -20,8 +20,7 @@ namespace Test
 namespace TestBase
 {
 
-TestSingleton::SingletonUser::SingletonUser() :
-	userValue((unsigned int)(-1))
+TestSingleton::SingletonUser::SingletonUser()
 {
 	// nothing to do here
 }

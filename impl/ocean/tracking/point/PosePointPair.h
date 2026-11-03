@@ -86,10 +86,10 @@ class PosePointPair
 	private:
 
 		/// Id of the pose.
-		unsigned int pairPoseId;
+		unsigned int pairPoseId = (unsigned int)(-1);
 
 		/// Id of th point.
-		unsigned int pairImagePointId;
+		unsigned int pairImagePointId = (unsigned int)(-1);
 };
 
 /**
@@ -255,18 +255,16 @@ class OCEAN_TRACKING_POINT_EXPORT PosePointPairsObject
 	private:
 
 		/// Id of the object.
-		unsigned int dataObjectId;
+		unsigned int dataObjectId = (unsigned int)(-1);
 
 		/// Pose point pairs.
 		PosePointPairs dataPosePointPairs;
 
 		/// Failure counter.
-		unsigned int dataFailureCounter;
+		unsigned int dataFailureCounter = 0u;
 };
 
-inline PosePointPair::PosePointPair() :
-	pairPoseId((unsigned int)(-1)),
-	pairImagePointId((unsigned int)(-1))
+inline PosePointPair::PosePointPair()
 {
 	// nothing to do here
 }
@@ -296,17 +294,14 @@ inline void PosePointPair::extractPair(const Database& database, HomogenousMatri
 	imagePoint = database.imagePoint<false>(pairImagePointId);
 }
 
-inline PosePointPairsObject::PosePointPairsObject() :
-	dataObjectId((unsigned int)(-1)),
-	dataFailureCounter(0u)
+inline PosePointPairsObject::PosePointPairsObject()
 {
 	// nothing to do here
 }
 
 inline PosePointPairsObject::PosePointPairsObject(const unsigned int objectId, const PosePointPairs& posePointPairs) :
 	dataObjectId(objectId),
-	dataPosePointPairs(posePointPairs),
-	dataFailureCounter(0u)
+	dataPosePointPairs(posePointPairs)
 {
 	// nothing to do here
 }
@@ -321,8 +316,7 @@ inline PosePointPairsObject::PosePointPairsObject(PosePointPairsObject&& object)
 
 inline PosePointPairsObject::PosePointPairsObject(const unsigned int newObjectId, PosePointPairs&& newPosePointPairs) :
 	dataObjectId(newObjectId),
-	dataPosePointPairs(newPosePointPairs),
-	dataFailureCounter(0u)
+	dataPosePointPairs(newPosePointPairs)
 {
 	// nothing to do here
 }

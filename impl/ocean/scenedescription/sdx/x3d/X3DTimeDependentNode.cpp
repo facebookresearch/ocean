@@ -30,8 +30,7 @@ X3DTimeDependentNode::X3DTimeDependentNode(const SDXEnvironment* environment) :
 	startTime_(Timestamp(0.0)),
 	stopTime_(Timestamp(0.0)),
 	isActive_(false),
-	isPaused_(false),
-	pausedTime_(0.0)
+	isPaused_(false)
 {
 	// nothing to do here
 }

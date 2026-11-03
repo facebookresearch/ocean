@@ -133,11 +133,10 @@ class OCEAN_TRACKING_EXPORT HomographyPlaneFinder : public PlaneFinder
 		RandomGenerator randomGenerator;
 
 		/// Number of image points sets that have been added.
-		size_t planeImagePointsSets;
+		size_t planeImagePointsSets = 0;
 };
 
-inline HomographyPlaneFinder::HomographyPlaneFinder() :
-	planeImagePointsSets(0)
+inline HomographyPlaneFinder::HomographyPlaneFinder()
 {
 	// nothing to do here
 }

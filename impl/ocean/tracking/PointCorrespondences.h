@@ -79,13 +79,13 @@ class OCEAN_TRACKING_EXPORT PointCorrespondences
 			protected:
 
 				/// Index of the interest point.
-				unsigned int correspondenceIndex;
+				unsigned int correspondenceIndex = (unsigned int)(-1);
 
 				/// Candidate index.
-				unsigned int correspondenceCandidateIndex;
+				unsigned int correspondenceCandidateIndex = (unsigned int)(-1);
 
 				/// Candidate square distance.
-				Scalar correspondenceCandidateSqrDistance;
+				Scalar correspondenceCandidateSqrDistance = Numeric::maxValue();
 		};
 
 		/**
@@ -150,10 +150,10 @@ class OCEAN_TRACKING_EXPORT PointCorrespondences
 			protected:
 
 				/// Second candidate index.
-				unsigned int correspondenceSecondCandidateIndex;
+				unsigned int correspondenceSecondCandidateIndex = (unsigned int)(-1);
 
 				/// Second candidate square distance.
-				Scalar correspondenceSecondCandidateSqrDistance;
+				Scalar correspondenceSecondCandidateSqrDistance = Numeric::maxValue();
 		};
 
 		/**
@@ -347,10 +347,7 @@ class OCEAN_TRACKING_EXPORT PointCorrespondences
 		static Indices32 filterValidCorrespondences(const Vectors2& firstPoints, const Vectors2& secondPoints, const Indices32& subsetIndices, const Scalar thresholdFactor);
 };
 
-inline PointCorrespondences::Correspondence::Correspondence() :
-	correspondenceIndex((unsigned int)(-1)),
-	correspondenceCandidateIndex((unsigned int)(-1)),
-	correspondenceCandidateSqrDistance(Numeric::maxValue())
+inline PointCorrespondences::Correspondence::Correspondence()
 {
 	// nothing to do here
 }
@@ -384,9 +381,7 @@ inline PointCorrespondences::Correspondence::operator bool() const
 }
 
 inline PointCorrespondences::RedundantCorrespondence::RedundantCorrespondence() :
-	Correspondence(),
-	correspondenceSecondCandidateIndex((unsigned int)(-1)),
-	correspondenceSecondCandidateSqrDistance(Numeric::maxValue())
+	Correspondence()
 {
 	// nothing to do here
 }

@@ -122,7 +122,7 @@ class OCEAN_SCENEDESCRIPTION_SDX_X3D_EXPORT TrackerTransform :
 		Devices::Tracker::TrackerObjectEventSubscription trackerObjectEventSubscription_;
 
 		/// True, if the tracker object is visible; False, otherwise.
-		bool objectVisible_;
+		bool objectVisible_ = false;
 };
 
 }

@@ -98,7 +98,7 @@ class OCEAN_SCENEDESCRIPTION_SDX_X3D_EXPORT Inline :
 		SingleBool load_;
 
 		/// State determining whether the inline node has loaded scenes.
-		bool hasScenes_;
+		bool hasScenes_ = false;
 
 		/// Scene reference of a possible permanent scene object.
 		SDXSceneRef permanentScene_;

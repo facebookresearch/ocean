@@ -26,8 +26,7 @@ X3DEnvironmentalSensorNode::X3DEnvironmentalSensorNode(const SDXEnvironment* env
 	X3DSensorNode(environment),
 	SDXUpdateNode(environment),
 	center_(Vector3(0, 0, 0)),
-	size_(Vector3(0, 0, 0)),
-	sensorEntered_(false)
+	size_(Vector3(0, 0, 0))
 {
 	// nothing to do here
 }

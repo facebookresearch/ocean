@@ -267,22 +267,22 @@ class OCEAN_TRACKING_RMV_EXPORT RMVFeatureTracker6DOF :
 		RMVFeatureDetector::DetectorType trackerDetectorType_;
 
 		/// The current strength threshold for the feature tracker, will be adjusted as time goes by, with range [0, infinity)
-		Scalar trackerFeatureDetectorStrength_;
+		Scalar trackerFeatureDetectorStrength_ = Scalar(25);
 
 		/// Maximal number of feature points to be used for the pose projections, with range [10, infinity)
-		size_t trackerMaximalPoseProjectionFeatureNumber_;
+		size_t trackerMaximalPoseProjectionFeatureNumber_ = 150;
 
 		/// The radius defining the circle around each strong feature point not containing more than one projected object point so that a point correspondence counts as strong, in pixels, with range (trackerSemiStrongCorrespondencesEmptyAreaRadius_, infinity)
-		Scalar trackerStrongCorrespondencesEmptyAreaRadius_;
+		Scalar trackerStrongCorrespondencesEmptyAreaRadius_ = Scalar(10);
 
 		/// The radius defining the circle around each semi-strong feature point not containing more than one projected object point so that a point correspondence counts as semi-strong, in pixels, with range [0, trackerStrongCorrespondencesEmptyAreaRadius_)
-		Scalar trackerSemiStrongCorrespondencesEmptyAreaRadius_;
+		Scalar trackerSemiStrongCorrespondencesEmptyAreaRadius_ = Scalar(6);
 
 		/// The random number generator object to be used.
 		RandomGenerator trackerRandomGenerator_;
 
 		/// True, if the asynchronous data processing function is currently active.
-		bool trackerAsynchronousDataProcessingActive_;
+		bool trackerAsynchronousDataProcessingActive_ = false;
 
 		/// The inverted and flipped camera pose to be used during the asynchronous data processing function.
 		HomogenousMatrix4 trackerAsynchronousDataProcessingFlippedCamera_T_world_;

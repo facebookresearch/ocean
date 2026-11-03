@@ -15,12 +15,12 @@ namespace Ocean
 namespace Tracking
 {
 
-SmoothedTransformation::SmoothedTransformation(const double smoothingInterval)
+SmoothedTransformation::SmoothedTransformation(const double smoothingInterval) :
+	smoothingInterval_(smoothingInterval)
 {
 	reset();
 
 	ocean_assert(smoothingInterval > NumericD::eps());
-	smoothingInterval_ = smoothingInterval;
 }
 
 void SmoothedTransformation::setTransformation(const HomogenousMatrix4& transformation, const Timestamp& timestamp)

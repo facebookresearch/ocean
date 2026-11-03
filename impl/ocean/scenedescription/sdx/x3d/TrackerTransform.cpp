@@ -47,8 +47,7 @@ TrackerTransform::TrackerTransform(const SDXEnvironment* environment) :
 	multiInput_(false),
 	objectSize_(Vector3(0, 0, 0)),
 	alwaysVisible_(false),
-	objectId_(Devices::Tracker::invalidObjectId()),
-	objectVisible_(false)
+	objectId_(Devices::Tracker::invalidObjectId())
 {
 	static NodeSpecification specification(specifyNode());
 	specification_ = &specification;

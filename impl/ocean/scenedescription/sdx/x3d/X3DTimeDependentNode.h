@@ -169,7 +169,7 @@ class OCEAN_SCENEDESCRIPTION_SDX_X3D_EXPORT X3DTimeDependentNode :
 		SingleBool isPaused_;
 
 		/// The time this sensor was paused, with range [0, infinity)
-		double pausedTime_;
+		double pausedTime_ = 0.0;
 };
 
 }

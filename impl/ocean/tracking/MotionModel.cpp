@@ -13,8 +13,7 @@ namespace Ocean
 namespace Tracking
 {
 
-MotionModel::MotionModel() :
-	modelHasPose(false)
+MotionModel::MotionModel()
 {
 	// nothing to do here
 }

@@ -24,12 +24,7 @@ namespace Test
 namespace TestBase
 {
 
-TestMoveBehavior::OperationCounter::OperationCounter() :
-	constructor_(0),
-	copyConstructor_(0),
-	moveConstructor_(0),
-	assignOperator_(0),
-	moveOperator_(0)
+TestMoveBehavior::OperationCounter::OperationCounter()
 {
 	// nothing to do here
 }
