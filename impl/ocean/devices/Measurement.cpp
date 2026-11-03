@@ -272,9 +272,9 @@ Strings Measurement::objectDescriptions() const
 	Strings descriptions;
 	descriptions.reserve(objectDescriptionToIdMap_.size());
 
-	for (ObjectDescriptionToIdMap::const_iterator i = objectDescriptionToIdMap_.cbegin(); i != objectDescriptionToIdMap_.cend(); ++i)
+	for (const ObjectDescriptionToIdMap::value_type& pair : objectDescriptionToIdMap_)
 	{
-		descriptions.emplace_back(i->first);
+		descriptions.emplace_back(pair.first);
 	}
 
 	return descriptions;
@@ -316,9 +316,9 @@ void Measurement::postNewSample(const SampleRef& newSample)
 
 	const ScopedLock scopedLock(subscriptionLock_);
 
-	for (SampleSubscriptionMap::const_iterator i = sampleSubscriptionMap_.cbegin(); i != sampleSubscriptionMap_.cend(); ++i)
+	for (const SampleSubscriptionMap::value_type& pair : sampleSubscriptionMap_)
 	{
-		i->second(this, newSample);
+		pair.second(this, newSample);
 	}
 }
 

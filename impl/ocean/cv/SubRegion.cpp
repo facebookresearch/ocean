@@ -160,9 +160,9 @@ bool SubRegion::isInside(const Vector2& point) const
 			return false;
 		}
 
-		for (Triangles2::const_iterator i = triangles_.begin(); i != triangles_.end(); ++i)
+		for (const Triangle2& triangle : triangles_)
 		{
-			if (i->isInside(point))
+			if (triangle.isInside(point))
 			{
 				return true;
 			}
@@ -196,11 +196,11 @@ Vectors2 SubRegion::filterPoints(const Vectors2& points) const
 	Vectors2 result;
 	result.reserve(points.size());
 
-	for (Vectors2::const_iterator i = points.begin(); i != points.end(); ++i)
+	for (const Vector2& point : points)
 	{
-		if (isInside(*i))
+		if (isInside(point))
 		{
-			result.push_back(*i);
+			result.push_back(point);
 		}
 	}
 
@@ -250,9 +250,9 @@ Scalar SubRegion::size() const
 	{
 		Scalar result = 0;
 
-		for (Triangles2::const_iterator i = triangles_.begin(); i != triangles_.end(); ++i)
+		for (const Triangle2& triangle : triangles_)
 		{
-			result += i->area();
+			result += triangle.area();
 		}
 
 		return result;
@@ -274,9 +274,9 @@ SubRegion SubRegion::operator*(const Scalar factor) const
 		Triangles2 scaledTriangles;
 		scaledTriangles.reserve(triangles_.size());
 
-		for (Triangles2::const_iterator i = triangles_.begin(); i != triangles_.end(); ++i)
+		for (const Triangle2& triangle : triangles_)
 		{
-			scaledTriangles.push_back(Triangle2(i->point0() * factor, i->point1() * factor, i->point2() * factor));
+			scaledTriangles.emplace_back(triangle.point0() * factor, triangle.point1() * factor, triangle.point2() * factor);
 		}
 
 		return SubRegion(scaledTriangles);

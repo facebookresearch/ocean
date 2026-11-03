@@ -415,10 +415,10 @@ void StaticPatternTracker6DOF::reportNotAlignedPoses(const Timestamp& timestamp)
 
 	// we do not have a world tracker result for the current timestamp (perhaps world tracking is not initialized yet)
 
-	for (PatternTransformationsMap::iterator iPattern = patternTrackerTransformationsMap_.begin(); iPattern != patternTrackerTransformationsMap_.end(); ++iPattern)
+	for (PatternTransformationsMap::value_type& pair : patternTrackerTransformationsMap_)
 	{
-		const ObjectId& internalObjectId = iPattern->first;
-		const TransformationMap& patternTrackerTransformationMap = iPattern->second.transformations();
+		const ObjectId& internalObjectId = pair.first;
+		const TransformationMap& patternTrackerTransformationMap = pair.second.transformations();
 
 		const TransformationMap::const_iterator iPatternTransform = patternTrackerTransformationMap.find(timestamp);
 
@@ -433,7 +433,7 @@ void StaticPatternTracker6DOF::reportNotAlignedPoses(const Timestamp& timestamp)
 			orientations.emplaceBack(pattern_T_camera.rotation());
 		}
 
-		iPattern->second.pattern_T_world().toNull();
+		pair.second.pattern_T_world().toNull();
 	}
 
 	scopedLock.release();
@@ -471,11 +471,11 @@ void StaticPatternTracker6DOF::reportAlignedPoses(const Timestamp& timestamp)
 	world_T_cameras.reserve(world_T_cameras.size());
 	pattern_T_cameras.reserve(world_T_cameras.size());
 
-	for (PatternTransformationsMap::iterator iPattern = patternTrackerTransformationsMap_.begin(); iPattern != patternTrackerTransformationsMap_.end(); ++iPattern)
+	for (PatternTransformationsMap::value_type& pair : patternTrackerTransformationsMap_)
 	{
-		const ObjectId& internalObjectId = iPattern->first;
-		HomogenousMatrix4& pattern_T_world = iPattern->second.pattern_T_world();
-		const TransformationMap& patternTrackerTransformationMap = iPattern->second.transformations();
+		const ObjectId& internalObjectId = pair.first;
+		HomogenousMatrix4& pattern_T_world = pair.second.pattern_T_world();
+		const TransformationMap& patternTrackerTransformationMap = pair.second.transformations();
 
 		world_T_cameras.clear();
 		pattern_T_cameras.clear();

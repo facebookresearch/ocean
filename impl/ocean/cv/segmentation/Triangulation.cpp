@@ -95,9 +95,9 @@ Triangulation::IndexTriangles Triangulation::triangulate(const PixelContourT<T>&
 	result.reserve(corners.size());
 
 	unsigned int index = 0u;
-	for (PixelPositionPairs::const_iterator i = corners.begin(); i != corners.end(); ++i)
+	for (const PixelPositionPair& corner : corners)
 	{
-		if (i->second)
+		if (corner.second)
 		{
 			break;
 		}

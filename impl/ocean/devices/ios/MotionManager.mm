@@ -113,9 +113,9 @@ void MotionManager::start()
 			{
 				const ScopedLock scopedLock(lock_);
 
-				for (DeviceMotionListenerMap::const_iterator i = deviceMotionListenerMap_.cbegin(); i != deviceMotionListenerMap_.cend(); ++i)
+				for (const DeviceMotionListenerMap::value_type& pair : deviceMotionListenerMap_)
 				{
-					i->second(deviceMotion);
+					pair.second(deviceMotion);
 				}
 			}
 		}];

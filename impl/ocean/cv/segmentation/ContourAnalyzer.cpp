@@ -80,9 +80,13 @@ PixelContour ContourAnalyzer::createDenseContour(const PixelPositions& initialPi
 	ocean_assert(!initialPixels.empty());
 	uniquePixels.push_back(initialPixels.front());
 
-	for (PixelPositions::const_iterator i = initialPixels.begin(); i != initialPixels.end(); ++i)
-		if (*i != uniquePixels.back())
-			uniquePixels.push_back(*i);
+	for (const PixelPosition& initialPixel : initialPixels)
+	{
+		if (initialPixel != uniquePixels.back())
+		{
+			uniquePixels.push_back(initialPixel);
+		}
+	}
 
 	while (!uniquePixels.empty() && uniquePixels.front() == uniquePixels.back())
 		uniquePixels.pop_back();

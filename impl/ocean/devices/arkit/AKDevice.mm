@@ -103,11 +103,11 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 
 	AKDevice::TrackerCapabilities necessaryTrackerCapabilities = device->trackerCapabilities();
 
-	for (AKDevice::DeviceMap::const_iterator iDevice = deviceMap_.cbegin(); iDevice != deviceMap_.cend(); ++iDevice)
+	for (const AKDevice::DeviceMap::value_type& pair : deviceMap_)
 	{
-		ocean_assert(iDevice->first == device || iDevice->first->name() != device->name());
+		ocean_assert(pair.first == device || pair.first->name() != device->name());
 
-		necessaryTrackerCapabilities = AKDevice::TrackerCapabilities(necessaryTrackerCapabilities | iDevice->first->trackerCapabilities());
+		necessaryTrackerCapabilities = AKDevice::TrackerCapabilities(necessaryTrackerCapabilities | pair.first->trackerCapabilities());
 	}
 
 	if (inputLiveVideo_ && &*inputLiveVideo_ != &*inputLiveVideo)
@@ -594,9 +594,9 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 
 	bool containsGeoTracker = false;
 
-	for (AKDevice::DeviceMap::const_iterator iDevice = deviceMap_.cbegin(); iDevice != deviceMap_.cend(); ++iDevice)
+	for (const AKDevice::DeviceMap::value_type& pair : deviceMap_)
 	{
-		AKDevice* device = iDevice->first;
+		AKDevice* device = pair.first;
 
 		if (device->name() == AKWorldTracker6DOF::deviceNameAKWorldTracker6DOF())
 		{
@@ -696,9 +696,9 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 
 	const ScopedLock scopedLock(lock_);
 
-	for (AKDevice::DeviceMap::const_iterator iDevice = deviceMap_.cbegin(); iDevice != deviceMap_.cend(); ++iDevice)
+	for (const AKDevice::DeviceMap::value_type& pair : deviceMap_)
 	{
-		iDevice->first->onAddedAnchors(reusableAnchors_);
+		pair.first->onAddedAnchors(reusableAnchors_);
 	}
 }
 
@@ -716,9 +716,9 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 
 	const ScopedLock scopedLock(lock_);
 
-	for (AKDevice::DeviceMap::const_iterator iDevice = deviceMap_.cbegin(); iDevice != deviceMap_.cend(); ++iDevice)
+	for (const AKDevice::DeviceMap::value_type& pair : deviceMap_)
 	{
-		iDevice->first->onUpdateAnchors(reusableAnchors_);
+		pair.first->onUpdateAnchors(reusableAnchors_);
 	}
 }
 
@@ -736,9 +736,9 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 
 	const ScopedLock scopedLock(lock_);
 
-	for (AKDevice::DeviceMap::const_iterator iDevice = deviceMap_.cbegin(); iDevice != deviceMap_.cend(); ++iDevice)
+	for (const AKDevice::DeviceMap::value_type& pair : deviceMap_)
 	{
-		iDevice->first->onRemovedAnchors(reusableAnchors_);
+		pair.first->onRemovedAnchors(reusableAnchors_);
 	}
 }
 

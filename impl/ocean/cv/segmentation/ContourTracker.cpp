@@ -133,9 +133,9 @@ bool ContourTracker::trackObject(const Frame& frame, RandomGenerator& randomGene
 			}
 
 			previousContourStrongest_.clear();
-			for (IndexSet32::const_iterator i = subsetIndexSet.begin(); i != subsetIndexSet.end(); ++i)
+			for (const Index32& subsetIndex : subsetIndexSet)
 			{
-				previousContourStrongest_.push_back(previousDenseContourSubPixel_[*i]);
+				previousContourStrongest_.push_back(previousDenseContourSubPixel_[subsetIndex]);
 			}
 
 			if (Advanced::AdvancedMotionT<>::trackPointsSubPixelMirroredBorder<31u>(previousFramePyramid_, currentFramePyramid_, previousContourStrongest_, previousContourStrongest_, currentContourStrongest, 2u, 4u, worker))

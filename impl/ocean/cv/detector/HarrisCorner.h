@@ -112,9 +112,9 @@ inline Vectors2 HarrisCorner::corners2imagePoints(const HarrisCorners& corners)
 	Vectors2 result;
 	result.reserve(corners.size());
 
-	for (HarrisCorners::const_iterator i = corners.begin(); i != corners.end(); ++i)
+	for (const HarrisCorner& corner : corners)
 	{
-		result.push_back(i->observation());
+		result.push_back(corner.observation());
 	}
 
 	return result;
@@ -141,9 +141,9 @@ inline PointFeatures HarrisCorner::corners2pointFeatures(const HarrisCorners& co
 	PointFeatures result;
 	result.reserve(corners.size());
 
-	for (HarrisCorners::const_iterator i = corners.begin(); i != corners.end(); ++i)
+	for (const HarrisCorner& corner : corners)
 	{
-		result.push_back(*i);
+		result.push_back(corner);
 	}
 
 	return result;

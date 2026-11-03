@@ -362,9 +362,9 @@ bool FTFontManager::hasFont(const std::string& familyName, const std::string& st
 
 	if (!styleName.empty())
 	{
-		for (FaceMap::const_iterator iFace = iFamily->second.cbegin(); iFace != iFamily->second.cend(); ++iFace)
+		for (const FaceMap::value_type& pair : iFamily->second)
 		{
-			if (iFace->first == styleName)
+			if (pair.first == styleName)
 			{
 				return true;
 			}
@@ -383,9 +383,9 @@ Strings FTFontManager::familyNames() const
 	Strings result;
 	result.reserve(familyMap_.size());
 
-	for (FamilyMap::const_iterator i = familyMap_.cbegin(); i != familyMap_.cend(); ++i)
+	for (const FamilyMap::value_type& pair : familyMap_)
 	{
-		result.emplace_back(i->first);
+		result.emplace_back(pair.first);
 	}
 
 	return result;
@@ -406,9 +406,9 @@ Strings FTFontManager::styleNames(const std::string& familyName) const
 
 	result.reserve(familyMap_.size());
 
-	for (FaceMap::const_iterator iFace = iFamily->second.cbegin(); iFace != iFamily->second.cend(); ++iFace)
+	for (const FaceMap::value_type& pair : iFamily->second)
 	{
-		result.emplace_back(iFace->first);
+		result.emplace_back(pair.first);
 	}
 
 	return result;

@@ -803,9 +803,9 @@ void SerializerDeviceRecorder::threadRun()
 		{
 			const ScopedLock scopedLock(frameMediumMapLock_);
 
-			for (FrameMediumMap::iterator iFrameMedium = frameMediumMap_.begin(); iFrameMedium != frameMediumMap_.end(); ++iFrameMedium)
+			for (FrameMediumMap::value_type& pair : frameMediumMap_)
 			{
-				FrameMediumData& frameMediumData = iFrameMedium->second;
+				FrameMediumData& frameMediumData = pair.second;
 
 				SharedAnyCamera camera;
 				FrameRef frame = frameMediumData.frameMedium_->frame(&camera);

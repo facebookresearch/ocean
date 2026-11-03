@@ -515,9 +515,9 @@ bool Worker::executeFunctions(const Functions& functions)
 
 	if (signals_.size() == 0u)
 	{
-		for (Functions::const_iterator i = functions.begin(); i != functions.end(); ++i)
+		for (const Function& function : functions)
 		{
-			(*i)();
+			(function)();
 		}
 
 		return true;

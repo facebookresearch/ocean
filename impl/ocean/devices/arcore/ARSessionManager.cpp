@@ -913,10 +913,10 @@ void ARSessionManager::update(unsigned int textureId)
 {
 	const ScopedLock scopedLock(lock_);
 
-	for (SessionMap::iterator iSession = sessionMap_.begin(); iSession != sessionMap_.end(); ++iSession)
+	for (SessionMap::value_type& pair : sessionMap_)
 	{
 		// possible issue: do we need individual texture ids for individual sessions?
-		iSession->second->update(textureId);
+		pair.second->update(textureId);
 	}
 }
 

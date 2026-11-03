@@ -788,15 +788,15 @@ typename Clustering<tChannels>::Segmentation Clustering<tChannels>::findOptimalR
 			else if (results[n].clusters().size() == results[bestIndex].clusters().size())
 			{
 				/*unsigned int maxVariance = 0u;
-				for (Clusters::const_iterator i = clusters.begin(); i != clusters.end(); ++i)
+				for (const Cluster& cluster : clusters)
 				{
-					maxVariance = max(maxVariance, max(i->clusterVariance0, max(i->clusterVariance1, i->clusterVariance2)));
+					maxVariance = max(maxVariance, max(cluster.clusterVariance0, max(cluster.clusterVariance1, cluster.clusterVariance2)));
 				}
 
 				unsigned int testMaxVariance = 0u;
-				for (Clusters::const_iterator i = testClusters.begin(); i != testClusters.end(); ++i)
+				for (const Cluster& testCluster : testClusters)
 				{
-					testMaxVariance = max(maxVariance, max(i->clusterVariance0, max(i->clusterVariance1, i->clusterVariance2)));
+					testMaxVariance = max(maxVariance, max(testCluster.clusterVariance0, max(testCluster.clusterVariance1, testCluster.clusterVariance2)));
 				}
 
 				if (testMaxVariance < maxVariance)
@@ -847,15 +847,15 @@ void Clustering<tChannels>::findOptimalRandomClusteringSubset(const Datas* datas
 		else if (testSegmentation.clusters().size() == result.clusters().size())
 		{
 			/*unsigned int maxVariance = 0u;
-			for (Clusters::const_iterator i = clusters.begin(); i != clusters.end(); ++i)
+			for (const Cluster& cluster : clusters)
 			{
-				maxVariance = max(maxVariance, max(i->clusterVariance0, max(i->clusterVariance1, i->clusterVariance2)));
+				maxVariance = max(maxVariance, max(cluster.clusterVariance0, max(cluster.clusterVariance1, cluster.clusterVariance2)));
 			}
 
 			unsigned int testMaxVariance = 0u;
-			for (Clusters::const_iterator i = testClusters.begin(); i != testClusters.end(); ++i)
+			for (const Cluster& testCluster : testClusters)
 			{
-				testMaxVariance = max(maxVariance, max(i->clusterVariance0, max(i->clusterVariance1, i->clusterVariance2)));
+				testMaxVariance = max(maxVariance, max(testCluster.clusterVariance0, max(testCluster.clusterVariance1, testCluster.clusterVariance2)));
 			}
 
 			if (testMaxVariance < maxVariance)

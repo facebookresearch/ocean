@@ -432,16 +432,16 @@ Strings HighPerformanceBenchmark::report(const std::string& referenceCategory) c
 	}
 
 	SortedMap sortedMap;
-	for (MeasurementMap::const_iterator i = measurementMap_.cbegin(); i != measurementMap_.cend(); ++i)
+	for (const MeasurementMap::value_type& pair : measurementMap_)
 	{
 		double sumSeconds = 0.0;
 
-		for (const double& measurement : i->second)
+		for (const double& measurement : pair.second)
 		{
 			sumSeconds += measurement;
 		}
 
-		sortedMap.insert(std::make_pair(sumSeconds, i->first));
+		sortedMap.insert(std::make_pair(sumSeconds, pair.first));
 	}
 
 	std::vector<Strings> tokenMatrix;
@@ -730,11 +730,11 @@ bool HighPerformanceBenchmark::Category::reportAsTokenMatrix(std::vector<std::ve
 				sortedCategoryMap.insert(std::make_pair(i->computeRecursiveSumSeconds(), &(*i)));
 			}
 
-			for (SortedCategoryMap::const_iterator i = sortedCategoryMap.cbegin(); i != sortedCategoryMap.cend(); ++i)
+			for (const SortedCategoryMap::value_type& pair : sortedCategoryMap)
 			{
 				// Add the sub-categories, which are sorted by their sums of seconds in ascending order, onto the category stack in reverse order (to process those with large sums of seconds first).
-				ocean_assert(i->second != nullptr);
-				categoryStack.emplace_front(i->second, currentIndentation + 2u);
+				ocean_assert(pair.second != nullptr);
+				categoryStack.emplace_front(pair.second, currentIndentation + 2u);
 			}
 		}
 	}
@@ -882,9 +882,9 @@ HighPerformanceBenchmark::Categories HighPerformanceBenchmark::createCategoryHie
 	Strings categoryNames;
 	categoryNames.reserve(measurementMap.size());
 
-	for (MeasurementMap::const_iterator i = measurementMap.cbegin(); i != measurementMap.cend(); ++i)
+	for (const MeasurementMap::value_type& pair : measurementMap)
 	{
-		categoryNames.emplace_back(i->first);
+		categoryNames.emplace_back(pair.first);
 	}
 
 	std::sort(categoryNames.begin(), categoryNames.end());

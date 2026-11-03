@@ -946,9 +946,9 @@ inline std::vector<PixelPositionT<T>> PixelPositionT<T>::vectors2pixelPositions(
 	std::vector<PixelPositionT<T>> result;
 	result.reserve(values.size());
 
-	for (Vectors2::const_iterator i = values.begin(); i != values.end(); ++i)
+	for (const Vector2& value : values)
 	{
-		result.push_back(vector2pixelPosition(*i));
+		result.push_back(vector2pixelPosition(value));
 	}
 
 	return result;
@@ -962,9 +962,9 @@ inline std::vector<PixelPositionT<T>> PixelPositionT<T>::vectors2pixelPositions(
 	std::vector<PixelPositionT<T>> result;
 	result.reserve(values.size());
 
-	for (Vectors2::const_iterator i = values.begin(); i != values.end(); ++i)
+	for (const Vector2& value : values)
 	{
-		result.emplace_back(T(minmax(0, int(i->x() + Scalar(0.5)), int(width - 1))), T(minmax(0, int(i->y() + Scalar(0.5)), int(height - 1u))));
+		result.emplace_back(T(minmax(0, int(value.x() + Scalar(0.5)), int(width - 1))), T(minmax(0, int(value.y() + Scalar(0.5)), int(height - 1u))));
 	}
 
 	return result;

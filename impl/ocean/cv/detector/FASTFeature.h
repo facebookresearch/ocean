@@ -100,9 +100,9 @@ inline Vectors2 FASTFeature::features2imagePoints(const FASTFeatures& features)
 	Vectors2 result;
 	result.reserve(features.size());
 
-	for (FASTFeatures::const_iterator i = features.begin(); i != features.end(); ++i)
+	for (const FASTFeature& feature : features)
 	{
-		result.push_back(i->observation());
+		result.push_back(feature.observation());
 	}
 
 	return result;
@@ -128,9 +128,9 @@ inline PointFeatures FASTFeature::features2pointFeatures(const FASTFeatures& fea
 	PointFeatures result;
 	result.reserve(features.size());
 
-	for (FASTFeatures::const_iterator i = features.begin(); i != features.end(); ++i)
+	for (const FASTFeature& feature : features)
 	{
-		result.push_back(*i);
+		result.push_back(feature);
 	}
 
 	return result;

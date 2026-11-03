@@ -88,19 +88,19 @@ void MaskCreator::denseContour2inclusiveMaskHotizontallyConvex(uint8_t* mask, co
 
 	IndexPairs32 indexPairs(height, std::make_pair(0xFFFFFFFFu, 0u));
 
-	for (PixelPositions::const_iterator i = densePixelPositions.begin(); i != densePixelPositions.end(); ++i)
+	for (const PixelPosition& densePixelPosition : densePixelPositions)
 	{
-		if (i->y() < height)
+		if (densePixelPosition.y() < height)
 		{
-			IndexPair32& indexPair = indexPairs[i->y()];
+			IndexPair32& indexPair = indexPairs[densePixelPosition.y()];
 
-			if (i->x() < indexPair.first)
+			if (densePixelPosition.x() < indexPair.first)
 			{
-				indexPair.first = i->x();
+				indexPair.first = densePixelPosition.x();
 			}
-			if (i->x() > indexPair.second)
+			if (densePixelPosition.x() > indexPair.second)
 			{
-				indexPair.second = i->x();
+				indexPair.second = densePixelPosition.x();
 			}
 		}
 	}

@@ -418,9 +418,9 @@ bool ContourFinder::adjustContourWithLandmarks(const Vectors2& contour, const Ve
 		Scalar sqrDistance0 = Numeric::maxValue();
 		Scalar sqrDistance1 = Numeric::maxValue();
 
-		for (Vectors2::const_iterator i = landmarks.begin(); i != landmarks.end(); ++i)
+		for (const Vector2& landmark : landmarks)
 		{
-			const Scalar sqrDistance = point.sqrDistance(*i);
+			const Scalar sqrDistance = point.sqrDistance(landmark);
 
 			if (sqrDistance < sqrDistance0)
 			{
@@ -428,12 +428,12 @@ bool ContourFinder::adjustContourWithLandmarks(const Vectors2& contour, const Ve
 				near1 = near0;
 
 				sqrDistance0 = sqrDistance;
-				near0 = *i;
+				near0 = landmark;
 			}
 			else if (sqrDistance < sqrDistance1)
 			{
 				sqrDistance1 = sqrDistance;
-				near1 = *i;
+				near1 = landmark;
 			}
 		}
 
@@ -544,9 +544,9 @@ void ContourFinder::similarityMaskPyramid8BitPerChannel(const Frame& frame, cons
 
 		// we up-sample the locations for the next finder layer (by multiplying the locations by 2 and by filling the gaps on the finer layer)
 
-		for (PixelPositions::const_iterator i = smallNonUniquePixels.begin(); i != smallNonUniquePixels.end(); ++i)
+		for (const PixelPosition& smallNonUniquePixel : smallNonUniquePixels)
 		{
-			const PixelPosition twice(i->twice());
+			const PixelPosition twice(smallNonUniquePixel.twice());
 
 			nonUniquePixels.emplace_back(twice);
 			nonUniquePixels.emplace_back(twice.east());
@@ -690,9 +690,9 @@ void ContourFinder::finetuneSimilarityMask8BitPerChannel(const uint8_t* frame, u
 	const unsigned int maskStrideElements = width + maskPaddingElements;
 
 #ifdef OCEAN_DEBUG
-	for (PixelPositions::const_iterator i = positions.begin(); i != positions.end(); ++i)
+	for (const PixelPosition& position : positions)
 	{
-		ocean_assert(i->x() < width && i->y() < height);
+		ocean_assert(position.x() < width && position.y() < height);
 	}
 #endif
 

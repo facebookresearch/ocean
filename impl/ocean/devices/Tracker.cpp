@@ -232,9 +232,9 @@ void Tracker::postFoundTrackerObjects(const ObjectIdSet& objectIds, const Timest
 
 	const ScopedLock scopedLock(subscriptionLock_);
 
-	for (TrackerObjectSubscriptionMap::const_iterator i = trackerObjectSubscriptionMap_.cbegin(); i != trackerObjectSubscriptionMap_.cend(); ++i)
+	for (const TrackerObjectSubscriptionMap::value_type& pair : trackerObjectSubscriptionMap_)
 	{
-		i->second(this, true, objectIds, timestamp);
+		pair.second(this, true, objectIds, timestamp);
 	}
 }
 
@@ -249,9 +249,9 @@ void Tracker::postLostTrackerObjects(const ObjectIdSet& objectIds, const Timesta
 
 	const ScopedLock scopedLock(subscriptionLock_);
 
-	for (TrackerObjectSubscriptionMap::const_iterator i = trackerObjectSubscriptionMap_.cbegin(); i != trackerObjectSubscriptionMap_.cend(); ++i)
+	for (const TrackerObjectSubscriptionMap::value_type& pair : trackerObjectSubscriptionMap_)
 	{
-		i->second(this, false, objectIds, timestamp);
+		pair.second(this, false, objectIds, timestamp);
 	}
 }
 

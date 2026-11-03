@@ -274,9 +274,9 @@ std::vector<DebugElements::Hierarchy> DebugElements::hierarchies(const uint32_t 
 	std::vector<Hierarchy> hierarchies;
 	hierarchies.reserve(hierarchyMap.size());
 
-	for (HierarchyMap::const_iterator iHierarchy = hierarchyMap.cbegin(); iHierarchy != hierarchyMap.cend(); ++iHierarchy)
+	for (const HierarchyMap::value_type& pair : hierarchyMap)
 	{
-		hierarchies.emplace_back(iHierarchy->first);
+		hierarchies.emplace_back(pair.first);
 	}
 
 	return hierarchies;

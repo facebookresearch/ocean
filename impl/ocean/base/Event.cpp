@@ -30,8 +30,10 @@ EventManager::~EventManager()
 
 	stopThreadExplicitly();
 
-	for (EventCallbacksMap::const_iterator i = managerEventCallbacksMap.begin(); i != managerEventCallbacksMap.end(); ++i)
-		ocean_assert(i->second.isEmpty());
+	for (const EventCallbacksMap::value_type& pair : managerEventCallbacksMap)
+	{
+		ocean_assert_and_suppress_unused(pair.second.isEmpty(), pair);
+	}
 
 	managerEventCallbacksMap.clear();
 }
@@ -106,15 +108,19 @@ void EventManager::threadRun()
 
 			TemporaryScopedLock temporalModificationScopedLock(managerRegistrationRequestLock);
 
-			for (RegistrationRequests::const_iterator i = managerRegistrationRequests.begin(); i != managerRegistrationRequests.end(); ++i)
+			for (const RegistrationRequest& managerRegistrationRequest : managerRegistrationRequests)
 			{
-				if (i->registerCallback())
-					addEventFunction(i->eventTypes(), i->callback());
+				if (managerRegistrationRequest.registerCallback())
+				{
+					addEventFunction(managerRegistrationRequest.eventTypes(), managerRegistrationRequest.callback());
+				}
 				else
-					removeEventFunction(i->eventTypes(), i->callback());
+				{
+					removeEventFunction(managerRegistrationRequest.eventTypes(), managerRegistrationRequest.callback());
+				}
 
-				ocean_assert(managerRequestSet.find(i->id()) != managerRequestSet.end());
-				managerRequestSet.erase(i->id());
+				ocean_assert(managerRequestSet.find(managerRegistrationRequest.id()) != managerRequestSet.end());
+				managerRequestSet.erase(managerRegistrationRequest.id());
 			}
 			managerRegistrationRequests.clear();
 
@@ -137,9 +143,13 @@ void EventManager::threadRun()
 
 				const ScopedLock scopedLock(managerRegistrationRequestLock);
 
-				for (EventCallbacksMap::const_iterator i = managerEventCallbacksMap.begin(); i != managerEventCallbacksMap.end(); ++i)
-					if (i->first & eventObject->type())
-						i->second(eventObject);
+				for (const EventCallbacksMap::value_type& pair : managerEventCallbacksMap)
+				{
+					if (pair.first & eventObject->type())
+					{
+						pair.second(eventObject);
+					}
+				}
 			}
 		}
 

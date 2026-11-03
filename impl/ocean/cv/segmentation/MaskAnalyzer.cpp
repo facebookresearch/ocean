@@ -977,13 +977,15 @@ bool MaskAnalyzer::pixels2contour(const PixelPositions& pixels, const unsigned i
 	unsigned int bottom = 0u;
 
 	PixelPosition startPoint;
-	for (PixelPositions::const_iterator i = pixels.begin(); i != pixels.end(); ++i)
-		if (i->x() < left || (i->x() == left && i->y() > bottom))
+	for (const PixelPosition& pixel : pixels)
+	{
+		if (pixel.x() < left || (pixel.x() == left && pixel.y() > bottom))
 		{
-			left = i->x();
-			bottom = i->y();
-			startPoint = *i;
+			left = pixel.x();
+			bottom = pixel.y();
+			startPoint = pixel;
 		}
+	}
 
 	PixelPositions tmpContour;
 	tmpContour.reserve(pixels.size());

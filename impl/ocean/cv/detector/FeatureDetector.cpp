@@ -71,9 +71,9 @@ Vectors2 FeatureDetector::filterStrongHarrisPoints(const uint8_t* yFrame, const 
 		{
 			bool neighborhood = false;
 
-			for (Vectors2::const_iterator iP = strongestPositions.begin(); iP != strongestPositions.end(); ++iP)
+			for (const Vector2& p : strongestPositions)
 			{
-				if (i->sqrDistance(*iP) < minSqrDistance)
+				if (i->sqrDistance(p) < minSqrDistance)
 				{
 					neighborhood = true;
 					break;

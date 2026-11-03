@@ -47,19 +47,19 @@ bool LineDetectorHough::InfiniteLine::isSimilar(const InfiniteLine& line, const 
 
 LineDetectorHough::Accumulator::LookupManager::~LookupManager()
 {
-	for (AngleLookupMap::iterator i = angleLookupMap_.begin(); i != angleLookupMap_.end(); ++i)
+	for (AngleLookupMap::value_type& pair : angleLookupMap_)
 	{
-		delete [] i->second;
+		delete [] pair.second;
 	}
 
-	for (AngleLookupMap::iterator i = angleLookupMapDiagonal_.begin(); i != angleLookupMapDiagonal_.end(); ++i)
+	for (AngleLookupMap::value_type& pair : angleLookupMapDiagonal_)
 	{
-		delete [] i->second;
+		delete [] pair.second;
 	}
 
-	for (DirectionLookupMap::iterator i = directionLookupMap_.begin(); i != directionLookupMap_.end(); ++i)
+	for (DirectionLookupMap::value_type& pair : directionLookupMap_)
 	{
-		delete [] i->second;
+		delete [] pair.second;
 	}
 }
 
@@ -1258,14 +1258,14 @@ void LineDetectorHough::parallelLines(const InfiniteLines& lines, const Scalar m
 	{
 		IndexSet32 duplicateSet;
 
-		for (IndexSetVector::const_iterator i = indexSets.begin(); i != indexSets.end(); ++i)
+		for (const IndexSet32& indexSet : indexSets)
 		{
-			if (i->size() > 1)
+			if (indexSet.size() > 1)
 			{
 				InfiniteLines newLines;
-				newLines.reserve(i->size());
+				newLines.reserve(indexSet.size());
 
-				for (IndexSet32::const_iterator iS = i->begin(); iS != i->end(); ++iS)
+				for (IndexSet32::const_iterator iS = indexSet.begin(); iS != indexSet.end(); ++iS)
 				{
 					if (duplicateSet.find(*iS) == duplicateSet.end())
 					{
@@ -1288,14 +1288,14 @@ void LineDetectorHough::parallelLines(const InfiniteLines& lines, const Scalar m
 	}
 	else
 	{
-		for (IndexSetVector::const_iterator i = indexSets.begin(); i != indexSets.end(); ++i)
+		for (const IndexSet32& indexSet : indexSets)
 		{
-			if (i->size() > 1)
+			if (indexSet.size() > 1)
 			{
 				InfiniteLines newLines;
-				newLines.reserve(i->size());
+				newLines.reserve(indexSet.size());
 
-				for (IndexSet32::const_iterator iS = i->begin(); iS != i->end(); ++iS)
+				for (IndexSet32::const_iterator iS = indexSet.begin(); iS != indexSet.end(); ++iS)
 				{
 					newLines.push_back(lines[*iS]);
 				}
@@ -1962,9 +1962,9 @@ void LineDetectorHough::optimizeInfiniteLinesSubset(const InfiniteLine* infinite
 
 		// transform the image points into points with origin in the center of the image
 
-		for (Vectors2::iterator i = imagePoints.begin(); i != imagePoints.end(); ++i)
+		for (Vector2& imagePoint : imagePoints)
 		{
-			*i = *i - Vector2(width2, height2);
+			imagePoint = imagePoint - Vector2(width2, height2);
 		}
 
 		Scalar initialSqrError, finalSqrError;
