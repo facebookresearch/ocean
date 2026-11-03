@@ -112,7 +112,7 @@ class OCEAN_PLATFORM_GL_EXPORT FramebufferObject : public ContextAssociated
 		GLuint framebufferObjectId;
 
 		/// The viewport coordinates set before changing the render target.
-		GLint framebufferOldViewportCoordinates[4];
+		GLint framebufferOldViewportCoordinates[4] = {};
 
 		/// Indicates if the frame buffer object is currently used for rendering into a texture.
 		bool framebufferIsBound;

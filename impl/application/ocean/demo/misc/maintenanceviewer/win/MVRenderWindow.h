@@ -177,10 +177,10 @@ class MVRenderWindow : virtual public Platform::Win::Window
 		Rendering::WindowFramebufferRef framebuffer_;
 
 		/// Old horizontal mouse cursor position.
-		unsigned int oldCursorX_;
+		unsigned int oldCursorX_ = (unsigned int)(-1);
 
 		/// Old vertical mouse cursor position.
-		unsigned int oldCursorY_;
+		unsigned int oldCursorY_ = (unsigned int)(-1);
 
 		/// The mesh visibility statement.
 		bool meshVisibility_;

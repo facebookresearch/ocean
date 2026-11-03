@@ -144,7 +144,7 @@ class OCEAN_CV_DETECTOR_EXPORT ShapeDetector
 				Vector2 position_;
 
 				/// The score of this L-shape.
-				Scalar score_;
+				Scalar score_ = Scalar(0);
 		};
 
 		/**

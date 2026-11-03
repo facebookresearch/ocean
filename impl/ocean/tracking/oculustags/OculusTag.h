@@ -120,7 +120,7 @@ class OCEAN_TRACKING_OCULUSTAGS_EXPORT OculusTag
 		ReflectanceType reflectanceType_;
 
 		/// The grayscale intensity that was used binary separation of foreground and background
-		uint8_t intensityThreshold_;
+		uint8_t intensityThreshold_ = 255u;
 
 		/// The 6DOF pose of the tag relative to the world
 		HomogenousMatrix4 world_T_tag_;

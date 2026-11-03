@@ -103,7 +103,7 @@ class OCEAN_CV_SEGMENTATION_EXPORT MaskAnalyzer
 				unsigned int blockSize;
 
 				/// True, if image border block.
-				bool blockBorder;
+				bool blockBorder = false;
 		};
 
 		/**

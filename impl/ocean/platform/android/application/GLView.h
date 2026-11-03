@@ -77,7 +77,7 @@ class OCEAN_PLATFORM_ANDROID_APPLICATION_EXPORT GLView
 			protected:
 
 				/// The instance object.
-				GLView* view_;
+				GLView* view_ = nullptr;
 
 				/// The instance function.
 				InstanceFunction baseInstanceFunction_ = nullptr;

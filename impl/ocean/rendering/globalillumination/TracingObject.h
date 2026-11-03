@@ -120,10 +120,10 @@ class OCEAN_RENDERING_GI_EXPORT TracingObject
 		HomogenousMatrix4 invertedObjectTransformation_ = HomogenousMatrix4(false);
 
 		/// The material of the sphere, if any.
-		GIMaterial* material_;
+		GIMaterial* material_ = nullptr;
 
 		/// The textures of the sphere, if any.
-		GITextures* textures_;
+		GITextures* textures_ = nullptr;
 
 		/// The light sources which will be used for rendering.
 		LightSources lightSources_;

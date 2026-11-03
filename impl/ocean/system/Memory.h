@@ -134,7 +134,7 @@ class OCEAN_SYSTEM_EXPORT Memory
 				std::vector<uint64_t> measurements_;
 
 				/// The first measurement within the thread function.
-				uint64_t measurementFirstInThread_;
+				uint64_t measurementFirstInThread_ = 0ull;
 		};
 
 	public:

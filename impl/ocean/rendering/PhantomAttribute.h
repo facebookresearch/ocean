@@ -89,7 +89,7 @@ class OCEAN_RENDERING_EXPORT PhantomAttribute : virtual public Attribute
 	protected:
 
 		/// Attribute phantom mode.
-		unsigned int attributePhantomMode;
+		unsigned int attributePhantomMode = PM_INVALID;
 };
 
 }

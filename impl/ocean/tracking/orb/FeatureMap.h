@@ -179,7 +179,7 @@ class OCEAN_TRACKING_ORB_EXPORT FeatureMap
 		Plane3 plane_;
 
 		// True, to use Harris corners; False, to use FAST features.
-		bool usingHarrisFeatures_;
+		bool usingHarrisFeatures_ = false;
 };
 
 inline const CV::Detector::ORBFeatures& FeatureMap::projectedFeatures() const
