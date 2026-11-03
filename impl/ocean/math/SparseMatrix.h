@@ -133,10 +133,10 @@ class SparseMatrixT
 			protected:
 
 				/// The row of this entry.
-				size_t entryRow;
+				size_t entryRow = size_t(-1);
 
 				/// The column of this entry.
-				size_t entryColumn;
+				size_t entryColumn = size_t(-1);
 
 				/// The value of this entry.
 				T entryValue;
@@ -460,13 +460,11 @@ class SparseMatrixT
 	private:
 
 		/// Abstract pointer to the internal matrix object.
-		void* internalMatrix;
+		void* internalMatrix = nullptr;
 };
 
 template <typename T>
 inline SparseMatrixT<T>::Entry::Entry() :
-	entryRow(size_t(-1)),
-	entryColumn(size_t(-1)),
 	entryValue(T(0))
 {
 	// nothing to do here

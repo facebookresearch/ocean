@@ -233,10 +233,10 @@ class OCEAN_CV_DETECTOR_EXPORT FrameChangeDetector
 		Options options_;
 
 		/// Number of tile blocks in the vertical dimension.
-		unsigned int tileRows_;
+		unsigned int tileRows_ = 0u;
 
 		/// Number of tile blocks in the horizontal dimension.
-		unsigned int tileColumns_;
+		unsigned int tileColumns_ = 0u;
 
 		/// Flattened grid of 2D histograms for the most recently processed frame, stored row-major.
 		TileHistograms tileHistograms_;
@@ -269,8 +269,6 @@ inline bool FrameChangeDetector::Options::isValid() const
 }
 
 inline FrameChangeDetector::FrameChangeDetector() :
-	tileRows_(0u),
-	tileColumns_(0u),
 	lastTimestamp_(false),
 	priorLastTimestamp_(false),
 	keyframeTimestamp_(false),

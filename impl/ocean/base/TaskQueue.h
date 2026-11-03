@@ -88,7 +88,7 @@ class OCEAN_BASE_EXPORT TaskQueue :
 		Tasks queueTasks;
 
 		/// True, if at least one task has been added to this queue before.
-		bool queueHadTask;
+		bool queueHadTask = false;
 
 		/// The lock of this queue.
 		Lock queueLock;

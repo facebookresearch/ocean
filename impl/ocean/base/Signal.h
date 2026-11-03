@@ -224,10 +224,10 @@ class OCEAN_BASE_EXPORT Signals
 	private:
 
 		/// Array of stored signals.
-		Signal* signalObjects;
+		Signal* signalObjects = nullptr;
 
 		/// Number of signals stored in the array.
-		unsigned int signalsSize;
+		unsigned int signalsSize = 0u;
 };
 
 #ifdef _WINDOWS

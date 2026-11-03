@@ -20,8 +20,6 @@ namespace Detector
 
 FrameChangeDetector::FrameChangeDetector(const Options& options) :
 	options_(options),
-	tileRows_(0u),
-	tileColumns_(0u),
 	lastTimestamp_(false),
 	priorLastTimestamp_(false),
 	keyframeTimestamp_(false),

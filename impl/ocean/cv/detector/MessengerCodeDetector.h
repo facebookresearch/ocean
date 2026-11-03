@@ -226,13 +226,13 @@ class OCEAN_CV_DETECTOR_EXPORT MessengerCodeDetector
 			protected:
 
 				/// The previous delta.
-				int deltaMinus1;
+				int deltaMinus1 = 0;
 
 				/// The second previous delta.
-				int deltaMinus2;
+				int deltaMinus2 = 0;
 
 				/// The third previous delta.
-				int deltaMinus3;
+				int deltaMinus3 = 0;
 		};
 
 	public:
@@ -561,10 +561,7 @@ inline bool MessengerCodeDetector::Bullseye::isValid() const
 	return position_.x() >= 0 && position_.y() >= 0 && radius_ > 0 && grayThreshold_ != 0u && grayThreshold_ < 256u;
 }
 
-inline MessengerCodeDetector::TransitionHistory::TransitionHistory() :
-	deltaMinus1(0),
-	deltaMinus2(0),
-	deltaMinus3(0)
+inline MessengerCodeDetector::TransitionHistory::TransitionHistory()
 {
 	// nothing to do here
 }

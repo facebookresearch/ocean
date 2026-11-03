@@ -278,7 +278,7 @@ class OCEAN_DEVICES_EXPORT Device
 		DeviceType deviceType;
 
 		/// Flag determining whether this device is valid.
-		bool deviceIsValid;
+		bool deviceIsValid = true;
 
 		/// Device lock.
 		mutable Lock deviceLock;

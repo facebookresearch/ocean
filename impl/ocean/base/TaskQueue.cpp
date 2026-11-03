@@ -12,8 +12,7 @@ namespace Ocean
 {
 
 TaskQueue::TaskQueue() :
-	Thread("TaskQueue thread"),
-	queueHadTask(false)
+	Thread("TaskQueue thread")
 {
 	// nothing to do here
 }

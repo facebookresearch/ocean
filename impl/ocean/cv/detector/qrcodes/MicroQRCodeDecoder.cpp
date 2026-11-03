@@ -974,7 +974,7 @@ static bool applyErrorCorrection(const unsigned int symbolNumber, std::vector<ui
 	return err == QUIRC_SUCCESS;
 }
 
-MicroQRCodeDecoder::BitStream::BitStream(std::vector<uint8_t>&& buffer, const unsigned int numberOfBits) : buffer_(std::move(buffer)), bitsConsumed_(0u), bytesConsumed_(0u), bitsRemaining_(numberOfBits)
+MicroQRCodeDecoder::BitStream::BitStream(std::vector<uint8_t>&& buffer, const unsigned int numberOfBits) : buffer_(std::move(buffer)), bitsRemaining_(numberOfBits)
 {
 	ocean_assert(buffer_.size() * 8u >= numberOfBits);
 }

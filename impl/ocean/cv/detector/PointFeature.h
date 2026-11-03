@@ -162,7 +162,7 @@ class OCEAN_CV_DETECTOR_EXPORT PointFeature : public Feature
 		Vector3 featurePosition;
 
 		/// Feature strength.
-		Scalar featureStrength;
+		Scalar featureStrength = Scalar(0);
 
 		/// Holds the distortion state of the observation position.
 		DistortionState featureDistortionState;
@@ -172,7 +172,6 @@ inline PointFeature::PointFeature() :
 	Feature(),
 	featureObservation(0, 0),
 	featurePosition(0, 0, 0),
-	featureStrength(0),
 	featureDistortionState(DS_INVALID)
 {
 	// nothing to do here

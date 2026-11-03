@@ -100,7 +100,7 @@ class OCEAN_CV_SYNTHESIS_EXPORT InitializerHomographyMappingAdaptionF1 :
 		const MappingF1* sourceMappingF1_;
 
 		/// Source mapping to be adapted with integer accuracy.
-		const MappingI1* sourceMappingI1_;
+		const MappingI1* sourceMappingI1_ = nullptr;
 
 		/// The homography transforming a point defined in the current layer into a point defined in the previous layer.
 		const SquareMatrix3 previous_H_current_;
@@ -113,7 +113,6 @@ inline InitializerHomographyMappingAdaptionF1::InitializerHomographyMappingAdapt
 	InitializerSubset(layer),
 	Initializer1(layer),
 	sourceMappingF1_(&sourceLayer.mappingF1()),
-	sourceMappingI1_(nullptr),
 	previous_H_current_(previous_H_current)
 {
 	// nothing to do here
@@ -126,7 +125,6 @@ inline InitializerHomographyMappingAdaptionF1::InitializerHomographyMappingAdapt
 	InitializerSubset(layer),
 	Initializer1(layer),
 	sourceMappingF1_(&sourceMapping),
-	sourceMappingI1_(nullptr),
 	previous_H_current_(previous_H_current)
 {
 	// nothing to do here

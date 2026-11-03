@@ -2842,12 +2842,11 @@ class Caller
 	private:
 
 		/// Base function container.
-		ParameterizedFunctionBase<RT>* callerFunction;
+		ParameterizedFunctionBase<RT>* callerFunction = nullptr;
 };
 
 template <typename RT>
-inline Caller<RT>::Caller() :
-	callerFunction(nullptr)
+inline Caller<RT>::Caller()
 {
 	// nothing to do here
 }

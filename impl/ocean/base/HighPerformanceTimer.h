@@ -764,7 +764,7 @@ class OCEAN_BASE_EXPORT HighPerformanceBenchmark : public Singleton<HighPerforma
 		MeasurementMap measurementMap_;
 
 		/// True, if benchmarking is running, false by default.
-		bool isRunning_;
+		bool isRunning_ = false;
 
 		/// The lock object.
 		mutable Lock lock_;
@@ -1032,8 +1032,7 @@ inline void HighPerformanceBenchmark::ScopedCategory::change(std::string name)
 	}
 }
 
-inline HighPerformanceBenchmark::HighPerformanceBenchmark() :
-	isRunning_(false)
+inline HighPerformanceBenchmark::HighPerformanceBenchmark()
 {
 	// nothing to do here
 }

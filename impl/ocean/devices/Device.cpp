@@ -40,8 +40,7 @@ Device::DeviceType Device::DeviceType::translateDeviceType(const std::string& ma
 
 Device::Device(const std::string& name, const DeviceType type) :
 	deviceName(name),
-	deviceType(type),
-	deviceIsValid(true)
+	deviceType(type)
 {
 	// nothing to do here
 }

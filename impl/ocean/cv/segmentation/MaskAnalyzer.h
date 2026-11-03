@@ -97,10 +97,10 @@ class OCEAN_CV_SEGMENTATION_EXPORT MaskAnalyzer
 				PixelPosition blockPosition;
 
 				/// Id of the mask block.
-				unsigned int blockId;
+				unsigned int blockId = 0u;
 
 				/// Size of the mask block in pixel.
-				unsigned int blockSize;
+				unsigned int blockSize = 0u;
 
 				/// True, if image border block.
 				bool blockBorder = false;
@@ -687,9 +687,7 @@ class OCEAN_CV_SEGMENTATION_EXPORT MaskAnalyzer
 };
 
 inline MaskAnalyzer::MaskBlock::MaskBlock() :
-	blockPosition(),
-	blockId(0u),
-	blockSize(0u)
+	blockPosition()
 {
 	// nothing to do here
 }

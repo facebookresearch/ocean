@@ -374,7 +374,7 @@ class OCEAN_BASE_EXPORT Maintenance : public Singleton<Maintenance>
 	protected:
 
 		/// The activation statement of this manager.
-		bool maintenanceActive;
+		bool maintenanceActive = false;
 
 		/// The readable name of this manager.
 		std::string maintenanceName;
@@ -455,7 +455,6 @@ inline Maintenance::Buffer& Maintenance::Element::buffer()
 }
 
 inline Maintenance::Maintenance() :
-	maintenanceActive(false),
 	maintenanceId(RandomI::random64())
 {
 	while (maintenanceId == 0ull)

@@ -76,10 +76,10 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT MicroQRCodeDecoder
 				std::vector<uint8_t> buffer_;
 
 				/// The portion of the current byte that have already been consumed
-				unsigned int bitsConsumed_;
+				unsigned int bitsConsumed_ = 0u;
 
 				/// The number of bytes that have already been consumed
-				unsigned int bytesConsumed_;
+				unsigned int bytesConsumed_ = 0u;
 
 				/// The number of bits remaining in the bit stream
 				unsigned int bitsRemaining_;

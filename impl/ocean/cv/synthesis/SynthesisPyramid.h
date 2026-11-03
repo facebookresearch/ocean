@@ -173,7 +173,7 @@ class OCEAN_CV_SYNTHESIS_EXPORT SynthesisPyramid
 
 #ifdef OCEAN_DEBUG
 		/// True, if this synthesis pyramid object has been arranged.
-		bool synthesisHasBeenArranged_;
+		bool synthesisHasBeenArranged_ = false;
 #endif
 };
 

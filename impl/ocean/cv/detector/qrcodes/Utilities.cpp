@@ -33,13 +33,12 @@ namespace QRCodes
 {
 
 Utilities::CoordinateSystemBase::CoordinateSystemBase(const unsigned int modulesPerSide, const Scalar scale) :
-	modulesPerSide_(modulesPerSide), scale_(scale)
+	modulesPerSide_(modulesPerSide), scale_(scale),
+	xScale_((Scalar(2) * scale) / Scalar(modulesPerSide)), yScale_(-xScale_)
 {
 	ocean_assert(modulesPerSide >= 11u && modulesPerSide <= 177u);
 	ocean_assert(scale_ > Scalar(0));
 
-	xScale_ = (Scalar(2) * scale_) / Scalar(modulesPerSide);
-	yScale_ = -xScale_;
 }
 
 Utilities::CoordinateSystem::CoordinateSystem(const unsigned int version, const Scalar scale) :

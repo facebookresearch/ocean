@@ -251,15 +251,12 @@ void Signal::release()
 
 }
 
-Signals::Signals() :
-	signalObjects(nullptr),
-	signalsSize(0u)
+Signals::Signals()
 {
 	// nothing to do here
 }
 
 Signals::Signals(const unsigned int size) :
-	signalObjects(nullptr),
 	signalsSize(size)
 {
 	ocean_assert(signalsSize > 0u);

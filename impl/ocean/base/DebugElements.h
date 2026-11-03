@@ -277,7 +277,7 @@ class OCEAN_BASE_EXPORT DebugElements
 		ElementSet activeElements_;
 
 		/// True, if all debug elements are activated (this state overrides the individual ids of `activeIds_`).
-		bool allElementsActivate_;
+		bool allElementsActivate_ = false;
 
 		/// The map mapping ids to frames.
 		ElementMap elementMap_;
@@ -309,8 +309,7 @@ DebugElements::ScopedHierarchyBase::~ScopedHierarchyBase()
 	}
 }
 
-DebugElements::DebugElements() :
-	allElementsActivate_(false)
+DebugElements::DebugElements()
 {
 	// nothing to do here
 }

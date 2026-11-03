@@ -17,8 +17,7 @@ Event::~Event()
 }
 
 EventManager::EventManager() :
-	Thread("EventManager"),
-	managerRequestCounter(0u)
+	Thread("EventManager")
 {
 	startThread();
 }

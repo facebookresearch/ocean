@@ -270,15 +270,13 @@ struct InternalMatrix
 };
 
 template <typename T>
-SparseMatrixT<T>::SparseMatrixT() :
-	internalMatrix(nullptr)
+SparseMatrixT<T>::SparseMatrixT()
 {
 	// nothing to do here
 }
 
 template <typename T>
-SparseMatrixT<T>::SparseMatrixT(const SparseMatrixT<T>& matrix) :
-	internalMatrix(nullptr)
+SparseMatrixT<T>::SparseMatrixT(const SparseMatrixT<T>& matrix)
 {
 	if (matrix.internalMatrix)
 	{
@@ -295,16 +293,14 @@ SparseMatrixT<T>::SparseMatrixT(SparseMatrixT<T>&& matrix) noexcept :
 }
 
 template <typename T>
-SparseMatrixT<T>::SparseMatrixT(const size_t rows, const size_t columns) :
-	internalMatrix(nullptr)
+SparseMatrixT<T>::SparseMatrixT(const size_t rows, const size_t columns)
 {
 	internalMatrix = new typename InternalMatrix<T>::Type(int(rows), int(columns));
 	ocean_assert(internalMatrix != nullptr);
 }
 
 template <typename T>
-SparseMatrixT<T>::SparseMatrixT(const size_t rows, const size_t columns, const size_t nonZeroElements) :
-	internalMatrix(nullptr)
+SparseMatrixT<T>::SparseMatrixT(const size_t rows, const size_t columns, const size_t nonZeroElements)
 {
 	internalMatrix = new typename InternalMatrix<T>::Type(int(rows), int(columns));
 	ocean_assert(internalMatrix != nullptr);
@@ -313,8 +309,7 @@ SparseMatrixT<T>::SparseMatrixT(const size_t rows, const size_t columns, const s
 }
 
 template <typename T>
-SparseMatrixT<T>::SparseMatrixT(const size_t rows, const size_t columns, const Entries& entries) :
-	internalMatrix(nullptr)
+SparseMatrixT<T>::SparseMatrixT(const size_t rows, const size_t columns, const Entries& entries)
 {
 	internalMatrix = new typename InternalMatrix<T>::Type(int(rows), int(columns));
 	ocean_assert(internalMatrix != nullptr);
@@ -323,8 +318,7 @@ SparseMatrixT<T>::SparseMatrixT(const size_t rows, const size_t columns, const E
 }
 
 template <typename T>
-SparseMatrixT<T>::SparseMatrixT(const size_t rows, const size_t columns, const MatrixT<T>& diagonal, const bool forceNonZeros) :
-	internalMatrix(nullptr)
+SparseMatrixT<T>::SparseMatrixT(const size_t rows, const size_t columns, const MatrixT<T>& diagonal, const bool forceNonZeros)
 {
 	internalMatrix = new typename InternalMatrix<T>::Type(int(rows), int(columns));
 	ocean_assert(internalMatrix != nullptr);
@@ -382,8 +376,7 @@ SparseMatrixT<T>::SparseMatrixT(const size_t rows, const size_t columns, const M
 }
 
 template <typename T>
-SparseMatrixT<T>::SparseMatrixT(const MatrixT<T>& denseMatrix) :
-	internalMatrix(nullptr)
+SparseMatrixT<T>::SparseMatrixT(const MatrixT<T>& denseMatrix)
 {
 	using Index = typename InternalMatrix<T>::Type::Index;
 

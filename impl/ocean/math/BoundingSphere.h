@@ -192,12 +192,11 @@ class OCEAN_MATH_EXPORT BoundingSphere : public SphereT3<Scalar>
 	private:
 
 		/// Inverse of the sphere radius.
-		Scalar inverseRadius_;
+		Scalar inverseRadius_ = Scalar(0);
 };
 
 inline BoundingSphere::BoundingSphere() :
-	Sphere3(),
-	inverseRadius_(0)
+	Sphere3()
 {
 	// nothing to do here
 }

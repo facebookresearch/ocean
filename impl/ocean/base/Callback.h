@@ -3677,12 +3677,11 @@ class Callback
 	private:
 
 		/// Base function container.
-		FunctionBase<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18, PT19>* callbackFunction;
+		FunctionBase<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18, PT19>* callbackFunction = nullptr;
 };
 
 template <typename RT, typename PT0, typename PT1, typename PT2, typename PT3, typename PT4, typename PT5, typename PT6, typename PT7, typename PT8, typename PT9, typename PT10, typename PT11, typename PT12, typename PT13, typename PT14, typename PT15, typename PT16, typename PT17, typename PT18, typename PT19>
-inline Callback<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18, PT19>::Callback() :
-	callbackFunction(nullptr)
+inline Callback<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18, PT19>::Callback()
 {
 	// nothing to do here
 }

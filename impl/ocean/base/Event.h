@@ -344,7 +344,7 @@ class EventManager :
 		RegistrationRequests managerRegistrationRequests;
 
 		/// The counter for registration requests.
-		unsigned int managerRequestCounter;
+		unsigned int managerRequestCounter = 0u;
 
 		/// The set of pending registration requests.
 		IndexSet32 managerRequestSet;

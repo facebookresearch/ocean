@@ -26,9 +26,7 @@ namespace Synthesis
 
 SynthesisPyramid::SynthesisPyramid()
 {
-#ifdef OCEAN_DEBUG
-	synthesisHasBeenArranged_ = false;
-#endif
+	// nothing to do here
 }
 
 bool SynthesisPyramid::arrange(const Frame& frame, const Frame& mask, Worker* worker, const bool binomialFilterOnCoarsestLayers, const bool binomialFilterOnFineLayers, const Frame& filter)

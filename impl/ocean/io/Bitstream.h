@@ -393,7 +393,7 @@ class OCEAN_IO_EXPORT Tag
 	protected:
 
 		/// The tag value of this tag object.
-		unsigned long long tagValue_;
+		unsigned long long tagValue_ = 0ull;
 };
 
 inline ScopedInputBitstream::ScopedInputBitstream(InputBitstream& stream) :
@@ -420,8 +420,7 @@ inline OutputBitstream::operator bool() const
 	return outputStream_.good();
 }
 
-inline Tag::Tag() :
-	tagValue_(0ull)
+inline Tag::Tag()
 {
 	// nothing to do here
 }

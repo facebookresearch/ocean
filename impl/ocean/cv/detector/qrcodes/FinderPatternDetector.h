@@ -173,7 +173,7 @@ class FinderPattern
 		Scalar symmetryScore_;
 
 		/// True if the four corners of this finder pattern are known, otherwise false
-		bool cornersKnown_;
+		bool cornersKnown_ = false;
 
 		/// The four corners of this finder pattern; points are stored in counter-clockwise order but no guarantee on which corner is the first; if `cornersDetected_` is false these values will be undefined
 		Vector2 corners_[4];
@@ -509,7 +509,6 @@ inline FinderPattern::FinderPattern(const Vector2& position, const Scalar length
 	centerIntensity_(centerIntensity),
 	grayThreshold_(grayThreshold),
 	symmetryScore_(symmetryScore),
-	cornersKnown_(false),
 	orientation_(1, 0),
 	moduleSize_(length / Scalar(7))
 {

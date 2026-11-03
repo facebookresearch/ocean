@@ -1015,9 +1015,6 @@ class OCEAN_CV_DETECTOR_EXPORT ShapeDetector
 };
 
 inline ShapeDetector::TwoLineShape::TwoLineShape() :
-	shapeType_(ST_INVALID),
-	finiteLineIndex0_((unsigned int)(-1)),
-	finiteLineIndex1_((unsigned int)(-1)),
 	position_(0, 0)
 {
 	// nothing to do here

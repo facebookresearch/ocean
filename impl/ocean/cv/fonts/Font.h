@@ -136,31 +136,31 @@ class OCEAN_CV_FONTS_EXPORT Font
 			protected:
 
 				/// The character's index, with range [0, infinity).
-				unsigned int characterIndex_;
+				unsigned int characterIndex_ = (unsigned int)(-1);
 
 				/// The character's left pixel in 'charactersFrame', in pixels, with range [0, charactersFrame_.width() - 1].
-				unsigned int framePositionX_;
+				unsigned int framePositionX_ = 0u;
 
 				/// The character's top pixel in 'charactersFrame', in pixels, with range [0, charactersFrame_.height() - 1].
-				unsigned int framePositionY_;
+				unsigned int framePositionY_ = 0u;
 
 				/// The character's top pixel in the target text line, in pixel, with range [0, font.height() - 1]
-				unsigned int linePositionY_;
+				unsigned int linePositionY_ = 0u;
 
 				/// The character's width, in pixels, with rang [0, charactersFrame_.width()].
-				unsigned int width_;
+				unsigned int width_ = 0u;
 
 				/// The character's hieght, in pixels, with rang [0, charactersFrame_.height()].
-				unsigned int height_;
+				unsigned int height_ = 0u;
 
 				///  The character's horizontal offset, in pixels, with range (-infinity, infinity).
-				int bearingX_;
+				int bearingX_ = 0;
 
 				//// The character's vertical offset, in pixels, with range (-infinity, infinity).
-				int bearingY_;
+				int bearingY_ = 0;
 
 				/// The horizontal distance between this character and the next character (between the origins of both characters), in pixels, with range [0, infinity).
-				unsigned int advanceX_;
+				unsigned int advanceX_ = 0u;
 		};
 
 		/// Definition of a vector holding information about characters.
@@ -250,28 +250,19 @@ class OCEAN_CV_FONTS_EXPORT Font
 	protected:
 
 		/// The font's size in dots, with range [0, infinity).
-		unsigned int size_;
+		unsigned int size_ = 0u;
 
 		/// The font's height in pixel, with range [0, infinity).
-		unsigned int height_;
+		unsigned int height_ = 0u;
 
 		/// The font's dots per inch, with range [0, infinity).
-		unsigned int dpi_;
+		unsigned int dpi_ = 0u;
 
 		/// True, if the font is valid.
-		bool isValid_;
+		bool isValid_ = false;
 };
 
-inline Font::Character::Character() :
-	characterIndex_((unsigned int)(-1)),
-	framePositionX_(0u),
-	framePositionY_(0u),
-	linePositionY_(0u),
-	width_(0u),
-	height_(0u),
-	bearingX_(0),
-	bearingY_(0),
-	advanceX_(0u)
+inline Font::Character::Character()
 {
 	// nothing to do here
 }
@@ -344,11 +335,7 @@ inline void Font::Character::setPositionY(const unsigned int framePositionY, con
 	linePositionY_ = linePositionY;
 }
 
-inline Font::Font() :
-	size_(0u),
-	height_(0u),
-	dpi_(0u),
-	isValid_(false)
+inline Font::Font()
 {
 	// nothing to do here
 }
