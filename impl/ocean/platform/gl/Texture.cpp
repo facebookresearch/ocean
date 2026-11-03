@@ -16,16 +16,12 @@ namespace Platform
 namespace GL
 {
 
-Texture::Texture() :
-	textureId(0u),
-	textureFormat(0u)
+Texture::Texture()
 {
 	// nothing to do here
 }
 
-Texture::Texture(const Frame& frame) :
-	textureId(0u),
-	textureFormat(0u)
+Texture::Texture(const Frame& frame)
 {
 	update(frame);
 }

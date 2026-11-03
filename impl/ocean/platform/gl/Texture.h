@@ -121,10 +121,10 @@ class OCEAN_PLATFORM_GL_EXPORT Texture : public ContextAssociated
 	protected:
 
 		/// The OpenGL texture id.
-		GLuint textureId;
+		GLuint textureId = 0u;
 
 		/// OpenGL texture (pixel) format.
-		GLuint textureFormat;
+		GLuint textureFormat = 0u;
 
 		/// The frame type of the texture.
 		FrameType textureFrameType;

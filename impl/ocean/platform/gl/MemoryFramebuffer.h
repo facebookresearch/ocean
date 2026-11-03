@@ -103,22 +103,22 @@ class OCEAN_PLATFORM_GL_EXPORT MemoryFramebuffer : public Framebuffer
 	protected:
 
 		/// The id of the framebuffer object.
-		GLuint framebufferObjectId;
+		GLuint framebufferObjectId = 0u;
 
 		/// The id of the render buffer.
-		GLuint framebufferRenderBufferId;
+		GLuint framebufferRenderBufferId = 0u;
 
 		/// The id of the intermediate framebuffer object.
-		GLuint framebufferIntermediateObjectId;
+		GLuint framebufferIntermediateObjectId = 0u;
 
 		/// The id of the intermediate render buffer object.
-		GLuint framebufferIntermediateRenderBufferId;
+		GLuint framebufferIntermediateRenderBufferId = 0u;
 
 		/// True, if this framebuffer is currently bound.
-		bool framebufferIsBound;
+		bool framebufferIsBound = false;
 
 		/// The frame in which the pixel data from the framebuffer will be copied, if defined
-		Frame* framebufferFrame;
+		Frame* framebufferFrame = nullptr;
 };
 
 inline bool MemoryFramebuffer::isBound() const

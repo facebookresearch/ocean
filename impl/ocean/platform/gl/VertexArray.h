@@ -79,19 +79,17 @@ class OCEAN_PLATFORM_GL_EXPORT VertexArray : public ContextAssociated
 	protected:
 
 		/// The id of the vertex array.
-		GLuint arrayId;
+		GLuint arrayId = 0u;
 };
 
 inline VertexArray::VertexArray() :
-	ContextAssociated(),
-	arrayId(0u)
+	ContextAssociated()
 {
 	// nothing to do here
 }
 
 inline VertexArray::VertexArray(Context& context) :
-	ContextAssociated(context),
-	arrayId(0u)
+	ContextAssociated(context)
 {
 	// nothing to do here
 }

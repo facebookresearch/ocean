@@ -129,7 +129,7 @@ class OCEAN_MEDIA_IIO_EXPORT IIOImage :
 		Timestamp stopTimestamp_;
 
 		/// Determining whether this image is 'started' and holds valid image data.
-		bool started_;
+		bool started_ = false;
 };
 
 }

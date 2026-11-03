@@ -103,29 +103,23 @@ class OCEAN_PLATFORM_GL_EXPORT Framebuffer : public ContextAssociated
 	protected:
 
 		/// The width of the framebuffer in pixel, with range [0, infinity).
-		unsigned int framebufferWidth;
+		unsigned int framebufferWidth = 0u;
 
 		/// The height of the framebuffer in pixel, with range [0, infinity).
-		unsigned int framebufferHeight;
+		unsigned int framebufferHeight = 0u;
 
 		/// The internal format of the framebuffer.
-		GLenum framebufferInternalFormat;
+		GLenum framebufferInternalFormat = 0u;
 };
 
 inline Framebuffer::Framebuffer() :
-	ContextAssociated(),
-	framebufferWidth(0u),
-	framebufferHeight(0u),
-	framebufferInternalFormat(0u)
+	ContextAssociated()
 {
 	// nothing to do here
 }
 
 inline Framebuffer::Framebuffer(Context& context) :
-	ContextAssociated(context),
-	framebufferWidth(0u),
-	framebufferHeight(0u),
-	framebufferInternalFormat(0u)
+	ContextAssociated(context)
 {
 	// nothing to do here
 }

@@ -138,7 +138,7 @@ class OCEAN_MEDIA_EXPORT PixelImage : virtual public FrameMedium
 		Timestamp stopTimestamp_;
 
 		/// Determining whether this image is 'started' and holds valid image data.
-		bool isStarted_;
+		bool isStarted_ = false;
 
 		/// The camera profile for all images for which no per-frame camera profile is provided via setPixelImage(), nullptr if unknown.
 		SharedAnyCamera camera_;

@@ -19,8 +19,7 @@ namespace WxWidgets
 {
 
 FrameMediumWindow::FrameMediumWindow(const wxString& title, wxWindow* parent, const wxPoint& pos, const wxSize& size) :
-	FrameWindow(title, parent, pos, size),
-	hasFinished_(false)
+	FrameWindow(title, parent, pos, size)
 {
 	// nothing to do here
 }

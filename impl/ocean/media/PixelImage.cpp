@@ -16,7 +16,6 @@ namespace Media
 PixelImage::PixelImage(const std::string& url) :
 	Medium(url),
 	FrameMedium(url),
-	isStarted_(false),
 	device_T_camera_(true)
 {
 	type_ = Type(type_ | PIXEL_IMAGE);

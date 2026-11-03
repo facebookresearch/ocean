@@ -17,25 +17,13 @@ namespace GL
 {
 
 MemoryFramebuffer::MemoryFramebuffer() :
-	Framebuffer(),
-	framebufferObjectId(0u),
-	framebufferRenderBufferId(0u),
-	framebufferIntermediateObjectId(0u),
-	framebufferIntermediateRenderBufferId(0u),
-	framebufferIsBound(false),
-	framebufferFrame(nullptr)
+	Framebuffer()
 {
 	// nothing to do here
 }
 
 MemoryFramebuffer::MemoryFramebuffer(Context& context) :
-	Framebuffer(context),
-	framebufferObjectId(0u),
-	framebufferRenderBufferId(0u),
-	framebufferIntermediateObjectId(0u),
-	framebufferIntermediateRenderBufferId(0u),
-	framebufferIsBound(false),
-	framebufferFrame(nullptr)
+	Framebuffer(context)
 {
 	ocean_assert(associatedContext_);
 	associatedContext_->makeCurrent();

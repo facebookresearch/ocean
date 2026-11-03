@@ -94,10 +94,10 @@ class VRVisualizer
 			protected:
 
 				/// The width, if any.
-				Scalar width_;
+				Scalar width_ = 0;
 
 				/// the object height, if any.
-				Scalar height_;
+				Scalar height_ = 0;
 		};
 
 	public:
@@ -170,9 +170,7 @@ class VRVisualizer
 		mutable Lock lock_;
 };
 
-inline VRVisualizer::ObjectSize::ObjectSize() :
-	width_(0),
-	height_(0)
+inline VRVisualizer::ObjectSize::ObjectSize()
 {
 	ocean_assert(!isValid());
 }

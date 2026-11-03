@@ -26,8 +26,7 @@ namespace ImageIO
 IIOImage::IIOImage(const std::string& url) :
 	Medium(url),
 	FrameMedium(url),
-	Image(url),
-	started_(false)
+	Image(url)
 {
 	libraryName_ = nameImageIOLibrary();
 

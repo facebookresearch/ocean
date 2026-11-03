@@ -17,9 +17,7 @@ namespace Platform
 namespace GL
 {
 
-FramebufferObject::FramebufferObject() :
-	framebufferObjectId(0u),
-	framebufferIsBound(false)
+FramebufferObject::FramebufferObject()
 {
 	// Nothing to do here.
 }

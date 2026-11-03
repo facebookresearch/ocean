@@ -143,29 +143,23 @@ class OCEAN_PLATFORM_GL_EXPORT ShaderProgram : public ContextAssociated
 	protected:
 
 		/// The id of the shader program.
-		GLuint programId;
+		GLuint programId = 0u;
 
 		/// The id of the vertex shader.
-		GLuint programVertexShaderId;
+		GLuint programVertexShaderId = 0u;
 
 		/// The id of the fragment shader.
-		GLuint programFragmentShaderId;
+		GLuint programFragmentShaderId = 0u;
 };
 
 inline ShaderProgram::ShaderProgram() :
-	ContextAssociated(),
-	programId(0u),
-	programVertexShaderId(0u),
-	programFragmentShaderId(0u)
+	ContextAssociated()
 {
 	// nothing to do here
 }
 
 inline ShaderProgram::ShaderProgram(Context& context) :
-	ContextAssociated(context),
-	programId(0u),
-	programVertexShaderId(0u),
-	programFragmentShaderId(0u)
+	ContextAssociated(context)
 {
 	// nothing to do here
 }

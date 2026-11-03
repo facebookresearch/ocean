@@ -88,7 +88,7 @@ class OCEAN_PLATFORM_WXWIDGETS_EXPORT FrameMediumWindow :
 		Callback callback_;
 
 		/// True, if the medium has finished.
-		bool hasFinished_;
+		bool hasFinished_ = false;
 
 		/// Frame lock.
 		Ocean::Lock lock_;

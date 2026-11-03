@@ -67,24 +67,20 @@ class OCEAN_PLATFORM_GL_EXPORT Buffer : public ContextAssociated
 	protected:
 
 		/// The id of the vertex buffer.
-		GLuint bufferId;
+		GLuint bufferId = 0u;
 
 		/// The number of elements the vertex buffer holds.
-		size_t bufferSize;
+		size_t bufferSize = 0;
 };
 
 inline Buffer::Buffer() :
-	ContextAssociated(),
-	bufferId(0u),
-	bufferSize(0)
+	ContextAssociated()
 {
 	// nothing to do here
 }
 
 inline Buffer::Buffer(Context& context) :
-	ContextAssociated(context),
-	bufferId(0u),
-	bufferSize(0)
+	ContextAssociated(context)
 {
 	// nothing to do here
 }
