@@ -222,9 +222,9 @@ BinaryAnalyzer::GraphNodeRefs BinaryAnalyzer::callTraces2callNodes(const SymbolI
 	GraphNodeRefs nodeStack;
 	nodeStack.reserve(64);
 
-	for (SymbolIdSet::const_iterator i = rootSymbols.cbegin(); i != rootSymbols.cend(); ++i)
+	for (const SymbolId& rootSymbol : rootSymbols)
 	{
-		nodeStack.push_back(std::make_shared<GraphNode>(*i));
+		nodeStack.push_back(std::make_shared<GraphNode>(rootSymbol));
 	}
 
 	GraphNodeRefs callGraphRootNodes(nodeStack);
@@ -284,9 +284,9 @@ BinaryAnalyzer::GraphNodeRef BinaryAnalyzer::determineReducedCallGraphForChildre
 
 		const SymbolIdSet& symbolIds = symbol.childSymbols();
 
-		for (SymbolIdSet::const_iterator i = symbolIds.cbegin(); i != symbolIds.cend(); ++i)
+		for (const SymbolId& childSymbolId : symbolIds)
 		{
-			const GraphNodeRef newNode = std::make_shared<GraphNode>(*i);
+			const GraphNodeRef newNode = std::make_shared<GraphNode>(childSymbolId);
 
 			node->childNodes_.push_back(newNode);
 			nodeStack.push_back(newNode);
@@ -366,9 +366,9 @@ void BinaryAnalyzer::determineSizeImpact(const SymbolId& symbolId, unsigned int&
 
 	const SymbolIdSet childGraphSymbols(determineChildGraphSymbols(symbolId));
 
-	for (SymbolIdSet::const_iterator i = childGraphSymbols.cbegin(); i != childGraphSymbols.cend(); ++i)
+	for (const SymbolId& childGraphSymbol : childGraphSymbols)
 	{
-		const Symbol& symbol = symbols_[*i];
+		const Symbol& symbol = symbols_[childGraphSymbol];
 
 		// we must count the size of the symbol for the maximal case
 		maximalSize += symbol.size();
@@ -429,9 +429,9 @@ void BinaryAnalyzer::determineSizeImpact(const SymbolIdSet& symbolIds, unsigned 
 		}
 	}
 
-	for (SymbolIdSet::const_iterator i = childGraphSymbols.cbegin(); i != childGraphSymbols.cend(); ++i)
+	for (const SymbolId& childGraphSymbol : childGraphSymbols)
 	{
-		const Symbol& symbol = symbols_[*i];
+		const Symbol& symbol = symbols_[childGraphSymbol];
 
 		// we must count the size of the symbol for the maximal case
 		maximalSize += symbol.size();

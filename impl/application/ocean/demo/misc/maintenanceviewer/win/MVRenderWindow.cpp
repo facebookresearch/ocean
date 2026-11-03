@@ -403,9 +403,9 @@ bool MVRenderWindow::addMesh(const Vectors3& objectPoints, const Vectors2& image
 
 		rgbFrame.setTimestamp(Timestamp(true));
 
-		for (Vectors2::const_iterator i = imagePoints.begin(); i != imagePoints.end(); ++i)
+		for (const Vector2& imagePoint : imagePoints)
 		{
-			textureCoordinates.push_back(Vector2(i->x() / Scalar(frame.width()), Scalar(1) - i->y() / Scalar(frame.height())));
+			textureCoordinates.push_back(Vector2(imagePoint.x() / Scalar(frame.width()), Scalar(1) - imagePoint.y() / Scalar(frame.height())));
 		}
 	}
 
@@ -486,10 +486,10 @@ bool MVRenderWindow::addPoints(const Vectors3& objectPoints, const bool adjustEx
 
 	const Rendering::TransformRef box = Rendering::Utilities::createBox(engine_, Vector3(pointSize, pointSize, pointSize), RGBAColor(0.7f, 0.7f, 0.7f));
 
-	for (Vectors3::const_iterator i = objectPoints.begin(); i != objectPoints.end(); ++i)
+	for (const Vector3& objectPoint : objectPoints)
 	{
 		const Rendering::TransformRef transform = engine_->factory().createTransform();
-		transform->setTransformation(HomogenousMatrix4(*i));
+		transform->setTransformation(HomogenousMatrix4(objectPoint));
 
 		transform->addChild(box);
 		renderingScene->addChild(transform);
@@ -602,10 +602,10 @@ void MVRenderWindow::updateHighlightObjectPoints(const Vectors3& objectPoints)
 	const Scalar pointSize = sceneExpansion_ * Scalar(0.0101);
 	const Rendering::TransformRef box = Rendering::Utilities::createBox(engine_, Vector3(pointSize, pointSize, pointSize), RGBAColor(1, 0, 0));
 
-	for (Vectors3::const_iterator i = objectPoints.begin(); i != objectPoints.end(); ++i)
+	for (const Vector3& objectPoint : objectPoints)
 	{
 		const Rendering::TransformRef transform = engine_->factory().createTransform();
-		transform->setTransformation(HomogenousMatrix4(*i));
+		transform->setTransformation(HomogenousMatrix4(objectPoint));
 
 		transform->addChild(box);
 		highlightsScene->addChild(transform);

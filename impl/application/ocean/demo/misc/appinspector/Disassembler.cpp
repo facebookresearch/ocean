@@ -130,10 +130,10 @@ void Disassembler::resolveStaticLinksToNames(const SourceSymbolsTargetNames& not
 {
 	unsigned long long sizeMultipleSymbols = 0ull;
 
-	for (SourceSymbolsTargetNames::const_iterator iL = notResolvedLinksToNames.cbegin(); iL != notResolvedLinksToNames.cend(); ++iL)
+	for (const std::pair<BinaryAnalyzer::SymbolId, std::string>& l : notResolvedLinksToNames)
 	{
-		const BinaryAnalyzer::SymbolId sourceSymbolId = iL->first;
-		const std::string& targetSymbolName = iL->second;
+		const BinaryAnalyzer::SymbolId sourceSymbolId = l.first;
+		const std::string& targetSymbolName = l.second;
 
 		SymbolName2SymbolIdsMultiMap::const_iterator iN = symbolName2SymbolIdsMultiMap.find(targetSymbolName);
 		if (iN == symbolName2SymbolIdsMultiMap.cend())
@@ -195,10 +195,10 @@ void Disassembler::resolveStaticLinksToNames(const SourceSymbolsTargetNames& not
 
 void Disassembler::resolveStaticLinksToAddresses(const SourceSymbolsTargetAddresses& notResolvedLinksToAddresses, BinaryAnalyzer::Symbols& symbols, BinaryAnalyzer::Address2SymbolIdMap& address2SymbolIdMap)
 {
-	for (SourceSymbolsTargetAddresses::const_iterator iL = notResolvedLinksToAddresses.cbegin(); iL != notResolvedLinksToAddresses.cend(); ++iL)
+	for (const std::pair<BinaryAnalyzer::SymbolId, BinaryAnalyzer::Address64>& l : notResolvedLinksToAddresses)
 	{
-		const BinaryAnalyzer::SymbolId sourceSymbolId = iL->first;
-		const BinaryAnalyzer::Address64 targetAddress = iL->second;
+		const BinaryAnalyzer::SymbolId sourceSymbolId = l.first;
+		const BinaryAnalyzer::Address64 targetAddress = l.second;
 
 		ocean_assert(sourceSymbolId < symbols.size());
 		BinaryAnalyzer::Symbol& sourceSymbol = symbols[sourceSymbolId];

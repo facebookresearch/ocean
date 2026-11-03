@@ -239,10 +239,10 @@ void LineDetectorHoughMainWindow::paintLines(Frame& frame, const Lines2& lines, 
 	Scalar minStrength = Numeric::maxValue();
 	Scalar maxStrength = Numeric::minValue();
 
-	for (Scalars::const_iterator i = strengths.begin(); i != strengths.end(); ++i)
+	for (const Scalar& strength : strengths)
 	{
-		minStrength = min(*i, minStrength);
-		maxStrength = max(*i, maxStrength);
+		minStrength = min(strength, minStrength);
+		maxStrength = max(strength, maxStrength);
 	}
 
 	if (worker)

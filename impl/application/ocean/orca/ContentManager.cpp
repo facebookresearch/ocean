@@ -115,9 +115,9 @@ bool ContentManager::Content::loadProject(const Timestamp timestamp, FilenameSet
 
 	unsigned int successfully = 0;
 
-	for (Contents::iterator i = childContents_.begin(); i != childContents_.end(); ++i)
+	for (Content& childContent : childContents_)
 	{
-		if (i->load(timestamp, filenameSet, cancel))
+		if (childContent.load(timestamp, filenameSet, cancel))
 		{
 			++successfully;
 		}
@@ -419,9 +419,9 @@ bool ContentManager::removeContent(const ContentId id)
 	const ScopedLock scopedLock(lock_);
 
 	bool found = false;
-	for (Contents::iterator i = contents_.begin(); i != contents_.end(); ++i)
+	for (Content& content : contents_)
 	{
-		if (i->id() == id)
+		if (content.id() == id)
 		{
 			found = true;
 			break;
@@ -459,9 +459,9 @@ bool ContentManager::removeContent(const ContentIds ids)
 
 	const ScopedLock scopedLock(lock_);
 
-	for (ContentIds::const_iterator i = ids.begin(); i != ids.end(); ++i)
+	for (const ContentId& id : ids)
 	{
-		result = removeContent(*i) && result;
+		result = removeContent(id) && result;
 	}
 
 	return result;
@@ -471,13 +471,13 @@ ContentManager::ContentId ContentManager::removeContent(const std::string& filen
 {
 	const ScopedLock scopedLock(lock_);
 
-	for (Contents::iterator i = contents_.begin(); i != contents_.end(); ++i)
+	for (Content& content : contents_)
 	{
-		if (i->filename() == filename)
+		if (content.filename() == filename)
 		{
-			removeContent(i->id());
+			removeContent(content.id());
 
-			return i->id();
+			return content.id();
 		}
 	}
 
@@ -496,12 +496,12 @@ ContentManager::ContentIds ContentManager::removeContent(const Filenames& filena
 	{
 		bool found = false;
 
-		for (Contents::const_iterator i = contents_.begin(); i != contents_.end(); ++i)
+		for (const Content& content : contents_)
 		{
-			if (i->filename() == *iF)
+			if (content.filename() == *iF)
 			{
-				contentIds.push_back(i->id());
-				result = removeContent(i->id()) && result;
+				contentIds.push_back(content.id());
+				result = removeContent(content.id()) && result;
 
 				found = true;
 				break;

@@ -89,9 +89,9 @@ void ItemView::onMouseUpRight()
 
 		std::string text;
 
-		for (TreeItemIds::const_iterator i = ids.cbegin(); i != ids.cend(); ++i)
+		for (const TreeItemId& id : ids)
 		{
-			const TreeItemRef itemObject = item(*i);
+			const TreeItemRef itemObject = item(id);
 
 			ocean_assert(itemObject);
 			if (!itemObject)

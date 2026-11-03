@@ -175,10 +175,10 @@ void PointMotionMainWindow::onFrame(const Frame& frame)
 			Vectors2 accurateCurrentPositions;
 			if (CV::Advanced::AdvancedMotionT<>::trackPointsSubPixelMirroredBorder<patchSize>(initialFramePyramid_, currentFramePyramid_, accurateInitialPositions_, accuratePreviousPositions_, accurateCurrentPositions, coarsestLayerRadius, 4u, &worker_))
 			{
-				for (Vectors2::const_iterator i = accurateCurrentPositions.begin(); i != accurateCurrentPositions.end(); ++i)
+				for (const Vector2& accurateCurrentPosition : accurateCurrentPositions)
 				{
-					const int x = int(i->x() + Scalar(0.5));
-					const int y = int(i->y() + Scalar(0.5));
+					const int x = int(accurateCurrentPosition.x() + Scalar(0.5));
+					const int y = int(accurateCurrentPosition.y() + Scalar(0.5));
 
 					Ellipse(bitmap().dc(), x - 3, y - 3, x + 3, y + 3);
 				}

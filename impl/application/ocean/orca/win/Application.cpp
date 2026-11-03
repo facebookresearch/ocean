@@ -452,9 +452,9 @@ std::string Application::fileFilter(const IO::FileManager::FileExtensions& fileE
 
 	if (fileExtension.empty() == false)
 	{
-		for (IO::FileManager::FileExtensions::const_iterator i = fileExtension.begin(); i != fileExtension.end(); ++i)
+		for (const IO::FileManager::FileExtensions::value_type& pair : fileExtension)
 		{
-			filter += i->second + std::string(" (*.") + i->first + std::string(")|*.") + i->first + std::string("|");
+			filter += pair.second + std::string(" (*.") + pair.first + std::string(")|*.") + pair.first + std::string("|");
 		}
 
 		filter += "All supported files|";

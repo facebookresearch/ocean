@@ -89,8 +89,8 @@ bool Surface::executeInpainting(const unsigned int quality)
 			{
 				CV::Synthesis::Constraints constraints;
 
-				for (Lines::const_iterator i = lines_.begin(); i != lines_.end(); ++i)
-					constraints.addConstraint(std::make_unique<CV::Synthesis::FiniteLineConstraint>(i->first, i->second, 200, 40, 500, true, true));
+				for (const Line& line : lines_)
+					constraints.addConstraint(std::make_unique<CV::Synthesis::FiniteLineConstraint>(line.first, line.second, 200, 40, 500, true, true));
 
 				synthesisPyramid.applyInpainting(constraints, randomGenerator_, 10u, 25u, 0xFFFFFFFF, 4u, 2u, worker());
 			}
@@ -333,11 +333,11 @@ void Surface::onMouseMove(wxMouseEvent& event)
 
 void Surface::onPaintOverlay(wxPaintEvent& /*event*/, wxPaintDC& dc)
 {
-	for (Lines::const_iterator i = lines_.begin(); i != lines_.end(); ++i)
+	for (const Line& line : lines_)
 	{
 		Scalar xWindow0, yWindow0, xWindow1, yWindow1;
 
-		if (bitmap2virtualWindow(i->first.x(), i->first.y(), xWindow0, yWindow0) && bitmap2virtualWindow(i->second.x(), i->second.y(), xWindow1, yWindow1))
+		if (bitmap2virtualWindow(line.first.x(), line.first.y(), xWindow0, yWindow0) && bitmap2virtualWindow(line.second.x(), line.second.y(), xWindow1, yWindow1))
 		{
 			dc.SetPen(wxPen(wxColour(0x00, 0x00, 0x00), 3, wxPENSTYLE_SOLID));
 			dc.DrawLine(int(xWindow0), int(yWindow0), int(xWindow1), int(yWindow1));

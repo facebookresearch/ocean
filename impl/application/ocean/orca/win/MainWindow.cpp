@@ -666,11 +666,11 @@ void MainWindow::applicationInterfaceContentAdd(const ApplicationInterface::Stri
 	{
 		bool found = false;
 
-		for (ContentEventIds::iterator i = contentEventIds_.begin(); i != contentEventIds_.end(); ++i)
+		for (std::pair<ContentManager::ContentId, ApplicationInterface::EventId>& contentEventId : contentEventIds_)
 		{
-			if (i->second == eventIds[n])
+			if (contentEventId.second == eventIds[n])
 			{
-				i->first = contentIds[n];
+				contentEventId.first = contentIds[n];
 				found = true;
 				break;
 			}
@@ -698,11 +698,11 @@ void MainWindow::applicationInterfaceContentRemove(const ApplicationInterface::S
 		{
 			bool found = false;
 
-			for (ContentEventIds::iterator i = contentEventIds_.begin(); i != contentEventIds_.end(); ++i)
+			for (std::pair<ContentManager::ContentId, ApplicationInterface::EventId>& contentEventId : contentEventIds_)
 			{
-				if (i->second == eventIds[n])
+				if (contentEventId.second == eventIds[n])
 				{
-					i->first = contentIds[n];
+					contentEventId.first = contentIds[n];
 					found = true;
 					break;
 				}
