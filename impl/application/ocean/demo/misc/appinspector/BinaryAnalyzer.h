@@ -168,7 +168,7 @@ class BinaryAnalyzer : protected Ocean::Thread
 				Address64 address_;
 
 				/// The size of the symbol.
-				unsigned int size_;
+				unsigned int size_ = 0u;
 		};
 
 		/**
@@ -785,8 +785,7 @@ class BinaryAnalyzer : protected Ocean::Thread
 };
 
 inline BinaryAnalyzer::Object::Object() :
-	address_(0ull),
-	size_(0u)
+	address_(0ull)
 {
 	// nothing to do here
 }

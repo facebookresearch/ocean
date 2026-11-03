@@ -92,16 +92,16 @@ class ShapeDetectorMainWindow :
 			public:
 
 				/// The factor mulitplied with each response.
-				double detectorResponseFactor_;
+				double detectorResponseFactor_ = 1.0;
 
 				/// The detection threshold.
-				double detectorThreshold_;
+				double detectorThreshold_ = 0.05;
 
 				/// The expected shape sign.
-				int shapeSign_;
+				int shapeSign_ = -1;
 
 				/// The penalty factor.
-				double detectorPenaltyFactor_;
+				double detectorPenaltyFactor_ = 3.0;
 
 				/// The edge response strategy to apply.
 				GradientBasedDetector::EdgeResponseStrategy detectorEdgeResponseStrategy_;
@@ -156,19 +156,19 @@ class ShapeDetectorMainWindow :
 			public:
 
 				/// The factor mulitplied with each response.
-				double detectorResponseFactor_;
+				double detectorResponseFactor_ = 1.0;
 
 				/// The detection threshold.
-				double detectorThreshold_;
+				double detectorThreshold_ = 4.5;
 
 				/// The minimal variance value each response must have.
-				double detectorMinimalVariance_;
+				double detectorMinimalVariance_ = 1.0;
 
 				/// The maximal ration between vertical and horizontal responses.
-				double detectorMaximalRatio_;
+				double detectorMaximalRatio_ = 4.0;
 
 				/// The multiplication factor for the foreground variance.
-				double detectorForegroundVarianceFactor_;
+				double detectorForegroundVarianceFactor_ = 1.0;
 
 				/// The threshold strategy to be used.
 				VarianceBasedDetector::ThresholdStrategy detectorThresholdStrategy_;
@@ -216,16 +216,16 @@ class ShapeDetectorMainWindow :
 			public:
 
 				/// The factor mulitplied with each response.
-				double detectorResponseFactor_;
+				double detectorResponseFactor_ = 1.0;
 
 				/// The detection threshold.
-				double detectorThreshold_;
+				double detectorThreshold_ = 4.5;
 
 				/// The expected shape sign.
-				int shapeSign_;
+				int shapeSign_ = -1;
 
 				/// The maximal ration between vertical and horizontal responses.
-				double detectorMaximalRatio_;
+				double detectorMaximalRatio_ = 4.0;
 
 				/// The band strategy to be used.
 				GradientVarianceBasedDetector::BandStrategy detectorBandStrategy_;
@@ -263,16 +263,16 @@ class ShapeDetectorMainWindow :
 			public:
 
 				/// The factor mulitplied with each response.
-				double detectorResponseFactor_;
+				double detectorResponseFactor_ = 1.0;
 
 				/// The detection threshold.
-				double detectorThreshold_;
+				double detectorThreshold_ = 4.5;
 
 				/// The expected shape sign.
-				int shapeSign_;
+				int shapeSign_ = -1;
 
 				/// The maximal ration between vertical and horizontal responses.
-				double detectorMaximalRatio_;
+				double detectorMaximalRatio_ = 4.0;
 
 				/// The band strategy to be used.
 				GradientVarianceBasedDetector::BandStrategy detectorBandStrategy_;
@@ -357,7 +357,7 @@ class ShapeDetectorMainWindow :
 		IO::Files inputFiles_;
 
 		/// The index of the current image to be analyzed.
-		size_t currentInputIndex_;
+		size_t currentInputIndex_ = 0;
 
 		/// The shape detector which is currently used.
 		ShapeDetector shapeDetector_;

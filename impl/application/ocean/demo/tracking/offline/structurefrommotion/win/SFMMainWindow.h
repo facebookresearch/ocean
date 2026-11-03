@@ -209,19 +209,19 @@ class SFMMainWindow :
 		RandomGenerator randomGenerator_;
 
 		/// The current frame index.
-		unsigned int frameIndex_;
+		unsigned int frameIndex_ = 0u;
 
 		/// The number of frames.
-		unsigned int frameNumber_;
+		unsigned int frameNumber_ = 0u;
 
 		/// The lower valid pose.
-		unsigned int lowerPoseBorder_;
+		unsigned int lowerPoseBorder_ = (unsigned int)(-1);
 
 		/// The upper valid pose.
-		unsigned int upperPoseBorder_;
+		unsigned int upperPoseBorder_ = (unsigned int)(-1);
 
 		/// The frame paint slow-down factor.
-		unsigned int frameSlowDownFactor_;
+		unsigned int frameSlowDownFactor_ = 0u;
 
 		/// Media file to be used.
 		std::string mediaFile_;
@@ -233,7 +233,7 @@ class SFMMainWindow :
 		HomogenousMatrix4 world_T_plane_;
 
 		/// The expansion of the plane, in world domain.
-		Scalar planeSize_;
+		Scalar planeSize_ = 0;
 
 		/// The 3D location on the plane which is used to move the plane.
 		Vector3 planeMoveObjectPoint_;

@@ -25,12 +25,6 @@
 
 ShapeDetectorMainWindow::GradientBasedParameters::GradientBasedParameters()
 {
-	detectorResponseFactor_ = 1.0;
-	detectorThreshold_ = 0.05;
-
-	shapeSign_ = -1;
-	detectorPenaltyFactor_ = 3.0;
-
 	detectorEdgeResponseStrategy_ = GradientBasedDetector::ERS_GRADIENT_TO_CENTER;
 	detectorMinimalResponseStrategy_ = GradientBasedDetector::MRS_SEPARATE_HORIZONTAL_VERTICAL;
 	detectorPenaltyUsage_ = GradientBasedDetector::PU_SUBTRACT;
@@ -140,13 +134,6 @@ std::string ShapeDetectorMainWindow::GradientBasedParameters::translatePenaltyUs
 
 ShapeDetectorMainWindow::VarianceBasedParameters::VarianceBasedParameters()
 {
-	detectorResponseFactor_ = 1.0;
-	detectorThreshold_ = 4.5;
-
-	detectorMinimalVariance_ = 1.0;
-	detectorMaximalRatio_ = 4.0;
-	detectorForegroundVarianceFactor_ = 1.0;
-
 	detectorThresholdStrategy_ = VarianceBasedDetector::TS_VALUE;
 
 	detectorGradientResponseStrategy_ = VarianceBasedDetector::GRS_SUM_ABSOLUTE_DIFFERENCES;
@@ -277,12 +264,6 @@ std::string ShapeDetectorMainWindow::VarianceBasedParameters::translateBandStrat
 
 ShapeDetectorMainWindow::GradientVarianceBasedParameters::GradientVarianceBasedParameters()
 {
-	detectorResponseFactor_ = 1.0;
-	detectorThreshold_ = 4.5;
-	shapeSign_ = -1;
-
-	detectorMaximalRatio_ = 4.0;
-
 	detectorBandStrategy_ = GradientVarianceBasedDetector::BS_SUBTRACT_AND_DIVIDE;
 	detectorOptimizationStrategy_ = GradientVarianceBasedDetector::OS_NONE;
 }
@@ -387,12 +368,6 @@ std::string ShapeDetectorMainWindow::GradientVarianceBasedParameters::translateO
 
 ShapeDetectorMainWindow::ModifiedGradientVarianceBasedParameters::ModifiedGradientVarianceBasedParameters()
 {
-	detectorResponseFactor_ = 1.0;
-	detectorThreshold_ = 4.5;
-	shapeSign_ = -1;
-
-	detectorMaximalRatio_ = 4.0;
-
 	detectorBandStrategy_ = GradientVarianceBasedDetector::BS_SUBTRACT_AND_DIVIDE;
 }
 
@@ -467,7 +442,6 @@ ShapeDetectorMainWindow::ShapeDetectorMainWindow(HINSTANCE instance, const std::
 	Window(instance, name),
 	BitmapWindow(instance, name),
 	ApplicationWindow(instance, name),
-	currentInputIndex_(0),
 	shapeDetector_(SD_GRADIENT_VARIANCE_BASED),
 	windowResponsesTopDown_(instance, L"Top-down responses"),
 	windowResponsesBottomUp_(instance, L"Bottom-up responses"),

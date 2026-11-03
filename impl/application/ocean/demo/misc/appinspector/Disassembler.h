@@ -76,7 +76,7 @@ class Disassembler
 				std::vector<char> lineBufferDynamic_;
 
 				/// The number of valid characters the dynamic line buffer stores (not the capacity of the dynamic buffer)s.
-				size_t lineBufferDynamicSize_;
+				size_t lineBufferDynamicSize_ = 0;
 		};
 
 		/**

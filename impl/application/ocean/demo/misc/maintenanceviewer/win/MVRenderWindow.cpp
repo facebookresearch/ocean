@@ -30,10 +30,7 @@
 #include "ocean/rendering/Triangles.h"
 
 MVRenderWindow::MVRenderWindow(HINSTANCE applicationInstance, const std::wstring& name, HWND parent) :
-	Window(applicationInstance, name, parent),
-	meshVisibility_(true),
-	pointVisibility_(true),
-	sceneExpansion_(100)
+	Window(applicationInstance, name, parent)
 {
 	// nothing to do here
 }

@@ -25,8 +25,7 @@ FrameConverterYUVMainWindow::FrameConverterYUVMainWindow(HINSTANCE instance, con
 	windowY_(instance, L"Y frame"),
 	windowU_(instance, L"U frame"),
 	windowV_(instance, L"V frame"),
-	mediaFile_(file),
-	ignoreTimestamp_(false)
+	mediaFile_(file)
 {
 	// nothing to do here
 }

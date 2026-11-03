@@ -44,13 +44,7 @@ SFMMainWindow::SFMMainWindow(HINSTANCE instance, const std::wstring& name, const
 	ApplicationWindow(instance, name),
 	commandArguments_(commandArguments),
 	applicationState_(AS_IDLE),
-	frameIndex_(0u),
-	frameNumber_(0u),
-	lowerPoseBorder_((unsigned int)(-1)),
-	upperPoseBorder_((unsigned int)(-1)),
-	frameSlowDownFactor_(0u),
 	world_T_plane_(false),
-	planeSize_(0),
 	planeMoveObjectPoint_(Numeric::minValue(), Numeric::minValue(), Numeric::minValue())
 {
 	mediaFile_ = commandArguments_.value("input", false, 0).stringValue();

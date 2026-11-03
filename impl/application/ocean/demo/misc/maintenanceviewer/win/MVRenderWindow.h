@@ -183,13 +183,13 @@ class MVRenderWindow : virtual public Platform::Win::Window
 		unsigned int oldCursorY_ = (unsigned int)(-1);
 
 		/// The mesh visibility statement.
-		bool meshVisibility_;
+		bool meshVisibility_ = true;
 
 		/// The point visibility statement.
-		bool pointVisibility_;
+		bool pointVisibility_ = true;
 
 		/// The scene expansion value.
-		Scalar sceneExpansion_;
+		Scalar sceneExpansion_ = Scalar(100);
 };
 
 #endif // FACEBOOK_APPLICATION_OCEAN_DEMO_MISC_MAINTENANCE_VIEWER_WIN_MV_RENDER_WINDOW_H

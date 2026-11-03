@@ -88,7 +88,7 @@ class FrameConverterYUVMainWindow :
 		std::string mediaFile_;
 
 		/// True, to ignore the frame timestamp.
-		bool ignoreTimestamp_;
+		bool ignoreTimestamp_ = false;
 };
 
 #endif // FACEBOOK_APPLICATION_OCEAN_DEMO_CV_FRAME_CONVERTER_YUV_WIN_FRAME_CONVERTER_YUV_MAINWINDOW_H

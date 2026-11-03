@@ -18,14 +18,7 @@ OpenGLESMainWindow::OpenGLESMainWindow(HINSTANCE instance, const std::wstring& n
 	eglDisplay_(EGL_NO_DISPLAY),
 	eglConfig_(nullptr),
 	eglSurface_(EGL_NO_SURFACE),
-	eglContext_(EGL_NO_CONTEXT),
-	glesShaderProgram_(0),
-	glesVertexShader_(0),
-	glesFragmentShader_(0),
-	glesVertexBufferObject_(0),
-	glesVertexBufferIndicesObject_(0),
-	glesVertexAttributeLocation_(0),
-	glesTextureId_(0)
+	eglContext_(EGL_NO_CONTEXT)
 {
 	// nothing to do here
 }

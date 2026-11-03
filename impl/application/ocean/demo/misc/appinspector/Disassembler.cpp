@@ -15,8 +15,7 @@
 using namespace Ocean;
 
 Disassembler::LineReader::LineReader(std::istream& inputStream) :
-	inputStream_(inputStream),
-	lineBufferDynamicSize_(0)
+	inputStream_(inputStream)
 {
 	// nothing to do here
 }

@@ -146,25 +146,25 @@ class OpenGLESMainWindow : public Platform::Win::ApplicationWindow
 		EGLContext eglContext_;
 
 		/// GLES shader program.
-		GLuint glesShaderProgram_;
+		GLuint glesShaderProgram_ = 0;
 
 		/// GLES vertex shader.
-		GLuint glesVertexShader_;
+		GLuint glesVertexShader_ = 0;
 
 		/// GLES fragment shader.
-		GLuint glesFragmentShader_;
+		GLuint glesFragmentShader_ = 0;
 
 		/// GLES vertex buffer object.
-		GLuint glesVertexBufferObject_;
+		GLuint glesVertexBufferObject_ = 0;
 
 		/// GLES vertex buffer indices object.
-		GLuint glesVertexBufferIndicesObject_;
+		GLuint glesVertexBufferIndicesObject_ = 0;
 
 		/// GLES vertex attribute location.
-		GLuint glesVertexAttributeLocation_;
+		GLuint glesVertexAttributeLocation_ = 0;
 
 		/// GLES texture id.
-		GLuint glesTextureId_;
+		GLuint glesTextureId_ = 0;
 
 		/// The performance object to determine the rendering execution time.
 		HighPerformanceStatistic performance_;

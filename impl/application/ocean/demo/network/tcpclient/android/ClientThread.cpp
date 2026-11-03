@@ -15,7 +15,6 @@
 using namespace Ocean;
 
 ClientThread::ClientThread() :
-	threadReceivedBytes(0),
 	threadHostPort(0)
 {
 	// nothing to do here

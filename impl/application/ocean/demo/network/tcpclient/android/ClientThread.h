@@ -72,7 +72,7 @@ class ClientThread :
 		unsigned short threadHostPort;
 
 		/// The number of received bytes.
-		size_t threadReceivedBytes;
+		size_t threadReceivedBytes = 0;
 
 		/// The timestamp of the first received byte.
 		Ocean::Timestamp threadReceivedTimestamp;
