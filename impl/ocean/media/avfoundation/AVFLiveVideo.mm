@@ -1188,12 +1188,12 @@ AVFLiveVideo::StreamConfigurations AVFLiveVideo::determineAvailableStreamConfigu
 
 	streamConfigurations.reserve(configurationMap.size());
 
-	for (ConfigurationMap::const_iterator i = configurationMap.cbegin(); i != configurationMap.cend(); ++i)
+	for (const ConfigurationMap::value_type& pair : configurationMap)
 	{
-		std::vector<double> frameRates = i->second;
+		std::vector<double> frameRates = pair.second;
 		std::sort(frameRates.begin(), frameRates.end());
 
-		streamConfigurations.emplace_back(i->first, std::move(frameRates));
+		streamConfigurations.emplace_back(pair.first, std::move(frameRates));
 	}
 
 	return streamConfigurations;

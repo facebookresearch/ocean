@@ -113,13 +113,13 @@ Delaunay::IndexTriangles Delaunay::triangulation(const Vectors2& points)
 
 		// now we fill the hole by new triangles, one triangle for each boundary edge/segment
 
-		for (EdgeMap::const_iterator iEdge = edgeMap.cbegin(); iEdge != edgeMap.cend(); ++iEdge)
+		for (const EdgeMap::value_type& pair : edgeMap)
 		{
-			ocean_assert(iEdge->second >= 1u && iEdge->second <= 2u);
+			ocean_assert(pair.second >= 1u && pair.second <= 2u);
 
-			if (iEdge->second == 1u)
+			if (pair.second == 1u)
 			{
-				workingTriangles.emplace_back(sortedIndex, iEdge->first.firstIndex(), iEdge->first.secondIndex(), points.data(), points.size(), pointsSuperTriangle);
+				workingTriangles.emplace_back(sortedIndex, pair.first.firstIndex(), pair.first.secondIndex(), points.data(), points.size(), pointsSuperTriangle);
 			}
 		}
 	}

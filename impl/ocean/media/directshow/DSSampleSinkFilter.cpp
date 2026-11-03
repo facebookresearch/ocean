@@ -52,27 +52,27 @@ HRESULT DSSampleSinkFilter::DSInputPin::CheckMediaType(const CMediaType* mediaTy
 {
 	ocean_assert(mediaType);
 
-	for (MediaTypes::const_iterator iMedia = mediaTypes_.begin(); iMedia != mediaTypes_.end(); ++iMedia)
+	for (const CMediaType& media : mediaTypes_)
 	{
-		if (iMedia->majortype != GUID_NULL)
+		if (media.majortype != GUID_NULL)
 		{
-			if (iMedia->majortype != mediaType->majortype)
+			if (media.majortype != mediaType->majortype)
 			{
 				continue;
 			}
 		}
 
-		if (iMedia->subtype != GUID_NULL)
+		if (media.subtype != GUID_NULL)
 		{
-			if (iMedia->subtype != mediaType->subtype)
+			if (media.subtype != mediaType->subtype)
 			{
 				continue;
 			}
 		}
 
-		if (iMedia->formattype != GUID_NULL)
+		if (media.formattype != GUID_NULL)
 		{
-			if (iMedia->formattype != mediaType->formattype)
+			if (media.formattype != mediaType->formattype)
 			{
 				continue;
 			}
@@ -83,17 +83,17 @@ HRESULT DSSampleSinkFilter::DSInputPin::CheckMediaType(const CMediaType* mediaTy
 			continue;
 		}
 
-		if (iMedia->lSampleSize > 1)
+		if (media.lSampleSize > 1)
 		{
-			if (iMedia->lSampleSize != mediaType->lSampleSize)
+			if (media.lSampleSize != mediaType->lSampleSize)
 			{
 				continue;
 			}
 		}
 
-		if (iMedia->cbFormat != 0)
+		if (media.cbFormat != 0)
 		{
-			if (*mediaType != *iMedia)
+			if (*mediaType != media)
 			{
 				continue;
 			}

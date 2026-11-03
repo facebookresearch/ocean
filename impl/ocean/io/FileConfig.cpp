@@ -953,16 +953,16 @@ bool FileConfig::readSubValues(FileValues& values, Scanner& scanner, bool stopWi
 
 bool FileConfig::write(const FileValues& values, std::ostream& stream, unsigned int offset)
 {
-	for (FileValues::const_iterator i = values.begin(); i != values.end(); ++i)
+	for (const FileValues::value_type& pair : values)
 	{
-		if (i->second.type() == TYPE_GROUP)
+		if (pair.second.type() == TYPE_GROUP)
 		{
 			if (!writeTabs(stream, offset))
 			{
 				return false;
 			}
 
-			stream << i->first.c_str() << "\n";
+			stream << pair.first.c_str() << "\n";
 
 			if (!writeTabs(stream, offset))
 			{
@@ -971,7 +971,7 @@ bool FileConfig::write(const FileValues& values, std::ostream& stream, unsigned 
 
 			stream << "{" << "\n";
 
-			if (!write(i->second.subValues_, stream, offset + 1))
+			if (!write(pair.second.subValues_, stream, offset + 1))
 			{
 				return false;
 			}
@@ -983,31 +983,31 @@ bool FileConfig::write(const FileValues& values, std::ostream& stream, unsigned 
 
 			stream << "}" << "\n";
 		}
-		else if (i->second.type() != TYPE_INVALID && i->second.type() != TYPE_UNDEFINED)
+		else if (pair.second.type() != TYPE_INVALID && pair.second.type() != TYPE_UNDEFINED)
 		{
 			if (!writeTabs(stream, offset))
 			{
 				return false;
 			}
 
-			stream << i->first.c_str() << " ";
+			stream << pair.first.c_str() << " ";
 
-			if (i->second.type() == TYPE_STRING)
+			if (pair.second.type() == TYPE_STRING)
 			{
 				stream << "\"";
 			}
-			else if (i->second.isMultiType())
+			else if (pair.second.isMultiType())
 			{
 				stream << "[ ";
 			}
 
-			stream << i->second.string_.c_str();
+			stream << pair.second.string_.c_str();
 
-			if (i->second.type() == TYPE_STRING)
+			if (pair.second.type() == TYPE_STRING)
 			{
 				stream << "\"";
 			}
-			else if (i->second.isMultiType())
+			else if (pair.second.isMultiType())
 			{
 				stream << " ]";
 			}

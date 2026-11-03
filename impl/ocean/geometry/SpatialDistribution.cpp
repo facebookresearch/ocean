@@ -197,9 +197,9 @@ Indices32 SpatialDistribution::filterAccordingDistance(const Vector2* imagePoint
 
 			bool found = false;
 
-			for (Indices32::const_iterator i = indexVector.begin(); i != indexVector.end(); ++i)
+			for (const Index32& pointIndex : indexVector)
 			{
-				const unsigned int index = *i;
+				const unsigned int index = pointIndex;
 
 				ocean_assert(index < number);
 
@@ -500,11 +500,11 @@ Scalar SpatialDistribution::determineMinimalSqrDistance(const Vector2* imagePoin
 		{
 			const Indices32& neighborArrayVector = distributionElements(x, y);
 
-			for (Indices32::const_iterator i = neighborArrayVector.begin(); i != neighborArrayVector.end(); ++i)
+			for (const Index32& neighborArray : neighborArrayVector)
 			{
-				if (*i != index)
+				if (neighborArray != index)
 				{
-					const Scalar distance = point.sqrDistance(imagePoints[*i]);
+					const Scalar distance = point.sqrDistance(imagePoints[neighborArray]);
 
 					if (distance < minDistance)
 						minDistance = distance;
@@ -551,11 +551,11 @@ void SpatialDistribution::determineMinimalSqrDistances(const Vector2* imagePoint
 			{
 				const Indices32& neighborArrayVector = indexArray[y * bins + x];
 
-				for (Indices32::const_iterator i = neighborArrayVector.begin(); i != neighborArrayVector.end(); ++i)
+				for (const Index32& neighborArray : neighborArrayVector)
 				{
-					if (*i != n)
+					if (neighborArray != n)
 					{
-						const Scalar distance = point.sqrDistance(imagePoints[*i]);
+						const Scalar distance = point.sqrDistance(imagePoints[neighborArray]);
 
 						if (distance < minDistance)
 							minDistance = distance;
@@ -714,9 +714,9 @@ Indices32 SpatialDistribution::determineNeighbors(const Vector2& point, const Ve
 	Indices32 result;
 	result.reserve(indices.size());
 
-	for (Indices32::const_iterator i = indices.begin(); i != indices.end(); ++i)
+	for (const Index32& index : indices)
 	{
-		const unsigned int neighborIndex = *i;
+		const unsigned int neighborIndex = index;
 		ocean_assert_and_suppress_unused(neighborIndex < numberCandidatePoints, numberCandidatePoints);
 
 		if (point.sqrDistance(candidatePoints[neighborIndex]) <= sqrRadius)
@@ -745,9 +745,9 @@ Index32 SpatialDistribution::determineNearestNeighbor(const Vector2& interestPoi
 	Index32 bestIndex = Index32(-1);
 	Scalar bestSqrDistance = Numeric::sqr(radius) + Numeric::eps();
 
-	for (Indices32::const_iterator i = indices.begin(); i != indices.end(); ++i)
+	for (const Index32& index : indices)
 	{
-		const unsigned int neighborIndex = *i;
+		const unsigned int neighborIndex = index;
 		ocean_assert(neighborIndex < numberImagePoints);
 
 		const Scalar localSqrDistance = interestPoint.sqrDistance(imagePoints[neighborIndex]);

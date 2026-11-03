@@ -494,9 +494,9 @@ bool NonLinearOptimizationPlane::optimizePosesPlaneIF(const PinholeCamera& pinho
 #ifdef OCEAN_DEBUG
 
 	// we have to avoid that the first camera pose is identical to the remaining poses as this case provides mathematical uncertainties
-	for (HomogenousMatrices4::const_iterator i = invertedFlippedPoses.begin(); i != invertedFlippedPoses.end(); ++i)
+	for (const HomogenousMatrix4& invertedFlippedPose : invertedFlippedPoses)
 	{
-		ocean_assert(!Geometry::Error::posesAlmostEqual(flippedCameraFirst_T_world, *i, Vector3(Scalar(0.001), Scalar(0.001), Scalar(0.001)), Scalar(Numeric::deg2rad(1))));
+		ocean_assert(!Geometry::Error::posesAlmostEqual(flippedCameraFirst_T_world, invertedFlippedPose, Vector3(Scalar(0.001), Scalar(0.001), Scalar(0.001)), Scalar(Numeric::deg2rad(1))));
 	}
 
 #endif // OCEAN_DEBUG

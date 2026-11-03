@@ -39,9 +39,9 @@ ProcessorMonitor::FrequencyPairs ProcessorMonitor::monitorData(const Timestamp b
 
 	if (double(beginTimestamp) < 0.0)
 	{
-		for (FrequencyMap::const_iterator i = frequencyMap_.cbegin(); i != frequencyMap_.cend(); ++i)
+		for (const FrequencyMap::value_type& pair : frequencyMap_)
 		{
-			frequencyPairs.emplace_back(i->first, i->second);
+			frequencyPairs.emplace_back(pair.first, pair.second);
 		}
 	}
 	else

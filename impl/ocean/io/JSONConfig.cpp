@@ -44,9 +44,9 @@ unsigned int JSONConfig::JSONValue::values() const
 {
 	unsigned int size = 0u;
 
-	for (JSONValues::const_iterator i = subValues_.cbegin(); i != subValues_.cend(); ++i)
+	for (const JSONValues::value_type& pair : subValues_)
 	{
-		size += (unsigned int)(i->second.size());
+		size += (unsigned int)(pair.second.size());
 	}
 
 	return size;
@@ -100,17 +100,17 @@ JSONConfig::JSONValue& JSONConfig::JSONValue::value(const unsigned int index, st
 {
 	unsigned int n = 0u;
 
-	for (JSONValues::iterator i = subValues_.begin(); i != subValues_.end(); ++i)
+	for (JSONValues::value_type& pair : subValues_)
 	{
 		ocean_assert(n <= index);
 
-		if (index < n + (unsigned int)i->second.size())
+		if (index < n + (unsigned int)pair.second.size())
 		{
-			name = i->first;
-			return i->second[index - n];
+			name = pair.first;
+			return pair.second[index - n];
 		}
 
-		n += (unsigned int)i->second.size();
+		n += (unsigned int)pair.second.size();
 	}
 
 	return nullValue();
@@ -122,19 +122,19 @@ bool JSONConfig::JSONValue::value(const unsigned int index, std::string& name, V
 
 	unsigned int n = 0u;
 
-	for (JSONValues::iterator i = subValues_.begin(); i != subValues_.end(); ++i)
+	for (JSONValues::value_type& pair : subValues_)
 	{
 		ocean_assert(n <= index);
 
-		if (index < n + (unsigned int)i->second.size())
+		if (index < n + (unsigned int)pair.second.size())
 		{
-			name = i->first;
-			*value = &(i->second[index - n]);
+			name = pair.first;
+			*value = &(pair.second[index - n]);
 
 			return true;
 		}
 
-		n += (unsigned int)i->second.size();
+		n += (unsigned int)pair.second.size();
 	}
 
 	return false;

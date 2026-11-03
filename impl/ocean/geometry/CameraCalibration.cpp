@@ -107,9 +107,9 @@ void CameraCalibration::Pattern::changeSize(const Scalar sizeFactor)
 {
 	ocean_assert(sizeFactor > 0);
 
-	for (PatternRows::iterator iR = patternRows.begin(); iR != patternRows.end(); ++iR)
+	for (PatternRow& r : patternRows)
 	{
-		for (PatternRow::iterator iC = iR->begin(); iC != iR->end(); ++iC)
+		for (PatternRow::iterator iC = r.begin(); iC != r.end(); ++iC)
 		{
 			*iC *= sizeFactor;
 		}
@@ -320,9 +320,9 @@ bool CameraCalibration::determineCameraCalibration(const PinholeCamera& roughCam
 		totalImagePoints.insert(totalImagePoints.end(), imagePoints.begin(), imagePoints.end());
 
 		const HomogenousMatrix4 poseIF(PinholeCamera::standard2InvertedFlipped(pose));
-		for (Vectors3::const_iterator i = objectPoints.begin(); i != objectPoints.end(); ++i)
+		for (const Vector3& objectPoint : objectPoints)
 		{
-			const Vector3 transformedObjectPoint(poseIF * *i);
+			const Vector3 transformedObjectPoint(poseIF * objectPoint);
 			ocean_assert(Numeric::isNotEqualEps(transformedObjectPoint.z()));
 
 			const Scalar factor = 1 / transformedObjectPoint.z();
@@ -589,9 +589,9 @@ bool CameraCalibration::successiveCameraPoseOptimization(const PinholeCamera& pi
 
 	// determine the total number of point correspondences
 	size_t correspondences = 0u;
-	for (ObjectPointGroups::const_iterator i = objectPointGroups.begin(); i != objectPointGroups.end(); ++i)
+	for (const ObjectPoints& objectPoint : objectPointGroups)
 	{
-		correspondences += i->size();
+		correspondences += objectPoint.size();
 	}
 
 	entireNormalizedImagePoints.resize(correspondences);

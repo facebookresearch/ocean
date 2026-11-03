@@ -64,13 +64,13 @@ MediumRef Manager::newMedium(const std::string& url, bool useExclusive)
 	const IO::File file(url);
 	const std::string fileExtension(String::toLower(file.extension()));
 
-	for (Libraries::const_iterator i = libraries_.cbegin(); i != libraries_.cend(); ++i)
+	for (const LibraryCounterPair& library : libraries_)
 	{
-		ocean_assert(i->first);
+		ocean_assert(library.first);
 
-		if (i->first->notSupported(fileExtension) == false)
+		if (library.first->notSupported(fileExtension) == false)
 		{
-			const MediumRef medium(i->first->newMedium(url, useExclusive));
+			const MediumRef medium(library.first->newMedium(url, useExclusive));
 
 			if (medium)
 			{
@@ -101,13 +101,13 @@ MediumRef Manager::newMedium(const std::string& url, const Medium::Type type, bo
 	const IO::File file(url);
 	const std::string fileExtension(String::toLower(file.extension()));
 
-	for (Libraries::iterator i = libraries_.begin(); i != libraries_.end(); ++i)
+	for (LibraryCounterPair& library : libraries_)
 	{
-		ocean_assert(i->first);
+		ocean_assert(library.first);
 
-		if (i->first->supports(type) && i->first->notSupported(fileExtension) == false)
+		if (library.first->supports(type) && library.first->notSupported(fileExtension) == false)
 		{
-			const MediumRef medium(i->first->newMedium(url, type, useExclusive));
+			const MediumRef medium(library.first->newMedium(url, type, useExclusive));
 
 			if (medium)
 			{
@@ -158,13 +158,13 @@ MediumRef Manager::newMedium(const std::string& url, const std::string& library,
 	const IO::File file(url);
 	const std::string fileExtension(String::toLower(file.extension()));
 
-	for (Libraries::const_iterator i = libraries_.cbegin(); i != libraries_.cend(); ++i)
+	for (const LibraryCounterPair& libraryPair : libraries_)
 	{
-		ocean_assert(i->first);
+		ocean_assert(libraryPair.first);
 
-		if (i->first->name() == library && i->first->supports(type) && i->first->notSupported(fileExtension) == false)
+		if (libraryPair.first->name() == library && libraryPair.first->supports(type) && libraryPair.first->notSupported(fileExtension) == false)
 		{
-			return i->first->newMedium(url, type, useExclusive);
+			return libraryPair.first->newMedium(url, type, useExclusive);
 		}
 	}
 
@@ -175,16 +175,16 @@ RecorderRef Manager::newRecorder(const Recorder::Type type, const std::string& l
 {
 	const ScopedLock scopedLock(lock_);
 
-	for (Libraries::const_iterator i = libraries_.cbegin(); i != libraries_.cend(); ++i)
+	for (const LibraryCounterPair& libraryPair : libraries_)
 	{
-		ocean_assert(i->first);
+		ocean_assert(libraryPair.first);
 
-		if (!library.empty() && i->first->name() != library)
+		if (!library.empty() && libraryPair.first->name() != library)
 		{
 			continue;
 		}
 
-		RecorderRef recorder(i->first->newRecorder(type));
+		RecorderRef recorder(libraryPair.first->newRecorder(type));
 
 		if (recorder)
 		{
@@ -201,11 +201,11 @@ Library::Definitions Manager::selectableMedia() const
 
 	Library::Definitions definitions;
 
-	for (Libraries::const_iterator i = libraries_.cbegin(); i != libraries_.cend(); ++i)
+	for (const LibraryCounterPair& library : libraries_)
 	{
-		ocean_assert(i->first);
+		ocean_assert(library.first);
 
-		Library::Definitions libDefinitions(i->first->selectableMedia());
+		Library::Definitions libDefinitions(library.first->selectableMedia());
 		definitions.insert(definitions.end(), libDefinitions.begin(), libDefinitions.end());
 	}
 
@@ -218,11 +218,11 @@ Library::Definitions Manager::selectableMedia(const Medium::Type type) const
 
 	Library::Definitions definitions;
 
-	for (Libraries::const_iterator i = libraries_.cbegin(); i != libraries_.cend(); ++i)
+	for (const LibraryCounterPair& library : libraries_)
 	{
-		ocean_assert(i->first);
+		ocean_assert(library.first);
 
-		Library::Definitions libDefinitions(i->first->selectableMedia(type));
+		Library::Definitions libDefinitions(library.first->selectableMedia(type));
 
 		definitions.insert(definitions.cend(), libDefinitions.cbegin(), libDefinitions.cend());
 	}
@@ -237,11 +237,11 @@ Manager::Names Manager::libraries() const
 	Names result;
 	result.reserve(libraries_.size());
 
-	for (Libraries::const_iterator i = libraries_.cbegin(); i != libraries_.cend(); ++i)
+	for (const LibraryCounterPair& library : libraries_)
 	{
-		ocean_assert(i->first);
+		ocean_assert(library.first);
 
-		result.emplace_back(i->first->name());
+		result.emplace_back(library.first->name());
 	}
 
 	return result;

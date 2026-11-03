@@ -187,9 +187,9 @@ bool HTTPSClient::httpsPostRequestApple(const std::string& url, const uint8_t* r
 	NSMutableDictionary* additionalHeadersDictionary = [NSMutableDictionary dictionaryWithCapacity:additionalHeaders.size() + 1];
 	[additionalHeadersDictionary setObject:[NSString stringWithFormat:@"%@",  @([bodyString length])] forKey:@"Content-Length"];
 
-	for (Strings::const_iterator i = additionalHeaders.begin(); i != additionalHeaders.end(); ++i)
+	for (const std::string& additionalHeader : additionalHeaders)
 	{
-		const std::string header = *i;
+		const std::string header = additionalHeader;
 		const std::string::size_type pos = header.find(": ");
 
 		ocean_assert(pos != std::string::npos);

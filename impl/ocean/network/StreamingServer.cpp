@@ -68,10 +68,10 @@ StreamingServer::Channel::StreamId StreamingServer::Channel::addStream(const TCP
 	ocean_assert(tcpConnectionId != TCPServer::invalidConnectionId());
 
 	// ensure that this channel does not exist
-	for (StreamMap::const_iterator i = streamMap_.begin(); i != streamMap_.end(); ++i)
+	for (const StreamMap::value_type& pair : streamMap_)
 	{
-		ocean_assert(i->second->tcpConnectionId() != tcpConnectionId);
-		ocean_assert(i->second->receiverAddress() != address || i->second->receiverPort() != port);
+		ocean_assert_and_suppress_unused(pair.second->tcpConnectionId() != tcpConnectionId, pair);
+		ocean_assert(pair.second->receiverAddress() != address || pair.second->receiverPort() != port);
 	}
 
 	streamMap_[streamIdCounter_] = std::make_shared<Stream>(tcpConnectionId, address, port);
@@ -217,7 +217,7 @@ bool StreamingServer::Channel::setDataType(TCPServer& configurationTCPServer, Me
 	extraData_ = extraData;
 
 	// notify connected streaming clients about the combined data type and extra data change
-	for (StreamMap::iterator i = streamMap_.begin(); i != streamMap_.end(); ++i)
+	for (StreamMap::value_type& pair : streamMap_)
 	{
 		// encode the extra data as Base64 for transmission over the text protocol
 		std::string encodedExtraData;
@@ -232,7 +232,7 @@ bool StreamingServer::Channel::setDataType(TCPServer& configurationTCPServer, Me
 		const std::string combinedValue = dataType_ + "|" + encodedExtraData;
 
 		const SessionId sessionId = messageQueue.uniqueId();
-		if (configurationTCPServer.send(i->second->tcpConnectionId(), createCommand(changedDataTypeCommand(), combinedValue, sessionId)) != TCPServer::SR_SUCCEEDED)
+		if (configurationTCPServer.send(pair.second->tcpConnectionId(), createCommand(changedDataTypeCommand(), combinedValue, sessionId)) != TCPServer::SR_SUCCEEDED)
 		{
 			Log::error() << "Could not send a change data type command to a streaming client.";
 		}
@@ -253,11 +253,11 @@ bool StreamingServer::Channel::stream(const void* data, const size_t size)
 {
 	bool allSuccessfull = true;
 
-	for (StreamMap::iterator i = streamMap_.begin(); i != streamMap_.end(); ++i)
+	for (StreamMap::value_type& pair : streamMap_)
 	{
-		if (i->second->isStreaming())
+		if (pair.second->isStreaming())
 		{
-			if (i->second->stream(data, size) == false)
+			if (pair.second->stream(data, size) == false)
 			{
 				allSuccessfull = false;
 			}
@@ -357,9 +357,9 @@ StreamingServer::ChannelId StreamingServer::registerChannel(const std::string& c
 
 	const ScopedLock scopedLock(lock_);
 
-	for (ChannelMap::const_iterator i = channelMap_.begin(); i != channelMap_.end(); ++i)
+	for (const ChannelMap::value_type& pair : channelMap_)
 	{
-		if (i->second.name() == channel)
+		if (pair.second.name() == channel)
 		{
 			return invalidChannelId();
 		}
@@ -443,9 +443,9 @@ bool StreamingServer::hasChannel(const std::string& channel) const
 {
 	const ScopedLock scopedLock(lock_);
 
-	for (ChannelMap::const_iterator i = channelMap_.begin(); i != channelMap_.end(); ++i)
+	for (const ChannelMap::value_type& pair : channelMap_)
 	{
-		if (i->second.name() == channel)
+		if (pair.second.name() == channel)
 		{
 			return true;
 		}

@@ -1616,9 +1616,9 @@ bool RANSAC::determineCameraCalibrationPlanar(const unsigned int width, const un
 
 		// test whether the calibration pattern are sufficient different
 		Indices32 indexVector;
-		for (IndexSet32::const_iterator iS = indexSet.begin(); iS != indexSet.end(); ++iS)
+		for (const Index32& s : indexSet)
 		{
-			indexVector.push_back(*iS);
+			indexVector.push_back(s);
 		}
 
 		bool differentPattern = true;

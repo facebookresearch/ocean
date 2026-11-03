@@ -136,9 +136,9 @@ void Microphone::threadRun()
 		{
 			const ScopedLock scopedLock(lock_);
 
-			for (SampleCallbackMap::const_iterator iSampleCallback = sampleCallbackMap_.cbegin(); iSampleCallback != sampleCallbackMap_.cend(); ++iSampleCallback)
+			for (const SampleCallbackMap::value_type& pair : sampleCallbackMap_)
 			{
-				iSampleCallback->second(buffer.data(), buffer.size());
+				pair.second(buffer.data(), buffer.size());
 			}
 
 			positionInChunk = 0;

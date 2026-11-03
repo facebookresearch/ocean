@@ -56,9 +56,9 @@ bool MovieFrameProvider::setEnabled(const bool state)
 
 		bool needStart = false;
 
-		for (PreviewFrames::const_iterator i = previewFrames_.begin(); i != previewFrames_.end(); ++i)
+		for (const PreviewFrame& previewFrame : previewFrames_)
 		{
-			if (i->first == false)
+			if (previewFrame.first == false)
 			{
 				needStart = true;
 				break;
@@ -258,9 +258,9 @@ bool MovieFrameProvider::setPreferredPreviewDimension(const unsigned int width, 
 
 	if (oldPreviewDimension != newPreviewDimension)
 	{
-		for (PreviewFrames::iterator i = previewFrames_.begin(); i != previewFrames_.end(); ++i)
+		for (PreviewFrame& previewFrame : previewFrames_)
 		{
-			i->first = false;
+			previewFrame.first = false;
 		}
 	}
 

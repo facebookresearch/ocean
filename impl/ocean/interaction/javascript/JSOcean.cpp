@@ -152,32 +152,32 @@ void JSOcean::OceanContainer::onContentEvent(const ApplicationInterface::EventId
 	if (value)
 	{
 		// content loaded
-		for (ContextFunctionPairs::iterator i = contentAddedEventFunctions_.begin(); i != contentAddedEventFunctions_.end(); ++i)
+		for (ContextFunctionPair& contentAddedEventFunction : contentAddedEventFunctions_)
 		{
-			std::shared_ptr<JSContext> functionContext(i->first);
+			std::shared_ptr<JSContext> functionContext(contentAddedEventFunction.first);
 			ocean_assert(functionContext);
 
 			if (functionContext)
 			{
 				const v8::Context::Scope contextScope(functionContext->context());
 
-				functionContext->addExplicitFunctionCall(i->second, JSContext::FunctionParameterCaller::createStatic(&OceanContainer::parameter, eventId, state));
+				functionContext->addExplicitFunctionCall(contentAddedEventFunction.second, JSContext::FunctionParameterCaller::createStatic(&OceanContainer::parameter, eventId, state));
 			}
 		}
 	}
 	else
 	{
 		// content unloaded
-		for (ContextFunctionPairs::iterator i = contentRemovedEventFunctions_.begin(); i != contentRemovedEventFunctions_.end(); ++i)
+		for (ContextFunctionPair& contentRemovedEventFunction : contentRemovedEventFunctions_)
 		{
-			std::shared_ptr<JSContext> functionContext(i->first);
+			std::shared_ptr<JSContext> functionContext(contentRemovedEventFunction.first);
 			ocean_assert(functionContext);
 
 			if (functionContext)
 			{
 				const v8::Context::Scope contextScope(functionContext->context());
 
-				functionContext->addExplicitFunctionCall(i->second, JSContext::FunctionParameterCaller::createStatic(&OceanContainer::parameter, eventId, state));
+				functionContext->addExplicitFunctionCall(contentRemovedEventFunction.second, JSContext::FunctionParameterCaller::createStatic(&OceanContainer::parameter, eventId, state));
 			}
 		}
 	}

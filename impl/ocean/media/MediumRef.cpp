@@ -98,9 +98,9 @@ bool MediumRefManager::isRegistered(const Medium* medium)
 {
 	const ScopedLock scopedLock(lock_);
 
-	for (MediumMap::iterator i = mediumMap_.begin(); i != mediumMap_.end(); ++i)
+	for (MediumMap::value_type& pair : mediumMap_)
 	{
-		if (&*i->second == medium)
+		if (&*pair.second == medium)
 		{
 			return true;
 		}

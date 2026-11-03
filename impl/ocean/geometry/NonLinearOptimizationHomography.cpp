@@ -1069,9 +1069,9 @@ bool NonLinearOptimizationHomography::optimizeCameraHomographies(const PinholeCa
 	pinholeCamera.copyElements(sharedModel.data());
 
 	UniversalOptimization::IndividualModels individualModels, optimizedIndividualModels;
-	for (SquareMatrices3::const_iterator i = homographies.begin(); i != homographies.end(); ++i)
+	for (const SquareMatrix3& homography : homographies)
 	{
-		const SquareMatrix3 normalizedHomography(Homography::normalizedHomography(pinholeCamera.invertedIntrinsic() * *i * pinholeCamera.intrinsic()));
+		const SquareMatrix3 normalizedHomography(Homography::normalizedHomography(pinholeCamera.invertedIntrinsic() * homography * pinholeCamera.intrinsic()));
 
 		const UniversalOptimization::IndividualModel indiviudalModel(normalizedHomography.data());
 		individualModels.push_back(indiviudalModel);
@@ -1079,10 +1079,10 @@ bool NonLinearOptimizationHomography::optimizeCameraHomographies(const PinholeCa
 
 	std::vector<size_t> numberElementsPerIndividualModel;
 	numberElementsPerIndividualModel.reserve(imagePointsPairs.size());
-	for (ImagePointsPairs::const_iterator i = imagePointsPairs.begin(); i != imagePointsPairs.end(); ++i)
+	for (const ImagePointsPair& imagePointsPair : imagePointsPairs)
 	{
-		ocean_assert(i->first.size() == i->second.size());
-		numberElementsPerIndividualModel.push_back(i->first.size());
+		ocean_assert(imagePointsPair.first.size() == imagePointsPair.second.size());
+		numberElementsPerIndividualModel.push_back(imagePointsPair.first.size());
 	}
 
 	CameraHomographiesData data(pinholeCamera.width(), pinholeCamera.height(), imagePointsPairs);
@@ -1131,9 +1131,9 @@ bool NonLinearOptimizationHomography::optimizeDistortionCameraHomographies(const
 	sharedModel[3] = pinholeCamera.tangentialDistortion().second;
 
 	UniversalOptimization::IndividualModels individualModels, optimizedIndividualModels;
-	for (SquareMatrices3::const_iterator i = homographies.begin(); i != homographies.end(); ++i)
+	for (const SquareMatrix3& homography : homographies)
 	{
-		const SquareMatrix3 normalizedHomography(Homography::normalizedHomography(pinholeCamera.invertedIntrinsic() * *i * pinholeCamera.intrinsic()));
+		const SquareMatrix3 normalizedHomography(Homography::normalizedHomography(pinholeCamera.invertedIntrinsic() * homography * pinholeCamera.intrinsic()));
 
 		const UniversalOptimization::IndividualModel indiviudalModel(normalizedHomography.data());
 		individualModels.push_back(indiviudalModel);
@@ -1141,10 +1141,10 @@ bool NonLinearOptimizationHomography::optimizeDistortionCameraHomographies(const
 
 	std::vector<size_t> numberElementsPerIndividualModel;
 	numberElementsPerIndividualModel.reserve(imagePointsPairs.size());
-	for (ImagePointsPairs::const_iterator i = imagePointsPairs.begin(); i != imagePointsPairs.end(); ++i)
+	for (const ImagePointsPair& imagePointsPair : imagePointsPairs)
 	{
-		ocean_assert(i->first.size() == i->second.size());
-		numberElementsPerIndividualModel.push_back(i->first.size());
+		ocean_assert(imagePointsPair.first.size() == imagePointsPair.second.size());
+		numberElementsPerIndividualModel.push_back(imagePointsPair.first.size());
 	}
 
 	DistortionCameraHomographiesData data(pinholeCamera, imagePointsPairs);

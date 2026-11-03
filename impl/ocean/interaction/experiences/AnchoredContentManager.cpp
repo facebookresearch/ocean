@@ -242,11 +242,11 @@ AnchoredContentManager::SharedContentObjectSet AnchoredContentManager::visibleCo
 
 	SharedContentObjectSet result;
 
-	for (ContentMap::const_iterator iContent = contentMap_.cbegin(); iContent != contentMap_.cend(); ++iContent)
+	for (const ContentMap::value_type& pair : contentMap_)
 	{
-		if (iContent->second->renderingObjectNode_->visible())
+		if (pair.second->renderingObjectNode_->visible())
 		{
-			result.emplace(iContent->second);
+			result.emplace(pair.second);
 		}
 	}
 
@@ -259,11 +259,11 @@ AnchoredContentManager::SharedContentObjectSet AnchoredContentManager::closeCont
 
 	SharedContentObjectSet result;
 
-	for (ContentMap::const_iterator iContent = contentMap_.cbegin(); iContent != contentMap_.cend(); ++iContent)
+	for (const ContentMap::value_type& pair : contentMap_)
 	{
-		if (iContent->second->sqrDistance_ >= 0 && iContent->second->sqrDistance_ <= maxSqrDistance)
+		if (pair.second->sqrDistance_ >= 0 && pair.second->sqrDistance_ <= maxSqrDistance)
 		{
-			result.emplace(iContent->second);
+			result.emplace(pair.second);
 		}
 	}
 
@@ -291,9 +291,9 @@ Timestamp AnchoredContentManager::preUpdate(const Rendering::EngineRef& engine, 
 
 	SharedContentObjectSet removedContentObjects; // all content objects outside of the engagement radius
 
-	for (SubscriptionMap::const_iterator iSubscription = subscriptionMap_.cbegin(); iSubscription != subscriptionMap_.cend(); ++iSubscription)
+	for (const SubscriptionMap::value_type& pair : subscriptionMap_)
 	{
-		const Devices::Tracker6DOF* tracker = iSubscription->first;
+		const Devices::Tracker6DOF* tracker = pair.first;
 
 		const Devices::Tracker6DOF::Tracker6DOFSampleRef trackerSample(tracker->sample(timestamp));
 
@@ -385,10 +385,10 @@ Timestamp AnchoredContentManager::preUpdate(const Rendering::EngineRef& engine, 
 		{
 			// no sample for the given timestamp, all associated content objects are invisible
 
-			for (TrackerToContentObjectMap::const_iterator iContent = trackerToContentObjectMap_.cbegin(); iContent != trackerToContentObjectMap_.cend(); ++iContent)
+			for (const TrackerToContentObjectMap::value_type& trackerContentPair : trackerToContentObjectMap_)
 			{
-				ocean_assert(iContent->second);
-				ContentObject& contentObject = *iContent->second;
+				ocean_assert(trackerContentPair.second);
+				ContentObject& contentObject = *trackerContentPair.second;
 
 				ocean_assert(contentObject.renderingAnchorTransform_);
 				contentObject.renderingAnchorTransform_->setVisible(false);

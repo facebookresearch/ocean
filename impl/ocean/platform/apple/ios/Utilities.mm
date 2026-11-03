@@ -384,11 +384,11 @@ bool Utilities::shareImages(const Frames& frames)
 
 	NSMutableArray* objects = [[NSMutableArray alloc] init];
 
-	for (Frames::const_iterator i = frames.begin(); i != frames.end(); ++i)
+	for (const Frame& frame : frames)
 	{
-		ocean_assert(*i);
+		ocean_assert(frame);
 
-		const ScopedCGImageRef imageRef(Apple::Utilities::toCGImage(*i, true));
+		const ScopedCGImageRef imageRef(Apple::Utilities::toCGImage(frame, true));
 
 		if (imageRef.object() != nullptr)
 		{

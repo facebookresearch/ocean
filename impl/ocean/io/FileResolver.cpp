@@ -38,12 +38,14 @@ Files FileResolver::resolve(const File& file, const bool checkExistence) const
 
 	Files files;
 
-	for (Directories::const_iterator i = referencePaths.begin(); i != referencePaths.end(); ++i)
+	for (const Directory& referencePath : referencePaths)
 	{
-		const IO::File resolvedFile(*i + file);
+		const IO::File resolvedFile(referencePath + file);
 
 		if (!checkExistence || resolvedFile.exists())
-			files.push_back(*i + file);
+		{
+			files.push_back(referencePath + file);
+		}
 	}
 
 	return files;
@@ -82,12 +84,14 @@ Files FileResolver::resolve(const File& file, const Path& reference, const bool 
 			result.push_back(refFile);
 	}
 
-	for (Directories::const_iterator i = referencePaths.begin(); i != referencePaths.end(); ++i)
+	for (const Directory& referencePath : referencePaths)
 	{
-		const IO::File resolvedFile(*i + file);
+		const IO::File resolvedFile(referencePath + file);
 
 		if (!checkExistence || resolvedFile.exists())
-			result.push_back(*i + file);
+		{
+			result.push_back(referencePath + file);
+		}
 	}
 
 	if (result.empty())

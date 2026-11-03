@@ -195,9 +195,9 @@ Manager::FileExtensions Manager::supportedExtensions()
 	{
 		const Library::FileExtensions libraryExtensions((*i)->registeredFileExtensions());
 
-		for (Library::FileExtensions::const_iterator iL = libraryExtensions.begin(); iL != libraryExtensions.end(); ++iL)
+		for (const Library::FileExtensions::value_type& pair : libraryExtensions)
 		{
-			extensions.insert(std::make_pair(iL->first, iL->second));
+			extensions.insert(std::make_pair(pair.first, pair.second));
 		}
 	}
 

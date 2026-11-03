@@ -192,11 +192,11 @@ void ExperiencesLibrary::unload(const UserInterface& userInterface, const Render
 {
 	const ScopedLock scopedLock(lock_);
 
-	for (NameToExperienceMap::iterator iExperience = nameToExperienceMap_.begin(); iExperience != nameToExperienceMap_.end(); ++iExperience)
+	for (NameToExperienceMap::value_type& pair : nameToExperienceMap_)
 	{
-		ocean_assert(iExperience->second);
-		iExperience->second->unload(userInterface, engine, timestamp);
-		iExperience->second->postUnload(userInterface, engine, timestamp);
+		ocean_assert(pair.second);
+		pair.second->unload(userInterface, engine, timestamp);
+		pair.second->postUnload(userInterface, engine, timestamp);
 	}
 
 	nameToExperienceMap_.clear();
@@ -220,10 +220,10 @@ Timestamp ExperiencesLibrary::preUpdate(const UserInterface& userInterface, cons
 
 	Timestamp localTimestamp(timestamp);
 
-	for (NameToExperienceMap::iterator iExperience = nameToExperienceMap_.begin(); iExperience != nameToExperienceMap_.end(); ++iExperience)
+	for (NameToExperienceMap::value_type& pair : nameToExperienceMap_)
 	{
-		ocean_assert(iExperience->second);
-		localTimestamp = iExperience->second->preUpdate(userInterface, engine, view, localTimestamp);
+		ocean_assert(pair.second);
+		localTimestamp = pair.second->preUpdate(userInterface, engine, view, localTimestamp);
 	}
 
 	return localTimestamp;
@@ -235,10 +235,10 @@ void ExperiencesLibrary::postUpdate(const UserInterface& userInterface, const Re
 
 	const ScopedLock scopedLock(lock_);
 
-	for (NameToExperienceMap::iterator iExperience = nameToExperienceMap_.begin(); iExperience != nameToExperienceMap_.end(); ++iExperience)
+	for (NameToExperienceMap::value_type& pair : nameToExperienceMap_)
 	{
-		ocean_assert(iExperience->second);
-		iExperience->second->postUpdate(userInterface, engine, view, timestamp);
+		ocean_assert(pair.second);
+		pair.second->postUpdate(userInterface, engine, view, timestamp);
 	}
 }
 
@@ -248,10 +248,10 @@ void ExperiencesLibrary::onMousePress(const UserInterface& userInterface, const 
 
 	const ScopedLock scopedLock(lock_);
 
-	for (NameToExperienceMap::iterator iExperience = nameToExperienceMap_.begin(); iExperience != nameToExperienceMap_.end(); ++iExperience)
+	for (NameToExperienceMap::value_type& pair : nameToExperienceMap_)
 	{
-		ocean_assert(iExperience->second);
-		iExperience->second->onMousePress(userInterface, engine, button, screenPosition, ray, timestamp);
+		ocean_assert(pair.second);
+		pair.second->onMousePress(userInterface, engine, button, screenPosition, ray, timestamp);
 	}
 }
 
@@ -261,10 +261,10 @@ void ExperiencesLibrary::onMouseMove(const UserInterface& userInterface, const R
 
 	const ScopedLock scopedLock(lock_);
 
-	for (NameToExperienceMap::iterator iExperience = nameToExperienceMap_.begin(); iExperience != nameToExperienceMap_.end(); ++iExperience)
+	for (NameToExperienceMap::value_type& pair : nameToExperienceMap_)
 	{
-		ocean_assert(iExperience->second);
-		iExperience->second->onMouseMove(userInterface, engine, button, screenPosition, ray, timestamp);
+		ocean_assert(pair.second);
+		pair.second->onMouseMove(userInterface, engine, button, screenPosition, ray, timestamp);
 	}
 }
 
@@ -274,10 +274,10 @@ void ExperiencesLibrary::onMouseRelease(const UserInterface& userInterface, cons
 
 	const ScopedLock scopedLock(lock_);
 
-	for (NameToExperienceMap::iterator iExperience = nameToExperienceMap_.begin(); iExperience != nameToExperienceMap_.end(); ++iExperience)
+	for (NameToExperienceMap::value_type& pair : nameToExperienceMap_)
 	{
-		ocean_assert(iExperience->second);
-		iExperience->second->onMouseRelease(userInterface, engine, button, screenPosition, ray, timestamp);
+		ocean_assert(pair.second);
+		pair.second->onMouseRelease(userInterface, engine, button, screenPosition, ray, timestamp);
 	}
 }
 
@@ -287,10 +287,10 @@ void ExperiencesLibrary::onKeyPress(const UserInterface& userInterface, const Re
 
 	const ScopedLock scopedLock(lock_);
 
-	for (NameToExperienceMap::iterator iExperience = nameToExperienceMap_.begin(); iExperience != nameToExperienceMap_.end(); ++iExperience)
+	for (NameToExperienceMap::value_type& pair : nameToExperienceMap_)
 	{
-		ocean_assert(iExperience->second);
-		iExperience->second->onKeyPress(userInterface, engine, key, timestamp);
+		ocean_assert(pair.second);
+		pair.second->onKeyPress(userInterface, engine, key, timestamp);
 	}
 }
 
@@ -300,10 +300,10 @@ void ExperiencesLibrary::onKeyRelease(const UserInterface& userInterface, const 
 
 	const ScopedLock scopedLock(lock_);
 
-	for (NameToExperienceMap::iterator iExperience = nameToExperienceMap_.begin(); iExperience != nameToExperienceMap_.end(); ++iExperience)
+	for (NameToExperienceMap::value_type& pair : nameToExperienceMap_)
 	{
-		ocean_assert(iExperience->second);
-		iExperience->second->onKeyRelease(userInterface, engine, key, timestamp);
+		ocean_assert(pair.second);
+		pair.second->onKeyRelease(userInterface, engine, key, timestamp);
 	}
 }
 
@@ -311,12 +311,12 @@ void ExperiencesLibrary::release()
 {
 	const ScopedLock scopedLock(lock_);
 
-	for (NameToExperienceMap::iterator i = nameToExperienceMap_.begin(); i != nameToExperienceMap_.end(); ++i)
+	for (NameToExperienceMap::value_type& pair : nameToExperienceMap_)
 	{
-		ocean_assert(i->second);
-		i->second->release();
+		ocean_assert(pair.second);
+		pair.second->release();
 
-		i->second = nullptr;
+		pair.second = nullptr;
 	}
 
 	nameToExperienceMap_.clear();
