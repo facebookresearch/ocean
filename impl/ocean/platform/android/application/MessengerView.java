@@ -29,6 +29,7 @@ public class MessengerView extends ScrollView
 	 * @param context The context of new view object
 	 * @param lastMessageOnly True, to display the most recent message only; False, to display all messages
 	 */
+ @SuppressWarnings("this-escape")
 	public MessengerView(Context context, boolean lastMessageOnly)
 	{
 		super(context);

@@ -69,6 +69,7 @@ public class GLView extends GLSurfaceView
 	 * Creates a new view object.
 	 * @param context Application context object
 	 */
+ @SuppressWarnings("this-escape")
 	public GLView(Context context)
 	{
 		super(context);
@@ -77,6 +78,7 @@ public class GLView extends GLSurfaceView
         registerInstance();
 	}
 
+ @SuppressWarnings("this-escape")
 	public GLView(Context context, boolean translucent, int depth, int stencil)
 	{
 		super(context);
@@ -85,6 +87,7 @@ public class GLView extends GLSurfaceView
         registerInstance();
 	}
 
+ @SuppressWarnings("this-escape")
 	private void init(boolean translucent, int depth, int stencil)
 	{
 		/* By default, GLSurfaceView() creates a RGB_565 opaque surface.
