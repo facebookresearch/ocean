@@ -102,7 +102,7 @@ void ImageSequenceRecorderMainWindow::onKeyUp(const int key)
 			{
 				const Media::ConfigMedium::ConfigNames configs(configMedium->configs());
 
-				if (configs.size() > 0)
+				if (!configs.empty())
 					configMedium->configuration(configs[0], (long long)(handle()));
 			}
 			break;

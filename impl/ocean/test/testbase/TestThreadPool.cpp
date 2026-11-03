@@ -138,7 +138,7 @@ bool TestThreadPool::testInvokeFunctions(const double testDuration)
 
 		while (iterationTimestamp + 5.0 > Timestamp(true))
 		{
-			if (threadPool.size() == 0 && Executions::get().hasId())
+			if (threadPool.isEmpty() && Executions::get().hasId())
 			{
 				break;
 			}

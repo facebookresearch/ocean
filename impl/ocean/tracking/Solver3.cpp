@@ -2778,7 +2778,7 @@ bool Solver3::determinePoses(const Database& database, const AnyCamera& camera, 
 		}
 	}
 
-	if (finalAverageError != nullptr && poses.size() != 0)
+	if (finalAverageError != nullptr && !poses.isEmpty())
 	{
 		*finalAverageError = totalError / Scalar(poses.size());
 	}
@@ -2938,7 +2938,7 @@ bool Solver3::trackObjectPoints(const Database& database, const Indices32& objec
 
 			if (trackedImagePointGroups.size() >= minimalTrackedFrames)
 			{
-				ocean_assert(trackedImagePointGroups.size() != 0);
+				ocean_assert(!trackedImagePointGroups.isEmpty());
 				fixedNumberObjectPoints = (unsigned int)trackedImagePointGroups.front().size();
 			}
 		}
@@ -3563,7 +3563,7 @@ void Solver3::determineProjectionErrors(const AnyCamera& camera, const Vector3& 
 		*minimalSqrError = minError;
 	}
 
-	if (world_T_cameras.size() != 0 && averageSqrError != nullptr)
+	if (!world_T_cameras.isEmpty() && averageSqrError != nullptr)
 	{
 		*averageSqrError = totalError / Scalar(world_T_cameras.size());
 	}
@@ -3614,7 +3614,7 @@ bool Solver3::determineProjectionError(const Database& database, const PinholeCa
 	if (minimalSqrError)
 		*minimalSqrError = minError;
 
-	ocean_assert(imagePoints.size() != 0);
+	ocean_assert(!imagePoints.empty());
 	if (averageSqrError)
 		*averageSqrError = totalError / Scalar(imagePoints.size());
 
@@ -3982,7 +3982,7 @@ bool Solver3::removeSparseObjectPoints(Database& database, const Scalar minimalB
 		if (medianPoint.sqrDistance(validObjectPoints[i]) > Numeric::sqr(medianDistance * medianFactor))
 			farObjectPointIds.push_back(validObjectPointIds[i]);
 
-	ocean_assert(validObjectPoints.size() != 0);
+	ocean_assert(!validObjectPoints.empty());
 	Log::info() << "The amount of far object points: " << Scalar(farObjectPointIds.size()) * Scalar(100) / Scalar(validObjectPoints.size());
 
 	if (Scalar(farObjectPointIds.size()) / Scalar(validObjectPoints.size()) > maximalSparseObjectPointRatio)

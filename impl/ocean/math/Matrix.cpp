@@ -747,7 +747,7 @@ bool MatrixT<T>::solve(const T* b, T* x) const
 			sqrDistance += NumericT<T>::sqr(differences[n]);
 		}
 
-		const T distance = differences.size() == 0 ? T(0) : NumericT<T>::sqrt(sqrDistance / T(differences.size()));
+		const T distance = differences.empty() ? T(0) : NumericT<T>::sqrt(sqrDistance / T(differences.size()));
 
 		if (NumericT<T>::isWeakEqualEps(distance) == false)
 		{

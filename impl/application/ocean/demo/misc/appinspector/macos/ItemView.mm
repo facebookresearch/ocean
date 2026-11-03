@@ -101,7 +101,7 @@ void ItemView::onMouseUpRight()
 
 			const Strings& texts = itemObject->texts();
 
-			if (texts.size() == 0)
+			if (texts.empty())
 			{
 				continue;
 			}

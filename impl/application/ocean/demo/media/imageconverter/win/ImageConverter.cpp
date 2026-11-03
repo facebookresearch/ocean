@@ -43,7 +43,7 @@ int __stdcall wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR 
 
 	std::string mediaFileInput;
 
-	if (commands.size() > 0)
+	if (!commands.empty())
 	{
 		mediaFileInput = String::toAString(commands[0]);
 	}

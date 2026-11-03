@@ -70,7 +70,7 @@ BOOL PropertiesWindow::PropertyControl::OnCommand(WPARAM wParam, LPARAM lParam)
 				{
 					Media::ConfigMedium::ConfigNames configs(configMedium->configs());
 
-					if (configs.size() > 0)
+					if (!configs.empty())
 					{
 						configMedium->configuration(configs[0], 0ll);
 					}

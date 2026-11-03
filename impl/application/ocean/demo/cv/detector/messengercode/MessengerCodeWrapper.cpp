@@ -104,7 +104,7 @@ MessengerCodeWrapper::MessengerCodeWrapper(const std::vector<std::wstring>& comm
 
 	// First, we get access to the frame medium that is intended to be used for the tracking
 
-	if (commandArguments.size() > 0 && !commandArguments[0].empty())
+	if (!commandArguments.empty() && !commandArguments[0].empty())
 	{
 		const std::string argument = String::toAString(commandArguments[0]);
 

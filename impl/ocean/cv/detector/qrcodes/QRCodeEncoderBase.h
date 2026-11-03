@@ -267,7 +267,7 @@ inline bool QRCodeEncoderBase::Segment::isNumericData(const std::string& data)
 		}
 	}
 
-	return data.size() != 0;
+	return !data.empty();
 }
 
 inline bool QRCodeEncoderBase::Segment::isAlphanumericData(const std::string& data)

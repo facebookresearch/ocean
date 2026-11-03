@@ -697,7 +697,7 @@ Vectors3 EpipolarGeometry::triangulateImagePointsIF(const ConstIndexedAccessor<H
 	 *		x * (P1_2i * X) - y *(P1_1i * X) = 0 (linear dependent)
 	 */
 
-	ocean_assert(posesIF.size() == imagePointsPerPose.size() && posesIF.size() > 0);
+	ocean_assert(posesIF.size() == imagePointsPerPose.size() && !posesIF.isEmpty());
 	ocean_assert(invalidIndices == nullptr || invalidIndices->empty());
 
 	if (invalidIndices)

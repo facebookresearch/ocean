@@ -688,7 +688,7 @@ inline void OculusTagTracker::TagObservationHistory::append(TagObservationHistor
 	Geometry::ObjectPointGroups otherTrackingObjectPointsGroup = std::move(otherObservationHistory.trackingObjectPointsGroups());
 
 	ocean_assert(otherObservationHistory.empty());
-	ocean_assert(otherCameraPoses_world_T_camera.size() != 0);
+	ocean_assert(!otherCameraPoses_world_T_camera.empty());
 	ocean_assert(otherCameraPoses_world_T_camera.size() == otherObjectPointsGroup.size());
 	ocean_assert(otherCameraPoses_world_T_camera.size() == otherImagePointsGroup.size());
 	ocean_assert(otherCameraPoses_world_T_camera.size() == otherTrackingImagePointsGroup.size());
@@ -817,7 +817,7 @@ inline OculusTagTracker::TrackedTag::TrackedTag(OculusTag&& tag, TagObservationH
 	motionType_(motionType)
 {
 	ocean_assert(tag_.isValid());
-	ocean_assert(tagObservationHistoryA_.size() != 0 || tagObservationHistoryB_.size() != 0);
+	ocean_assert(!tagObservationHistoryA_.empty() || !tagObservationHistoryB_.empty());
 }
 
 inline bool OculusTagTracker::TrackedTag::operator<(const TrackedTag& otherTrackedTag) const

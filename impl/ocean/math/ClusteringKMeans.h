@@ -871,7 +871,7 @@ TSquareDistance ClusteringKMeans<T, tDimension, TSum, TSquareDistance, tUseIndic
 		result += sqrDistance(data[*i]);
 	}
 
-	ocean_assert(dataIndices_.size() != 0);
+	ocean_assert(!dataIndices_.empty());
 	return result / TSquareDistance(dataIndices_.size());
 }
 

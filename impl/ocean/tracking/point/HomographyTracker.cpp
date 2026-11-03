@@ -256,7 +256,7 @@ bool HomographyTracker::determineHomography(const AnyCamera& camera, const Frame
 
 						for (size_t nLayer = 0; nLayer < currentPointsPyramid.size(); ++nLayer)
 						{
-							if (currentPointsPyramid[nLayer].size() > 0 && currentPointsPyramid[nLayer].size() < 25)
+							if (!currentPointsPyramid[nLayer].empty() && currentPointsPyramid[nLayer].size() < 25)
 							{
 								enoughPoints = false;
 								break;
@@ -387,7 +387,7 @@ bool HomographyTracker::determineHomography(const AnyCamera& camera, const Frame
 								}
 							}
 
-							if (copyKeyFrameInitialPointsPyramidLayer.size() > 0 && (copyKeyFrameInitialPointsPyramidLayer.size() < 20 || keyFrameInitialPointsPyramidLayer.size() * 50 / 100 > copyKeyFrameInitialPointsPyramidLayer.size()))
+							if (!copyKeyFrameInitialPointsPyramidLayer.empty() && (copyKeyFrameInitialPointsPyramidLayer.size() < 20 || keyFrameInitialPointsPyramidLayer.size() * 50 / 100 > copyKeyFrameInitialPointsPyramidLayer.size()))
 							{
 								// we do not have enough visible points which we can track from the (transformed) key frame to the current frame
 								enoughPointsVisible = false;
@@ -642,7 +642,7 @@ bool HomographyTracker::trackPoints(const CV::FramePyramid& yPreviousFramePyrami
 	Vectors2& previousLayerPoints = previousPointsPyramid[startLayer];
 	Vectors2& currentLayerPoints = currentPointsPyramid[startLayer];
 
-	ocean_assert(previousLayerPoints.size() > 0);
+	ocean_assert(!previousLayerPoints.empty());
 
 	// the rough locations of the current points are either a simple copy of the previous points, or a prediction based on the given homography
 

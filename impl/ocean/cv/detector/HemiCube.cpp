@@ -193,7 +193,7 @@ void HemiCube::merge(const FiniteLines2& lines, const Scalar maxLineDistance, co
 			if (mapping)
 			{
 				ocean_assert(lineIndex < mapping->size());
-				ocean_assert(linesInMap_.size() != 0);
+				ocean_assert(!linesInMap_.empty());
 				(*mapping)[lineIndex] = (Index32)(linesInMap_.size() - 1);
 			}
 		}

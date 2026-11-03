@@ -112,7 +112,7 @@ int wmain(int argc, wchar_t* argv[])
 					}
 				}
 
-				if (frames.size() == 0)
+				if (frames.empty())
 				{
 					std::cout << "No images could be load!" << std::endl << "Cannot calculate patterns.";
 				}

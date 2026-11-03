@@ -1207,7 +1207,7 @@ std::vector<Indices64> SphericalEnvironment::determineFeaturePointsFromPointClou
 
 			if (!doublePoint)
 			{
-				ocean_assert(siblings.size() != 0);
+				ocean_assert(!siblings.empty());
 
 				if (siblings.size() >= minSiblings)
 				{

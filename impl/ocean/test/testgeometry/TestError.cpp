@@ -203,7 +203,7 @@ bool TestError::testDeterminePoseErrorSeparatePinhole(const double testDuration)
 						testAverageSqrError += testSqrError;
 					}
 
-					ocean_assert(objectPoints.size() != 0);
+					ocean_assert(!objectPoints.empty());
 					testAverageSqrError /= Scalar(objectPoints.size());
 
 					if (Numeric::isNotEqual(testAverageSqrError, averageSqrError, epsilon))
@@ -304,7 +304,7 @@ bool TestError::testDeterminePoseErrorSeparateAnyCamera(const double testDuratio
 					testAverageSqrError += testSqrError;
 				}
 
-				ocean_assert(objectPoints.size() != 0);
+				ocean_assert(!objectPoints.empty());
 				testAverageSqrError /= Scalar(objectPoints.size());
 
 				if (Numeric::isNotEqual(testAverageSqrError, averageSqrError, epsilon))
@@ -394,7 +394,7 @@ bool TestError::testDeterminePoseErrorCombinedPinhole(const double testDuration)
 						testAverageSqrError += testSqrError;
 					}
 
-					ocean_assert(objectPoints.size() != 0);
+					ocean_assert(!objectPoints.empty());
 					testAverageSqrError /= Scalar(objectPoints.size());
 
 					if (!Numeric::isEqual(testMinimalSqrError, minimalSqrError, epsilon))
@@ -528,7 +528,7 @@ bool TestError::testDeterminePoseErrorCombinedAnyCamera(const double testDuratio
 					testAverageSqrError += testSqrError;
 				}
 
-				ocean_assert(objectPoints.size() != 0);
+				ocean_assert(!objectPoints.empty());
 				testAverageSqrError /= Scalar(objectPoints.size());
 
 				if (!Numeric::isEqual(testMinimalSqrError, minimalSqrError, epsilon))

@@ -278,7 +278,7 @@ bool OculusTagTracker::trackTagsStereo(const AnyCamera& anyCameraA, const AnyCam
 								tagObservationHistory.append(newTagObservationHistory);
 
 								isTagTracked[cameraIndex] = true;
-								ocean_assert(tagObservationHistory.size() != 0);
+								ocean_assert(!tagObservationHistory.empty());
 							}
 						}
 					}
@@ -322,7 +322,7 @@ bool OculusTagTracker::trackTagsStereo(const AnyCamera& anyCameraA, const AnyCam
 			visibleTagsIndices.insert(trackedTag.tag_.tagID());
 		}
 
-		ocean_assert(trackedTag.trackingState_ != TS_TRACKING || trackedTag.tagObservationHistoryA_.size() != 0  || trackedTag.tagObservationHistoryB_.size() != 0);
+		ocean_assert(trackedTag.trackingState_ != TS_TRACKING || !trackedTag.tagObservationHistoryA_.empty()  || !trackedTag.tagObservationHistoryB_.empty());
 	}
 
 
@@ -357,13 +357,13 @@ bool OculusTagTracker::trackTagsStereo(const AnyCamera& anyCameraA, const AnyCam
 					const size_t removedObservationsA = trackedTag.tagObservationHistoryA_.removeObservations(anyCameraA, tag_T_world, maxAllowedProjectionError_);
 					const size_t removedObservationsB = trackedTag.tagObservationHistoryB_.removeObservations(anyCameraB, tag_T_world, maxAllowedProjectionError_);
 
-					if (detectedTags[t].tagObservationHistoryA_.size() != 0 && trackedTag.tagObservationHistoryA_.size() <= numberMaxAllowedObservations_)
+					if (!detectedTags[t].tagObservationHistoryA_.empty() && trackedTag.tagObservationHistoryA_.size() <= numberMaxAllowedObservations_)
 					{
 						ocean_assert(detectedTags[t].tagObservationHistoryA_.size() == 1);
 						trackedTag.tagObservationHistoryA_.append(detectedTags[t].tagObservationHistoryA_);
 					}
 
-					if (detectedTags[t].tagObservationHistoryB_.size() != 0 && trackedTag.tagObservationHistoryB_.size() < numberMaxAllowedObservations_)
+					if (!detectedTags[t].tagObservationHistoryB_.empty() && trackedTag.tagObservationHistoryB_.size() < numberMaxAllowedObservations_)
 					{
 						ocean_assert(detectedTags[t].tagObservationHistoryB_.size() == 1);
 						trackedTag.tagObservationHistoryB_.append(detectedTags[t].tagObservationHistoryB_);
@@ -559,7 +559,7 @@ OculusTags OculusTagTracker::detectTagsMono(const AnyCamera& anyCamera, const Fr
 			if (addTagObservationAndOptimize(anyCamera, yFrame, world_T_device, device_T_camera, tag, quad, tagObservationsHistory))
 			{
 				ocean_assert(tag.isValid());
-				ocean_assert(tagObservationsHistory.size() != 0);
+				ocean_assert(!tagObservationsHistory.empty());
 
 				tags.emplace_back(std::move(tag));
 				localTagObservationHistories.emplace_back(std::move(tagObservationsHistory));
@@ -998,7 +998,7 @@ OculusTagTracker::TrackedTags OculusTagTracker::detectTagsStereo(const SharedAny
 			edgeLengthSum += (worldCorners.back() - worldCorners.front()).length();
 
 			ocean_assert(edgeLengthSum > Scalar(0));
-			ocean_assert(worldCorners.size() != 0);
+			ocean_assert(!worldCorners.empty());
 
 			const Scalar tagSize = edgeLengthSum / Scalar(worldCorners.size());
 

@@ -871,7 +871,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointF
 				sqrPixelErrorOptimized += fisheyeCamera.projectToImage(poses_world_T_camera[n], optimizedObjectPoint).sqrDistance(perfectImagePoints[n]);
 			}
 
-			ocean_assert(poses_world_T_camera.size() > 0);
+			ocean_assert(!poses_world_T_camera.empty());
 			sqrPixelErrorInitial /= Scalar(poses_world_T_camera.size());
 			sqrPixelErrorOptimized /= Scalar(poses_world_T_camera.size());
 
@@ -1050,7 +1050,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointA
 				sqrPixelErrorOptimized += anyCamera.projectToImage(world_T_cameras[n], optimizedObjectPoint).sqrDistance(perfectImagePoints[n]);
 			}
 
-			ocean_assert(world_T_cameras.size() > 0);
+			ocean_assert(!world_T_cameras.empty());
 			sqrPixelErrorInitial /= Scalar(world_T_cameras.size());
 			sqrPixelErrorOptimized /= Scalar(world_T_cameras.size());
 
@@ -1475,7 +1475,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointA
 				sqrPixelErrorOptimized += anyCamera->projectToImage(world_T_cameras[n], optimizedObjectPoint).sqrDistance(perfectImagePoints[n]);
 			}
 
-			ocean_assert(world_T_cameras.size() > 0);
+			ocean_assert(!world_T_cameras.empty());
 			sqrPixelErrorInitial /= Scalar(world_T_cameras.size());
 			sqrPixelErrorOptimized /= Scalar(world_T_cameras.size());
 

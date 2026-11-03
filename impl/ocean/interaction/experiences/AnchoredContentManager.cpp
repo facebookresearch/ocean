@@ -157,7 +157,7 @@ bool AnchoredContentManager::removeAllContent()
 {
 	ocean_assert(renderingScene_);
 
-	while (contentMap_.size() > 0)
+	while (!contentMap_.empty())
 	{
 		ContentMap::const_iterator iContent = contentMap_.cbegin();
 		ContentId content_id = iContent->second->contentId_;

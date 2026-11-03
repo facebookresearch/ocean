@@ -2388,7 +2388,7 @@ bool SLAMTracker::adjustPosesAndPlaneToCamera(const PinholeCamera& oldCamera, co
 			offset += optimizedObjectPoints[n] - objectPoints[n];
 		}
 
-		ocean_assert(objectPoints.size() != 0);
+		ocean_assert(!objectPoints.empty());
 		offset /= Scalar(objectPoints.size());
 
 		const Vector3 newObjectPoint(oldPlaneTransformation.translation() + offset);

@@ -493,7 +493,7 @@ bool TestQRCodeDetector2D::testDetectQRCodesSyntheticData_Internal(const unsigne
 
 			if (failedAtDetection)
 			{
-				if (codes.size() == 0)
+				if (codes.empty())
 				{
 					Log::error() << "Did not detect any QR codes (seed:" << randomGenerator.initialSeed() << ", #" << testImageIndex << ", useWorker:" << useWorker << ")";
 				}

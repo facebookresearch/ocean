@@ -263,7 +263,7 @@ bool TestBresenham::testIntegerBorderIntersection(const double testDuration)
 					ocean_assert_and_suppress_unused(testIntersection.first >= borderLeft && testIntersection.first <= borderRight && testIntersection.second >= borderTop && testIntersection.second <= borderBottom, testIntersection);
 				}
 
-				if (testIntersectionSet.size() == 0 || testIntersectionSet.size() > 2)
+				if (testIntersectionSet.empty() || testIntersectionSet.size() > 2)
 				{
 					scopedIteration.setInaccurate();
 				}

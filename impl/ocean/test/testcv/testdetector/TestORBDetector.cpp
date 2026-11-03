@@ -582,7 +582,7 @@ double TestORBDetector::validateOrientation(const uint32_t* linedIntegralFrame, 
 		}
 	}
 
-	ocean_assert(features.size() != 0);
+	ocean_assert(!features.empty());
 	return double(validOrientations) / double(features.size());
 }
 

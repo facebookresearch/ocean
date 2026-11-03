@@ -216,7 +216,7 @@ bool TestMultipleViewGeometry::testTrifocalTensorMatrix(bool addGaussianNoise, c
 		}
 		else
 		{
-			const Scalar medianMetric = maxProjectionErrorsMetric.size() > 0 ? Median::median(maxProjectionErrorsMetric.data(), maxProjectionErrorsMetric.size()) : 0;
+			const Scalar medianMetric = !maxProjectionErrorsMetric.empty() ? Median::median(maxProjectionErrorsMetric.data(), maxProjectionErrorsMetric.size()) : 0;
 
 			Log::info() << "Validation: " << validationPrecision << " Median maximal re-projection error: " << String::toAString(medianMetric, 1u) << " pixel";
 
@@ -319,7 +319,7 @@ bool TestMultipleViewGeometry::testProjectiveReconstructionFrom3Views(bool addGa
 		return false;
 	}
 
-	const Scalar medianMetric = maxProjectionErrorsMetric.size() > 0 ? Median::median(maxProjectionErrorsMetric.data(), maxProjectionErrorsMetric.size()) : 0;
+	const Scalar medianMetric = !maxProjectionErrorsMetric.empty() ? Median::median(maxProjectionErrorsMetric.data(), maxProjectionErrorsMetric.size()) : 0;
 
 	Log::info() << "Validation: " << validation << " Median maximal re-projection error: " << String::toAString(medianMetric, 1u) << " pixel";
 
@@ -411,7 +411,7 @@ bool TestMultipleViewGeometry::testProjectiveReconstruction(const unsigned int v
 		return false;
 	}
 
-	const Scalar medianMetric = maxProjectionErrorsMetric.size() > 0 ? Median::median(maxProjectionErrorsMetric.data(), maxProjectionErrorsMetric.size()) : 0;
+	const Scalar medianMetric = !maxProjectionErrorsMetric.empty() ? Median::median(maxProjectionErrorsMetric.data(), maxProjectionErrorsMetric.size()) : 0;
 
 	Log::info() << "Validation: " << validation << " Median maximal re-projection error: " << String::toAString(medianMetric, 1u) << " pixel";
 
@@ -530,7 +530,7 @@ bool TestMultipleViewGeometry::testFaultyProjectiveReconstruction(const unsigned
 		}
 		else
 		{
-			const Scalar medianMetric = maxProjectionErrorsMetric.size() > 0 ? Median::median(maxProjectionErrorsMetric.data(), maxProjectionErrorsMetric.size()) : 0;
+			const Scalar medianMetric = !maxProjectionErrorsMetric.empty() ? Median::median(maxProjectionErrorsMetric.data(), maxProjectionErrorsMetric.size()) : 0;
 
 			Log::info() << "Validation: " << validationPrecision << " Median maximal re-projection error: " << String::toAString(medianMetric, 1u) << " pixel";
 

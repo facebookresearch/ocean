@@ -581,7 +581,7 @@ bool TestStaticVector::testClear(RandomGenerator& randomGenerator)
 
 		staticVector.clear();
 
-		if (staticVector.capacity() != tCapacity || staticVector.size() != 0)
+		if (staticVector.capacity() != tCapacity || !staticVector.empty())
 		{
 			return false;
 		}
@@ -607,7 +607,7 @@ bool TestStaticVector::testClear(RandomGenerator& randomGenerator)
 
 		staticVector.weakClear();
 
-		if (staticVector.capacity() != tCapacity || staticVector.size() != 0)
+		if (staticVector.capacity() != tCapacity || !staticVector.empty())
 		{
 			return false;
 		}
@@ -1291,7 +1291,7 @@ bool TestStaticVector::testPopBack(RandomGenerator& randomGenerator)
 		// calling on empty vector should be safe
 		staticVector.securePopBack();
 
-		if (staticVector.size() != 0)
+		if (!staticVector.empty())
 		{
 			return false;
 		}
@@ -1352,7 +1352,7 @@ bool TestStaticVector::testPopBack(RandomGenerator& randomGenerator)
 		// calling on empty vector should be safe
 		staticVector.secureWeakPopBack();
 
-		if (staticVector.size() != 0)
+		if (!staticVector.empty())
 		{
 			return false;
 		}

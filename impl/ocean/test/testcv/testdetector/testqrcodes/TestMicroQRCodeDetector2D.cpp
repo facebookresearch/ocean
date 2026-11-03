@@ -471,7 +471,7 @@ bool TestMicroQRCodeDetector2D::testDetectMicroQRCodesSyntheticData_Internal(con
 
 			if (failedAtDetection)
 			{
-				if (codes.size() == 0)
+				if (codes.empty())
 				{
 					Log::error() << "Did not detect any Micro QR codes (seed:" << randomGenerator.initialSeed() << ", #" << testImageIndex << ", useWorker:" << useWorker << ")";
 				}

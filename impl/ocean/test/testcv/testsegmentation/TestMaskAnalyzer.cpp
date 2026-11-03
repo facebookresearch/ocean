@@ -2689,7 +2689,7 @@ bool TestMaskAnalyzer::validateComputeDistanceTransform8Bit(const uint8_t* sourc
 				neighborsVerticalHorizontal.emplace_back(pixel.east());
 			}
 
-			ocean_assert(neighborsVerticalHorizontal.size() != 0 && neighborsDiagonal.size() != 0);
+			ocean_assert(!neighborsVerticalHorizontal.empty() && !neighborsDiagonal.empty());
 
 			TDistanceType minimumDistance = invalidDistance;
 

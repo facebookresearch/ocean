@@ -364,7 +364,7 @@ void Grid::clipByImageBoundingBox(const PinholeCamera& pinholeCamera, const Homo
 		adjustGridCornersInYDirectionByImageLines(pinholeCamera, world_T_camera, edgesImageCoordinates[i], boundingBoxLeftEdge);
 	}
 
-	if (insideGridCoordinates.size() > 0)
+	if (!insideGridCoordinates.empty())
 	{
 		// if we have given grid coordinates, we must extend the determined grid bounding box to ensure
 		// that all given coordinates lie inside the grid

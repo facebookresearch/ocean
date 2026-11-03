@@ -233,7 +233,7 @@ size_t SuccessionSubset<T, tDimensions>::incrementSubset()
 
 	ocean_assert(successionSubset.size() < successionObjects.size());
 
-	if (successionSubset.size() == 0)
+	if (successionSubset.empty())
 	{
 		index = smallestMaximalDistance();
 	}

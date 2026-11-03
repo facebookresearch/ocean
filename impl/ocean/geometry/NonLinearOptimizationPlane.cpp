@@ -487,7 +487,7 @@ bool NonLinearOptimizationPlane::optimizePosesPlaneIF(const PinholeCamera& pinho
 
 	ocean_assert(pinholeCamera.isValid());
 	ocean_assert(invertedFlippedPoses.size() >= 1);
-	ocean_assert(imagePointsFirst.size() > 0);
+	ocean_assert(!imagePointsFirst.empty());
 
 	ocean_assert(invertedFlippedPoses.size() == imagePointGroups.size());
 
