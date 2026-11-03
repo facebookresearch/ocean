@@ -259,10 +259,10 @@ bool SLAMPlaneTracker::HomographyTrackerComponent::optimizeHomography(const CV::
 
 	// now correct the current point positions due to the determined homography
 	const SquareMatrix3 cameraFreeHomography(Geometry::Homography::normalizedHomography(componentCamera_.invertedIntrinsic() * homography * componentCamera_.intrinsic()));
-	for (Vectors2::iterator i = currentImagePoints.begin(); i != currentImagePoints.end(); ++i)
+	for (Vector2& currentImagePoint : currentImagePoints)
 	{
-		const Vector2 normalizedImagePoint(componentCamera_.imagePoint2normalizedImagePoint<true>(*i, componentCamera_.hasDistortionParameters()));
-		*i = componentCamera_.normalizedImagePoint2imagePoint<true>(cameraFreeHomography * normalizedImagePoint, componentCamera_.hasDistortionParameters());
+		const Vector2 normalizedImagePoint(componentCamera_.imagePoint2normalizedImagePoint<true>(currentImagePoint, componentCamera_.hasDistortionParameters()));
+		currentImagePoint = componentCamera_.normalizedImagePoint2imagePoint<true>(cameraFreeHomography * normalizedImagePoint, componentCamera_.hasDistortionParameters());
 	}
 
 	ocean_assert(previousImagePoints.size() == currentImagePoints.size());
@@ -867,10 +867,10 @@ bool SLAMPlaneTracker::PlaneTrackerComponent::optimizePose(const CV::FramePyrami
 		}
 	}
 
-	for (Vectors2::iterator i = currentImagePoints.begin(); i != currentImagePoints.end(); ++i)
+	for (Vector2& currentImagePoint : currentImagePoints)
 	{
-		const Vector2 normalizedImagePoint(componentCamera_.imagePoint2normalizedImagePoint<true>(*i, componentCamera_.hasDistortionParameters()));
-		*i = componentCamera_.normalizedImagePoint2imagePoint<true>(cameraFreeHomography * normalizedImagePoint, componentCamera_.hasDistortionParameters());
+		const Vector2 normalizedImagePoint(componentCamera_.imagePoint2normalizedImagePoint<true>(currentImagePoint, componentCamera_.hasDistortionParameters()));
+		currentImagePoint = componentCamera_.normalizedImagePoint2imagePoint<true>(cameraFreeHomography * normalizedImagePoint, componentCamera_.hasDistortionParameters());
 	}
 
 	const Vectors3 objectPoints(Geometry::Utilities::backProjectImagePoints(componentCamera_, previousPose, componentPlane_, previousImagePoints.data(), previousImagePoints.size(), componentCamera_.hasDistortionParameters()));

@@ -830,29 +830,29 @@ bool QRCodeTracker3D::isAlreadyTracked(const TrackedQRCodesMap& trackedQRCodesMa
 	ObjectId bestMatchObjectId = invalidObjectId();
 	Scalar minSqrDistance = Numeric::maxValue();
 
-	for (TrackedQRCodesMap::const_iterator iter = trackedQRCodesMap.cbegin(); iter != trackedQRCodesMap.cend(); ++iter)
+	for (const TrackedQRCodesMap::value_type& pair : trackedQRCodesMap)
 	{
-		const Scalar trackedCodeSize = iter->second.codeSize();
+		const Scalar trackedCodeSize = pair.second.codeSize();
 
 		if (trackedCodeSize < minCodeSize || trackedCodeSize > maxCodeSize)
 		{
 			continue;
 		}
 
-		const QRCode& trackedCode = iter->second.code();
+		const QRCode& trackedCode = pair.second.code();
 
 		if (!code.isSame(trackedCode, /* ignoreModules */ true))
 		{
 			continue;
 		}
 
-		const Vector3 trackedCodeTranslation = iter->second.world_T_code().translation();
+		const Vector3 trackedCodeTranslation = pair.second.world_T_code().translation();
 
 		const Scalar sqrDistance = codeTranslation.sqrDistance(trackedCodeTranslation);
 
 		if (sqrDistance < minSqrDistance)
 		{
-			bestMatchObjectId = iter->first;
+			bestMatchObjectId = pair.first;
 			minSqrDistance = sqrDistance;
 		}
 	}

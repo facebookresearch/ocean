@@ -155,9 +155,9 @@ bool TextureGenerator::updateMesh(const Devices::SceneTracker6DOF::SharedSceneEl
 		}
 	}
 
-	for (TriangleMap::const_iterator iTriangle = triangleMap_.cbegin(); iTriangle != triangleMap_.cend(); ++iTriangle)
+	for (const TriangleMap::value_type& pair : triangleMap_)
 	{
-		const TriangleObject& triangleObject = iTriangle->second;
+		const TriangleObject& triangleObject = pair.second;
 
 		if (triangleObject.frameIndex_ != frameIndex_)
 		{
@@ -397,14 +397,14 @@ bool TextureGenerator::exportMeshs(const std::string& filename, const bool expor
 
 	Frame textureFrame;
 
-	for (MeshMap::const_iterator iMesh = meshMap.cbegin(); iMesh != meshMap.cend(); ++iMesh)
+	for (const MeshMap::value_type& pair : meshMap)
 	{
-		if (iMesh->second.triangleFaces_.empty())
+		if (pair.second.triangleFaces_.empty())
 		{
 			continue;
 		}
 
-		const Index32& meshId = iMesh->first;
+		const Index32& meshId = pair.first;
 
 		if (meshId != Index32(-1))
 		{
@@ -437,16 +437,16 @@ bool TextureGenerator::exportMeshs(const std::string& filename, const bool expor
 
 	stream << "#X3D V3.0 utf8\n\n";
 
-	for (MeshMap::const_iterator iMesh = meshMap.cbegin(); iMesh != meshMap.cend(); ++iMesh)
+	for (const MeshMap::value_type& pair : meshMap)
 	{
-		const Index32& meshId = iMesh->first;
+		const Index32& meshId = pair.first;
 
-		if (iMesh->second.triangleFaces_.empty())
+		if (pair.second.triangleFaces_.empty())
 		{
 			continue;
 		}
 
-		const Mesh& mesh = iMesh->second;
+		const Mesh& mesh = pair.second;
 
 		RGBAColor color(false);
 
@@ -833,16 +833,16 @@ bool TextureGenerator::extractMeshesWithAtlasTextureCoordinates(const Index32 me
 	}
 	else
 	{
-		for (TriangleMap::const_iterator iTriangle = triangleMap_.cbegin(); iTriangle != triangleMap_.cend(); ++iTriangle)
+		for (const TriangleMap::value_type& pair : triangleMap_)
 		{
-			ocean_assert(iTriangle->second.id_ < triangleStates.size());
-			if (triangleStates[iTriangle->second.id_] >= 126u && triangleStates[iTriangle->second.id_] <= 130u)
+			ocean_assert(pair.second.id_ < triangleStates.size());
+			if (triangleStates[pair.second.id_] >= 126u && triangleStates[pair.second.id_] <= 130u)
 			{
 				mesh.triangleFaces_.emplace_back(Index32(mesh.vertices_.size()));
 
-				mesh.vertices_.emplace_back(iTriangle->first.vertex0());
-				mesh.vertices_.emplace_back(iTriangle->first.vertex1());
-				mesh.vertices_.emplace_back(iTriangle->first.vertex2());
+				mesh.vertices_.emplace_back(pair.first.vertex0());
+				mesh.vertices_.emplace_back(pair.first.vertex1());
+				mesh.vertices_.emplace_back(pair.first.vertex2());
 
 				hasAtLeastOneTriangle = true;
 			}
@@ -854,9 +854,9 @@ bool TextureGenerator::extractMeshesWithAtlasTextureCoordinates(const Index32 me
 
 bool TextureGenerator::extractMeshesWithAtlasTextureCoordinates(MeshMap& meshMap, const bool exportTexturedTrianglesOnly)
 {
-	for (MeshMap::iterator iMesh = meshMap.begin(); iMesh != meshMap.end(); ++iMesh)
+	for (MeshMap::value_type& pair : meshMap)
 	{
-		Mesh& mesh = iMesh->second;
+		Mesh& mesh = pair.second;
 
 		mesh.vertices_.clear();
 		mesh.triangleFaces_.clear();
@@ -869,12 +869,12 @@ bool TextureGenerator::extractMeshesWithAtlasTextureCoordinates(MeshMap& meshMap
 
 	const ScopedConstMemoryAccessor<uint8_t> triangleStates(trianglesManagerRenderer_.triangleStates(numberTriangleIds));
 
-	for (TriangleMap::const_iterator iTriangle = triangleMap_.cbegin(); iTriangle != triangleMap_.cend(); ++iTriangle)
+	for (const TriangleMap::value_type& pair : triangleMap_)
 	{
-		ocean_assert(iTriangle->second.id_ < triangleStates.size());
-		if (triangleStates[iTriangle->second.id_] == 255u || triangleStates[iTriangle->second.id_] == 64u)
+		ocean_assert(pair.second.id_ < triangleStates.size());
+		if (triangleStates[pair.second.id_] == 255u || triangleStates[pair.second.id_] == 64u)
 		{
-			const Index32& triangleId = iTriangle->second.id_;
+			const Index32& triangleId = pair.second.id_;
 
 			const Index32 meshId = triangleId / textureAtlas_.numberTriangles();
 
@@ -891,9 +891,9 @@ bool TextureGenerator::extractMeshesWithAtlasTextureCoordinates(MeshMap& meshMap
 			mesh.textureCoordinates_.emplace_back(triangleTextureCoordinates[1]);
 			mesh.textureCoordinates_.emplace_back(triangleTextureCoordinates[2]);
 
-			mesh.vertices_.emplace_back(iTriangle->first.vertex0());
-			mesh.vertices_.emplace_back(iTriangle->first.vertex1());
-			mesh.vertices_.emplace_back(iTriangle->first.vertex2());
+			mesh.vertices_.emplace_back(pair.first.vertex0());
+			mesh.vertices_.emplace_back(pair.first.vertex1());
+			mesh.vertices_.emplace_back(pair.first.vertex2());
 		}
 		else if (!exportTexturedTrianglesOnly)
 		{
@@ -903,9 +903,9 @@ bool TextureGenerator::extractMeshesWithAtlasTextureCoordinates(MeshMap& meshMap
 
 			mesh.triangleFaces_.emplace_back(Index32(mesh.vertices_.size()));
 
-			mesh.vertices_.emplace_back(iTriangle->first.vertex0());
-			mesh.vertices_.emplace_back(iTriangle->first.vertex1());
-			mesh.vertices_.emplace_back(iTriangle->first.vertex2());
+			mesh.vertices_.emplace_back(pair.first.vertex0());
+			mesh.vertices_.emplace_back(pair.first.vertex1());
+			mesh.vertices_.emplace_back(pair.first.vertex2());
 		}
 
 		hasAtLeastOneTriangle = true;

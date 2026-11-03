@@ -439,9 +439,9 @@ PosePointPairsObjects AdvancedPointTracker<tSuccessiveFrames>::newPose(const Pin
 
 	if (externalOccupancyArray)
 	{
-		for (Vectors2::const_iterator i = imagePoints.begin(); i != imagePoints.end(); ++i)
+		for (const Vector2& imagePoint : imagePoints)
 			//if (!internalOccupancyArray(*i))
-			if (!internalOccupancyArray.isOccupiedNeighborhood9(*i))
+			if (!internalOccupancyArray.isOccupiedNeighborhood9(imagePoint))
 			//if (!internalOccupancyArray.isOccupiedNeighborhood9(*i))
 			{
 				/*const unsigned int externalHorizontalBin = externalOccupancyArray->horizontalBin(i->x());
@@ -451,21 +451,21 @@ PosePointPairsObjects AdvancedPointTracker<tSuccessiveFrames>::newPose(const Pin
 
 				if (!isExternalOccupied)*/
 
-				if (!externalOccupancyArray->isOccupiedNeighborhood9(*i))
+				if (!externalOccupancyArray->isOccupiedNeighborhood9(imagePoint))
 				//if (!(*externalOccupancyArray)(*i))
 				{
 					//const unsigned char color[3] = {0x00, 0x00, 0x00};
 					//CV::Canvas::ellipticRegion(frame, CV::PixelPosition(int(i->x()), int(i->y())), 7u, 7u, color);
 
 					if (trackerInvalidCandidates.empty())
-						trackerCandidates.push_back(Candidate(pinholeCamera, pose, *i, useCameraDistortionParameters, poseId));
+						trackerCandidates.push_back(Candidate(pinholeCamera, pose, imagePoint, useCameraDistortionParameters, poseId));
 					else
 					{
-						trackerCandidates[trackerInvalidCandidates.back()].replace(pinholeCamera, pose, *i, useCameraDistortionParameters, poseId);
+						trackerCandidates[trackerInvalidCandidates.back()].replace(pinholeCamera, pose, imagePoint, useCameraDistortionParameters, poseId);
 						trackerInvalidCandidates.pop_back();
 					}
 
-					internalOccupancyArray += *i;
+					internalOccupancyArray += imagePoint;
 
 					//if (updateExternalOccupancyArray)
 					//	isExternalOccupied = 1u;
@@ -474,14 +474,14 @@ PosePointPairsObjects AdvancedPointTracker<tSuccessiveFrames>::newPose(const Pin
 	}
 	else
 	{
-		for (Vectors2::const_iterator i = imagePoints.begin(); i != imagePoints.end(); ++i)
-			if (!internalOccupancyArray.isOccupiedNeighborhood9(*i))
+		for (const Vector2& imagePoint : imagePoints)
+			if (!internalOccupancyArray.isOccupiedNeighborhood9(imagePoint))
 			{
 				if (trackerInvalidCandidates.empty())
-					trackerCandidates.push_back(Candidate(pinholeCamera, pose, *i, useCameraDistortionParameters, poseId));
+					trackerCandidates.push_back(Candidate(pinholeCamera, pose, imagePoint, useCameraDistortionParameters, poseId));
 				else
 				{
-					trackerCandidates[trackerInvalidCandidates.back()].replace(pinholeCamera, pose, *i, useCameraDistortionParameters, poseId);
+					trackerCandidates[trackerInvalidCandidates.back()].replace(pinholeCamera, pose, imagePoint, useCameraDistortionParameters, poseId);
 					trackerInvalidCandidates.pop_back();
 				}
 			}
@@ -531,9 +531,9 @@ Geometry::SpatialDistribution::OccupancyArray AdvancedPointTracker<tSuccessiveFr
 
 	Geometry::SpatialDistribution::OccupancyArray occupancyArray(Scalar(0), Scalar(0), Scalar(pinholeCamera.width()), Scalar(pinholeCamera.height()), horizontalBins, verticalBins);
 
-	for (Candidates::const_iterator i = trackerCandidates.begin(); i != trackerCandidates.end(); ++i)
-		if (i->isValid())
-			i->add2OccupancyArray(occupancyArray);
+	for (const Candidate& trackerCandidate : trackerCandidates)
+		if (trackerCandidate.isValid())
+			trackerCandidate.add2OccupancyArray(occupancyArray);
 
 	return occupancyArray;
 }

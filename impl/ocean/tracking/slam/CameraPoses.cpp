@@ -118,11 +118,11 @@ Box3 CameraPoses::boundingBox() const
 
 	Box3 box;
 
-	for (CameraPoseMap::const_iterator iPose = cameraPoseMap_.cbegin(); iPose != cameraPoseMap_.cend(); ++iPose)
+	for (const CameraPoseMap::value_type& pair : cameraPoseMap_)
 	{
-		if (iPose->second)
+		if (pair.second)
 		{
-			const HomogenousMatrix4& world_T_camera = iPose->second->world_T_camera();
+			const HomogenousMatrix4& world_T_camera = pair.second->world_T_camera();
 			ocean_assert(world_T_camera.isValid());
 
 			box += world_T_camera.translation();

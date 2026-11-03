@@ -229,9 +229,9 @@ bool PatternTrackerCore6DOF::determinePoses(const uint8_t* yFrame, const Pinhole
 	{
 		timestampPreviousFrame_.toInvalid();
 
-		for (PatternMap::iterator i = patternMap_.begin(); i != patternMap_.end(); ++i)
+		for (PatternMap::value_type& pair : patternMap_)
 		{
-			Pattern& pattern = i->second;
+			Pattern& pattern = pair.second;
 
 			pattern.objectPoints().clear();
 			pattern.imagePoints().clear();
@@ -254,11 +254,11 @@ bool PatternTrackerCore6DOF::determinePoses(const uint8_t* yFrame, const Pinhole
 
 	if (determinePoses(true /*allowRecognition*/, frame, pinholeCamera, previousCamera_R_camera, worker))
 	{
-		for (PatternMap::iterator i = patternMap_.begin(); i != patternMap_.end(); ++i)
+		for (PatternMap::value_type& pair : patternMap_)
 		{
-			if (i->second.previousPose().isValid()) // previousPose as we are done with the current frame already
+			if (pair.second.previousPose().isValid()) // previousPose as we are done with the current frame already
 			{
-				transformations.push_back(VisualTracker::TransformationSample(i->second.previousPose(), i->first));
+				transformations.emplace_back(pair.second.previousPose(), pair.first);
 			}
 		}
 	}
@@ -299,9 +299,9 @@ void PatternTrackerCore6DOF::reset()
 	currentFramePyramid_.clear();
 	previousFramePyramid_.clear();
 
-	for (PatternMap::iterator i = patternMap_.begin(); i != patternMap_.end(); ++i)
+	for (PatternMap::value_type& pair : patternMap_)
 	{
-		i->second.reset();
+		pair.second.reset();
 	}
 
 	world_R_previousCamera_ = Quaternion(false);
@@ -467,9 +467,9 @@ bool PatternTrackerCore6DOF::determinePosesWithDownsampledResolution(const bool 
 
 	currentFramePyramid_.replace8BitPerChannel11(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.channels(), yFrame.pixelOrigin(), pyramidLayers,  yFrame.paddingElements(), true /*copyFirstLayer*/, worker, yFrame.pixelFormat(), yFrame.timestamp());
 
-	for (PatternMap::iterator i = patternMap_.begin(); i != patternMap_.end(); ++i)
+	for (PatternMap::value_type& pair : patternMap_)
 	{
-		Pattern& pattern = i->second;
+		Pattern& pattern = pair.second;
 
 		// check whether we have 3D object points (and corresponding 2D image points) from the previous frame so that we can find the new image points in the current frame
 		if (pattern.objectPoints().size() > 15)
@@ -534,9 +534,9 @@ bool PatternTrackerCore6DOF::determinePosesWithDownsampledResolution(const bool 
 	// For patterns that lost tracking since the last frame, attempt to re-localize with a more robust procedure.
 	if (timestampPreviousFrame_.isValid() && (currentlyVisiblePattern == 0u || currentlyVisiblePattern < internalMaxConcurrentlyVisiblePattern()))
 	{
-		for (PatternMap::iterator iP = patternMap_.begin(); iP != patternMap_.end(); ++iP)
+		for (PatternMap::value_type& pair : patternMap_)
 		{
-			Pattern& pattern = iP->second;
+			Pattern& pattern = pair.second;
 
 			if (pattern.previousPose().isValid() == false)
 			{
@@ -564,11 +564,11 @@ bool PatternTrackerCore6DOF::determinePosesWithDownsampledResolution(const bool 
 	std::swap(previousFramePyramid_, currentFramePyramid_);
 
 	// at this moment the previous pose is also the pose for the current frame
-	for (PatternMap::iterator i = patternMap_.begin(); i != patternMap_.end(); ++i)
+	for (PatternMap::value_type& pair : patternMap_)
 	{
-		if (i->second.previousPose().isValid())
+		if (pair.second.previousPose().isValid())
 		{
-			i->second.setPoseGuess(i->second.previousPose(), yFrame.timestamp());
+			pair.second.setPoseGuess(pair.second.previousPose(), yFrame.timestamp());
 		}
 	}
 
@@ -834,9 +834,9 @@ bool PatternTrackerCore6DOF::trackFrame2Frame(const PinholeCamera& pinholeCamera
 	ocean_assert(previousObjectPoints.size() == previousImagePoints.size() && previousImagePoints.size() >= 3);
 
 #ifdef OCEAN_DEBUG
-	for (Vectors2::const_iterator i = previousImagePoints.begin(); i != previousImagePoints.end(); ++i)
+	for (const Vector2& previousImagePoint : previousImagePoints)
 	{
-		ocean_assert(i->x() >= 0 && i->y() >= 0 && i->x() <= Scalar(previousFramePyramid.finestLayer().width()) && i->y() <= Scalar(previousFramePyramid.finestLayer().height()));
+		ocean_assert(previousImagePoint.x() >= 0 && previousImagePoint.y() >= 0 && previousImagePoint.x() <= Scalar(previousFramePyramid.finestLayer().width()) && previousImagePoint.y() <= Scalar(previousFramePyramid.finestLayer().height()));
 	}
 #endif
 
@@ -1084,14 +1084,14 @@ bool PatternTrackerCore6DOF::optimizePoseByRectification(const PinholeCamera& pi
 		const Scalar invPatternLayerWidth = Scalar(1) / Scalar(patternLayerWidth);
 		const Scalar invPatternLayerHeight = Scalar(1) / Scalar(patternLayerHeight);
 
-		for (Vectors2::const_iterator i = patternPoints.begin(); i != patternPoints.end(); ++i)
+		for (const Vector2& patternPoint : patternPoints)
 		{
-			objectPoints.push_back(Vector3(i->x() * pattern.dimension().x() * invPatternLayerWidth, 0, i->y() * pattern.dimension().y() * invPatternLayerHeight));
+			objectPoints.emplace_back(patternPoint.x() * pattern.dimension().x() * invPatternLayerWidth, 0, patternPoint.y() * pattern.dimension().y() * invPatternLayerHeight);
 		}
 
-		for (Vectors2::const_iterator i = rectifiedPoints.begin(); i != rectifiedPoints.end(); ++i)
+		for (const Vector2& rectifiedPoint : rectifiedPoints)
 		{
-			imagePoints.push_back(CV::Advanced::FrameRectification::planarRectangleObjectRectifiedPosition2cameraPositionIF<true>(AnyCameraPinhole(pinholeCamera), roughPoseIF, pattern.corner0(), pattern.corner3(), pattern.corner1(), rectifiedFrame.width(), rectifiedFrame.height(), *i));
+			imagePoints.push_back(CV::Advanced::FrameRectification::planarRectangleObjectRectifiedPosition2cameraPositionIF<true>(AnyCameraPinhole(pinholeCamera), roughPoseIF, pattern.corner0(), pattern.corner3(), pattern.corner1(), rectifiedFrame.width(), rectifiedFrame.height(), rectifiedPoint));
 		}
 
 		// Optimize the given rough pose by application of the new 2D/3D correspondences.
@@ -1110,15 +1110,15 @@ bool PatternTrackerCore6DOF::optimizePoseByRectification(const PinholeCamera& pi
 					// Invalidate the bins for invalid points.
 					const HomogenousMatrix4 optimizedPoseIF(PinholeCamera::standard2InvertedFlipped(optimizedPose));
 
-					for (ImagePoints::const_iterator i = invalidPatternPoints.begin(); i != invalidPatternPoints.end(); ++i)
+					for (const ImagePoint& invalidPatternPoint : invalidPatternPoints)
 					{
-						tmpArray.removePoint(CV::Advanced::FrameRectification::planarRectangleObjectRectifiedPosition2cameraPositionIF<true>(AnyCameraPinhole(pinholeCamera), optimizedPoseIF, pattern.corner0(), pattern.corner3(), pattern.corner1(), rectifiedFrame.width(), rectifiedFrame.height(), *i));
+						tmpArray.removePoint(CV::Advanced::FrameRectification::planarRectangleObjectRectifiedPosition2cameraPositionIF<true>(AnyCameraPinhole(pinholeCamera), optimizedPoseIF, pattern.corner0(), pattern.corner3(), pattern.corner1(), rectifiedFrame.width(), rectifiedFrame.height(), invalidPatternPoint));
 					}
 
 					// Re-validate the bins for valid points.
-					for (ImagePoints::const_iterator i = imagePoints.begin(); i != imagePoints.end(); ++i)
+					for (const ImagePoint& imagePoint : imagePoints)
 					{
-						tmpArray.addPoint(*i);
+						tmpArray.addPoint(imagePoint);
 					}
 
 					*occupancyArray = tmpArray;
@@ -1169,11 +1169,11 @@ bool PatternTrackerCore6DOF::determinePosesWithoutKnowledge(const PinholeCamera&
 
 	Triangles2 projectedTriangles;
 
-	for (PatternMap::const_iterator i = patternMap_.begin(); i != patternMap_.end(); ++i)
+	for (const PatternMap::value_type& pair : patternMap_)
 	{
-		if (i->second.previousPose().isValid())
+		if (pair.second.previousPose().isValid())
 		{
-			const Triangles2 triangles = i->second.triangles2(pinholeCamera, i->second.previousPose() * previousCamera_R_camera_OrIdentity);
+			const Triangles2 triangles = pair.second.triangles2(pinholeCamera, pair.second.previousPose() * previousCamera_R_camera_OrIdentity);
 			projectedTriangles.insert(projectedTriangles.end(), triangles.begin(), triangles.end());
 		}
 	}

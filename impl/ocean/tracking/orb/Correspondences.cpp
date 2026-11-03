@@ -29,15 +29,15 @@ void Correspondences::extractCorrespondingPoints(const ORBFeatures& forwardFeatu
 	objectPoints.reserve(correspondences.size());
 	imagePoints.reserve(correspondences.size());
 
-	for (CorrespondencePairs::const_iterator i = correspondences.begin(); i != correspondences.end(); ++i)
+	for (const CorrespondencePair& correspondence : correspondences)
 	{
-		ocean_assert(i->first < forwardFeatures.size());
-		ocean_assert(i->second < backwardFeatures.size());
+		ocean_assert(correspondence.first < forwardFeatures.size());
+		ocean_assert(correspondence.second < backwardFeatures.size());
 
-		const ORBFeature& forwardFeature = forwardFeatures[i->first];
+		const ORBFeature& forwardFeature = forwardFeatures[correspondence.first];
 
 		imagePoints.push_back(forwardFeature.observation());
-		objectPoints.push_back(backwardFeatures[i->second].position());
+		objectPoints.push_back(backwardFeatures[correspondence.second].position());
 	}
 }
 
@@ -49,13 +49,13 @@ void Correspondences::extractCorrespondingFeatures(const ORBFeatures& forwardFea
 	forwardCorrespondences.reserve(correspondencePairs.size());
 	backwardCorrespondences.reserve(correspondencePairs.size());
 
-	for (CorrespondencePairs::const_iterator i = correspondencePairs.begin(); i != correspondencePairs.end(); ++i)
+	for (const CorrespondencePair& correspondencePair : correspondencePairs)
 	{
-		ocean_assert(i->first < forwardFeatures.size());
-		ocean_assert(i->second < backwardFeatures.size());
+		ocean_assert(correspondencePair.first < forwardFeatures.size());
+		ocean_assert(correspondencePair.second < backwardFeatures.size());
 
-		forwardCorrespondences.push_back(forwardFeatures[i->first]);
-		backwardCorrespondences.push_back(backwardFeatures[i->second]);
+		forwardCorrespondences.push_back(forwardFeatures[correspondencePair.first]);
+		backwardCorrespondences.push_back(backwardFeatures[correspondencePair.second]);
 	}
 }
 
@@ -70,13 +70,13 @@ void Correspondences::extractCorrespondingFeatures(const ORBFeatures& forwardFea
 	const HomogenousMatrix4 flippedPose(PinholeCamera::flippedTransformationRightSide(pose));
 	const HomogenousMatrix4 iFlippedPose(flippedPose.inverted());
 
-	for (CorrespondencePairs::const_iterator i = correspondencePairs.begin(); i != correspondencePairs.end(); ++i)
+	for (const CorrespondencePair& correspondencePair : correspondencePairs)
 	{
-		ocean_assert(i->first < forwardFeatures.size());
-		ocean_assert(i->second < backwardFeatures.size());
+		ocean_assert(correspondencePair.first < forwardFeatures.size());
+		ocean_assert(correspondencePair.second < backwardFeatures.size());
 
-		const ORBFeature& forwardFeature(forwardFeatures[i->first]);
-		const ORBFeature& backwardFeature(backwardFeatures[i->second]);
+		const ORBFeature& forwardFeature(forwardFeatures[correspondencePair.first]);
+		const ORBFeature& backwardFeature(backwardFeatures[correspondencePair.second]);
 
 		const Vector2 projectedObject(pinholeCamera.projectToImageIF<true>(iFlippedPose, backwardFeature.position(), false));
 
@@ -96,11 +96,11 @@ void Correspondences::extractCorrespondingFeatures(const ORBFeatures& forwardFea
 	forwardCorrespondences.reserve(correspondenceIndices.size());
 	backwardCorrespondences.reserve(correspondenceIndices.size());
 
-	for (FeatureIndices::const_iterator i = correspondenceIndices.begin(); i != correspondenceIndices.end(); ++i)
+	for (const unsigned int& correspondenceIndex : correspondenceIndices)
 	{
-		ocean_assert(*i < candidatePairs.size());
+		ocean_assert(correspondenceIndex < candidatePairs.size());
 
-		const CorrespondencePair& candidatePair(candidatePairs[*i]);
+		const CorrespondencePair& candidatePair(candidatePairs[correspondenceIndex]);
 
 		ocean_assert(candidatePair.first < forwardFeatures.size());
 		ocean_assert(candidatePair.second < backwardFeatures.size());
@@ -145,8 +145,10 @@ void Correspondences::determineCandidates(const ORBFeatures& interestFeatures, c
 	candidates.clear();
 	candidates.reserve(candidateSet.size());
 
-	for (CandidateSet::const_iterator i = candidateSet.begin(); i != candidateSet.end(); ++i)
-		candidates.push_back(*i);
+	for (const unsigned int& candidate : candidateSet)
+	{
+		candidates.push_back(candidate);
+	}
 }
 
 }

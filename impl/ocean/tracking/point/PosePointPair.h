@@ -372,8 +372,10 @@ inline HomogenousMatrices4 PosePointPairsObject::poses(const Database& database)
 	HomogenousMatrices4 result;
 	result.reserve(dataPosePointPairs.size());
 
-	for (PosePointPairs::const_iterator i = dataPosePointPairs.begin(); i != dataPosePointPairs.end(); ++i)
-		result.push_back(database.pose<false>(i->poseId()));
+	for (const PosePointPair& dataPosePointPair : dataPosePointPairs)
+	{
+		result.push_back(database.pose<false>(dataPosePointPair.poseId()));
+	}
 
 	return result;
 }
@@ -388,8 +390,10 @@ inline Vectors2 PosePointPairsObject::imagePoints(const Database& database) cons
 	Vectors2 result;
 	result.reserve(dataPosePointPairs.size());
 
-	for (PosePointPairs::const_iterator i = dataPosePointPairs.begin(); i != dataPosePointPairs.end(); ++i)
-		result.push_back(database.imagePoint<false>(i->imagePointId()));
+	for (const PosePointPair& dataPosePointPair : dataPosePointPairs)
+	{
+		result.push_back(database.imagePoint<false>(dataPosePointPair.imagePointId()));
+	}
 
 	return result;
 }
@@ -405,12 +409,16 @@ inline void PosePointPairsObject::extractObject(const Database& database, Homoge
 	ocean_assert(imagePoints.empty());
 
 	poses.reserve(dataPosePointPairs.size());
-	for (PosePointPairs::const_iterator i = dataPosePointPairs.begin(); i != dataPosePointPairs.end(); ++i)
-		poses.push_back(database.pose<false>(i->poseId()));
+	for (const PosePointPair& dataPosePointPair : dataPosePointPairs)
+	{
+		poses.push_back(database.pose<false>(dataPosePointPair.poseId()));
+	}
 
 	imagePoints.reserve(dataPosePointPairs.size());
-	for (PosePointPairs::const_iterator i = dataPosePointPairs.begin(); i != dataPosePointPairs.end(); ++i)
-		imagePoints.push_back(database.imagePoint<false>(i->imagePointId()));
+	for (const PosePointPair& dataPosePointPair : dataPosePointPairs)
+	{
+		imagePoints.push_back(database.imagePoint<false>(dataPosePointPair.imagePointId()));
+	}
 
 	objectPoint = database.objectPoint<true>(dataObjectId);
 }
@@ -423,8 +431,10 @@ inline void PosePointPairsObject::extractObjectIF(const Database& database, Homo
 	posesIF = PinholeCamera ::standard2InvertedFlipped(poses(database));
 
 	imagePoints.reserve(dataPosePointPairs.size());
-	for (PosePointPairs::const_iterator i = dataPosePointPairs.begin(); i != dataPosePointPairs.end(); ++i)
-		imagePoints.push_back(database.imagePoint<false>(i->imagePointId()));
+	for (const PosePointPair& dataPosePointPair : dataPosePointPairs)
+	{
+		imagePoints.push_back(database.imagePoint<false>(dataPosePointPair.imagePointId()));
+	}
 
 	objectPoint = database.objectPoint<true>(dataObjectId);
 }

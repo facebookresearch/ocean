@@ -215,12 +215,12 @@ PointTracker::PointTracks PointTracker::pointTracks(const Index32 imageIndex, co
 	PointTracks pointTracks;
 	pointTracks.reserve(featurePointsMap.size());
 
-	for (Tracking::Database::IdIdPointPairsMap::const_iterator i = featurePointsMap.begin(); i != featurePointsMap.end(); ++i)
+	for (const Tracking::Database::IdIdPointPairsMap::value_type& pair : featurePointsMap)
 	{
 		Vectors2 imagePoints;
-		imagePoints.reserve(i->second.size());
+		imagePoints.reserve(pair.second.size());
 
-		for (Tracking::Database::IdPointPairs::const_iterator iI = i->second.begin(); iI != i->second.end(); ++iI)
+		for (Tracking::Database::IdPointPairs::const_iterator iI = pair.second.begin(); iI != pair.second.end(); ++iI)
 		{
 			imagePoints.push_back(iI->second);
 		}

@@ -329,9 +329,9 @@ Indices32 TexturedTrianglesRenderer::meshIds() const
 	Indices32 result;
 	result.reserve(textureFramebufferMap_.size());
 
-	for (TextureFramebufferMap::const_iterator iFramebuffer = textureFramebufferMap_.cbegin(); iFramebuffer != textureFramebufferMap_.cend(); ++iFramebuffer)
+	for (const TextureFramebufferMap::value_type& pair : textureFramebufferMap_)
 	{
-		result.emplace_back(iFramebuffer->first);
+		result.emplace_back(pair.first);
 	}
 
 	return result;

@@ -874,9 +874,9 @@ inline unsigned int PatternTrackerCore6DOF::internalNumberVisiblePattern() const
 {
 	unsigned int number = 0u;
 
-	for (PatternMap::const_iterator i = patternMap_.begin(); i != patternMap_.end(); ++i)
+	for (const PatternMap::value_type& pair : patternMap_)
 	{
-		if (i->second.previousPose().isValid())
+		if (pair.second.previousPose().isValid())
 		{
 			number++;
 		}

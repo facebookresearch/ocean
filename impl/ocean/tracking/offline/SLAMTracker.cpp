@@ -270,10 +270,10 @@ bool SLAMTracker::extractPoses(const unsigned int lowerFrameIndex, const unsigne
 			keyFrameIds.push_back(keyFrameId);
 			keyFrameCandidateIdSet.erase(keyFrameId);
 
-			for (Indices32::const_iterator i = foundMajorObjectPointIds.begin(); i != foundMajorObjectPointIds.end(); ++i)
+			for (const Index32& foundMajorObjectPointId : foundMajorObjectPointIds)
 			{
-				majorObjectPointIds.erase(*i);
-				minorObjectPointIds.insert(*i);
+				majorObjectPointIds.erase(foundMajorObjectPointId);
+				minorObjectPointIds.insert(foundMajorObjectPointId);
 			}
 		}
 
@@ -291,10 +291,10 @@ bool SLAMTracker::extractPoses(const unsigned int lowerFrameIndex, const unsigne
 			const unsigned int halfCorrespondences = max(1u, database_.numberObservations<false>(keyFrameIds.front(), regionOfInterestObjectPointIds) / 2);
 
 			// we add the already selected key frames (so that we can select further key frames most different to these)
-			for (Indices32::const_iterator i = keyFrameIds.begin(); i != keyFrameIds.end(); ++i)
+			for (const Index32& keyFrameId : keyFrameIds)
 			{
-				keyFrameCandidatePoses.emplace_back(database_.pose<false>(*i));
-				keyFrameCandidatePoseIds.push_back(*i);
+				keyFrameCandidatePoses.emplace_back(database_.pose<false>(keyFrameId));
+				keyFrameCandidatePoseIds.push_back(keyFrameId);
 			}
 
 			for (const Index32 keyFrameCandidateId : keyFrameCandidateIdSet)
@@ -378,8 +378,8 @@ bool SLAMTracker::extractPoses(const unsigned int lowerFrameIndex, const unsigne
 		const Indices32 nonRegionNonOptimizedObjectPointIds(regionDatabase.objectPointIds<false, false>(regionOptimizedObjectPointIdSet, Vector3(Numeric::minValue(), Numeric::minValue(), Numeric::minValue())));
 
 #ifdef OCEAN_DEBUG
-		for (const Indices32::const_iterator i = nonRegionObjectPointIds.begin(); i != nonRegionObjectPointIds.end(); ++i)
-			ocean_assert(regionOptimizedObjectPointIdSet.find(*i) == regionOptimizedObjectPointIdSet.end());
+		for (const Index32& nonRegionObjectPointId : nonRegionObjectPointIds)
+			ocean_assert(regionOptimizedObjectPointIdSet.find(nonRegionObjectPointId) == regionOptimizedObjectPointIdSet.end());
 #endif
 
 		Vectors3 nonRegionOptimizedObjectPoints;
@@ -1894,11 +1894,11 @@ bool SLAMTracker::determineValidCorrespondencesInPlanarRegionOfInterest(const Pi
 			objectPoints.clear();
 			database.imagePointsObjectPoints<false, false>(frameIndex, imagePoints, objectPoints, Vector3(Numeric::minValue(), Numeric::minValue(), Numeric::minValue()));
 
-			for (Vectors2::const_iterator i = imagePoints.begin(); i != imagePoints.end(); ++i)
+			for (const Vector2& imagePoint : imagePoints)
 			{
 				if (pinholeCamera.hasDistortionParameters())
 				{
-					const Vector2 undistortedNormalizedImagePoint(pinholeCamera.imagePoint2normalizedImagePoint<true>(*i, true));
+					const Vector2 undistortedNormalizedImagePoint(pinholeCamera.imagePoint2normalizedImagePoint<true>(imagePoint, true));
 					const Vector2 undistortedNormalizedSubRegionFrameImagePoint(normalizedHomography * undistortedNormalizedImagePoint);
 					const Vector2 regionOfInterestFrameImagePoint(pinholeCamera.normalizedImagePoint2imagePoint<true>(undistortedNormalizedSubRegionFrameImagePoint, true));
 
@@ -1909,7 +1909,7 @@ bool SLAMTracker::determineValidCorrespondencesInPlanarRegionOfInterest(const Pi
 				}
 				else
 				{
-					if (regionOfInterest.isInside(homography * *i))
+					if (regionOfInterest.isInside(homography * imagePoint))
 					{
 						count++;
 					}
@@ -1928,9 +1928,9 @@ bool SLAMTracker::determineValidCorrespondencesInPlanarRegionOfInterest(const Pi
 	if (meanCorrespondences)
 	{
 		Scalar sum = 0;
-		for (Indices32::const_iterator i = correspondences.begin(); i != correspondences.end(); ++i)
+		for (const Index32& correspondence : correspondences)
 		{
-			sum += Scalar(*i);
+			sum += Scalar(correspondence);
 		}
 
 		*meanCorrespondences = correspondences.empty() ? 0 : Scalar(sum) / Scalar(correspondences.size());
@@ -1972,11 +1972,11 @@ bool SLAMTracker::determineNumberImagePointsInPlanarRegionOfInterest(const Pinho
 
 			imagePoints = database.imagePoints<false>(frameIndex);
 
-			for (Vectors2::const_iterator i = imagePoints.begin(); i != imagePoints.end(); ++i)
+			for (const Vector2& imagePoint : imagePoints)
 			{
 				if (pinholeCamera.hasDistortionParameters())
 				{
-					const Vector2 undistortedNormalizedImagePoint(pinholeCamera.imagePoint2normalizedImagePoint<true>(*i, true));
+					const Vector2 undistortedNormalizedImagePoint(pinholeCamera.imagePoint2normalizedImagePoint<true>(imagePoint, true));
 					const Vector2 undistortedNormalizedSubRegionFrameImagePoint(normalizedHomography * undistortedNormalizedImagePoint);
 					const Vector2 regionOfInterestFrameImagePoint(pinholeCamera.normalizedImagePoint2imagePoint<true>(undistortedNormalizedSubRegionFrameImagePoint, true));
 
@@ -1987,7 +1987,7 @@ bool SLAMTracker::determineNumberImagePointsInPlanarRegionOfInterest(const Pinho
 				}
 				else
 				{
-					if (regionOfInterest.isInside(homography * *i))
+					if (regionOfInterest.isInside(homography * imagePoint))
 					{
 						count++;
 					}
@@ -2006,9 +2006,9 @@ bool SLAMTracker::determineNumberImagePointsInPlanarRegionOfInterest(const Pinho
 	if (meanNumberImagePoints)
 	{
 		Scalar sum = 0;
-		for (Indices32::const_iterator i = points.begin(); i != points.end(); ++i)
+		for (const Index32& point : points)
 		{
-			sum += Scalar(*i);
+			sum += Scalar(point);
 		}
 
 		*meanNumberImagePoints = points.empty() ? 0 : Scalar(sum) / Scalar(points.size());
@@ -2606,9 +2606,9 @@ bool SLAMTracker::extendStableObjectPointsFullRotational(const PinholeCamera& pi
 
 #ifdef OCEAN_DEBUG
 			ocean_assert(newObjectPoints.size() == newObjectPointIds.size());
-			for (Vectors3::const_iterator i = newObjectPoints.begin(); i != newObjectPoints.end(); ++i)
+			for (const Vector3& newObjectPoint : newObjectPoints)
 			{
-				ocean_assert(*i != Vector3(Numeric::minValue(), Numeric::minValue(), Numeric::minValue()));
+				ocean_assert(newObjectPoint != Vector3(Numeric::minValue(), Numeric::minValue(), Numeric::minValue()));
 			}
 #endif
 			database.setObjectPoints<false>(newObjectPointIds.data(), newObjectPoints.data(), newObjectPointIds.size());
@@ -2932,9 +2932,9 @@ bool SLAMTracker::extendStableObjectPointsPartiallyRotational(const PinholeCamer
 				{
 					for (unsigned int n = lowerObservationFrame; n <= upperObservationFrame; ++n)
 					{
-						for (Indices32::const_iterator i = newLowerObjectPointCandidateIds.begin(); i != newLowerObjectPointCandidateIds.end(); ++i)
+						for (const Index32& newLowerObjectPointCandidateId : newLowerObjectPointCandidateIds)
 						{
-							ocean_assert(database.hasObservation<false>(n, *i));
+							ocean_assert(database.hasObservation<false>(n, newLowerObjectPointCandidateId));
 						}
 					}
 
@@ -2947,9 +2947,9 @@ bool SLAMTracker::extendStableObjectPointsPartiallyRotational(const PinholeCamer
 						return false;
 					}
 
-					for (Scalars::const_iterator i = averagedErrors.begin(); i != averagedErrors.end(); ++i)
+					for (const Scalar& averagedError : averagedErrors)
 					{
-						ocean_assert(*i <= Scalar(3.5 * 3.5));
+						ocean_assert(averagedError <= Scalar(3.5 * 3.5));
 					}
 				}
 #endif // OCEAN_DEBUG
@@ -2996,9 +2996,9 @@ bool SLAMTracker::extendStableObjectPointsPartiallyRotational(const PinholeCamer
 				{
 					for (unsigned int n = lowerObservationFrame; n <= upperObservationFrame; ++n)
 					{
-						for (Indices32::const_iterator i = newUpperObjectPointCandidateIds.begin(); i != newUpperObjectPointCandidateIds.end(); ++i)
+						for (const Index32& newUpperObjectPointCandidateId : newUpperObjectPointCandidateIds)
 						{
-							ocean_assert(database.hasObservation<false>(n, *i));
+							ocean_assert(database.hasObservation<false>(n, newUpperObjectPointCandidateId));
 						}
 					}
 
@@ -3011,9 +3011,9 @@ bool SLAMTracker::extendStableObjectPointsPartiallyRotational(const PinholeCamer
 						return false;
 					}
 
-					for (Scalars::const_iterator i = averagedErrors.begin(); i != averagedErrors.end(); ++i)
+					for (const Scalar& averagedError : averagedErrors)
 					{
-						ocean_assert(*i <= Scalar(3.5 * 3.5));
+						ocean_assert(averagedError <= Scalar(3.5 * 3.5));
 					}
 				}
 #endif // OCEAN_DEBUG
@@ -3375,9 +3375,9 @@ bool SLAMTracker::extendStableObjectPointsPartiallyTranslational(const PinholeCa
 				{
 					for (unsigned int n = lowerObservationFrame; n <= upperObservationFrame; ++n)
 					{
-						for (Indices32::const_iterator i = newLowerObjectPointCandidateIds.begin(); i != newLowerObjectPointCandidateIds.end(); ++i)
+						for (const Index32& newLowerObjectPointCandidateId : newLowerObjectPointCandidateIds)
 						{
-							ocean_assert(database.hasObservation<false>(n, *i));
+							ocean_assert(database.hasObservation<false>(n, newLowerObjectPointCandidateId));
 						}
 					}
 
@@ -3390,9 +3390,9 @@ bool SLAMTracker::extendStableObjectPointsPartiallyTranslational(const PinholeCa
 						return false;
 					}
 
-					for (Scalars::const_iterator i = averagedErrors.begin(); i != averagedErrors.end(); ++i)
+					for (const Scalar& averagedError : averagedErrors)
 					{
-						ocean_assert(*i <= Scalar(3.5 * 3.5));
+						ocean_assert(averagedError <= Scalar(3.5 * 3.5));
 					}
 				}
 #endif // OCEAN_DEBUG
@@ -3437,9 +3437,9 @@ bool SLAMTracker::extendStableObjectPointsPartiallyTranslational(const PinholeCa
 				{
 					for (unsigned int n = lowerObservationFrame; n <= upperObservationFrame; ++n)
 					{
-						for (Indices32::const_iterator i = newUpperObjectPointCandidateIds.begin(); i != newUpperObjectPointCandidateIds.end(); ++i)
+						for (const Index32& newUpperObjectPointCandidateId : newUpperObjectPointCandidateIds)
 						{
-							ocean_assert(database.hasObservation<false>(n, *i));
+							ocean_assert(database.hasObservation<false>(n, newUpperObjectPointCandidateId));
 						}
 					}
 
@@ -3452,9 +3452,9 @@ bool SLAMTracker::extendStableObjectPointsPartiallyTranslational(const PinholeCa
 						return false;
 					}
 
-					for (Scalars::const_iterator i = averagedErrors.begin(); i != averagedErrors.end(); ++i)
+					for (const Scalar& averagedError : averagedErrors)
 					{
-						ocean_assert(*i <= Scalar(3.5 * 3.5));
+						ocean_assert(averagedError <= Scalar(3.5 * 3.5));
 					}
 				}
 #endif // OCEAN_DEBUG

@@ -55,9 +55,9 @@ FeatureMap::FeatureMap(const Frame& frame, const Vector2& dimension, const Scala
 	const Scalar factorX = dimension.x() / Scalar(frame.width());
 	const Scalar factorY = dimension.y() > 0 ? dimension.y() / Scalar(frame.height()) : factorX;
 
-	for (ORBFeatures::iterator i = features_.begin(); i != features_.end(); ++i)
+	for (ORBFeature& feature : features_)
 	{
-		i->setPosition(Vector3(i->observation().x() * factorX, 0, i->observation().y() * factorY));
+		feature.setPosition(Vector3(feature.observation().x() * factorX, 0, feature.observation().y() * factorY));
 	}
 
 	boundingBox_ = Box3(Vector3(0, 0, 0), Vector3(frame.width() * factorX, 0, frame.height() * factorY));

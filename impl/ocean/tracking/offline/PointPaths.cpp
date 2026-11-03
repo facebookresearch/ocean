@@ -291,9 +291,9 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 		if (horizontalBins != 0u && verticalBins != 0u)
 		{
 			occupancyArray = Geometry::SpatialDistribution::OccupancyArray(Scalar(0), Scalar(0), Scalar(currentFramePyramid.finestWidth()), Scalar(currentFramePyramid.finestHeight()), min(horizontalBins * 3u, currentFramePyramid.finestWidth()), min(verticalBins * 3u, currentFramePyramid.finestHeight()), true);
-			for (Vectors2::const_iterator i = currentFeaturePoints.begin(); i != currentFeaturePoints.end(); ++i)
+			for (const Vector2& currentFeaturePoint : currentFeaturePoints)
 			{
-				occupancyArray += *i;
+				occupancyArray += currentFeaturePoint;
 			}
 		}
 
@@ -346,9 +346,9 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 	{
 		// ensure that every image point has been assigned to one object point
 		const Indices32 imagePointIds = database.imagePointIds<false>();
-		for (Indices32::const_iterator i = imagePointIds.begin(); i != imagePointIds.end(); ++i)
+		for (const Index32& imagePointId : imagePointIds)
 		{
-			ocean_assert(database.objectPointFromImagePoint<false>(*i) != Database::invalidId);
+			ocean_assert(database.objectPointFromImagePoint<false>(imagePointId) != Database::invalidId);
 		}
 	}
 
@@ -431,18 +431,18 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 		}
 
 		// now we add all successfully tracked points into the database (and connect them with the corresponding object points)
-		for (Indices32::const_iterator i = validTrackedIndices.begin(); i != validTrackedIndices.end(); ++i)
+		for (const Index32& validTrackedIndex : validTrackedIndices)
 		{
-			const Vector2& currentImagePoint = currentPointsToTrack[*i];
+			const Vector2& currentImagePoint = currentPointsToTrack[validTrackedIndex]; // NOLINT(facebook-hte-LocalUncheckedArrayBounds)
 
 			if (validFrameArea.isInside(currentImagePoint))
 			{
-				const Index32 currentObjectPointId = previousObjectPointsToTrack[*i];
+				const Index32 currentObjectPointId = previousObjectPointsToTrack[validTrackedIndex]; // NOLINT(facebook-hte-LocalUncheckedArrayBounds)
 
 #ifdef OCEAN_DEBUG
 				{
 					Vector2 debugImagePoint;
-					ocean_assert(database.hasObservation<false>(frameIndex + 1u, currentObjectPointId, &debugImagePoint) && debugImagePoint == previousPointsToTrack[*i]);
+					ocean_assert(database.hasObservation<false>(frameIndex + 1u, currentObjectPointId, &debugImagePoint) && debugImagePoint == previousPointsToTrack[validTrackedIndex]);
 
 					Indices32 debugImagePointIds;
 					const Vectors2 debugImagePoints = database.imagePoints<false>(frameIndex, &debugImagePointIds);
@@ -577,9 +577,9 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 		if (horizontalBins != 0u && verticalBins != 0u)
 		{
 			occupancyArray = Geometry::SpatialDistribution::OccupancyArray(Scalar(0), Scalar(0), Scalar(currentFramePyramid.finestWidth()), Scalar(currentFramePyramid.finestHeight()), min(horizontalBins * 3u, currentFramePyramid.finestWidth()), min(verticalBins * 3u, currentFramePyramid.finestHeight()), true);
-			for (Vectors2::const_iterator i = currentFeaturePoints.begin(); i != currentFeaturePoints.end(); ++i)
+			for (const Vector2& currentFeaturePoint : currentFeaturePoints)
 			{
-				occupancyArray += *i;
+				occupancyArray += currentFeaturePoint;
 			}
 		}
 
@@ -633,9 +633,9 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 	{
 		// ensure that every image point has been assigned to one object point
 		const Indices32 imagePointIds = database.imagePointIds<false>();
-		for (Indices32::const_iterator i = imagePointIds.begin(); i != imagePointIds.end(); ++i)
+		for (const Index32& imagePointId : imagePointIds)
 		{
-			ocean_assert(database.objectPointFromImagePoint<false>(*i) != Database::invalidId);
+			ocean_assert(database.objectPointFromImagePoint<false>(imagePointId) != Database::invalidId);
 		}
 	}
 
@@ -718,18 +718,18 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 		}
 
 		// now we add all successfully tracked points into the database (and connect them with the corresponding object points)
-		for (Indices32::const_iterator i = validTrackedIndices.begin(); i != validTrackedIndices.end(); ++i)
+		for (const Index32& validTrackedIndex : validTrackedIndices)
 		{
-			const Vector2& currentImagePoint = currentPointsToTrack[*i];
+			const Vector2& currentImagePoint = currentPointsToTrack[validTrackedIndex]; // NOLINT(facebook-hte-LocalUncheckedArrayBounds)
 
 			if (validFrameArea.isInside(currentImagePoint))
 			{
-				const Index32 currentObjectPointId = previousObjectPointsToTrack[*i];
+				const Index32 currentObjectPointId = previousObjectPointsToTrack[validTrackedIndex]; // NOLINT(facebook-hte-LocalUncheckedArrayBounds)
 
 #ifdef OCEAN_DEBUG
 				{
 					Vector2 debugImagePoint;
-					ocean_assert(database.hasObservation<false>(frameIndex - 1u, currentObjectPointId, &debugImagePoint) && debugImagePoint == previousPointsToTrack[*i]);
+					ocean_assert(database.hasObservation<false>(frameIndex - 1u, currentObjectPointId, &debugImagePoint) && debugImagePoint == previousPointsToTrack[validTrackedIndex]);
 
 					Indices32 debugImagePointIds;
 					const Vectors2 debugImagePoints = database.imagePoints<false>(frameIndex, &debugImagePointIds);
@@ -1027,9 +1027,9 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 	{
 		// ensure that every image point has been assigned to one object point
 		const Indices32 imagePointIds = database.imagePointIds<false>();
-		for (Indices32::const_iterator i = imagePointIds.begin(); i != imagePointIds.end(); ++i)
+		for (const Index32& imagePointId : imagePointIds)
 		{
-			ocean_assert(database.objectPointFromImagePoint<false>(*i) != Database::invalidId);
+			ocean_assert(database.objectPointFromImagePoint<false>(imagePointId) != Database::invalidId);
 		}
 	}
 #endif

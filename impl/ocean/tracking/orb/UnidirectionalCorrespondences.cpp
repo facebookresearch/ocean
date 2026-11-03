@@ -54,9 +54,13 @@ Correspondences::CorrespondencePairs UnidirectionalCorrespondences::corresponden
 	CorrespondencePairs validCorrespondences;
 
 	// find unidirectional correspondences
-	for (CorrespondencePairs::const_iterator i = correspondenceCandidates.begin(); i != correspondenceCandidates.end(); ++i)
-		if (correspondenceForwardCounters[i->first] == 1 && correspondenceBackwardCounters[i->second] == 1)
-			validCorrespondences.push_back(CorrespondencePair(i->first, i->second));
+	for (const CorrespondencePair& correspondenceCandidate : correspondenceCandidates)
+	{
+		if (correspondenceForwardCounters[correspondenceCandidate.first] == 1 && correspondenceBackwardCounters[correspondenceCandidate.second] == 1)
+		{
+			validCorrespondences.emplace_back(correspondenceCandidate.first, correspondenceCandidate.second);
+		}
+	}
 
 	return validCorrespondences;
 }
