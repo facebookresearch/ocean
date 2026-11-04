@@ -82,7 +82,7 @@ bool FeatureTracker6DOF::determinePoses(const Frame& frame, const PinholeCamera&
 
 	if (recentTimestamp_.isValid() && frame.timestamp() <= recentTimestamp_)
 	{
-		transformations.push_back(TransformationSample(recentPose_, 0));
+		transformations.emplace_back(recentPose_, 0);
 		Log::info() << "Pose already detected for the provided frame timestamp.";
 
 		return true;
@@ -107,7 +107,7 @@ bool FeatureTracker6DOF::determinePoses(const Frame& frame, const PinholeCamera&
 	if (trackerResult)
 	{
 		motionModel_.update(pose);
-		transformations.push_back(TransformationSample(pose, 0));
+		transformations.emplace_back(pose, 0);
 	}
 
 	return true;
