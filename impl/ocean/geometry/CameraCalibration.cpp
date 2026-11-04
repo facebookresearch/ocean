@@ -61,25 +61,25 @@ Scalar CameraCalibration::Pattern::distance(const Pattern& pattern) const
 	DistancePairs distances;
 	distances.reserve(16);
 
-	distances.push_back(DistancePair(patternCorners[0].sqrDistance(pattern.patternCorners[0]), IndexPair32(0, 0)));
-	distances.push_back(DistancePair(patternCorners[0].sqrDistance(pattern.patternCorners[1]), IndexPair32(0, 1)));
-	distances.push_back(DistancePair(patternCorners[0].sqrDistance(pattern.patternCorners[2]), IndexPair32(0, 2)));
-	distances.push_back(DistancePair(patternCorners[0].sqrDistance(pattern.patternCorners[3]), IndexPair32(0, 3)));
+	distances.emplace_back(patternCorners[0].sqrDistance(pattern.patternCorners[0]), IndexPair32(0, 0));
+	distances.emplace_back(patternCorners[0].sqrDistance(pattern.patternCorners[1]), IndexPair32(0, 1));
+	distances.emplace_back(patternCorners[0].sqrDistance(pattern.patternCorners[2]), IndexPair32(0, 2));
+	distances.emplace_back(patternCorners[0].sqrDistance(pattern.patternCorners[3]), IndexPair32(0, 3));
 
-	distances.push_back(DistancePair(patternCorners[1].sqrDistance(pattern.patternCorners[0]), IndexPair32(1, 0)));
-	distances.push_back(DistancePair(patternCorners[1].sqrDistance(pattern.patternCorners[1]), IndexPair32(1, 1)));
-	distances.push_back(DistancePair(patternCorners[1].sqrDistance(pattern.patternCorners[2]), IndexPair32(1, 2)));
-	distances.push_back(DistancePair(patternCorners[1].sqrDistance(pattern.patternCorners[3]), IndexPair32(1, 3)));
+	distances.emplace_back(patternCorners[1].sqrDistance(pattern.patternCorners[0]), IndexPair32(1, 0));
+	distances.emplace_back(patternCorners[1].sqrDistance(pattern.patternCorners[1]), IndexPair32(1, 1));
+	distances.emplace_back(patternCorners[1].sqrDistance(pattern.patternCorners[2]), IndexPair32(1, 2));
+	distances.emplace_back(patternCorners[1].sqrDistance(pattern.patternCorners[3]), IndexPair32(1, 3));
 
-	distances.push_back(DistancePair(patternCorners[2].sqrDistance(pattern.patternCorners[0]), IndexPair32(2, 0)));
-	distances.push_back(DistancePair(patternCorners[2].sqrDistance(pattern.patternCorners[1]), IndexPair32(2, 1)));
-	distances.push_back(DistancePair(patternCorners[2].sqrDistance(pattern.patternCorners[2]), IndexPair32(2, 2)));
-	distances.push_back(DistancePair(patternCorners[2].sqrDistance(pattern.patternCorners[3]), IndexPair32(2, 3)));
+	distances.emplace_back(patternCorners[2].sqrDistance(pattern.patternCorners[0]), IndexPair32(2, 0));
+	distances.emplace_back(patternCorners[2].sqrDistance(pattern.patternCorners[1]), IndexPair32(2, 1));
+	distances.emplace_back(patternCorners[2].sqrDistance(pattern.patternCorners[2]), IndexPair32(2, 2));
+	distances.emplace_back(patternCorners[2].sqrDistance(pattern.patternCorners[3]), IndexPair32(2, 3));
 
-	distances.push_back(DistancePair(patternCorners[3].sqrDistance(pattern.patternCorners[0]), IndexPair32(3, 0)));
-	distances.push_back(DistancePair(patternCorners[3].sqrDistance(pattern.patternCorners[1]), IndexPair32(3, 1)));
-	distances.push_back(DistancePair(patternCorners[3].sqrDistance(pattern.patternCorners[2]), IndexPair32(3, 2)));
-	distances.push_back(DistancePair(patternCorners[3].sqrDistance(pattern.patternCorners[3]), IndexPair32(3, 3)));
+	distances.emplace_back(patternCorners[3].sqrDistance(pattern.patternCorners[0]), IndexPair32(3, 0));
+	distances.emplace_back(patternCorners[3].sqrDistance(pattern.patternCorners[1]), IndexPair32(3, 1));
+	distances.emplace_back(patternCorners[3].sqrDistance(pattern.patternCorners[2]), IndexPair32(3, 2));
+	distances.emplace_back(patternCorners[3].sqrDistance(pattern.patternCorners[3]), IndexPair32(3, 3));
 
 	std::sort(distances.begin(), distances.end(), compareFirst<Scalar, IndexPair32>);
 	IndexSet indexSetThis;
@@ -326,7 +326,7 @@ bool CameraCalibration::determineCameraCalibration(const PinholeCamera& roughCam
 			ocean_assert(Numeric::isNotEqualEps(transformedObjectPoint.z()));
 
 			const Scalar factor = 1 / transformedObjectPoint.z();
-			totalNormalizedObjectPoints.push_back(Vector2(transformedObjectPoint.x() * factor, transformedObjectPoint.y() * factor));
+			totalNormalizedObjectPoints.emplace_back(transformedObjectPoint.x() * factor, transformedObjectPoint.y() * factor);
 		}
 
 #ifdef OCEAN_DEBUG
@@ -393,7 +393,7 @@ bool CameraCalibration::createCorrespondences(const Pattern& pattern, const Vect
 		{
 			const Scalar x = Scalar(c) * boxSize.x();
 
-			objectPoints.push_back(Vector3(x, y, 0));
+			objectPoints.emplace_back(x, y, 0);
 			imagePoints.push_back(row[c]);
 		}
 	}
