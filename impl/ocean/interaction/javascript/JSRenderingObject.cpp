@@ -471,7 +471,7 @@ void JSBase::propertyGetter<Rendering::ObjectRef, JSRenderingObject::AI_TYPE>(Re
 }
 
 template <>
-void JSBase::propertySetter<Rendering::ObjectRef, JSRenderingObject::AI_NAME>(Rendering::ObjectRef& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
+void JSBase::propertySetter<Rendering::ObjectRef, JSRenderingObject::AI_NAME>(Rendering::ObjectRef& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<v8::Boolean>& /*info*/)
 {
 	if (thisValue.isNull())
 	{

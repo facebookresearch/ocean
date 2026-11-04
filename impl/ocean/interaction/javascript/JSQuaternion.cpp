@@ -152,7 +152,7 @@ void JSBase::propertyGetter<Quaternion, JSQuaternion::AI_W>(Quaternion& thisValu
 }
 
 template <>
-void JSBase::propertySetter<Quaternion, JSQuaternion::AI_X>(Quaternion& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
+void JSBase::propertySetter<Quaternion, JSQuaternion::AI_X>(Quaternion& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<v8::Boolean>& /*info*/)
 {
 	Scalar numberValue;
 	if (isValue(value, numberValue))
@@ -166,7 +166,7 @@ void JSBase::propertySetter<Quaternion, JSQuaternion::AI_X>(Quaternion& thisValu
 }
 
 template <>
-void JSBase::propertySetter<Quaternion, JSQuaternion::AI_Y>(Quaternion& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
+void JSBase::propertySetter<Quaternion, JSQuaternion::AI_Y>(Quaternion& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<v8::Boolean>& /*info*/)
 {
 	Scalar numberValue;
 	if (isValue(value, numberValue))
@@ -180,7 +180,7 @@ void JSBase::propertySetter<Quaternion, JSQuaternion::AI_Y>(Quaternion& thisValu
 }
 
 template <>
-void JSBase::propertySetter<Quaternion, JSQuaternion::AI_Z>(Quaternion& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
+void JSBase::propertySetter<Quaternion, JSQuaternion::AI_Z>(Quaternion& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<v8::Boolean>& /*info*/)
 {
 	Scalar numberValue;
 	if (isValue(value, numberValue))
@@ -194,7 +194,7 @@ void JSBase::propertySetter<Quaternion, JSQuaternion::AI_Z>(Quaternion& thisValu
 }
 
 template <>
-void JSBase::propertySetter<Quaternion, JSQuaternion::AI_W>(Quaternion& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
+void JSBase::propertySetter<Quaternion, JSQuaternion::AI_W>(Quaternion& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<v8::Boolean>& /*info*/)
 {
 	Scalar numberValue;
 	if (isValue(value, numberValue))

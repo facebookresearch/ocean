@@ -107,7 +107,7 @@ void JSBase::propertyGetter<Plane3, JSPlane3::AI_DISTANCE>(Plane3& thisValue, v8
 }
 
 template <>
-void JSBase::propertySetter<Plane3, JSPlane3::AI_NORMAL>(Plane3& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
+void JSBase::propertySetter<Plane3, JSPlane3::AI_NORMAL>(Plane3& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<v8::Boolean>& /*info*/)
 {
 	Vector3 vectorValue;
 	if (isValue(value, vectorValue))
@@ -128,7 +128,7 @@ void JSBase::propertySetter<Plane3, JSPlane3::AI_NORMAL>(Plane3& thisValue, v8::
 }
 
 template <>
-void JSBase::propertySetter<Plane3, JSPlane3::AI_DISTANCE>(Plane3& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
+void JSBase::propertySetter<Plane3, JSPlane3::AI_DISTANCE>(Plane3& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<v8::Boolean>& /*info*/)
 {
 	Scalar scalarValue;
 	if (isValue(value, scalarValue))

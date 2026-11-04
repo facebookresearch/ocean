@@ -138,7 +138,7 @@ void JSBase::propertyGetter<RGBAColor, JSColor::AI_ALPHA>(RGBAColor& thisValue, 
 }
 
 template <>
-void JSBase::propertySetter<RGBAColor, JSColor::AI_RED>(RGBAColor& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
+void JSBase::propertySetter<RGBAColor, JSColor::AI_RED>(RGBAColor& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<v8::Boolean>& /*info*/)
 {
 	float numberValue;
 	if (isValue(value, numberValue) && numberValue >= 0.0f)
@@ -152,7 +152,7 @@ void JSBase::propertySetter<RGBAColor, JSColor::AI_RED>(RGBAColor& thisValue, v8
 }
 
 template <>
-void JSBase::propertySetter<RGBAColor, JSColor::AI_GREEN>(RGBAColor& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
+void JSBase::propertySetter<RGBAColor, JSColor::AI_GREEN>(RGBAColor& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<v8::Boolean>& /*info*/)
 {
 	float numberValue;
 	if (isValue(value, numberValue) && numberValue >= 0.0f)
@@ -166,7 +166,7 @@ void JSBase::propertySetter<RGBAColor, JSColor::AI_GREEN>(RGBAColor& thisValue, 
 }
 
 template <>
-void JSBase::propertySetter<RGBAColor, JSColor::AI_BLUE>(RGBAColor& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
+void JSBase::propertySetter<RGBAColor, JSColor::AI_BLUE>(RGBAColor& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<v8::Boolean>& /*info*/)
 {
 	float numberValue;
 	if (isValue(value, numberValue) && numberValue >= 0.0f)
@@ -180,7 +180,7 @@ void JSBase::propertySetter<RGBAColor, JSColor::AI_BLUE>(RGBAColor& thisValue, v
 }
 
 template <>
-void JSBase::propertySetter<RGBAColor, JSColor::AI_ALPHA>(RGBAColor& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
+void JSBase::propertySetter<RGBAColor, JSColor::AI_ALPHA>(RGBAColor& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<v8::Boolean>& /*info*/)
 {
 	float numberValue;
 	if (isValue(value, numberValue) && numberValue >= 0.0f)

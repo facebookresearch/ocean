@@ -209,7 +209,7 @@ class OCEAN_INTERACTION_JS_EXPORT JSBase
 		 * @tparam tSetterId The unique id of the setter, unique in combination with `T`
 		 */
 		template <typename T, unsigned int tSetterId>
-		static inline void propertySetter(v8::Local<v8::Name> property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info);
+		static inline void propertySetter(v8::Local<v8::Name> property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<v8::Boolean>& info);
 
 		/**
 		 * The specialized callback function for all JavaScript setters of wrapped C++ objects.
@@ -222,7 +222,7 @@ class OCEAN_INTERACTION_JS_EXPORT JSBase
 		 * @tparam tSetterId The unique id of the setter
 		 */
 		template <typename TNative, unsigned int tSetterId>
-		static void propertySetter(TNative& thisValue, v8::Local<v8::Name>& property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info);
+		static void propertySetter(TNative& thisValue, v8::Local<v8::Name>& property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<v8::Boolean>& info);
 
 		/**
 		 * The callback function for all JavaScript functions of wrapped C++ objects.
@@ -458,8 +458,8 @@ inline void JSBase::constructor(const v8::FunctionCallbackInfo<v8::Value>& info)
 template <typename T, unsigned int tFunctionId>
 inline void JSBase::propertyGetter(v8::Local<v8::Name> property, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
-	ocean_assert(info.HolderV2()->InternalFieldCount() == 1);
-	v8::Local<v8::Data> internalField = info.HolderV2()->GetInternalField(0);
+	ocean_assert(info.Holder()->InternalFieldCount() == 1);
+	v8::Local<v8::Data> internalField = info.Holder()->GetInternalField(0);
 	v8::Local<v8::Value> valueField = v8::Local<v8::Value>::Cast(internalField);
 	const v8::Local<v8::External> thisWrapper = v8::Local<v8::External>::Cast(valueField);
 
@@ -470,12 +470,12 @@ inline void JSBase::propertyGetter(v8::Local<v8::Name> property, const v8::Prope
 }
 
 template <typename T, unsigned int tFunctionId>
-inline void JSBase::propertySetter(v8::Local<v8::Name> property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info)
+inline void JSBase::propertySetter(v8::Local<v8::Name> property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<v8::Boolean>& info)
 {
 	ocean_assert(value.IsEmpty() == false);
-	ocean_assert(info.HolderV2()->InternalFieldCount() == 1);
+	ocean_assert(info.Holder()->InternalFieldCount() == 1);
 
-	v8::Local<v8::Data> internalField = info.HolderV2()->GetInternalField(0);
+	v8::Local<v8::Data> internalField = info.Holder()->GetInternalField(0);
 	v8::Local<v8::Value> valueField = v8::Local<v8::Value>::Cast(internalField);
 	const v8::Local<v8::External> thisWrapper = v8::Local<v8::External>::Cast(valueField);
 

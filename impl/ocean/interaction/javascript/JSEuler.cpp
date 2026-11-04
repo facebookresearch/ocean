@@ -136,7 +136,7 @@ void JSBase::propertyGetter<Euler, JSEuler::AI_ROLL>(Euler& thisValue, v8::Local
 }
 
 template <>
-void JSBase::propertySetter<Euler, JSEuler::AI_YAW>(Euler& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
+void JSBase::propertySetter<Euler, JSEuler::AI_YAW>(Euler& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<v8::Boolean>& /*info*/)
 {
 	Scalar numberValue;
 	if (isValue(value, numberValue))
@@ -150,7 +150,7 @@ void JSBase::propertySetter<Euler, JSEuler::AI_YAW>(Euler& thisValue, v8::Local<
 }
 
 template <>
-void JSBase::propertySetter<Euler, JSEuler::AI_PITCH>(Euler& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
+void JSBase::propertySetter<Euler, JSEuler::AI_PITCH>(Euler& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<v8::Boolean>& /*info*/)
 {
 	Scalar numberValue;
 	if (isValue(value, numberValue))
@@ -164,7 +164,7 @@ void JSBase::propertySetter<Euler, JSEuler::AI_PITCH>(Euler& thisValue, v8::Loca
 }
 
 template <>
-void JSBase::propertySetter<Euler, JSEuler::AI_ROLL>(Euler& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
+void JSBase::propertySetter<Euler, JSEuler::AI_ROLL>(Euler& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<v8::Boolean>& /*info*/)
 {
 	Scalar numberValue;
 	if (isValue(value, numberValue))
