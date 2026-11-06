@@ -32,6 +32,9 @@
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\RANSAC.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\RANSACP3P.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\EpipolarGeometry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

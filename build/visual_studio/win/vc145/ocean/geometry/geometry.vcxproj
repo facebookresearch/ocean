@@ -135,6 +135,7 @@
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\PnP.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\Quadric.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\RANSAC.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\RANSACP3P.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\SpatialDistribution.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\StereoscopicGeometry.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\Utilities.cpp" />
