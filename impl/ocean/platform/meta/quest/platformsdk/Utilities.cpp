@@ -68,7 +68,7 @@ Indices64 Utilities::extractUsers(ovrUserArrayHandle userArrayHandle, Strings* u
 				else
 				{
 					ocean_assert(false && "Invalid user name");
-					userNames->emplace_back(std::string());
+					userNames->emplace_back();
 				}
 			}
 		}
