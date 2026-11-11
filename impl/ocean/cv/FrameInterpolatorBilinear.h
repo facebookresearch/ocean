@@ -617,11 +617,12 @@ class OCEAN_CV_EXPORT FrameInterpolatorBilinear
 		 * @param inputPaddingElements The number of padding elements at the end of each input row, in elements, with range [0, infinity)
 		 * @param outputPaddingElements The number of padding elements at the end of each output row, in elements, with range [0, infinity)
 		 * @param worker Optional worker object to distribute the computation
+		 * @param use4ChannelSamplingFastPaths True to enable additional Apple ARM64 four-channel paths when useOptimizedNEON is true
 		 * @tparam T Data type of each pixel channel, e.g., float, double, int
 		 * @tparam tChannels Number of channels of the frame, with range [1, infinity)
 		 */
 		template <typename T, unsigned int tChannels>
-		static inline void lookup(const T* input, const unsigned int inputWidth, const unsigned int inputHeight, const LookupTable& input_LT_output, const bool offset, const T* borderColor, T* output, const unsigned int inputPaddingElements, const unsigned int outputPaddingElements, Worker* worker = nullptr, const bool useOptimizedNEON = false, const bool useOptimizedBilinearValuesAndFactorCalculation = false, const bool useOptimizedNEONFactorReplication = false);
+		static inline void lookup(const T* input, const unsigned int inputWidth, const unsigned int inputHeight, const LookupTable& input_LT_output, const bool offset, const T* borderColor, T* output, const unsigned int inputPaddingElements, const unsigned int outputPaddingElements, Worker* worker = nullptr, const bool useOptimizedNEON = false, const bool useOptimizedBilinearValuesAndFactorCalculation = false, const bool useOptimizedNEONFactorReplication = false, const bool use4ChannelSamplingFastPaths = false);
 
 		/**
 		 * Transforms a given input frame into an output frame by application of an interpolation lookup table.
@@ -1408,7 +1409,7 @@ class OCEAN_CV_EXPORT FrameInterpolatorBilinear
 		 * @tparam tChannels Number of channels of the frame, with range [1, infinity)
 		 */
 		template <unsigned int tChannels>
-		static void lookup8BitPerChannelSubsetNEON(const uint8_t* input, const unsigned int inputWidth, const unsigned int inputHeight, const LookupTable* input_LT_output, const bool offset, const uint8_t* borderColor, uint8_t* output, const unsigned int inputPaddingElements, const unsigned int outputPaddingElements, const unsigned int firstRow, const unsigned int numberRows, const bool useOptimizedNEON = false, const bool useOptimizedBilinearValuesAndFactorCalculation = false, const bool useOptimizedNEONFactorReplication = false);
+		static void lookup8BitPerChannelSubsetNEON(const uint8_t* input, const unsigned int inputWidth, const unsigned int inputHeight, const LookupTable* input_LT_output, const bool offset, const uint8_t* borderColor, uint8_t* output, const unsigned int inputPaddingElements, const unsigned int outputPaddingElements, const unsigned int firstRow, const unsigned int numberRows, const bool useOptimizedNEON = false, const bool useOptimizedBilinearValuesAndFactorCalculation = false, const bool useOptimizedNEONFactorReplication = false, const bool use4ChannelSamplingFastPaths = false);
 
 #endif // defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
 
@@ -1866,7 +1867,7 @@ inline void FrameInterpolatorBilinear::homographyWithCameraMask8BitPerChannel(co
 }
 
 template <typename T, unsigned int tChannels>
-inline void FrameInterpolatorBilinear::lookup(const T* input, const unsigned int inputWidth, const unsigned int inputHeight, const LookupTable& input_LT_output, const bool offset, const T* borderColor, T* output, const unsigned int inputPaddingElements, const unsigned int outputPaddingElements, Worker* worker, const bool useOptimizedNEON, const bool useOptimizedBilinearValuesAndFactorCalculation, [[maybe_unused]] const bool useOptimizedNEONFactorReplication)
+inline void FrameInterpolatorBilinear::lookup(const T* input, const unsigned int inputWidth, const unsigned int inputHeight, const LookupTable& input_LT_output, const bool offset, const T* borderColor, T* output, const unsigned int inputPaddingElements, const unsigned int outputPaddingElements, Worker* worker, const bool useOptimizedNEON, const bool useOptimizedBilinearValuesAndFactorCalculation, [[maybe_unused]] const bool useOptimizedNEONFactorReplication, [[maybe_unused]] const bool use4ChannelSamplingFastPaths)
 {
 	if constexpr (std::is_same<T, uint8_t>::value)
 	{
@@ -1877,11 +1878,11 @@ inline void FrameInterpolatorBilinear::lookup(const T* input, const unsigned int
 
 			if (worker)
 			{
-				worker->executeFunction(Worker::Function::createStatic(&FrameInterpolatorBilinear::lookup8BitPerChannelSubsetNEON<tChannels>, input, inputWidth, inputHeight, &input_LT_output, offset, borderColor, output, inputPaddingElements, outputPaddingElements, 0u, 0u, useOptimizedNEON, useOptimizedBilinearValuesAndFactorCalculation, useOptimizedNEONFactorReplication), 0u, (unsigned int)(input_LT_output.sizeY()), 9u, 10u, 20u);
+				worker->executeFunction(Worker::Function::createStatic(&FrameInterpolatorBilinear::lookup8BitPerChannelSubsetNEON<tChannels>, input, inputWidth, inputHeight, &input_LT_output, offset, borderColor, output, inputPaddingElements, outputPaddingElements, 0u, 0u, useOptimizedNEON, useOptimizedBilinearValuesAndFactorCalculation, useOptimizedNEONFactorReplication, use4ChannelSamplingFastPaths), 0u, (unsigned int)(input_LT_output.sizeY()), 9u, 10u, 20u);
 			}
 			else
 			{
-				lookup8BitPerChannelSubsetNEON<tChannels>(input, inputWidth, inputHeight, &input_LT_output, offset, borderColor, output, inputPaddingElements, outputPaddingElements, 0u, (unsigned int)(input_LT_output.sizeY()), useOptimizedNEON, useOptimizedBilinearValuesAndFactorCalculation, useOptimizedNEONFactorReplication);
+				lookup8BitPerChannelSubsetNEON<tChannels>(input, inputWidth, inputHeight, &input_LT_output, offset, borderColor, output, inputPaddingElements, outputPaddingElements, 0u, (unsigned int)(input_LT_output.sizeY()), useOptimizedNEON, useOptimizedBilinearValuesAndFactorCalculation, useOptimizedNEONFactorReplication, use4ChannelSamplingFastPaths);
 			}
 
 			return;
@@ -4973,7 +4974,7 @@ void FrameInterpolatorBilinear::lookupSubset(const T* input, const unsigned int 
 #if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
 
 template <>
-inline void FrameInterpolatorBilinear::lookup8BitPerChannelSubsetNEON<1u>(const uint8_t* input, const unsigned int inputWidth, const unsigned int inputHeight, const LookupTable* input_LT_output, const bool offset, const uint8_t* borderColor, uint8_t* output, const unsigned int inputPaddingElements, const unsigned int outputPaddingElements, const unsigned int firstRow, const unsigned int numberRows, const bool useOptimizedNEON, const bool useOptimizedBilinearValuesAndFactorCalculation, const bool /*useOptimizedNEONFactorReplication*/)
+inline void FrameInterpolatorBilinear::lookup8BitPerChannelSubsetNEON<1u>(const uint8_t* input, const unsigned int inputWidth, const unsigned int inputHeight, const LookupTable* input_LT_output, const bool offset, const uint8_t* borderColor, uint8_t* output, const unsigned int inputPaddingElements, const unsigned int outputPaddingElements, const unsigned int firstRow, const unsigned int numberRows, const bool useOptimizedNEON, const bool useOptimizedBilinearValuesAndFactorCalculation, const bool /*useOptimizedNEONFactorReplication*/, [[maybe_unused]] const bool use4ChannelSamplingFastPaths)
 {
 	ocean_assert(input_LT_output != nullptr);
 	ocean_assert(input != nullptr && output != nullptr);
@@ -5191,7 +5192,7 @@ inline void FrameInterpolatorBilinear::lookup8BitPerChannelSubsetNEON<1u>(const 
 }
 
 template <unsigned int tChannels>
-void FrameInterpolatorBilinear::lookup8BitPerChannelSubsetNEON(const uint8_t* input, const unsigned int inputWidth, const unsigned int inputHeight, const LookupTable* input_LT_output, const bool offset, const uint8_t* borderColor, uint8_t* output, const unsigned int inputPaddingElements, const unsigned int outputPaddingElements, const unsigned int firstRow, const unsigned int numberRows, const bool useOptimizedNEON, const bool useOptimizedBilinearValuesAndFactorCalculation, const bool useOptimizedNEONFactorReplication)
+void FrameInterpolatorBilinear::lookup8BitPerChannelSubsetNEON(const uint8_t* input, const unsigned int inputWidth, const unsigned int inputHeight, const LookupTable* input_LT_output, const bool offset, const uint8_t* borderColor, uint8_t* output, const unsigned int inputPaddingElements, const unsigned int outputPaddingElements, const unsigned int firstRow, const unsigned int numberRows, const bool useOptimizedNEON, const bool useOptimizedBilinearValuesAndFactorCalculation, const bool useOptimizedNEONFactorReplication, [[maybe_unused]] const bool use4ChannelSamplingFastPaths)
 {
 	ocean_assert(input_LT_output != nullptr);
 	ocean_assert(input != nullptr && output != nullptr);
