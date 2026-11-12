@@ -5365,6 +5365,16 @@ void FrameInterpolatorBilinear::lookup8BitPerChannelSubsetNEON(const uint8_t* in
 			{
 				if (useOptimizedNEON)
 				{
+#if defined(__aarch64__) && defined(__APPLE__)
+					if (use4ChannelSamplingFastPaths && borderColor == nullptr && vmaxvq_u32(validPixels_u_32x4) == 0u)
+					{
+						static_assert(sizeof(PixelType) == 4u, "Invalid pixel size!");
+						vst1q_u8((uint8_t*)outputPixelData, vdupq_n_u8(0u));
+						outputPixelData += 4;
+						continue;
+					}
+#endif
+
 					// Optimized 4-channel path: inline pixel gather + widening-multiply interpolation.
 					// Eliminates NEON->stack->scalar->stack->NEON roundtrip by extracting offsets
 					// directly from NEON registers via vgetq_lane_u32 (AArch64 umov).
