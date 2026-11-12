@@ -21,8 +21,10 @@
 
 #include "ocean/test/Validation.h"
 
+#include <algorithm>
 #include <array>
 #include <iostream>
+#include <vector>
 
 #ifdef OCEAN_USE_GTEST
 #include "ocean/test/Test.h"
@@ -55,6 +57,11 @@ TEST(TestFrameInterpolatorBilinearNEON, Lookup4ChannelOptimizedNEONAndBilinearFl
 TEST(TestFrameInterpolatorBilinearNEON, Lookup4ChannelOptimizedNEONBilinearAndFactorReplicationFlags)
 {
 	EXPECT_TRUE(Ocean::Test::TestCV::TestFrameInterpolatorBilinearNEON::testLookup4ChannelOptimizedNEONBilinearAndFactorReplicationFlags(GTEST_TEST_DURATION));
+}
+
+TEST(TestFrameInterpolatorBilinearNEON, Lookup4ChannelOptimizedGatherEdges)
+{
+	EXPECT_TRUE(Ocean::Test::TestCV::TestFrameInterpolatorBilinearNEON::testLookup4ChannelOptimizedGatherEdges());
 }
 
 #endif
@@ -148,6 +155,10 @@ bool TestFrameInterpolatorBilinearNEON::test(const double testDuration)
 	Log::info() << " ";
 
 	allSucceeded = testLookup4ChannelOptimizedNEONBilinearAndFactorReplicationFlags(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+
+	allSucceeded = testLookup4ChannelOptimizedGatherEdges() && allSucceeded;
 
 	Log::info() << " ";
 
@@ -889,6 +900,214 @@ bool TestFrameInterpolatorBilinearNEON::testLookup4ChannelOptimizedNEONBilinearA
 	std::cout << "Validation: " << (validation.succeeded() ? "succeeded" : "FAILED") << std::endl;
 
 	return validation.succeeded();
+
+#else
+
+	Log::info() << "Skipped (no NEON support).";
+	return true;
+
+#endif
+}
+
+bool TestFrameInterpolatorBilinearNEON::testLookup4ChannelOptimizedGatherEdges()
+{
+	Log::info() << "Testing four-channel lookup gather at source edges and output tails:";
+
+#if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
+
+	constexpr unsigned int tChannels = 4u;
+	constexpr unsigned int outputHeight = 9u;
+	constexpr unsigned int guardElements = 3u;
+	constexpr uint8_t sentinel = 0xa5u;
+
+	struct Geometry
+	{
+		unsigned int inputWidth;
+		unsigned int inputHeight;
+		unsigned int outputWidth;
+		unsigned int inputPaddingElements;
+		unsigned int outputPaddingElements;
+	};
+
+	const Geometry geometries[] =
+	{
+		{1u, 1u, 4u, 0u, 0u},
+		{1u, 9u, 5u, 1u, 3u},
+		{2u, 1u, 6u, 5u, 1u},
+		{2u, 2u, 7u, 0u, 5u},
+		{7u, 9u, 8u, 1u, 3u},
+		{17u, 9u, 9u, 5u, 1u},
+		{17u, 9u, 17u, 0u, 3u},
+		{17u, 9u, 3u, 5u, 5u},
+		{7u, 9u, 1u, 1u, 5u},
+		{7u, 9u, 2u, 5u, 3u}
+	};
+
+	enum Pattern
+	{
+		RegularMapping,
+		LastPixelMapping,
+		LastRowMapping,
+		LastAdjacentPairMapping,
+		MixedValidityMapping,
+		BorderMapping,
+		RightFactor128Mapping
+	};
+
+	for (const Geometry& geometry : geometries)
+	{
+		const unsigned int inputStrideElements = geometry.inputWidth * tChannels + geometry.inputPaddingElements;
+		const unsigned int outputStrideElements = geometry.outputWidth * tChannels + geometry.outputPaddingElements;
+		const size_t sourceElements = size_t(geometry.inputHeight - 1u) * inputStrideElements + geometry.inputWidth * tChannels;
+
+		std::vector<uint8_t> sourceMemory(sourceElements + 1u);
+		uint8_t* const source = sourceMemory.data() + 1u;
+
+		for (size_t n = 0u; n < sourceElements; ++n)
+		{
+			source[n] = uint8_t(n * 37u + 11u);
+		}
+
+		for (const bool offset : {false, true})
+		{
+			for (const Pattern pattern : {RegularMapping, LastPixelMapping, LastRowMapping, LastAdjacentPairMapping, MixedValidityMapping, BorderMapping, RightFactor128Mapping})
+			{
+				if (pattern == LastAdjacentPairMapping && (geometry.inputWidth != 17u || geometry.inputHeight != 9u || geometry.inputPaddingElements != 0u))
+				{
+					continue;
+				}
+
+				FrameInterpolatorBilinear::LookupTable lookupTable(geometry.outputWidth, outputHeight, std::min(geometry.outputWidth, 4u), 3u);
+
+				for (size_t yBin = 0u; yBin <= lookupTable.binsY(); ++yBin)
+				{
+					for (size_t xBin = 0u; xBin <= lookupTable.binsX(); ++xBin)
+					{
+						const Scalar x = lookupTable.binTopLeftCornerPositionX(xBin);
+						const Scalar y = lookupTable.binTopLeftCornerPositionY(yBin);
+						Vector2 position;
+
+						switch (pattern)
+						{
+							case RegularMapping:
+								position = Vector2(x * Scalar(geometry.inputWidth - 1u) / Scalar(std::max(geometry.outputWidth - 1u, 1u)), y * Scalar(geometry.inputHeight - 1u) / Scalar(outputHeight - 1u));
+								break;
+
+							case LastPixelMapping:
+								position = Vector2(Scalar(geometry.inputWidth - 1u), Scalar(geometry.inputHeight - 1u));
+								break;
+
+							case LastRowMapping:
+								position = Vector2(geometry.inputWidth > 1u ? Scalar(xBin % (geometry.inputWidth - 1u)) + Scalar(0.25) : Scalar(0), Scalar(geometry.inputHeight - 1u));
+								break;
+
+							case LastAdjacentPairMapping:
+								position = Vector2(Scalar(geometry.inputWidth - 2u) + Scalar(0.25), Scalar(geometry.inputHeight - 1u));
+								break;
+
+							case MixedValidityMapping:
+								position = Vector2(xBin % 2u == 0u ? Scalar(geometry.inputWidth - 1u) * Scalar(0.5) : Scalar(-0.25), Scalar(geometry.inputHeight - 1u) * Scalar(0.5));
+								break;
+
+							case BorderMapping:
+								position = Vector2(Scalar(-2), Scalar(-2));
+								break;
+
+							case RightFactor128Mapping:
+								position = Vector2(geometry.inputWidth > 1u ? Scalar(xBin % (geometry.inputWidth - 1u)) + Scalar(255.0 / 256.0) : Scalar(0), Scalar(geometry.inputHeight - 1u) * Scalar(0.5));
+								break;
+						}
+
+						lookupTable.setBinTopLeftCornerValue(xBin, yBin, offset ? position - Vector2(x, y) : position);
+					}
+				}
+
+				const uint8_t borderColor[tChannels] = {31u, 63u, 127u, 255u};
+
+				for (const bool useBorderColor : {false, true})
+				{
+					const uint8_t* const color = useBorderColor ? borderColor : nullptr;
+
+					for (unsigned int flags = 0u; flags < 16u; ++flags)
+					{
+						const bool useOptimizedNEON = (flags & 1u) != 0u;
+						const bool useOptimizedCoordinates = (flags & 2u) != 0u;
+						const bool useOptimizedFactorReplication = (flags & 4u) != 0u;
+						const bool use4ChannelSamplingFastPaths = (flags & 8u) != 0u;
+						std::vector<uint8_t> reference(size_t(outputStrideElements) * outputHeight + 2u * guardElements, sentinel);
+						std::vector<uint8_t> target(reference);
+
+						FrameInterpolatorBilinear::lookup<uint8_t, tChannels>(source, geometry.inputWidth, geometry.inputHeight, lookupTable, offset, color, reference.data() + guardElements, geometry.inputPaddingElements, geometry.outputPaddingElements, nullptr, false, useOptimizedCoordinates, useOptimizedFactorReplication, false);
+						FrameInterpolatorBilinear::lookup<uint8_t, tChannels>(source, geometry.inputWidth, geometry.inputHeight, lookupTable, offset, color, target.data() + guardElements, geometry.inputPaddingElements, geometry.outputPaddingElements, nullptr, useOptimizedNEON, useOptimizedCoordinates, useOptimizedFactorReplication, use4ChannelSamplingFastPaths);
+
+						if (reference != target)
+						{
+							Log::info() << "Gather mismatch: source " << geometry.inputWidth << "x" << geometry.inputHeight << ", output width " << geometry.outputWidth << ", pattern " << pattern << ", offset " << offset << ", flags " << flags;
+							return false;
+						}
+
+						for (unsigned int y = 0u; y < outputHeight; ++y)
+						{
+							const uint8_t* const row = target.data() + guardElements + size_t(y) * outputStrideElements;
+
+							for (unsigned int n = geometry.outputWidth * tChannels; n < outputStrideElements; ++n)
+							{
+								if (row[n] != sentinel)
+								{
+									return false;
+								}
+							}
+
+							if (pattern == LastAdjacentPairMapping && !offset)
+							{
+								const uint8_t* const leftPixel = source + size_t(geometry.inputHeight - 1u) * inputStrideElements + (geometry.inputWidth - 2u) * tChannels;
+
+								for (unsigned int x = 0u; x < geometry.outputWidth; ++x)
+								{
+									for (unsigned int channel = 0u; channel < tChannels; ++channel)
+									{
+										const uint8_t expected = uint8_t((leftPixel[channel] * 96u + leftPixel[tChannels + channel] * 32u + 64u) >> 7u);
+										if (row[x * tChannels + channel] != expected)
+										{
+											return false;
+										}
+									}
+								}
+							}
+
+							if ((pattern == LastPixelMapping && !offset) || pattern == BorderMapping)
+							{
+								const uint8_t* const lastPixel = source + size_t(geometry.inputHeight - 1u) * inputStrideElements + (geometry.inputWidth - 1u) * tChannels;
+
+								for (unsigned int x = 0u; x < geometry.outputWidth; ++x)
+								{
+									for (unsigned int channel = 0u; channel < tChannels; ++channel)
+									{
+										const uint8_t expected = pattern == LastPixelMapping ? lastPixel[channel] : (useBorderColor ? borderColor[channel] : 0u);
+
+										if (row[x * tChannels + channel] != expected)
+										{
+											return false;
+										}
+									}
+								}
+							}
+						}
+
+						for (unsigned int n = 0u; n < guardElements; ++n)
+						{
+							if (target[n] != sentinel || target[target.size() - 1u - n] != sentinel)
+							{
+								return false;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return true;
 
 #else
 

@@ -76,6 +76,12 @@ class OCEAN_TEST_CV_EXPORT TestFrameInterpolatorBilinearNEON
 		 * @return True, if succeeded
 		 */
 		static bool testLookup4ChannelOptimizedNEONBilinearAndFactorReplicationFlags(const double testDuration);
+		/**
+		 * Tests four-channel gather at source boundaries with output tails, padding, and matching coordinate flags.
+		 * @return True, if succeeded
+		 */
+		static bool testLookup4ChannelOptimizedGatherEdges();
+
 };
 
 }

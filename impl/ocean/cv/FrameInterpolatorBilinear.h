@@ -5366,12 +5366,36 @@ void FrameInterpolatorBilinear::lookup8BitPerChannelSubsetNEON(const uint8_t* in
 				if (useOptimizedNEON)
 				{
 #if defined(__aarch64__) && defined(__APPLE__)
-					if (use4ChannelSamplingFastPaths && borderColor == nullptr && vmaxvq_u32(validPixels_u_32x4) == 0u)
+					if (use4ChannelSamplingFastPaths)
 					{
-						static_assert(sizeof(PixelType) == 4u, "Invalid pixel size!");
-						vst1q_u8((uint8_t*)outputPixelData, vdupq_n_u8(0u));
-						outputPixelData += 4;
-						continue;
+						const uint32x4_t pairValid_u_32x4 = vandq_u32(validPixels_u_32x4, vcltq_u32(inputPositionsLeft_u_32x4, constantInputWidth1_u_32x4));
+						if (vminvq_u32(pairValid_u_32x4) == 0xffffffffu)
+						{
+							const auto loadPair = [](const uint8_t* p) -> uint64_t
+							{
+								uint64_t value;
+								__builtin_memcpy(&value, p, sizeof(value));
+								return value;
+							};
+							const uint64x2_t top01_u_64x2 = {loadPair(input + vgetq_lane_u32(topLeftOffsetsElements_u_32x4, 0)), loadPair(input + vgetq_lane_u32(topLeftOffsetsElements_u_32x4, 1))};
+							const uint64x2_t top23_u_64x2 = {loadPair(input + vgetq_lane_u32(topLeftOffsetsElements_u_32x4, 2)), loadPair(input + vgetq_lane_u32(topLeftOffsetsElements_u_32x4, 3))};
+							const uint64x2_t bottom01_u_64x2 = {loadPair(input + vgetq_lane_u32(bottomLeftOffsetsElements_u_32x4, 0)), loadPair(input + vgetq_lane_u32(bottomLeftOffsetsElements_u_32x4, 1))};
+							const uint64x2_t bottom23_u_64x2 = {loadPair(input + vgetq_lane_u32(bottomLeftOffsetsElements_u_32x4, 2)), loadPair(input + vgetq_lane_u32(bottomLeftOffsetsElements_u_32x4, 3))};
+							const uint8x16_t topLeftPixels_u_8x16 = vreinterpretq_u8_u32(vuzp1q_u32(vreinterpretq_u32_u64(top01_u_64x2), vreinterpretq_u32_u64(top23_u_64x2)));
+							const uint8x16_t topRightPixels_u_8x16 = vreinterpretq_u8_u32(vuzp2q_u32(vreinterpretq_u32_u64(top01_u_64x2), vreinterpretq_u32_u64(top23_u_64x2)));
+							const uint8x16_t bottomLeftPixels_u_8x16 = vreinterpretq_u8_u32(vuzp1q_u32(vreinterpretq_u32_u64(bottom01_u_64x2), vreinterpretq_u32_u64(bottom23_u_64x2)));
+							const uint8x16_t bottomRightPixels_u_8x16 = vreinterpretq_u8_u32(vuzp2q_u32(vreinterpretq_u32_u64(bottom01_u_64x2), vreinterpretq_u32_u64(bottom23_u_64x2)));
+							interpolate4Pixels4Channel8BitPerChannelNEON(topLeftPixels_u_8x16, topRightPixels_u_8x16, bottomLeftPixels_u_8x16, bottomRightPixels_u_8x16, tx_128_u_32x4, ty_128_u_32x4, outputPixelData, useOptimizedNEONFactorReplication);
+							outputPixelData += 4;
+							continue;
+						}
+						if (borderColor == nullptr && vmaxvq_u32(validPixels_u_32x4) == 0u)
+						{
+							static_assert(sizeof(PixelType) == 4u, "Invalid pixel size!");
+							vst1q_u8((uint8_t*)outputPixelData, vdupq_n_u8(0u));
+							outputPixelData += 4;
+							continue;
+						}
 					}
 #endif
 
