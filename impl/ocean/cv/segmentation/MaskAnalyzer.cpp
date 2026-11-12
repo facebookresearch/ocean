@@ -330,12 +330,21 @@ void MaskAnalyzer::findOutline4(const uint8_t* mask, const unsigned int width, c
 
 	if (boundingBox.isValid())
 	{
-		firstColumn = boundingBox.left();
-		firstRow = boundingBox.top();
+		// outline pixels are located inside the bounding box and one pixel outside of it
 
-		endColumn = boundingBox.rightEnd();
-		endRow = boundingBox.bottomEnd();
+		firstColumn = boundingBox.left() == 0u ? 0u : boundingBox.left() - 1u;
+		firstRow = boundingBox.top() == 0u ? 0u : boundingBox.top() - 1u;
+
+		endColumn = std::min(boundingBox.rightEnd() + 1u, width);
+		endRow = std::min(boundingBox.bottomEnd() + 1u, height);
 	}
+
+	// outline pixels outside of the frame are reported only if the bounding box reaches the frame border
+
+	const bool outsideLeft = !boundingBox.isValid() || boundingBox.left() == 0u;
+	const bool outsideTop = !boundingBox.isValid() || boundingBox.top() == 0u;
+	const bool outsideRight = !boundingBox.isValid() || boundingBox.rightEnd() == width;
+	const bool outsideBottom = !boundingBox.isValid() || boundingBox.bottomEnd() == height;
 
 	// first row
 
@@ -352,8 +361,15 @@ void MaskAnalyzer::findOutline4(const uint8_t* mask, const unsigned int width, c
 			{
 				// we have outline pixels outside of the frame
 
-				outlinePixels4.emplace_back(0u, (unsigned int)(-1));
-				outlinePixels4.emplace_back((unsigned int)(-1), 0u);
+				if (outsideTop)
+				{
+					outlinePixels4.emplace_back(0u, (unsigned int)(-1));
+				}
+
+				if (outsideLeft)
+				{
+					outlinePixels4.emplace_back((unsigned int)(-1), 0u);
+				}
 			}
 			else
 			{
@@ -374,7 +390,10 @@ void MaskAnalyzer::findOutline4(const uint8_t* mask, const unsigned int width, c
 			{
 				// we have outline pixels outside of the frame
 
-				outlinePixels4.emplace_back(x, (unsigned int)(-1));
+				if (outsideTop)
+				{
+					outlinePixels4.emplace_back(x, (unsigned int)(-1));
+				}
 			}
 			else
 			{
@@ -395,8 +414,15 @@ void MaskAnalyzer::findOutline4(const uint8_t* mask, const unsigned int width, c
 			{
 				// we have outline pixels outside of the frame
 
-				outlinePixels4.emplace_back(width_1, (unsigned int)(-1));
-				outlinePixels4.emplace_back(width, 0u);
+				if (outsideTop)
+				{
+					outlinePixels4.emplace_back(width_1, (unsigned int)(-1));
+				}
+
+				if (outsideRight)
+				{
+					outlinePixels4.emplace_back(width, 0u);
+				}
 			}
 			else
 			{
@@ -428,7 +454,10 @@ void MaskAnalyzer::findOutline4(const uint8_t* mask, const unsigned int width, c
 			{
 				// we have outline pixels outside of the frame
 
-				outlinePixels4.emplace_back((unsigned int)(-1), y);
+				if (outsideLeft)
+				{
+					outlinePixels4.emplace_back((unsigned int)(-1), y);
+				}
 			}
 			else
 			{
@@ -445,7 +474,7 @@ void MaskAnalyzer::findOutline4(const uint8_t* mask, const unsigned int width, c
 
 		for (unsigned int x = std::max(1u, firstColumn); x < std::min(endColumn, width_1); ++x)
 		{
-			if (maskRow[x - 1u] != nonMaskValue || maskRow[x + 1u] != nonMaskValue || maskRowTop[x] != nonMaskValue || maskRowBottom[x] != nonMaskValue)
+			if (maskRow[x] == nonMaskValue && (maskRow[x - 1u] != nonMaskValue || maskRow[x + 1u] != nonMaskValue || maskRowTop[x] != nonMaskValue || maskRowBottom[x] != nonMaskValue))
 			{
 				outlinePixels4.emplace_back(x, y);
 			}
@@ -459,7 +488,10 @@ void MaskAnalyzer::findOutline4(const uint8_t* mask, const unsigned int width, c
 			{
 				// we have outline pixels outside of the frame
 
-				outlinePixels4.emplace_back(width, y);
+				if (outsideRight)
+				{
+					outlinePixels4.emplace_back(width, y);
+				}
 			}
 			else
 			{
@@ -492,8 +524,15 @@ void MaskAnalyzer::findOutline4(const uint8_t* mask, const unsigned int width, c
 			{
 				// we have outline pixels outside of the frame
 
-				outlinePixels4.emplace_back(0u, height);
-				outlinePixels4.emplace_back((unsigned int)(-1), height_1);
+				if (outsideBottom)
+				{
+					outlinePixels4.emplace_back(0u, height);
+				}
+
+				if (outsideLeft)
+				{
+					outlinePixels4.emplace_back((unsigned int)(-1), height_1);
+				}
 			}
 			else
 			{
@@ -514,7 +553,10 @@ void MaskAnalyzer::findOutline4(const uint8_t* mask, const unsigned int width, c
 			{
 				// we have outline pixels outside of the frame
 
-				outlinePixels4.emplace_back(x, height);
+				if (outsideBottom)
+				{
+					outlinePixels4.emplace_back(x, height);
+				}
 			}
 			else
 			{
@@ -535,8 +577,15 @@ void MaskAnalyzer::findOutline4(const uint8_t* mask, const unsigned int width, c
 			{
 				// we have outline pixels outside of the frame
 
-				outlinePixels4.emplace_back(width_1, height);
-				outlinePixels4.emplace_back(width, height_1);
+				if (outsideBottom)
+				{
+					outlinePixels4.emplace_back(width_1, height);
+				}
+
+				if (outsideRight)
+				{
+					outlinePixels4.emplace_back(width, height_1);
+				}
 			}
 			else
 			{
