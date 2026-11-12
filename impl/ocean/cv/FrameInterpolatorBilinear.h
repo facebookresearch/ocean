@@ -5327,9 +5327,7 @@ void FrameInterpolatorBilinear::lookup8BitPerChannelSubsetNEON(const uint8_t* in
 			const uint32x4_t inputPositionsBottom_u_32x4 = vminq_u32(vaddq_u32(inputPositionsTop_u_32x4, constantOne_u_32x4), constantInputHeight1_u_32x4);
 
 			const uint32x4_t topLeftOffsetsElements_u_32x4 = vmlaq_u32(vmulq_u32(inputPositionsLeft_u_32x4, constantChannels_u_32x4), inputPositionsTop_u_32x4, constantInputStrideElements_u_32x4);
-			const uint32x4_t topRightOffsetsElements_u_32x4 = vmlaq_u32(vmulq_u32(inputPositionsRight_u_32x4, constantChannels_u_32x4), inputPositionsTop_u_32x4, constantInputStrideElements_u_32x4);
 			const uint32x4_t bottomLeftOffsetsElements_u_32x4 = vmlaq_u32(vmulq_u32(inputPositionsLeft_u_32x4, constantChannels_u_32x4), inputPositionsBottom_u_32x4, constantInputStrideElements_u_32x4);
-			const uint32x4_t bottomRightOffsetsElements_u_32x4 = vmlaq_u32(vmulq_u32(inputPositionsRight_u_32x4, constantChannels_u_32x4), inputPositionsBottom_u_32x4, constantInputStrideElements_u_32x4);
 
 			// we determine the fractional portions of the x' and y':
 			uint32x4_t tx_128_u_32x4;
@@ -5403,6 +5401,9 @@ void FrameInterpolatorBilinear::lookup8BitPerChannelSubsetNEON(const uint8_t* in
 					// Eliminates NEON->stack->scalar->stack->NEON roundtrip by extracting offsets
 					// directly from NEON registers via vgetq_lane_u32 (AArch64 umov).
 
+					const uint32x4_t topRightOffsetsElements_u_32x4 = vmlaq_u32(vmulq_u32(inputPositionsRight_u_32x4, constantChannels_u_32x4), inputPositionsTop_u_32x4, constantInputStrideElements_u_32x4);
+					const uint32x4_t bottomRightOffsetsElements_u_32x4 = vmlaq_u32(vmulq_u32(inputPositionsRight_u_32x4, constantChannels_u_32x4), inputPositionsBottom_u_32x4, constantInputStrideElements_u_32x4);
+
 					PixelType topLeftPixels[4];
 					PixelType topRightPixels[4];
 					PixelType bottomLeftPixels[4];
@@ -5437,6 +5438,9 @@ void FrameInterpolatorBilinear::lookup8BitPerChannelSubsetNEON(const uint8_t* in
 				}
 				else
 				{
+					const uint32x4_t topRightOffsetsElements_u_32x4 = vmlaq_u32(vmulq_u32(inputPositionsRight_u_32x4, constantChannels_u_32x4), inputPositionsTop_u_32x4, constantInputStrideElements_u_32x4);
+					const uint32x4_t bottomRightOffsetsElements_u_32x4 = vmlaq_u32(vmulq_u32(inputPositionsRight_u_32x4, constantChannels_u_32x4), inputPositionsBottom_u_32x4, constantInputStrideElements_u_32x4);
+
 					vst1q_u32(topLeftOffsetsElements, topLeftOffsetsElements_u_32x4);
 					vst1q_u32(topRightOffsetsElements, topRightOffsetsElements_u_32x4);
 					vst1q_u32(bottomLeftOffsetsElements, bottomLeftOffsetsElements_u_32x4);
@@ -5447,6 +5451,9 @@ void FrameInterpolatorBilinear::lookup8BitPerChannelSubsetNEON(const uint8_t* in
 			}
 			else
 			{
+				const uint32x4_t topRightOffsetsElements_u_32x4 = vmlaq_u32(vmulq_u32(inputPositionsRight_u_32x4, constantChannels_u_32x4), inputPositionsTop_u_32x4, constantInputStrideElements_u_32x4);
+				const uint32x4_t bottomRightOffsetsElements_u_32x4 = vmlaq_u32(vmulq_u32(inputPositionsRight_u_32x4, constantChannels_u_32x4), inputPositionsBottom_u_32x4, constantInputStrideElements_u_32x4);
+
 				vst1q_u32(topLeftOffsetsElements, topLeftOffsetsElements_u_32x4);
 				vst1q_u32(topRightOffsetsElements, topRightOffsetsElements_u_32x4);
 				vst1q_u32(bottomLeftOffsetsElements, bottomLeftOffsetsElements_u_32x4);
