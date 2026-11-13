@@ -556,7 +556,13 @@ def run_cmake_build(
     #
     # Windows still uses the hand-written flags below: add_windows_options() would
     # emit a second -A, which CMake rejects outright. It is wired up separately.
-    if target.os in (OS.ANDROID, OS.MACOS, OS.IOS):
+    #
+    # Stated as "everything except Windows" rather than as a list of the platforms
+    # that need it. The list form silently omitted each newly added platform -- an
+    # Emscripten build configured without CMAKE_TOOLCHAIN_FILE and failed with an
+    # error naming neither -- and add_cross_compile_options() already does nothing
+    # for a native Linux target, so there is no list to keep in step.
+    if target.os != OS.WINDOWS:
         try:
             add_cross_compile_options(configure_args, target, android_api_level)
         except RuntimeError as e:

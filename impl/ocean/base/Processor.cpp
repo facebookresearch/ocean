@@ -253,6 +253,15 @@ unsigned int Processor::realCores()
 	ocean_assert(false && "Failed to get processor count");
 	return 1u; // Fallback to 1 core
 
+#elif defined(__EMSCRIPTEN__) && !defined(__EMSCRIPTEN_PTHREADS__)
+
+	// Emscripten implements sysconf(_SC_NPROCESSORS_ONLN) as
+	// navigator.hardwareConcurrency, which can report several cores even where
+	// pthread_create is a stub that always fails. Worker skips thread creation only
+	// when it sees a single core, so reporting the truth here is what keeps its
+	// constructor from spawning threads it cannot create.
+	return 1u;
+
 #else
 
 	const long cores = sysconf(_SC_NPROCESSORS_ONLN);

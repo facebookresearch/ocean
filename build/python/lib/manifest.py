@@ -17,6 +17,19 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Set
 
 
+# Platforms that "platforms: all" does NOT cover.
+#
+# "all" means every platform Ocean builds natively. Emscripten is a sandboxed
+# cross-compilation target where most third-party libraries need dedicated work to
+# build at all, so enrolling one by default would be wrong: adding the OS enum value
+# alone would have signed up opencv, assimp, curl, wxwidgets and freetype for a WASM
+# build none of them survive, and the failure would have arrived as a cascade of
+# apparently unrelated link errors.
+#
+# A library that genuinely builds for such a platform must name it explicitly.
+OPT_IN_PLATFORMS: Set[str] = {"emscripten"}
+
+
 def _classify_shell_exe(exe: str) -> str:
     """Return the shell name for a Windows exe filename, "" if not a shell."""
     if "pwsh.exe" in exe:
@@ -359,14 +372,20 @@ class LibraryConfig:
             platform: Either an OS name (e.g., 'macos', 'win') or a full target string
                       (e.g., 'macos_arm64', 'ios_arm64_static_debug')
         """
-        if "all" in self.platforms:
-            return True
         # Extract just the OS part from the platform/target string
         # e.g., 'macos_arm64' -> 'macos', 'ios_arm64_static_debug' -> 'ios'
         os_part = platform.lower().split("_")[0]
         # Accept "windows" as a backward-compatible alias for "win"
         if os_part == "windows":
             os_part = "win"
+
+        # Opt-in platforms are never covered by "all" -- see OPT_IN_PLATFORMS.
+        if os_part in OPT_IN_PLATFORMS:
+            return os_part in self.platforms
+
+        if "all" in self.platforms:
+            return True
+
         return os_part in self.platforms
 
     def supports_link_type(self, link_type: str) -> bool:
