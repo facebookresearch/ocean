@@ -31,8 +31,6 @@
  * @}
  */
 
-using namespace Ocean;
-
 /**
  * This class implements the platform independent wrapper for the homography tracker which will be used/shared by/across platform specific applications.
  * Beware: You must not have more than one instance within one application.
@@ -77,13 +75,13 @@ class HomographyTrackerWrapper
 		 * @param lastFrameReached Optional resulting state whether the last frame (of the input medium) has been reached, nullptr if not of interest
 		 * @return True, if a new frame was available
 		 */
-		bool trackNewFrame(Frame& frame, double& time, const Vector2& newObjectPosition = Vector2(Numeric::minValue(), Numeric::minValue()), bool* lastFrameReached = nullptr);
+		bool trackNewFrame(Ocean::Frame& frame, double& time, const Ocean::Vector2& newObjectPosition = Ocean::Vector2(Ocean::Numeric::minValue(), Ocean::Numeric::minValue()), bool* lastFrameReached = nullptr);
 
 		/**
 		 * Returns the frame medium providing the visual information for the wrapper.
 		 * @return The wrapper's frame medium
 		 */
-		inline const Media::FrameMediumRef frameMedium() const;
+		inline const Ocean::Media::FrameMediumRef frameMedium() const;
 
 		/**
 		 * Move operator.
@@ -108,28 +106,28 @@ class HomographyTrackerWrapper
 	protected:
 
 		/// The frame medium providing the visual information for this tracker.
-		Media::FrameMediumRef frameMedium_;
+		Ocean::Media::FrameMediumRef frameMedium_;
 
 		/// The pixel format to be used for tracking.
-		FrameType::PixelFormat trackingPixelFormat_;
+		Ocean::FrameType::PixelFormat trackingPixelFormat_;
 
 		/// The timestamp of the last frame that has been handled.
-		Timestamp frameTimestamp_;
+		Ocean::Timestamp frameTimestamp_;
 
 		/// The performance measurement object.
-		HighPerformanceStatistic performance_;
+		Ocean::HighPerformanceStatistic performance_;
 
 		/// The actual implementation of the tracker.
-		Tracking::Point::HomographyTracker homographyTracker_;
+		Ocean::Tracking::Point::HomographyTracker homographyTracker_;
 
 		/// The initial region given to the homography tracker.
-		Box2 trackerRegion_;
+		Ocean::Box2 trackerRegion_;
 
 		/// The 3DOF orientation tracker which is used to support the homography tracker.
-		Devices::OrientationTracker3DOFRef orientationTracker3DOF_;
+		Ocean::Devices::OrientationTracker3DOFRef orientationTracker3DOF_;
 };
 
-inline const Media::FrameMediumRef HomographyTrackerWrapper::frameMedium() const
+inline const Ocean::Media::FrameMediumRef HomographyTrackerWrapper::frameMedium() const
 {
 	return frameMedium_;
 }

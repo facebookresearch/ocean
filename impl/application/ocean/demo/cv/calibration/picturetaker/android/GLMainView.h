@@ -25,8 +25,6 @@
  * @}
  */
 
-using namespace Ocean;
-
 /**
  * This class implements the main view of the picture taker demo application for android platforms.
  * @ingroup applicationdemocvcalibrationpicturetakerandroid
@@ -81,7 +79,7 @@ class GLMainView : public Ocean::Platform::Android::Application::GLFrameView
 		 * The camera must have been selected before.
 		 * @return The available image resolutions as strings, e.g., {"640x480", "1280x720", "1920x1080"}
 		 */
-		Strings availableResolutions();
+		Ocean::Strings availableResolutions();
 
 		/**
 		 * Creates an instance of this object.
@@ -93,7 +91,7 @@ class GLMainView : public Ocean::Platform::Android::Application::GLFrameView
 		 * Returns the names of all available cameras in the device.
 		 * @return The camera names
 		 */
-		static Strings availableCameras();
+		static Ocean::Strings availableCameras();
 
 	private:
 
@@ -122,10 +120,10 @@ class GLMainView : public Ocean::Platform::Android::Application::GLFrameView
 	protected:
 
 		/// The direcotry in which the pictures will be stored.
-		IO::Directory directory_;
+		Ocean::IO::Directory directory_;
 
 		/// The live video which will be used to take the pictures.
-		Media::LiveVideoRef liveVideo_;
+		Ocean::Media::LiveVideoRef liveVideo_;
 
 		/// The counter for the pictures.
 		unsigned int pictureCounter_ = 0u;

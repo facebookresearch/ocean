@@ -32,8 +32,6 @@
  * @}
  */
 
-using namespace Ocean;
-
 /**
  * This class implements the platform independent point tracker functionality which will be used/shared by/across platform specific applications.
  * @ingroup applicationdemotrackingpointtracker
@@ -77,7 +75,7 @@ class PointTrackerWrapper
 		 * @param time The time the tracker needed to process the frame, averaged over 20 iterations, in seconds, with range [0, infinity), negative if the pattern has not been detected yet
 		 * @return True, if succeeded
 		 */
-		bool trackNewFrame(Frame& frame, double& time);
+		bool trackNewFrame(Ocean::Frame& frame, double& time);
 
 		/**
 		 * Uses the next tracking mode of the tracker.
@@ -95,24 +93,24 @@ class PointTrackerWrapper
 		 * Returns the frame medium providing the visual information for the wrapper.
 		 * @return The wrapper's frame medium
 		 */
-		inline const Media::FrameMediumRef frameMedium() const;
+		inline const Ocean::Media::FrameMediumRef frameMedium() const;
 
 	protected:
 
 		/// The frame medium providing the visual information for this point tracker.
-		Media::FrameMediumRef frameMedium_;
+		Ocean::Media::FrameMediumRef frameMedium_;
 
 		/// The actual tracker to be used for point tracking.
-		Tracking::Point::PointTracker pointTracker_;
+		Ocean::Tracking::Point::PointTracker pointTracker_;
 
 		/// The timestamp of the last frame that has been handled.
-		Timestamp frameTimestamp_;
+		Ocean::Timestamp frameTimestamp_;
 
 		/// The performance measurement object.
-		HighPerformanceStatistic performance_;
+		Ocean::HighPerformanceStatistic performance_;
 };
 
-inline const Media::FrameMediumRef PointTrackerWrapper::frameMedium() const
+inline const Ocean::Media::FrameMediumRef PointTrackerWrapper::frameMedium() const
 {
 	return frameMedium_;
 }

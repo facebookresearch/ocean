@@ -43,6 +43,8 @@
 	#include "ocean/base/PluginManager.h"
 #endif
 
+using namespace Ocean;
+
 Detector2DWrapper::Detector2DWrapper(Detector2DWrapper&& detector2dWrapper)
 {
 	*this = std::move(detector2dWrapper);

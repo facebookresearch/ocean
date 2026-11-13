@@ -12,14 +12,11 @@
 
 #include "ocean/platform/meta/quest/openxr/application/VRNativeApplicationAdvanced.h"
 
-using namespace Ocean;
-using namespace Platform::Meta::Quest::OpenXR::Application;
-
 /**
  * Implements a specialization of the VRNativeApplicationAdvanced.
  * @ingroup applicationdemoplatformmetaquestopenxr
  */
-class OpenXRVRNativeApplicationAdvanced final : public VRNativeApplicationAdvanced
+class OpenXRVRNativeApplicationAdvanced final : public Ocean::Platform::Meta::Quest::OpenXR::Application::VRNativeApplicationAdvanced
 {
 	public:
 
@@ -35,12 +32,12 @@ class OpenXRVRNativeApplicationAdvanced final : public VRNativeApplicationAdvanc
 		 * Events function called before the scene is rendered.
 		 * @see VRNativeApplication::onPreRender().
 		 */
-		void onPreRender(const XrTime& xrPredictedDisplayTime, const Timestamp& predictedDisplayTime) override;
+		void onPreRender(const XrTime& xrPredictedDisplayTime, const Ocean::Timestamp& predictedDisplayTime) override;
 
 	protected:
 
 		/// The timestamp when the hand visualization mode changes the next time.
-		Timestamp handVisualizationModeTimestamp_;
+		Ocean::Timestamp handVisualizationModeTimestamp_;
 
 		/// The current index of the hand visualization render mode.
 		size_t renderModeIndex_ = 0;

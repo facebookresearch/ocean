@@ -12,6 +12,8 @@
 
 #include "ocean/platform/android/ResourceManager.h"
 
+using namespace Ocean;
+
 SolarSystem::SolarSystem(struct android_app* androidApp) :
 	VRNativeApplicationAdvanced(androidApp)
 {

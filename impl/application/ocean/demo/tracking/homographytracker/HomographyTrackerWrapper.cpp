@@ -45,6 +45,8 @@
 	#endif
 #endif
 
+using namespace Ocean;
+
 HomographyTrackerWrapper::HomographyTrackerWrapper() :
 	trackingPixelFormat_(FrameType::FORMAT_Y8)
 {

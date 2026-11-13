@@ -14,14 +14,11 @@
 
 #include "ocean/platform/meta/quest/openxr/application/VRNativeApplicationAdvanced.h"
 
-using namespace Ocean;
-using namespace Platform::Meta::Quest::OpenXR::Application;
-
 /**
  * Implements a specialization of the VRNativeApplicationAdvanced.
  * @ingroup applicationdemoplatformmetaquestopenxr
  */
-class PanoramaViewer final : public VRNativeApplicationAdvanced
+class PanoramaViewer final : public Ocean::Platform::Meta::Quest::OpenXR::Application::VRNativeApplicationAdvanced
 {
 	public:
 
@@ -55,7 +52,7 @@ class PanoramaViewer final : public VRNativeApplicationAdvanced
 		 * Events function called before the scene is rendered.
 		 * @see VRNativeApplication::onPreRender().
 		 */
-		void onPreRender(const XrTime& xrPredictedDisplayTime, const Timestamp& predictedDisplayTime) override;
+		void onPreRender(const XrTime& xrPredictedDisplayTime, const Ocean::Timestamp& predictedDisplayTime) override;
 
 		/**
 		 * Creates a textured sphere and inserts the sphere into the rendering pipeline.
@@ -63,15 +60,15 @@ class PanoramaViewer final : public VRNativeApplicationAdvanced
 		 * @param imageFile The file of the image which will be used as texture, must exist
 		 * @return The resulting rendering Transform node which will contain the sphere, invalid if something went wrong
 		 */
-		static Rendering::TransformRef createTexturedSphere(const Rendering::EngineRef& engine, const IO::File& imageFile);
+		static Ocean::Rendering::TransformRef createTexturedSphere(const Ocean::Rendering::EngineRef& engine, const Ocean::IO::File& imageFile);
 
 	protected:
 
 		/// The rendering object for the image credits.
-		Rendering::TransformRef renderingTextImageCredits_;
+		Ocean::Rendering::TransformRef renderingTextImageCredits_;
 
 		/// The timestamp until the image credits will shown.
-		Timestamp imageCreditsVisibleTimestamp_;
+		Ocean::Timestamp imageCreditsVisibleTimestamp_;
 };
 
 #endif // META_OCEAN_APPLICATION_DEMO_PLATFORM_META_QUEST_OPENXR_PANORAMAVIEWER_QUEST_PANORAMA_VIEWER_H

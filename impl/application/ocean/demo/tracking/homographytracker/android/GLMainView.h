@@ -84,7 +84,7 @@ class GLMainView :
 		HomographyTrackerWrapper homographyTrackerWrapper_;
 
 		/// Position of the most recent user interaction.
-		Vector2 recentTouchPosition_;
+		Ocean::Vector2 recentTouchPosition_;
 };
 
 inline Ocean::Platform::Android::Application::GLView* GLMainView::createInstance()

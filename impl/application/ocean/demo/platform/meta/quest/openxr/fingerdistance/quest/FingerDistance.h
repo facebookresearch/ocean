@@ -16,14 +16,11 @@
 #include "ocean/rendering/Text.h"
 #include "ocean/rendering/Transform.h"
 
-using namespace Ocean;
-using namespace Platform::Meta::Quest::OpenXR::Application;
-
 /**
  * Implements a specialization of the VRNativeApplicationAdvanced.
  * @ingroup applicationdemoplatformmetaquestopenxr
  */
-class FingerDistance final : public VRNativeApplicationAdvanced
+class FingerDistance final : public Ocean::Platform::Meta::Quest::OpenXR::Application::VRNativeApplicationAdvanced
 {
 	public:
 
@@ -51,7 +48,7 @@ class FingerDistance final : public VRNativeApplicationAdvanced
 		 * Events function called before the scene is rendered.
 		 * @see VRNativeApplication::onPreRender().
 		 */
-		void onPreRender(const XrTime& xrPredictedDisplayTime, const Timestamp& predictedDisplayTime) override;
+		void onPreRender(const XrTime& xrPredictedDisplayTime, const Ocean::Timestamp& predictedDisplayTime) override;
 
 		/**
 		 * Returns the center transformation between both finger tips.
@@ -59,34 +56,34 @@ class FingerDistance final : public VRNativeApplicationAdvanced
 		 * @param rightFingerTip The position of the right finger tip, in world coordinates
 		 * @return The resulting transformation transformation the center between both fingers top world, optimized so that x-axis is pointing to the right of the text, and y-axis upwards of the text, invalid in case of an error
 		 */
-		static HomogenousMatrix4 centerTransformation(const Vector3& leftFingerTip, const Vector3& rightFingerTip);
+		static Ocean::HomogenousMatrix4 centerTransformation(const Ocean::Vector3& leftFingerTip, const Ocean::Vector3& rightFingerTip);
 
 		/**
 		 * Returns a string with the distance.
 		 * @param distance The distance, in meter, with range [0, infinity)
 		 * @return The resulting distance string
 		 */
-		static std::string distanceString(const Scalar distance);
+		static std::string distanceString(const Ocean::Scalar distance);
 
 	protected:
 
 		/// The rendering Group object for all rendering objects.
-		Rendering::GroupRef renderingGroup_;
+		Ocean::Rendering::GroupRef renderingGroup_;
 
 		/// The rendering Transform object of the sphere for the left finger tip.
-		Rendering::TransformRef renderingTransformFingerTipLeft_;
+		Ocean::Rendering::TransformRef renderingTransformFingerTipLeft_;
 
 		/// The rendering Transform object of the sphere for the right finger tip.
-		Rendering::TransformRef renderingTransformFingerTipRight_;
+		Ocean::Rendering::TransformRef renderingTransformFingerTipRight_;
 
 		/// The rendering Transform object of the cylinder between both finger tips.
-		Rendering::TransformRef renderingTransformCylinder_;
+		Ocean::Rendering::TransformRef renderingTransformCylinder_;
 
 		/// The rendering Transform object for the distance text.
-		Rendering::TransformRef renderingTransformTextDistance_;
+		Ocean::Rendering::TransformRef renderingTransformTextDistance_;
 
 		/// The rendering Text object for the distance text.
-		Rendering::TextRef renderingTextDistance_;
+		Ocean::Rendering::TextRef renderingTextDistance_;
 };
 
 #endif // META_OCEAN_APPLICATION_DEMO_PLATFORM_META_QUEST_OPENXR_FINGERDISTANCE_QUEST_FINGER_DISTANCE_H

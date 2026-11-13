@@ -19,21 +19,18 @@
 #include "ocean/rendering/Text.h"
 #include "ocean/rendering/Transform.h"
 
-using namespace Ocean;
-using namespace Ocean::Platform::Meta::Quest;
-
 /**
  * Implements a specialization of the VRApplication.
  * @ingroup applicationdemoplatformmetaquestopenxr
  */
-class GraphsApplication : public Platform::Meta::Quest::OpenXR::Application::VRNativeApplicationAdvanced
+class GraphsApplication : public Ocean::Platform::Meta::Quest::OpenXR::Application::VRNativeApplicationAdvanced
 {
 	protected:
 
 		/**
 		 * Definition of an abbreviation for scalar automatic differentiation values.
 		 */
-		using ScalarAD = AutomaticDifferentiation;
+		using ScalarAD = Ocean::AutomaticDifferentiation;
 
 		/**
 		 * Definition of individual render modes.
@@ -85,7 +82,7 @@ class GraphsApplication : public Platform::Meta::Quest::OpenXR::Application::VRN
 				 * @param maximalGraphRadius The maximal radius from the origin in which the graph is visualized (allowing to cutoff parts of the graph), with range (0, infinity), 0 to skip using the radius
 				 * @param maximalGraphHeight The maximal height (in +/- y direction) in wich the graph is visualized (allowing to cutoff parts of the graph), with range (0, infinity), 0 to skip using the height
 				 */
-				inline Graph(const Function& function, const std::string& functionText, const std::string& functionDescription, const Scalar graphExpansion, const Scalar metric_s_graph, const size_t graphBins, const Scalar maximalGraphRadius, const Scalar maximalGraphHeight);
+				inline Graph(const Function& function, const std::string& functionText, const std::string& functionDescription, const Ocean::Scalar graphExpansion, const Ocean::Scalar metric_s_graph, const size_t graphBins, const Ocean::Scalar maximalGraphRadius, const Ocean::Scalar maximalGraphHeight);
 
 			public:
 
@@ -108,7 +105,7 @@ class GraphsApplication : public Platform::Meta::Quest::OpenXR::Application::VRN
 				 * @param triangleFaces The resulting triangle faces defining the mesh
 				 * @return True, if succeeded
 				 */
-				bool createMesh(Vectors3& vertices, Vectors3& normals, Rendering::TriangleFaces& triangleFaces) const;
+				bool createMesh(Ocean::Vectors3& vertices, Ocean::Vectors3& normals, Ocean::Rendering::TriangleFaces& triangleFaces) const;
 
 				/**
 				 * Determins the intersection point between a ray and this graph.
@@ -116,7 +113,7 @@ class GraphsApplication : public Platform::Meta::Quest::OpenXR::Application::VRN
 				 * @param intersection The resulting intersection between graph and ray
 				 * @return True, if the the ray intersected the graph within the visibile boundary
 				 */
-				bool intersection(const Line3& ray, Vector3& intersection) const;
+				bool intersection(const Ocean::Line3& ray, Ocean::Vector3& intersection) const;
 
 				/**
 				 * Determines the gradient descent path for a specific point on the graph.
@@ -124,7 +121,7 @@ class GraphsApplication : public Platform::Meta::Quest::OpenXR::Application::VRN
 				 * @param z The z location of the point, defined in the domain of the graph
 				 * @return The resulting 3D points of the gradient descent path, defined in the domain of the graph, empty if no path could be calculated
 				 */
-				Vectors3 determineGradientDescentPath(const Scalar x, const Scalar z) const;
+				Ocean::Vectors3 determineGradientDescentPath(const Ocean::Scalar x, const Ocean::Scalar z) const;
 
 				/**
 				 * Determines the function value at a specified (x, z) location.
@@ -133,14 +130,14 @@ class GraphsApplication : public Platform::Meta::Quest::OpenXR::Application::VRN
 				 * @return The resulting function value (the y value)
 				 * @see determineGraphValueAndNormal().
 				 */
-				Scalar determineGraphValue(const Scalar x, const Scalar z) const;
+				Ocean::Scalar determineGraphValue(const Ocean::Scalar x, const Ocean::Scalar z) const;
 
 				/**
 				 * Returns whether a given vertex is visible or not (visible because inside the visiblity boundary).
 				 * @param vertex The vertex to be checked, defined in the domain of the graph
 				 * @return True, if the vertex is visible
 				 */
-				bool isVertexVisible(const Vector3& vertex) const;
+				bool isVertexVisible(const Ocean::Vector3& vertex) const;
 
 				/**
 				 * Returns whether this graph is valid and ready to be used.
@@ -156,7 +153,7 @@ class GraphsApplication : public Platform::Meta::Quest::OpenXR::Application::VRN
 				 * @param invisibleVertex The vertex which is outside the visibility boundary
 				 * @return The resulting vertex located at the visibility boundary
 				 */
-				Vector3 calculateBorderVertex(const Vector3& visibleVertex, const Vector3& invisibleVertex) const;
+				Ocean::Vector3 calculateBorderVertex(const Ocean::Vector3& visibleVertex, const Ocean::Vector3& invisibleVertex) const;
 
 				/**
 				 * Determines the function value at a specified (x, z) location and further the 2x1 Jacobian [df/dx, df/dz] for the location.
@@ -167,7 +164,7 @@ class GraphsApplication : public Platform::Meta::Quest::OpenXR::Application::VRN
 				 * @return The resulting function value (the y value)
 				 * @see determineGraphValue(), determineGraphValueAndNormal().
 				 */
-				Scalar determineGraphValueAndJacobian(const Scalar x, const Scalar z, Vector2& jacobian) const;
+				Ocean::Scalar determineGraphValueAndJacobian(const Ocean::Scalar x, const Ocean::Scalar z, Ocean::Vector2& jacobian) const;
 
 				/**
 				 * Determines the function value at a specified (x, z) location.
@@ -179,7 +176,7 @@ class GraphsApplication : public Platform::Meta::Quest::OpenXR::Application::VRN
 				 * @return The resulting function value (the y value)
 				 * @see determineGraphValue().
 				 */
-				Scalar determineGraphValueAndNormal(const Scalar x, const Scalar z, Vector3& normal) const;
+				Ocean::Scalar determineGraphValueAndNormal(const Ocean::Scalar x, const Ocean::Scalar z, Ocean::Vector3& normal) const;
 
 				/**
 				 * Verifies the visibility of a given trinagle.
@@ -192,7 +189,7 @@ class GraphsApplication : public Platform::Meta::Quest::OpenXR::Application::VRN
 				 * @param visibleNormals The adjusted normals not containing normals of invisible vertices
 				 * @param visibleTriangleFaces The adjusted triangle faces not containing (partially) invisible triangles anymore
 				 */
-				void checkTriangleVisibility(const Vectors3& vertices, const Vectors3& normals, const Indices32& visibleVertexIndices, const Rendering::TriangleFace& triangleFace, Vectors3& visibleVertices, Vectors3& visibleNormals, Rendering::TriangleFaces& visibleTriangleFaces) const;
+				void checkTriangleVisibility(const Ocean::Vectors3& vertices, const Ocean::Vectors3& normals, const Ocean::Indices32& visibleVertexIndices, const Ocean::Rendering::TriangleFace& triangleFace, Ocean::Vectors3& visibleVertices, Ocean::Vectors3& visibleNormals, Ocean::Rendering::TriangleFaces& visibleTriangleFaces) const;
 
 			public:
 
@@ -206,22 +203,22 @@ class GraphsApplication : public Platform::Meta::Quest::OpenXR::Application::VRN
 				std::string functionDescription_;
 
 				/// The expansion of the graph, with range (0, infinity)
-				Scalar graphExpansion_ = Scalar(0);
+				Ocean::Scalar graphExpansion_ = Ocean::Scalar(0);
 
 				/// The scale between graph dimension and metric (world) dimenion.
-				Scalar metric_s_graph_ = Scalar(0);
+				Ocean::Scalar metric_s_graph_ = Ocean::Scalar(0);
 
 				/// The scale between metric (world) dimension and graph dimension.
-				Scalar graph_s_metric_ = Scalar(0);
+				Ocean::Scalar graph_s_metric_ = Ocean::Scalar(0);
 
 				/// The number of bins the graph is made of (along both axis).
 				size_t graphBins_ = 0;
 
 				/// The maximal radius from the origin in which the graph is visualized (allowing to cutoff parts of the graph), with range (0, infinity), 0 to skip using the radius.
-				Scalar maximalGraphRadius_;
+				Ocean::Scalar maximalGraphRadius_;
 
 				/// The maximal height (in +/- y direction) in wich the graph is visualized (allowing to cutoff parts of the graph), with range (0, infinity), 0 to skip using the height.
-				Scalar maximalGraphHeight_;
+				Ocean::Scalar maximalGraphHeight_;
 		};
 
 		/**
@@ -261,13 +258,13 @@ class GraphsApplication : public Platform::Meta::Quest::OpenXR::Application::VRN
 		 * Events function called before the scene is rendered.
 		 * @see VRNativeApplicationAdvanced::onPreRender().
 		 */
-		void onPreRender(const XrTime& xrPredictedDisplayTime, const Timestamp& predictedDisplayTime) override;
+		void onPreRender(const XrTime& xrPredictedDisplayTime, const Ocean::Timestamp& predictedDisplayTime) override;
 
 		/**
 		 * Event functions for released buttons (e.g., from a tracked controller).
 		 * @see VRNativeApplication::onButtonReleased().
 		 */
-		void onButtonReleased(const OpenXR::TrackedController::ButtonType buttons, const Timestamp& timestamp) override;
+		void onButtonReleased(const Ocean::Platform::Meta::Quest::OpenXR::TrackedController::ButtonType buttons, const Ocean::Timestamp& timestamp) override;
 
 		/**
 		 * Renders the gradient descent paths.
@@ -288,28 +285,28 @@ class GraphsApplication : public Platform::Meta::Quest::OpenXR::Application::VRN
 	protected:
 
 		/// The rendering Transform node holding the graph.
-		Rendering::TransformRef renderingTransformGraph_;
+		Ocean::Rendering::TransformRef renderingTransformGraph_;
 
 		/// The rendering Transform node holding the mesh of the graph.
-		Rendering::TransformRef renderingTransformGraphMesh_;
+		Ocean::Rendering::TransformRef renderingTransformGraphMesh_;
 
 		/// The rendering Transform node holding the intersection sphere.
-		Rendering::TransformRef renderingTransformIntersection_;
+		Ocean::Rendering::TransformRef renderingTransformIntersection_;
 
 		/// The rendering Transform node holding an array for the pointing interaction.
-		Rendering::TransformRef renderingTransformDirection_;
+		Ocean::Rendering::TransformRef renderingTransformDirection_;
 
 		/// The rendering Transform node holding all gradient descent paths.
-		Rendering::TransformRef renderingTransformGradientDescent_;
+		Ocean::Rendering::TransformRef renderingTransformGradientDescent_;
 
 		/// The rendering Text node to display the function.
-		Rendering::TextRef renderingTextFunction_;
+		Ocean::Rendering::TextRef renderingTextFunction_;
 
 		/// The table menu allowing to select individual graphs.
-		OpenXR::Application::VRTableMenu vrTableMenu_;
+		Ocean::Platform::Meta::Quest::OpenXR::Application::VRTableMenu vrTableMenu_;
 
 		/// The transformation between graph and world.
-		HomogenousMatrix4 world_T_graph_ = HomogenousMatrix4(false);
+		Ocean::HomogenousMatrix4 world_T_graph_ = Ocean::HomogenousMatrix4(false);
 
 		/// True, if the menu needs to be updated.
 		bool updateMenu_ = false;
@@ -327,7 +324,7 @@ class GraphsApplication : public Platform::Meta::Quest::OpenXR::Application::VRN
 		size_t selectedGraphIndex_ = size_t(-1);
 };
 
-inline GraphsApplication::Graph::Graph(const Function& function, const std::string& functionText, const std::string& functionDescription, const Scalar graphExpansion, const Scalar metric_s_graph, const size_t graphBins, const Scalar maximalGraphRadius, const Scalar maximalGraphHeight) :
+inline GraphsApplication::Graph::Graph(const Function& function, const std::string& functionText, const std::string& functionDescription, const Ocean::Scalar graphExpansion, const Ocean::Scalar metric_s_graph, const size_t graphBins, const Ocean::Scalar maximalGraphRadius, const Ocean::Scalar maximalGraphHeight) :
 	function_(function),
 	functionText_(functionText),
 	functionDescription_(functionDescription),
@@ -337,7 +334,7 @@ inline GraphsApplication::Graph::Graph(const Function& function, const std::stri
 	maximalGraphRadius_(maximalGraphRadius),
 	maximalGraphHeight_(maximalGraphHeight)
 {
-	graph_s_metric_ = Numeric::ratio(Scalar(1), metric_s_graph_, 0);
+	graph_s_metric_ = Ocean::Numeric::ratio(Ocean::Scalar(1), metric_s_graph_, 0);
 }
 
 inline const std::string& GraphsApplication::Graph::functionText() const

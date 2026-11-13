@@ -31,8 +31,6 @@
  * @}
  */
 
-using namespace Ocean;
-
 /**
  * This class implements the platform independent wrapper for the SLAM tracker which will be used/shared by/across platform specific applications.
  * Beware: You must not have more than one instance within one application.
@@ -63,7 +61,7 @@ class SLAMTrackerWrapper
 				 * @param timestamp The timestamp for which the gravity measurement is requested
 				 * @return The gravity vector in camera coordinates, a null vector if unavailable
 				 */
-				Vector3 cameraGravity(const Quaternion& device_Q_camera, const Timestamp& timestamp);
+				Ocean::Vector3 cameraGravity(const Ocean::Quaternion& device_Q_camera, const Ocean::Timestamp& timestamp);
 
 				/**
 				 * Returns the camera's orientation in world coordinates.
@@ -72,7 +70,7 @@ class SLAMTrackerWrapper
 				 * @param timestamp The timestamp for which the orientation measurement is requested
 				 * @return The rotation transforming points in camera coordinates to world coordinates, invalid if unavailable
 				 */
-				Quaternion anyWorld_Q_camera(const Quaternion& device_Q_camera, const Timestamp& timestamp);
+				Ocean::Quaternion anyWorld_Q_camera(const Ocean::Quaternion& device_Q_camera, const Ocean::Timestamp& timestamp);
 
 				/**
 				 * Releases all device references held by this object.
@@ -82,10 +80,10 @@ class SLAMTrackerWrapper
 			protected:
 
 				/// The gravity tracker device providing gravity measurements.
-				Devices::GravityTracker3DOFRef gravityTracker_;
+				Ocean::Devices::GravityTracker3DOFRef gravityTracker_;
 
 				/// The orientation tracker device providing orientation measurements.
-				Devices::OrientationTracker3DOFRef orientationTracker_;
+				Ocean::Devices::OrientationTracker3DOFRef orientationTracker_;
 		};
 
 	public:
@@ -123,13 +121,13 @@ class SLAMTrackerWrapper
 		 * @param lastFrameReached Optional resulting state whether the last frame (of the input medium) has been reached, nullptr if not of interest
 		 * @return True, if a new frame was available
 		 */
-		bool trackNewFrame(Frame& outputFrame, bool* lastFrameReached = nullptr);
+		bool trackNewFrame(Ocean::Frame& outputFrame, bool* lastFrameReached = nullptr);
 
 		/**
 		 * Returns the frame medium providing the visual information for the wrapper.
 		 * @return The wrapper's frame medium
 		 */
-		inline const Media::FrameMediumRef frameMedium() const;
+		inline const Ocean::Media::FrameMediumRef frameMedium() const;
 
 		/**
 		 * Starts a recording.
@@ -164,41 +162,41 @@ class SLAMTrackerWrapper
 	protected:
 
 		/// The frame medium providing the visual information for this tracker.
-		Media::FrameMediumRef frameMedium_;
+		Ocean::Media::FrameMediumRef frameMedium_;
 
 		/// The recent camera frame, with pixel format FORMAT_Y8.
-		Frame yFrame_;
+		Ocean::Frame yFrame_;
 
 		/// The camera clipper of the camera model.
-		AnyCameraClipper cameraClipper_;
+		Ocean::AnyCameraClipper cameraClipper_;
 
 		/// True to downsample the input image by factor 2; False otherwise.
 		bool downsample_ = false;
 
 		/// The timestamp of the last frame that has been handled.
-		Timestamp frameTimestamp_;
+		Ocean::Timestamp frameTimestamp_;
 
 		/// The performance measurement object.
-		HighPerformanceStatistic performance_;
+		Ocean::HighPerformanceStatistic performance_;
 
 		/// The accessor object providing access to gravity and orientation sensor data.
 		SensorAccessor sensorAccessor_;
 
 		/// The actual implementation of the tracker.
-		Tracking::SLAM::TrackerMono slamTracker_;
+		Ocean::Tracking::SLAM::TrackerMono slamTracker_;
 
 		/// The timestamp of the last warmup frame.
-		Timestamp warmupTimestamp_;
+		Ocean::Timestamp warmupTimestamp_;
 
 		/// The device recorder which will be used to record the tracking results.
-		std::unique_ptr<Devices::Serialization::SerializerDeviceRecorder> deviceRecorder_;
+		std::unique_ptr<Ocean::Devices::Serialization::SerializerDeviceRecorder> deviceRecorder_;
 
 		/// The lock for the device recorder.
-		Lock deviceRecorderLock_;
+		Ocean::Lock deviceRecorderLock_;
 
 };
 
-inline const Media::FrameMediumRef SLAMTrackerWrapper::frameMedium() const
+inline const Ocean::Media::FrameMediumRef SLAMTrackerWrapper::frameMedium() const
 {
 	return frameMedium_;
 }

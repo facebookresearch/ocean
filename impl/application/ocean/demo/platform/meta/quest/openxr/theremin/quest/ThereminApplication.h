@@ -17,13 +17,11 @@
 #include "ocean/rendering/Text.h"
 #include "ocean/rendering/Transform.h"
 
-using namespace Ocean;
-
 /**
  * Implements a specialization of the VRApplication.
  * @ingroup applicationdemoplatformmetaquestopenxr
  */
-class ThereminApplication : public Platform::Meta::Quest::OpenXR::Application::VRNativeApplicationAdvanced
+class ThereminApplication : public Ocean::Platform::Meta::Quest::OpenXR::Application::VRNativeApplicationAdvanced
 {
 	public:
 
@@ -57,7 +55,7 @@ class ThereminApplication : public Platform::Meta::Quest::OpenXR::Application::V
 		 * Events function called before the scene is rendered.
 		 * @see VRNativeApplication::onPreRender().
 		 */
-		void onPreRender(const XrTime& xrPredictedDisplayTime, const Timestamp& predictedDisplayTime) override;
+		void onPreRender(const XrTime& xrPredictedDisplayTime, const Ocean::Timestamp& predictedDisplayTime) override;
 
 		/**
 		 * Renders the next audio sample.
@@ -68,19 +66,19 @@ class ThereminApplication : public Platform::Meta::Quest::OpenXR::Application::V
 	protected:
 
 		/// The rendering Transform node holding the pitch antenna.
-		Rendering::TransformRef renderingTransformPitchAntenna_;
+		Ocean::Rendering::TransformRef renderingTransformPitchAntenna_;
 
 		/// The rendering Transform node holding the volume antenna.
-		Rendering::TransformRef renderingTransformVolumeAntenna_;
+		Ocean::Rendering::TransformRef renderingTransformVolumeAntenna_;
 
 		/// The rendering Text node for the frequency.
-		Rendering::TextRef renderingTextFrequency_;
+		Ocean::Rendering::TextRef renderingTextFrequency_;
 
 		/// The rendering Text node for the volume.
-		Rendering::TextRef renderingTextVolume_;
+		Ocean::Rendering::TextRef renderingTextVolume_;
 
 		/// The speaker of this experience.
-		Media::LiveAudioRef liveAudio_;
+		Ocean::Media::LiveAudioRef liveAudio_;
 
 		/// The reusable buffer holding an audio sample.
 		std::vector<int16_t> reusableSample_;

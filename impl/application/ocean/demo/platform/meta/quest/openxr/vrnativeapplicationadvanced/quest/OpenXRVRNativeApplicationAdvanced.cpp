@@ -7,6 +7,10 @@
 
 #include "application/ocean/demo/platform/meta/quest/openxr/vrnativeapplicationadvanced/quest/OpenXRVRNativeApplicationAdvanced.h"
 
+using namespace Ocean;
+using namespace Platform::Meta::Quest::OpenXR::Application;
+
+
 OpenXRVRNativeApplicationAdvanced::OpenXRVRNativeApplicationAdvanced(struct android_app* androidApp) :
 	VRNativeApplicationAdvanced(androidApp)
 {

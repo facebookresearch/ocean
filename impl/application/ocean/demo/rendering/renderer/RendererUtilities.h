@@ -14,8 +14,6 @@
 #include "ocean/rendering/Scene.h"
 #include "ocean/rendering/View.h"
 
-using namespace Ocean;
-
 /**
  * This class implements utility functions for a renderer.
  * @ingroup applicationdemorenderingrenderer
@@ -33,7 +31,7 @@ class RendererUtilities
 		 * @param view The view to translate
 		 * @param interactionSpeed The interaction speed, with range (0, infinity)
 		 */
-		static void moveMouseTranslateView(const int currentX, const int currentY, const int previousX, const int previousY, Rendering::View& view, const Scalar interactionSpeed = 1);
+		static void moveMouseTranslateView(const int currentX, const int currentY, const int previousX, const int previousY, Ocean::Rendering::View& view, const Ocean::Scalar interactionSpeed = 1);
 
 		/**
 		 * Rotates the view by moving the mouse.
@@ -44,14 +42,14 @@ class RendererUtilities
 		 * @param view The view to translate
 		 * @param interactionSpeed The interaction speed, with range (0, infinity)
 		 */
-		static void moveMouseRotateView(const int currentX, const int currentY, const int previousX, const int previousY, Rendering::View& view, const Scalar interactionSpeed = 1);
+		static void moveMouseRotateView(const int currentX, const int currentY, const int previousX, const int previousY, Ocean::Rendering::View& view, const Ocean::Scalar interactionSpeed = 1);
 
 		/**
 		 * Creates a new scene to render.
 		 * @param engine The rendering engine for which the new scene will be created
 		 * @return The scene
 		 */
-		static Rendering::SceneRef createScene(Rendering::Engine& engine);
+		static Ocean::Rendering::SceneRef createScene(Ocean::Rendering::Engine& engine);
 };
 
 #endif // FACEBOOK_APPLICATION_OCEAN_DEMO_RENDERING_RENDERER_RENDERER_UTILITIES_H

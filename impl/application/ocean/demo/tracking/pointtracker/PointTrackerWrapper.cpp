@@ -36,6 +36,8 @@
 	#endif
 #endif
 
+using namespace Ocean;
+
 using namespace Tracking::Point;
 
 PointTrackerWrapper::PointTrackerWrapper()

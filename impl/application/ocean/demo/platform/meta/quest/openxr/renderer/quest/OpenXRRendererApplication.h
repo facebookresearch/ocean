@@ -12,8 +12,6 @@
 
 #include "ocean/platform/meta/quest/openxr/application/VRNativeApplication.h"
 
-using namespace Ocean;
-
 // define this marco in case you want to use the custom render callbacks
 // #define OCEAN_USE_CUSTOM_RENDER_CALLBACK
 
@@ -21,7 +19,7 @@ using namespace Ocean;
  * Implements a specialization of the VRApplication.
  * @ingroup applicationdemoplatformmetaquestopenxr
  */
-class OpenXRRendererApplication : public Platform::Meta::Quest::OpenXR::Application::VRNativeApplication
+class OpenXRRendererApplication : public Ocean::Platform::Meta::Quest::OpenXR::Application::VRNativeApplication
 {
 	public:
 

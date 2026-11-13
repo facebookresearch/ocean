@@ -13,6 +13,11 @@
 
 #include "ocean/rendering/Utilities.h"
 
+using namespace Ocean::Platform::Meta::Quest;
+
+using namespace Ocean;
+using namespace Ocean::Platform::Meta::Quest::OpenXR::Application;
+
 using namespace Platform::Meta::Quest;
 
 static std::string getUsbCameraPermissionName(struct android_app* androidApp)

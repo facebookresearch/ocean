@@ -12,6 +12,8 @@
 #include "ocean/rendering/Scene.h"
 #include "ocean/rendering/Utilities.h"
 
+using namespace Ocean;
+
 using namespace Platform::Meta::Quest;
 
 ThereminApplication::ThereminApplication(struct android_app* androidApp) :

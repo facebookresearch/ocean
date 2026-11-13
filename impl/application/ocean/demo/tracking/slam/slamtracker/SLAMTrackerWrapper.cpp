@@ -45,6 +45,8 @@
 	#include "ocean/platform/android/ResourceManager.h"
 #endif
 
+using namespace Ocean;
+
 // #define DISABLE_TRACKING
 
 Vector3 SLAMTrackerWrapper::SensorAccessor::cameraGravity(const Quaternion& device_Q_camera, const Timestamp& timestamp)

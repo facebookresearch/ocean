@@ -26,8 +26,6 @@
  * @}
  */
 
-using namespace Ocean;
-
 /**
  * This class implements the platform independent detection and decoding of Messenger code.
  * Beware: You must not have more than one Messenger code object within one application.
@@ -72,7 +70,7 @@ class MessengerCodeWrapper
 		 * @param lastFrameReached Optional resulting state whether the last frame (of the input medium) has been reached, nullptr if not of interest
 		 * @return True if a Messenger code has been found, otherwise false
 		 */
-		bool detectAndDecode(Frame& frame, double& time, Strings& messages, bool* lastFrameReached = nullptr);
+		bool detectAndDecode(Ocean::Frame& frame, double& time, Ocean::Strings& messages, bool* lastFrameReached = nullptr);
 
 		/**
 		 * Move operator.
@@ -84,7 +82,7 @@ class MessengerCodeWrapper
 		 * Returns the frame medium providing the visual information for the wrapper.
 		 * @return The wrapper's frame medium
 		 */
-		inline Media::FrameMediumRef frameMedium() const;
+		inline Ocean::Media::FrameMediumRef frameMedium() const;
 
 	protected:
 
@@ -103,19 +101,19 @@ class MessengerCodeWrapper
 	protected:
 
 		/// The frame medium to provide the image sequence.
-		Media::FrameMediumRef frameMedium_;
+		Ocean::Media::FrameMediumRef frameMedium_;
 
 		/// The pixel format to be used for the underlying algorithms.
-		FrameType::PixelFormat pixelFormat_;
+		Ocean::FrameType::PixelFormat pixelFormat_;
 
 		/// The timestamp of the last frame that has been handled.
-		Timestamp timestamp_;
+		Ocean::Timestamp timestamp_;
 
 		/// The performance measurement object.
-		HighPerformanceStatistic messengerCodePerformance_;
+		Ocean::HighPerformanceStatistic messengerCodePerformance_;
 };
 
-inline Media::FrameMediumRef MessengerCodeWrapper::frameMedium() const
+inline Ocean::Media::FrameMediumRef MessengerCodeWrapper::frameMedium() const
 {
 	return frameMedium_;
 }

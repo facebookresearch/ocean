@@ -28,8 +28,6 @@
  * @}
  */
 
-using namespace Ocean;
-
 /**
  * This class implements the platform independent homography image aligner functionality which will be used/shared by/across platform specific applications.
  * Beware: You must not have more than one aligner object within one application.
@@ -83,13 +81,13 @@ class HomographyImageAligner
 		 * @return True, if a new frame was available
      * @see Subset::subset(), Subset::indices2statements().
 		 */
-		bool alignNewFrame(Frame& frame, double& time, SquareMatrix3* currentHomographyPrevious = nullptr, Vectors2* previousPoints = nullptr, Vectors2* currentPoints = nullptr, Indices32* validPointIndices = nullptr, bool* lastFrameReached = nullptr);
+		bool alignNewFrame(Ocean::Frame& frame, double& time, Ocean::SquareMatrix3* currentHomographyPrevious = nullptr, Ocean::Vectors2* previousPoints = nullptr, Ocean::Vectors2* currentPoints = nullptr, Ocean::Indices32* validPointIndices = nullptr, bool* lastFrameReached = nullptr);
 
 		/**
 		 * Returns the frame medium providing the visual information for the aligner.
 		 * @return The aligners's frame medium
 		 */
-		inline const Media::FrameMediumRef frameMedium() const;
+		inline const Ocean::Media::FrameMediumRef frameMedium() const;
 
 		/**
 		 * Move operator.
@@ -114,7 +112,7 @@ class HomographyImageAligner
 	protected:
 
 		/// The frame medium providing the visual information for this aligner.
-		Media::FrameMediumRef frameMedium_;
+		Ocean::Media::FrameMediumRef frameMedium_;
 
 		/// The number of feature points to be used during the alignment, with range [10, infinity)
 		unsigned int trackingNumberFeaturePoints_ = 150u;
@@ -132,31 +130,31 @@ class HomographyImageAligner
 		unsigned int trackingCoarsestLayerRadius_ = 4u;
 
 		/// RANSAC outlier radius
-		Scalar pixelErrorThreshold_ = Scalar(3.0);
+		Ocean::Scalar pixelErrorThreshold_ = Ocean::Scalar(3.0);
 
 		/// The pixel format to be used for sparse point tracking.
-		FrameType::PixelFormat trackingPixelFormat_ = FrameType::FORMAT_RGB24;
+		Ocean::FrameType::PixelFormat trackingPixelFormat_ = Ocean::FrameType::FORMAT_RGB24;
 
 		/// True, so that the sparse point tracker apply a mean extraction before tracking; False, to avoid the mean extraction.
 		bool trackingZeroMean_ = true;
 
 		/// The frame pyramid of the current frame, may have a different pixel format than RGB24.
-		CV::FramePyramid currentFramePyramid_;
+		Ocean::CV::FramePyramid currentFramePyramid_;
 
 		/// The frame pyramid of the previous frame, with same pixel format as the current frame pyramid.
-		CV::FramePyramid previousFramePyramid_;
+		Ocean::CV::FramePyramid previousFramePyramid_;
 
 		/// The RGB24 frame of the previous frame.
-		Frame rgbPreviousFrame_;
+		Ocean::Frame rgbPreviousFrame_;
 
 		/// The timestamp of the last frame that has been handled.
-		Timestamp frameTimestamp_;
+		Ocean::Timestamp frameTimestamp_;
 
 		/// The performance measurement object.
-		HighPerformanceStatistic performance_;
+		Ocean::HighPerformanceStatistic performance_;
 };
 
-inline const Media::FrameMediumRef HomographyImageAligner::frameMedium() const
+inline const Ocean::Media::FrameMediumRef HomographyImageAligner::frameMedium() const
 {
 	return frameMedium_;
 }

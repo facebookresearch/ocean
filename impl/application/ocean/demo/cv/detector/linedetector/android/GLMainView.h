@@ -67,7 +67,7 @@ class GLMainView :
 		const static bool instanceRegistered_;
 
 		/// The pixel image that will forward the image result from the point tracker to the renderer.
-		Media::PixelImageRef pixelImage_;
+		Ocean::Media::PixelImageRef pixelImage_;
 
 		/// The wrapper of the line detector.
 		LineDetectorWrapper lineDetectorWrapper_;

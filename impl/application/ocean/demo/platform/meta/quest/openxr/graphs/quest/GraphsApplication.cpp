@@ -17,6 +17,10 @@
 #include "ocean/rendering/Scene.h"
 #include "ocean/rendering/Utilities.h"
 
+using namespace Ocean::Platform::Meta::Quest;
+
+using namespace Ocean;
+
 GraphsApplication::GraphsApplication(struct android_app* androidApp) :
 	VRNativeApplicationAdvanced(androidApp)
 {

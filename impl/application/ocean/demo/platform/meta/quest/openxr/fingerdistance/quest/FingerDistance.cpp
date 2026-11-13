@@ -11,6 +11,8 @@
 
 #include "ocean/rendering/Utilities.h"
 
+using namespace Ocean;
+
 using namespace Platform::Meta;
 
 FingerDistance::FingerDistance(struct android_app* androidApp) :

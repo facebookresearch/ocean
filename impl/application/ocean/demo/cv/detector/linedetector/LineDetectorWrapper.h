@@ -23,8 +23,6 @@
  * @}
  */
 
-using namespace Ocean;
-
 /**
  * This class implements the platform independent wrapper for the line detector which will be used/shared by/across platform specific applications.
  * @ingroup applicationdemocvdetectorlinedetector
@@ -68,27 +66,27 @@ class LineDetectorWrapper
 		 * @param time The time the detector needed to process the frame, averaged over 20 iterations, in seconds, with range [0, infinity), negative if the detection failed
 		 * @return True, if succeeded
 		 */
-		bool detectNewFrame(Frame& frame, double& time);
+		bool detectNewFrame(Ocean::Frame& frame, double& time);
 
 		/**
 		 * Returns the frame medium providing the visual information for the wrapper.
 		 * @return The wrapper's frame medium
 		 */
-		inline const Media::FrameMediumRef frameMedium() const;
+		inline const Ocean::Media::FrameMediumRef frameMedium() const;
 
 	protected:
 
 		/// The frame medium providing the visual information.
-		Media::FrameMediumRef frameMedium_;
+		Ocean::Media::FrameMediumRef frameMedium_;
 
 		/// The timestamp of the last frame that has been handled.
-		Timestamp frameTimestamp_;
+		Ocean::Timestamp frameTimestamp_;
 
 		/// The performance measurement object.
-		HighPerformanceStatistic performance_;
+		Ocean::HighPerformanceStatistic performance_;
 };
 
-inline const Media::FrameMediumRef LineDetectorWrapper::frameMedium() const
+inline const Ocean::Media::FrameMediumRef LineDetectorWrapper::frameMedium() const
 {
 	return frameMedium_;
 }

@@ -20,14 +20,11 @@
 #include "ocean/rendering/Text.h"
 #include "ocean/rendering/Transform.h"
 
-using namespace Ocean;
-using namespace Ocean::Platform::Meta::Quest;
-
 /**
  * Implements a specialization of the VRApplication.
  * @ingroup applicationdemoplatformmetaquestopenxr
  */
-class ExternalCameraApplication : public OpenXR::Application::VRNativeApplicationAdvanced
+class ExternalCameraApplication : public Ocean::Platform::Meta::Quest::OpenXR::Application::VRNativeApplicationAdvanced
 {
 	protected:
 
@@ -92,19 +89,19 @@ class ExternalCameraApplication : public OpenXR::Application::VRNativeApplicatio
 		 * Events function called before the scene is rendered.
 		 * @see VRNativeApplication::onPreRender().
 		 */
-		void onPreRender(const XrTime& xrPredictedDisplayTime, const Timestamp& predictedDisplayTime) override;
+		void onPreRender(const XrTime& xrPredictedDisplayTime, const Ocean::Timestamp& predictedDisplayTime) override;
 
 		/**
 		 * Event functions for pressed buttons (e.g., from a tracked controller).
 		 * @see VRNativeApplication::onButtonPressed().
 		 */
-		void onButtonPressed(const OpenXR::TrackedController::ButtonType buttons, const Timestamp& timestamp) override;
+		void onButtonPressed(const Ocean::Platform::Meta::Quest::OpenXR::TrackedController::ButtonType buttons, const Ocean::Timestamp& timestamp) override;
 
 		/**
 		 * Event functions for released buttons (e.g., from a tracked controller).
 		 * @see VRNativeApplication::onButtonReleased().
 		 */
-		void onButtonReleased(const OpenXR::TrackedController::ButtonType buttons, const Timestamp& timestamp) override;
+		void onButtonReleased(const Ocean::Platform::Meta::Quest::OpenXR::TrackedController::ButtonType buttons, const Ocean::Timestamp& timestamp) override;
 
 		/**
 		 * Enumerates all external cameras and dispalys them in a table menu.
@@ -124,48 +121,48 @@ class ExternalCameraApplication : public OpenXR::Application::VRNativeApplicatio
 		 * @param codecType The codec type associated with the stream type, can be invalid
 		 * @return The translated string, 'Invalid' if the given stream type is invalid or unknown
 		 */
-		static std::string translateStreamType(const Media::LiveVideo::StreamType streamType, const FrameType::PixelFormat pixelFormat, const Media::LiveVideo::CodecType codecType);
+		static std::string translateStreamType(const Ocean::Media::LiveVideo::StreamType streamType, const Ocean::FrameType::PixelFormat pixelFormat, const Ocean::Media::LiveVideo::CodecType codecType);
 
 	protected:
 
 		/// The rendering Transform node holding the rendering content.
-		Rendering::TransformRef renderingTransform_;
+		Ocean::Rendering::TransformRef renderingTransform_;
 
 		/// The rendering Transform node holding the 3D box with the live texture of the external camera.
-		Rendering::TransformRef renderingTransformCamera_;
+		Ocean::Rendering::TransformRef renderingTransformCamera_;
 
 		/// True, to anchor the camera transform in the world; False, to anchor the camera transform w.r.t. the headset.
 		bool anchorCameraInWorld_ = true;
 
 		/// The rendering Text node holding the text displaying information about the selected camera.
-		Rendering::TextRef renderingTextCamera_;
+		Ocean::Rendering::TextRef renderingTextCamera_;
 
 		/// The rendering Text node holding the text displaying information about the camera's properties.
-		Rendering::TextRef renderingTextProperties_;
+		Ocean::Rendering::TextRef renderingTextProperties_;
 
 		/// The external camera.
-		Media::LiveVideoRef liveVideo_;
+		Ocean::Media::LiveVideoRef liveVideo_;
 
 		/// The table menu allowing to select the external camera.
-		OpenXR::Application::VRTableMenu vrTableMenu_;
+		Ocean::Platform::Meta::Quest::OpenXR::Application::VRTableMenu vrTableMenu_;
 
 		/// The application's state.
 		ApplicationState applicationState_ = AS_IDLE;
 
 		/// The individual stream configurations the external camera supports.
-		Media::LiveVideo::StreamConfigurations streamConfigurations_;
+		Ocean::Media::LiveVideo::StreamConfigurations streamConfigurations_;
 
 		/// The rate for the video framerate.
-		RateCalculator rateCalculator_;
+		Ocean::RateCalculator rateCalculator_;
 
 		/// The timestamp of the last frame.
-		Timestamp lastFrameTimestamp_;
+		Ocean::Timestamp lastFrameTimestamp_;
 
 		/// Timestamp until setting a custom focus is disabled.
-		Timestamp disabledCustomFocusTimestamp_;
+		Ocean::Timestamp disabledCustomFocusTimestamp_;
 
 		/// Timestamp until setting a custom exposure durtation is disabled.
-		Timestamp disabledCustomExposureDurationTimestamp_;
+		Ocean::Timestamp disabledCustomExposureDurationTimestamp_;
 };
 
 #endif // OCEAN_META_APPLICATION_DEMO_MEDIA_EXTERNALCAMERA_QUEST_EXTERNAL_CAMERA_APPLICATION_H

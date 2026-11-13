@@ -17,6 +17,8 @@
 #include "ocean/rendering/PrimitiveAttribute.h"
 #include "ocean/rendering/Utilities.h"
 
+using namespace Ocean;
+
 PanoramaViewer::PanoramaViewer(struct android_app* androidApp) :
 	VRNativeApplicationAdvanced(androidApp)
 {

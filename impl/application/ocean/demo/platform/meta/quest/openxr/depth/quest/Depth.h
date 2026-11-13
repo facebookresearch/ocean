@@ -14,15 +14,11 @@
 
 #include "ocean/rendering/Group.h"
 
-using namespace Ocean;
-using namespace Ocean::Platform::Meta::Quest;
-using namespace Ocean::Platform::Meta::Quest::OpenXR::Application;
-
 /**
  * Implements a specialization of the VRNativeApplicationAdvanced.
  * @ingroup applicationdemoplatformmetaquestopenxr
  */
-class Depth final : public VRNativeApplicationAdvanced
+class Depth final : public Ocean::Platform::Meta::Quest::OpenXR::Application::VRNativeApplicationAdvanced
 {
 	public:
 
@@ -74,13 +70,13 @@ class Depth final : public VRNativeApplicationAdvanced
 		 * Events function called before the scene is rendered.
 		 * @see VRNativeApplication::onPreRender().
 		 */
-		void onPreRender(const XrTime& xrPredictedDisplayTime, const Timestamp& predictedDisplayTime) override;
+		void onPreRender(const XrTime& xrPredictedDisplayTime, const Ocean::Timestamp& predictedDisplayTime) override;
 
 		/**
 		 * Event functions for pressed buttons (e.g., from a tracked controller).
 		 * @see VRNativeApplication::onButtonPressed().
 		 */
-		void onButtonPressed(const OpenXR::TrackedController::ButtonType buttons, const Timestamp& timestamp) override;
+		void onButtonPressed(const Ocean::Platform::Meta::Quest::OpenXR::TrackedController::ButtonType buttons, const Ocean::Timestamp& timestamp) override;
 
 		/**
 		 * Initializes the depth API.
@@ -97,7 +93,7 @@ class Depth final : public VRNativeApplicationAdvanced
 		 * @param depthFrameB The resulting second depth frame, must be valid
 		 * @return True, if succeeded
 		 */
-		bool extract(const GLuint depthTexture, const uint32_t width, const uint32_t height, Frame& depthFrameA, Frame& depthFrameB);
+		bool extract(const GLuint depthTexture, const uint32_t width, const uint32_t height, Ocean::Frame& depthFrameA, Ocean::Frame& depthFrameB);
 
 		/**
 		 * Initializes the function pointer of an OpenXR function.
@@ -112,7 +108,7 @@ class Depth final : public VRNativeApplicationAdvanced
 	protected:
 
 		/// The rendering Group object for all rendering objects.
-		Rendering::GroupRef renderingGroup_;
+		Ocean::Rendering::GroupRef renderingGroup_;
 
 		/// True, if the depth provider is running.
 		bool isDepthProviderRunning_ = false;
@@ -142,16 +138,16 @@ class Depth final : public VRNativeApplicationAdvanced
 		PFN_xrSetEnvironmentDepthHandRemovalMETA xrSetEnvironmentDepthHandRemovalMETA_ = nullptr;
 
 		/// The texture framebuffer which will be used as an intermediate helper framebuffer to be able copy the depth map to memory.
-		Rendering::TextureFramebufferRef textureFramebuffer_;
+		Ocean::Rendering::TextureFramebufferRef textureFramebuffer_;
 
 		/// The shader program for rendering the texture texture to the intermediate framebuffer.
-		Rendering::ShaderProgramRef shaderProgram_;
+		Ocean::Rendering::ShaderProgramRef shaderProgram_;
 
 		/// The vertex set object holding the vertices of the two triangles when rendering the depth textures to the depth texture framebuffer.
-		Rendering::VertexSetRef vertexSet_;
+		Ocean::Rendering::VertexSetRef vertexSet_;
 
 		/// The triangles object holding two triangles when rendering the depth textures to the depth texture framebuffer.
-		Rendering::TrianglesRef triangles_;
+		Ocean::Rendering::TrianglesRef triangles_;
 
 		/// Indicates if the current device supports hand removal.
 		bool isHandRemovalSupported_ = false;

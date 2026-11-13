@@ -31,8 +31,6 @@
  * @}
  */
 
-using namespace Ocean;
-
 /**
  * This class implements the platform independent wrapper for the similarity tracker which will be used/shared by/across platform specific applications.
  * Beware: You must not have more than one instance within one application.
@@ -79,13 +77,13 @@ class SimilarityTrackerWrapper
 		 * @param regionTextureness Optional resulting textureness of the region of interest of the similarity tracker
 		 * @return True, if a new frame was available
 		 */
-		bool trackNewFrame(Frame& frame, double& time, const Vector2& newObjectPosition = Vector2(Numeric::minValue(), Numeric::minValue()), bool* lastFrameReached = nullptr, Tracking::Point::SimilarityTracker::TrackerConfidence* trackerConfidence = nullptr, Tracking::Point::SimilarityTracker::RegionTextureness* regionTextureness = nullptr);
+		bool trackNewFrame(Ocean::Frame& frame, double& time, const Ocean::Vector2& newObjectPosition = Ocean::Vector2(Ocean::Numeric::minValue(), Ocean::Numeric::minValue()), bool* lastFrameReached = nullptr, Ocean::Tracking::Point::SimilarityTracker::TrackerConfidence* trackerConfidence = nullptr, Ocean::Tracking::Point::SimilarityTracker::RegionTextureness* regionTextureness = nullptr);
 
 		/**
 		 * Returns the frame medium providing the visual information for the wrapper.
 		 * @return The wrapper's frame medium
 		 */
-		inline const Media::FrameMediumRef frameMedium() const;
+		inline const Ocean::Media::FrameMediumRef frameMedium() const;
 
 		/**
 		 * Move operator.
@@ -110,34 +108,34 @@ class SimilarityTrackerWrapper
 	protected:
 
 		/// The frame medium providing the visual information for this tracker.
-		Media::FrameMediumRef frameMedium_;
+		Ocean::Media::FrameMediumRef frameMedium_;
 
 		/// The pixel format to be used for tracking.
-		FrameType::PixelFormat trackingPixelFormat_;
+		Ocean::FrameType::PixelFormat trackingPixelFormat_;
 
 		/// The timestamp of the last frame that has been handled.
-		Timestamp frameTimestamp_;
+		Ocean::Timestamp frameTimestamp_;
 
 		/// The performance measurement object.
-		HighPerformanceStatistic performance_;
+		Ocean::HighPerformanceStatistic performance_;
 
 		/// The actual implementation of the tracker.
-		Tracking::Point::SimilarityTracker similarityTracker_;
+		Ocean::Tracking::Point::SimilarityTracker similarityTracker_;
 
 		/// The for corners of the region in which the similarity tracker is working.
-		Vectors2 trackingRegionCorners_;
+		Ocean::Vectors2 trackingRegionCorners_;
 
 		/// The 3DOF orientation tracker which is used to support the similarity tracker.
-		Devices::OrientationTracker3DOFRef orientationTracker3DOF_;
+		Ocean::Devices::OrientationTracker3DOFRef orientationTracker3DOF_;
 
 		/// The device orientation associated with the previous frame.
-		Quaternion world_Q_previousCamera_ = Quaternion(false);
+		Ocean::Quaternion world_Q_previousCamera_ = Ocean::Quaternion(false);
 
 		/// The camera profile of the medium.
-		SharedAnyCamera camera_;
+		Ocean::SharedAnyCamera camera_;
 };
 
-inline const Media::FrameMediumRef SimilarityTrackerWrapper::frameMedium() const
+inline const Ocean::Media::FrameMediumRef SimilarityTrackerWrapper::frameMedium() const
 {
 	return frameMedium_;
 }

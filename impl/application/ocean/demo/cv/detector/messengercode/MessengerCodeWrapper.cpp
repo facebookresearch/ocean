@@ -39,6 +39,8 @@
 	#endif
 #endif
 
+using namespace Ocean;
+
 MessengerCodeWrapper::MessengerCodeWrapper() :
 	pixelFormat_(FrameType::FORMAT_RGB24)
 {

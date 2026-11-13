@@ -16,6 +16,8 @@
 #include "ocean/rendering/Material.h"
 #include "ocean/rendering/Transform.h"
 
+using namespace Ocean;
+
 void RendererUtilities::moveMouseTranslateView(const int currentX, const int currentY, const int previousX, const int previousY, Rendering::View& view, const Scalar interactionSpeed)
 {
 	ocean_assert(interactionSpeed > 0);

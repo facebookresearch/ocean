@@ -14,6 +14,11 @@
 #include "ocean/rendering/glescenegraph/GLESVertexSet.h"
 #include "ocean/rendering/glescenegraph/GLESTriangles.h"
 
+using namespace Ocean::Platform::Meta::Quest;
+using namespace Ocean::Platform::Meta::Quest::OpenXR::Application;
+
+using namespace Ocean;
+
 using namespace Platform::Meta;
 
 Depth::Depth(struct android_app* androidApp) :

@@ -12,13 +12,11 @@
 
 #include "ocean/platform/meta/quest/openxr/application/VRNativeApplication.h"
 
-using namespace Ocean;
-
 /**
  * Implements a specialization of the VRNativeApplication.
  * @ingroup applicationdemoplatformmetaquestopenxr
  */
-class OpenXRVRNativeApplication : public Platform::Meta::Quest::OpenXR::Application::VRNativeApplication
+class OpenXRVRNativeApplication : public Ocean::Platform::Meta::Quest::OpenXR::Application::VRNativeApplication
 {
 	public:
 

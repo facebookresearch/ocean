@@ -27,8 +27,6 @@
  * @}
  */
 
-using namespace Ocean;
-
 /**
  * This class implements the platform independent detection and decoding of QR codes.
  * Beware: You must not have more than one Detector2DWrapper object within one application.
@@ -69,7 +67,7 @@ class Detector2DWrapper
 		 * Returns the input frame medium which is used.
 		 * @return The tracker's input frame medium
 		 */
-		inline Media::FrameMediumRef frameMedium() const;
+		inline Ocean::Media::FrameMediumRef frameMedium() const;
 
 		/**
 		 * Detect and decode a QR code in a video sequence
@@ -79,7 +77,7 @@ class Detector2DWrapper
 		 * @param lastFrameReached Optional resulting state whether the last frame (of the input medium) has been reached, nullptr if not of interest
 		 * @return True if a QR code has been found, otherwise false
 		 */
-		bool detectAndDecode(Frame& frame, double& time, Strings& messages, bool* lastFrameReached = nullptr);
+		bool detectAndDecode(Ocean::Frame& frame, double& time, Ocean::Strings& messages, bool* lastFrameReached = nullptr);
 
 		/**
 		 * Move operator.
@@ -110,19 +108,19 @@ class Detector2DWrapper
 		bool includeMicro_ = false;
 
 		/// Device player which may be used for replay.
-		Devices::SharedDevicePlayer devicePlayer_;
+		Ocean::Devices::SharedDevicePlayer devicePlayer_;
 
 		/// The frame medium to provide the image sequence.
-		Media::FrameMediumRef frameMedium_;
+		Ocean::Media::FrameMediumRef frameMedium_;
 
 		/// The time stamp of the last frame that has been handled.
-		Timestamp timestamp_;
+		Ocean::Timestamp timestamp_;
 
 		/// The performance measurement object.
-		HighPerformanceStatistic performance_;
+		Ocean::HighPerformanceStatistic performance_;
 };
 
-inline Media::FrameMediumRef Detector2DWrapper::frameMedium() const
+inline Ocean::Media::FrameMediumRef Detector2DWrapper::frameMedium() const
 {
 	return frameMedium_;
 }

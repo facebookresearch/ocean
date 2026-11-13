@@ -38,6 +38,8 @@
 	#endif
 #endif
 
+using namespace Ocean;
+
 #define USE_ULF_DETECTOR
 
 LineDetectorWrapper::LineDetectorWrapper()

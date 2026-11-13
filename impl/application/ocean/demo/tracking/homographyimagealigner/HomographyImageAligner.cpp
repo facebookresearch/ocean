@@ -39,6 +39,8 @@
 	#endif
 #endif
 
+using namespace Ocean;
+
 HomographyImageAligner::HomographyImageAligner(const std::vector<std::wstring>& commandArguments) :
 	trackingNumberFeaturePoints_(150u),
 	trackingPatchSize_(15u),

@@ -84,7 +84,7 @@ class GLMainView :
 		SimilarityTrackerWrapper similarityTracker_;
 
 		/// Position of the most recent user interaction.
-		Vector2 recentTouchPosition_ = Vector2(Numeric::minValue(), Numeric::minValue());
+		Ocean::Vector2 recentTouchPosition_ = Ocean::Vector2(Ocean::Numeric::minValue(), Ocean::Numeric::minValue());
 };
 
 inline Ocean::Platform::Android::Application::GLView* GLMainView::createInstance()

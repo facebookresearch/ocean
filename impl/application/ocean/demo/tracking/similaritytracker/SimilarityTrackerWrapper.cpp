@@ -50,6 +50,8 @@
 	#endif
 #endif
 
+using namespace Ocean;
+
 SimilarityTrackerWrapper::SimilarityTrackerWrapper() :
 	trackingPixelFormat_(FrameType::FORMAT_Y8),
 	world_Q_previousCamera_(false)

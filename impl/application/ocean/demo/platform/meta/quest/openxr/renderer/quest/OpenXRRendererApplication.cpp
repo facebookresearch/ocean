@@ -10,6 +10,8 @@
 #include "ocean/rendering/Scene.h"
 #include "ocean/rendering/Utilities.h"
 
+using namespace Ocean;
+
 OpenXRRendererApplication::OpenXRRendererApplication(struct android_app* androidApp) :
 	VRNativeApplication(androidApp)
 {

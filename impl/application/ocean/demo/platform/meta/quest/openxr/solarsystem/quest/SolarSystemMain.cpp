@@ -7,6 +7,8 @@
 
 #include "application/ocean/demo/platform/meta/quest/openxr/solarsystem/quest/SolarSystem.h"
 
+using namespace Ocean;
+
 /**
  * The application's main entry point of native activity of the demo application.
  *
