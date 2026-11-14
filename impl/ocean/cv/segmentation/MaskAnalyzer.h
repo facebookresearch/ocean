@@ -456,7 +456,7 @@ class OCEAN_CV_SEGMENTATION_EXPORT MaskAnalyzer
 		 * @param width The width of the mask frame in pixel, with range [1, infinity)
 		 * @param height The height of the mask frame in pixel, with range [1, infinity)
 		 * @param maskPaddingElements The number of padding elements at the end of each mask row, in elements, with range [0, infinity)
-		 * @param outlinePixels4 Resulting outline-4 pixels, the pixel itself is not a mask pixel but has at least one neighbor mask pixel in the four-neighborhood
+		 * @param outlinePixels4 Resulting outline-4 pixels, the pixel itself is not a mask pixel but has at least one neighbor mask pixel in the four-neighborhood, pixels outside of the frame (with coordinate -1, width or height) are reported for mask pixels at the frame border
 		 * @param boundingBox Optional bounding box object shrinking the operation area, outline pixels will be detected inside the given bounding box and one pixel outside the given bounding box
 		 * @param nonMaskValue The pixel value of a mask pixel not belonging to the mask
 		 */
