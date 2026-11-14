@@ -21,7 +21,6 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
     target_compile_definitions(${OCEAN_TARGET_NAME}
         PUBLIC
             ${OCEAN_PREPROCESSOR_FLAGS}
-            "-DOCEAN_TEST_CV_LIBYUV_HAS_EXTRAS"
     )
 
     if (BUILD_SHARED_LIBS)
@@ -84,7 +83,6 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
         PUBLIC
             "${OCEAN_PREPROCESSOR_FLAGS}"
             "-DOCEAN_USE_GTEST"
-            "-DOCEAN_TEST_CV_LIBYUV_HAS_EXTRAS"
     )
 
     if (BUILD_SHARED_LIBS)
