@@ -14,6 +14,8 @@
 #include "ocean/platform/apple/macos/FrameView.h"
 #include "ocean/platform/apple/macos/Utilities.h"
 
+using namespace Ocean;
+
 @interface AppDelegate ()
 {
 	/// The platform independent wrapper for the line detector.

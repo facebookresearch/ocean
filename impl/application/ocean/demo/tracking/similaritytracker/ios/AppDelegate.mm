@@ -25,6 +25,8 @@
 	#include "ocean/rendering/glescenegraph/apple/Apple.h"
 #endif
 
+using namespace Ocean;
+
 /**
  * The ViewController adding support for user interaction.
  */

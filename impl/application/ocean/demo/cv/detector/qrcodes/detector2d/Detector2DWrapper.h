@@ -132,6 +132,6 @@ inline Ocean::Media::FrameMediumRef Detector2DWrapper::frameMedium() const
  * @param commandArguments The command arguments to use
  * @return The resulting device player, nullptr if the player could not be created
  */
-Devices::SharedDevicePlayer Detector2DWrapper_createExternalDevicePlayer(const CommandArguments& commandArguments);
+Ocean::Devices::SharedDevicePlayer Detector2DWrapper_createExternalDevicePlayer(const Ocean::CommandArguments& commandArguments);
 
 #endif // OCEAN_USE_EXTERNAL_DEVICE_PLAYER

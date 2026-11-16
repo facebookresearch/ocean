@@ -15,6 +15,8 @@
 #include "ocean/platform/apple/macos/FrameView.h"
 #include "ocean/platform/apple/macos/Utilities.h"
 
+using namespace Ocean;
+
 /**
  * The view adding support for user interaction.
  */

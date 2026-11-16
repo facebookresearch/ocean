@@ -30,6 +30,8 @@
 	#include "ocean/rendering/glescenegraph/apple/Apple.h"
 #endif
 
+using namespace Ocean;
+
 @interface AppDelegate ()
 {
 	/// The platform independent wrapper for the tracker.
