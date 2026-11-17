@@ -92,6 +92,23 @@ public class ExternalCameraActivity extends Activity
 		}
 	}
 
+	/**
+	 * Releases the native view, which closes the USB camera, and then the USB manager so that a new instance can be created when the activity is re-created.
+	 */
+	@Override
+	protected void onDestroy()
+	{
+		GLFrameView.release();
+
+		if (oceanUSBManager_ != null)
+		{
+			oceanUSBManager_.release();
+			oceanUSBManager_ = null;
+		}
+
+		super.onDestroy();
+	}
+
 	/// Ocean's USB manager providing the JAVA-side logic to access to external USB cameras.
 	private OceanUSBManager oceanUSBManager_;
 }
