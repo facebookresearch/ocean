@@ -16,12 +16,15 @@
 #include "ocean/cv/detector/qrcodes/FinderPatternDetector.h"
 #include "ocean/cv/detector/qrcodes/QRCodeDecoder.h"
 #include "ocean/cv/detector/qrcodes/QRCodeDetector2D.h"
+#include "ocean/cv/detector/qrcodes/StereoQrCorrespondence.h"
 #include "ocean/cv/detector/qrcodes/Utilities.h"
 
 #include "ocean/geometry/EpipolarGeometry.h"
 #include "ocean/geometry/P3P.h"
 
 #include "ocean/math/PinholeCamera.h"
+
+#include <cmath>
 
 namespace Ocean
 {
@@ -87,6 +90,7 @@ bool QRCodeDetector3D::detectQRCodes(const SharedAnyCameras& sharedAnyCameras, c
 		}
 	}
 
+	std::vector<StereoQrCorrespondence::Candidate> candidates;
 	for (size_t iCameraA = 0; iCameraA < indexTriplets.size() - 1; ++iCameraA)
 	{
 		const FinderPatterns& finderPatternsA = finderPatterns[iCameraA];
@@ -168,8 +172,26 @@ bool QRCodeDetector3D::detectQRCodes(const SharedAnyCameras& sharedAnyCameras, c
 					ocean_assert(world_T_code.isValid());
 					ocean_assert(codeSize > Scalar(0));
 
+					const Scalar errorA = computeSquaredProjectionError(sharedAnyCameraA, world_T_device * device_T_cameraA, world_T_code, finderPatternTripletA, code.version(), codeSize * Scalar(0.5));
+					const Scalar errorB = computeSquaredProjectionError(sharedAnyCameraB, world_T_device * device_T_cameraB, world_T_code, finderPatternTripletB, code.version(), codeSize * Scalar(0.5));
+					const auto errorLimit = [](const FinderPatternTriplet& triplet)
+					{
+						const Scalar moduleSize = (triplet[0].moduleSize() + triplet[1].moduleSize() + triplet[2].moduleSize()) / Scalar(3);
+						return Scalar(3) * Numeric::sqr(std::max(Scalar(2), moduleSize * Scalar(0.5)));
+					};
+					const Scalar limitA = errorLimit(finderPatternTripletA);
+					const Scalar limitB = errorLimit(finderPatternTripletB);
+					if (!std::isfinite(errorA) || !std::isfinite(errorB) || errorA > limitA || errorB > limitB)
+					{
+						continue;
+					}
+					const auto finderMask = [](const IndexTriplet& triplet)
+					{
+						return uint16_t((1u << triplet[0]) | (1u << triplet[1]) | (1u << triplet[2]));
+					};
+					candidates.push_back({finderMask(indexTripletA), finderMask(indexTripletB), double(errorA / limitA + errorB / limitB)});
 					codes.emplace_back(std::move(code));
-					world_T_codes.emplace_back(std::move(world_T_code));
+					world_T_codes.emplace_back(world_T_code);
 					codeSizes.emplace_back(codeSize);
 				}
 			}
@@ -178,6 +200,28 @@ bool QRCodeDetector3D::detectQRCodes(const SharedAnyCameras& sharedAnyCameras, c
 
 	ocean_assert(codes.size() == world_T_codes.size());
 	ocean_assert(codes.size() == codeSizes.size());
+
+	std::vector<size_t> selected;
+	if (!StereoQrCorrespondence::select(candidates, selected))
+	{
+		codes.clear();
+		world_T_codes.clear();
+		codeSizes.clear();
+		return false;
+	}
+	QRCodes selectedCodes;
+	HomogenousMatrices4 selectedPoses;
+	Scalars selectedSizes;
+	for (const size_t index : selected)
+	{
+		ocean_assert(index < codes.size() && index < world_T_codes.size() && index < codeSizes.size());
+		selectedCodes.emplace_back(std::move(codes.at(index)));
+		selectedPoses.emplace_back(world_T_codes.at(index));
+		selectedSizes.emplace_back(codeSizes.at(index));
+	}
+	codes = std::move(selectedCodes);
+	world_T_codes = std::move(selectedPoses);
+	codeSizes = std::move(selectedSizes);
 
 	if (codes.empty() && allow2DCodes)
 	{
@@ -557,6 +601,7 @@ bool QRCodeDetector3D::computePoseAndExtractQRCodeStereo(const Frame& yFrameA, c
 		{
 			const Scalar estimatedCodeSize_2 = Scalar(0.5) * estimatedCodeSize;
 
+			QRCode decodedCode;
 			for (const bool useCameraA : { true, false })
 			{
 				const SharedAnyCamera& anyCamera = useCameraA ? sharedAnyCameraA : sharedAnyCameraB;
@@ -580,12 +625,24 @@ bool QRCodeDetector3D::computePoseAndExtractQRCodeStereo(const Frame& yFrameA, c
 				{
 					ocean_assert(internalCode.isValid());
 
-					code = std::move(internalCode);
-					world_T_code = std::move(internalWorld_T_code);
-					codeSize = estimatedCodeSize;
-
-					return true;
+					if (!decodedCode.isValid())
+					{
+						decodedCode = std::move(internalCode);
+					}
+					else if (!decodedCode.isSame(internalCode, /* ignoreModules */ true))
+					{
+						return false;
+					}
 				}
+			}
+
+			if (decodedCode.isValid())
+			{
+				code = std::move(decodedCode);
+				world_T_code = internalWorld_T_code;
+				codeSize = estimatedCodeSize;
+
+				return true;
 			}
 		}
 

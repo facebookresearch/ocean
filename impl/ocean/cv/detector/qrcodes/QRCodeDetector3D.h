@@ -119,7 +119,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeDetector3D : public QRCodeDetector
 		 * @param world_T_code The resulting pose of the code in world coordinates
 		 * @param codeSize The resulting (display) size of the extracted code in the physical world (in meters)
 		 * @param version Optional indicator of the version number that the code might have (e.g. if it has been observed before), range: [1, 40] or -1 to determine it automatically
-		 * @return True if the extraction of the code and computation its pose was successful, otherwise false
+		 * @return True if the extraction of the code and computation its pose was successful, otherwise false; also false, without trying further versions, when both cameras decode a code and the decoded codes differ, because the two finder pattern triplets then belong to different codes
 		 * @sa triangulateFinderPatternsStereo()
 		 */
 		static bool computePoseAndExtractQRCodeStereo(const Frame& yFrameA, const Frame& yFrameB, const SharedAnyCamera& sharedAnyCameraA, const SharedAnyCamera& sharedAnyCameraB, const HomogenousMatrix4& world_T_device, const HomogenousMatrix4& device_T_cameraA, const HomogenousMatrix4& device_T_cameraB, const FinderPatternTriplet& finderPatternTripletA, const FinderPatternTriplet& finderPatternTripletB, const Vectors3& worldPoints, const Scalar& averageFinderPatternCenterDistance, CV::Detector::QRCodes::QRCode& code, HomogenousMatrix4& world_T_code, Scalar& codeSize, const unsigned int version = (unsigned int)(-1));
