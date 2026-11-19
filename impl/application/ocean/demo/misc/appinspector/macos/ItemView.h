@@ -26,7 +26,7 @@
  * Further, the view provides a basic context menu.
  * @ingroup applicationdemomiscappinspectormacos
  */
-class ItemView : public Platform::Apple::MacOS::TreeView
+class ItemView : public Ocean::Platform::Apple::MacOS::TreeView
 {
 	public:
 
@@ -58,7 +58,7 @@ class ItemView : public Platform::Apple::MacOS::TreeView
 		 * @param binaryAnalyzer The binary analyzer providing the data that will be visualized
 		 * @param columnNames The names of the columns, at least one
 		 */
-		explicit ItemView(const NSRect& rect, const BinaryAnalyzerRef& binaryAnalyzer, const Strings& columnNames);
+		explicit ItemView(const NSRect& rect, const BinaryAnalyzerRef& binaryAnalyzer, const Ocean::Strings& columnNames);
 
 		/**
 		 * Move constructor.
@@ -103,7 +103,7 @@ class ItemView : public Platform::Apple::MacOS::TreeView
 		 * @param contextMenu The context menu to be shown, contains entries already
 		 * @return The user's selection
 		 */
-		virtual int showContextMenu(Platform::Apple::MacOS::ContextMenu& contextMenu);
+		virtual int showContextMenu(Ocean::Platform::Apple::MacOS::ContextMenu& contextMenu);
 
 		/**
 		 * Registers a new tree item with an object id.

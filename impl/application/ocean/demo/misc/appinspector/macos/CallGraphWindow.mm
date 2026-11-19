@@ -10,6 +10,8 @@
 
 #include "ocean/base/StringApple.h"
 
+using namespace Ocean;
+
 /**
  * Definition of a window mainly holding a CallGraphView
  */

@@ -8,6 +8,8 @@
 #include "application/ocean/demo/misc/appinspector/macos/CallGraphView.h"
 #include "application/ocean/demo/misc/appinspector/macos/CallGraphWindow.h"
 
+using namespace Ocean;
+
 CallGraphView::CallGraphView() :
 	SymbolView()
 {

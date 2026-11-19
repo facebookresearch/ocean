@@ -23,8 +23,6 @@
  * @}
  */
 
-using namespace Ocean;
-
 /**
  * The delegate of this application.
  * @ingroup applicationdemomiscappinspectormacos

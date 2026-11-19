@@ -11,6 +11,8 @@
 
 #include "ocean/platform/apple/macos/ContextMenu.h"
 
+using namespace Ocean;
+
 ItemView::ItemView() :
 	Platform::Apple::MacOS::TreeView()
 {

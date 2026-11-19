@@ -29,8 +29,6 @@
  * @}
  */
 
-using namespace Ocean;
-
 /**
  * Just a helper class to ensure that all media plugins are unregistered when this object is disposed.
  * @ingroup applicationdemotrackingslamregression

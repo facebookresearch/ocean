@@ -21,6 +21,8 @@
 #include "ocean/platform/apple/System.h"
 #include "ocean/platform/apple/Utilities.h"
 
+using namespace Ocean;
+
 @interface AppDelegate ()
 {
 	/// The main view of this application.

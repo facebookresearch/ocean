@@ -21,15 +21,13 @@
  * @}
  */
 
-using namespace Ocean;
-
 #ifdef OCEAN_USE_EXTERNAL_DEVICE_PLAYER
 
 /**
  * Creates a device player.
  * @return The resulting device player, nullptr if the player could not be created
  */
-Devices::SharedDevicePlayer TextureGeneratorMain_createExternalDevicePlayer();
+Ocean::Devices::SharedDevicePlayer TextureGeneratorMain_createExternalDevicePlayer();
 
 #endif // OCEAN_USE_EXTERNAL_DEVICE_PLAYER
 

@@ -43,6 +43,8 @@
 	#endif
 #endif
 
+using namespace Ocean;
+
 Wrapper::Wrapper(Wrapper&& barcodeDetector2DWrapper)
 {
 	*this = std::move(barcodeDetector2DWrapper);

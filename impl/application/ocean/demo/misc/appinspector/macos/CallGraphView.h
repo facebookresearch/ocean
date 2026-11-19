@@ -87,7 +87,7 @@ class CallGraphView : public SymbolView
 		 * Shows a context menu, may extend the menu with new entries and returns the user's selection.
 		 * @see ItemView::showContextMenu().
 		 */
-		int showContextMenu(Platform::Apple::MacOS::ContextMenu& contextMenu) override;
+		int showContextMenu(Ocean::Platform::Apple::MacOS::ContextMenu& contextMenu) override;
 
 	protected:
 

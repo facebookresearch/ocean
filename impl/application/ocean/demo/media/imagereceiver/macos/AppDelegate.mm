@@ -31,6 +31,8 @@
 
 #include "ocean/platform/apple/macos/Utilities.h"
 
+using namespace Ocean;
+
 @interface AppDelegate ()
 {
 	/// The view displaying the medium

@@ -19,6 +19,8 @@
 
 #include "ocean/platform/apple/macos/FrameMediumView.h"
 
+using namespace Ocean;
+
 @interface AppDelegate ()
 {
 	/// The view displaying the medium

@@ -46,6 +46,8 @@
 	#endif
 #endif
 
+using namespace Ocean;
+
 Detector3DWrapper::Detector3DWrapper(Detector3DWrapper&& detector3DWrapper)
 {
 	*this = std::move(detector3DWrapper);

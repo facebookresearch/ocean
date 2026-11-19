@@ -30,8 +30,6 @@
  * @}
  */
 
-using namespace Ocean;
-
 /**
  * This class implements the platform independent 6-DOF detection of QR codes.
  * Beware: You must not have more than one Detector3DWrapper object within one application.
@@ -76,7 +74,7 @@ class Detector3DWrapper
 		 * @param lastFrameReached Optional resulting state whether the last frame (of the input medium) has been reached, nullptr if not of interest
 		 * @return True if a QR code has been found, otherwise false
 		 */
-		bool detectAndDecode(Frame& frame, double& time, Strings& messages, bool* lastFrameReached = nullptr);
+		bool detectAndDecode(Ocean::Frame& frame, double& time, Ocean::Strings& messages, bool* lastFrameReached = nullptr);
 
 		/**
 		 * Move operator.
@@ -107,19 +105,19 @@ class Detector3DWrapper
 		std::atomic<unsigned int> recordingCameraIndex1_ = 1u;
 
 		/// Device player that is used for replay.
-		Devices::SharedDevicePlayer devicePlayer_;
+		Ocean::Devices::SharedDevicePlayer devicePlayer_;
 
 		/// The frame mediums to provide the image sequence.
-		Media::FrameMediumRefs frameMediums_;
+		Ocean::Media::FrameMediumRefs frameMediums_;
 
 		/// The time stamp of the last frame that has been handled.
-		Timestamp timestamp_;
+		Ocean::Timestamp timestamp_;
 
 		/// The performance measurement object.
-		HighPerformanceStatistic performance_;
+		Ocean::HighPerformanceStatistic performance_;
 
 		/// A movie recorder to visualize the processed data.
-		Media::MovieRecorderRef movieRecorder_;
+		Ocean::Media::MovieRecorderRef movieRecorder_;
 };
 
 #ifdef OCEAN_USE_EXTERNAL_DEVICE_PLAYER
@@ -129,6 +127,6 @@ class Detector3DWrapper
  * @param commandArguments The command arguments to use
  * @return The resulting device player, nullptr if the player could not be created
  */
-Devices::SharedDevicePlayer Detector3DWrapper_createExternalDevicePlayer(const CommandArguments& commandArguments);
+Ocean::Devices::SharedDevicePlayer Detector3DWrapper_createExternalDevicePlayer(const Ocean::CommandArguments& commandArguments);
 
 #endif // OCEAN_USE_EXTERNAL_DEVICE_PLAYER

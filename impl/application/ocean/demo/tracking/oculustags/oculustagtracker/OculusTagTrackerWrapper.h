@@ -34,8 +34,6 @@
  * @}
  */
 
-using namespace Ocean;
-
 /**
  * This class implements the platform independent wrapper for the plane tracker which will be used/shared by/across platform specific applications.
  * Beware: You must not have more than one instance within one application.
@@ -48,7 +46,7 @@ class OculusTagTrackerWrapper
 		/**
 		 * Definition of a sample map for 6-DOF poses a a device.
 		 */
-		using DevicePoses = SampleMap<HomogenousMatrixD4>;
+		using DevicePoses = Ocean::SampleMap<Ocean::HomogenousMatrixD4>;
 
 	public:
 
@@ -85,7 +83,7 @@ class OculusTagTrackerWrapper
 		 * @param time The time the tracker needed to process the frame, averaged over 20 iterations, in seconds, with range [0, infinity)
 		 * @return True, if a new frame was available
 		 */
-		bool trackNewFrame(Frame& resultFrame, double& time);
+		bool trackNewFrame(Ocean::Frame& resultFrame, double& time);
 
 		/**
 		 * Move operator.
@@ -108,16 +106,16 @@ class OculusTagTrackerWrapper
 	protected:
 
 		/// The frame media that provide the camera frames
-		Media::FrameMediumRefs frameMediumRefs_;
+		Ocean::Media::FrameMediumRefs frameMediumRefs_;
 
 		/// The time stamp of the last frame that has been handled.
-		Timestamp frameTimestamp_;
+		Ocean::Timestamp frameTimestamp_;
 
 		/// The performance measurement object.
-		HighPerformanceStatistic performance_;
+		Ocean::HighPerformanceStatistic performance_;
 
 		/// The Oculus Tag tracker object.
-		Tracking::OculusTags::OculusTagTracker oculusTagTracker_;
+		Ocean::Tracking::OculusTags::OculusTagTracker oculusTagTracker_;
 
 		/// The image counter.
 		unsigned int frameCounter_ = 0u;
@@ -126,10 +124,10 @@ class OculusTagTrackerWrapper
 		bool enableStopMotionReplay_ = true;
 
 		/// Device player that will be used for replay.
-		Devices::SharedDevicePlayer devicePlayer_;
+		Ocean::Devices::SharedDevicePlayer devicePlayer_;
 
 		/// A movie recorder to create visualizations of the results
-		Media::MovieRecorderRef movieRecorder_;
+		Ocean::Media::MovieRecorderRef movieRecorder_;
 };
 
 #ifdef OCEAN_USE_EXTERNAL_DEVICE_PLAYER
@@ -139,6 +137,6 @@ class OculusTagTrackerWrapper
  * @param commandArguments The command arguments to use
  * @return The resulting device player, nullptr if the player could not be created
  */
-Devices::SharedDevicePlayer OculusTagTrackerWrapper_createExternalDevicePlayer(const CommandArguments& commandArguments);
+Ocean::Devices::SharedDevicePlayer OculusTagTrackerWrapper_createExternalDevicePlayer(const Ocean::CommandArguments& commandArguments);
 
 #endif // OCEAN_USE_EXTERNAL_DEVICE_PLAYER

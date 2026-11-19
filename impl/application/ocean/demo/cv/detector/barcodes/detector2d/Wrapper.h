@@ -30,8 +30,6 @@
  * @}
  */
 
-using namespace Ocean;
-
 /**
  * This class implements the platform independent detection of barcodes (2D).
  * Beware: You must not have more than one Wrapper object within one application.
@@ -76,7 +74,7 @@ class Wrapper
 		 * @param lastFrameReached Optional resulting state whether the last frame (of the input medium) has been reached, nullptr if not of interest
 		 * @return True if the processing was successful, otherwise false
 		 */
-		bool detectAndDecode(Frame& frame, double& time, Strings& messages, bool* lastFrameReached = nullptr);
+		bool detectAndDecode(Ocean::Frame& frame, double& time, Ocean::Strings& messages, bool* lastFrameReached = nullptr);
 
 		/**
 		 * Move operator.
@@ -101,19 +99,19 @@ class Wrapper
 	protected:
 
 		/// Device player which may be used for replay.
-		Devices::SharedDevicePlayer devicePlayer_;
+		Ocean::Devices::SharedDevicePlayer devicePlayer_;
 
 		/// The frame medium to provide the image sequence.
-		Media::FrameMediumRef frameMedium_;
+		Ocean::Media::FrameMediumRef frameMedium_;
 
 		/// The time stamp of the last frame that has been handled.
-		Timestamp timestamp_;
+		Ocean::Timestamp timestamp_;
 
 		/// The performance measurement object.
-		HighPerformanceStatistic performance_;
+		Ocean::HighPerformanceStatistic performance_;
 
 		/// A movie recorder to visualize the processed data.
-		Media::MovieRecorderRef movieRecorder_;
+		Ocean::Media::MovieRecorderRef movieRecorder_;
 };
 
 #ifdef OCEAN_USE_EXTERNAL_DEVICE_PLAYER
@@ -122,13 +120,13 @@ class Wrapper
  * Optional registers additional command arguments.
  * @param commandArguments The command arguments
  */
-void Wrapper_registerExternalCommandArguments(CommandArguments& commandArguments);
+void Wrapper_registerExternalCommandArguments(Ocean::CommandArguments& commandArguments);
 
 /**
  * Creates a device player.
  * @param commandArguments The command arguments to use
  * @return The resulting device player, nullptr if the player could not be created
  */
-Devices::SharedDevicePlayer Wrapper_createExternalDevicePlayer(const CommandArguments& commandArguments);
+Ocean::Devices::SharedDevicePlayer Wrapper_createExternalDevicePlayer(const Ocean::CommandArguments& commandArguments);
 
 #endif // OCEAN_USE_EXTERNAL_DEVICE_PLAYER

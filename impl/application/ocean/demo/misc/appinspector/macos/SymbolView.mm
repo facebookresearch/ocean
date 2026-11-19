@@ -11,6 +11,8 @@
 
 #include "ocean/platform/apple/Utilities.h"
 
+using namespace Ocean;
+
 SymbolView::SymbolView() :
 	ItemView()
 {

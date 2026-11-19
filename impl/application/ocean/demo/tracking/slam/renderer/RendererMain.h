@@ -32,8 +32,6 @@
  * @}
  */
 
-using namespace Ocean;
-
 /**
  * Just a helper class to ensure that all media and rendering plugins are unregistered when this object is disposed.
  * @ingroup applicationdemotrackingslamrenderer
@@ -74,7 +72,7 @@ class SensorAccessor
 		 * @param timestamp The timestamp for which the gravity measurement is requested
 		 * @return The gravity vector in camera coordinates, a null vector if unavailable
 		 */
-		Vector3 cameraGravity(const Quaternion& device_Q_camera, const Timestamp& timestamp);
+		Ocean::Vector3 cameraGravity(const Ocean::Quaternion& device_Q_camera, const Ocean::Timestamp& timestamp);
 
 		/**
 		 * Returns the camera's orientation in world coordinates.
@@ -83,7 +81,7 @@ class SensorAccessor
 		 * @param timestamp The timestamp for which the orientation measurement is requested
 		 * @return The rotation transforming points in camera coordinates to world coordinates, invalid if unavailable
 		 */
-		Quaternion anyWorld_Q_camera(const Quaternion& device_Q_camera, const Timestamp& timestamp);
+		Ocean::Quaternion anyWorld_Q_camera(const Ocean::Quaternion& device_Q_camera, const Ocean::Timestamp& timestamp);
 
 		/**
 		 * Releases all device references held by this object.
@@ -93,10 +91,10 @@ class SensorAccessor
 	protected:
 
 		/// The gravity tracker device providing gravity measurements.
-		Devices::GravityTracker3DOFRef gravityTracker_;
+		Ocean::Devices::GravityTracker3DOFRef gravityTracker_;
 
 		/// The orientation tracker device providing orientation measurements.
-		Devices::OrientationTracker3DOFRef orientationTracker_;
+		Ocean::Devices::OrientationTracker3DOFRef orientationTracker_;
 };
 
 #endif // META_OCEAN_APPLICATION_OCEAN_DEMO_TRACKING_SLAM_RENDERER_RENDERER_MAIN_H

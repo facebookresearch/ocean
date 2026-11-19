@@ -42,6 +42,8 @@
 	#include "ocean/platform/win/Utilities.h"
 #endif
 
+using namespace Ocean;
+
 using namespace Tracking::OculusTags;
 
 OculusTagTrackerWrapper::OculusTagTrackerWrapper(OculusTagTrackerWrapper&& oculusTagTrackerWrapper) noexcept

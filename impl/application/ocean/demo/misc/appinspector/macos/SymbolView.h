@@ -31,7 +31,7 @@ class SymbolView : public ItemView
 		 * @param binaryAnalyzer The binary analyzer providing the data that will be visualized
 		 * @param columnNames The names of the columns, at least one
 		 */
-		SymbolView(const NSRect& rect, const BinaryAnalyzerRef& binaryAnalyzer, const Strings& columnNames);
+		SymbolView(const NSRect& rect, const BinaryAnalyzerRef& binaryAnalyzer, const Ocean::Strings& columnNames);
 
 		/**
 		 * Move constructor.
@@ -70,7 +70,7 @@ class SymbolView : public ItemView
 		 * Shows a context menu, may extend the menu with new entries and returns the user's selection.
 		 * @see ItemView::showContextMenu().
 		 */
-		int showContextMenu(Platform::Apple::MacOS::ContextMenu& contextMenu) override;
+		int showContextMenu(Ocean::Platform::Apple::MacOS::ContextMenu& contextMenu) override;
 };
 
 #endif // FACEBOOK_OCEAN_APPLICATION_OCEAN_DEMO_MISC_APPINSPECTOR_SYMBOL_VIEW_H

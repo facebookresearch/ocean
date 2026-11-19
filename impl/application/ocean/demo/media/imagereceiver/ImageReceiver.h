@@ -19,6 +19,4 @@
  * @}
  */
 
-using namespace Ocean;
-
 #endif // FACEBOOK_APPLICATION_OCEAN_DEMO_MEDIA_IMAGERECEIVER_IMAGE_RECEIVER_H

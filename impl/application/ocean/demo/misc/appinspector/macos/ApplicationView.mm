@@ -9,6 +9,8 @@
 
 #include "ocean/io/Scanner.h"
 
+using namespace Ocean;
+
 ApplicationView::ApplicationView() :
 	SymbolView()
 {

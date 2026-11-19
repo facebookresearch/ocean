@@ -26,6 +26,8 @@
 
 #include "ocean/platform/apple/macos/FrameView.h"
 
+using namespace Ocean;
+
 /**
  * A custom view that accepts drag and drop of files.
  */

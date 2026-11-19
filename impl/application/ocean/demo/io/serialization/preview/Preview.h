@@ -20,6 +20,4 @@
  * @}
  */
 
-using namespace Ocean;
-
 #endif // META_APPLICATION_OCEAN_DEMO_IO_SERIALIZATION_PREVIEW_PREVIEW_H
