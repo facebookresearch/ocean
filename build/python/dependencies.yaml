@@ -50,7 +50,17 @@ libraries:
         EIGEN_BUILD_BLAS: OFF
         EIGEN_BUILD_LAPACK: OFF
         CMAKE_Fortran_COMPILER: NOTFOUND
-    platforms: all
+    # Spelled out rather than "all" because Emscripten is an opt-in platform: see
+    # OPT_IN_PLATFORMS in lib/manifest.py. Eigen is header-only, so it needs no
+    # Emscripten-specific build options -- but it still has to say it supports the
+    # platform, or Ocean's math and cv modules have no Eigen3 to find.
+    platforms:
+      - macos
+      - ios
+      - linux
+      - android
+      - win
+      - emscripten
 
   googletest:
     version: "1.14.0"

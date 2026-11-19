@@ -34,6 +34,7 @@ endif()
 # The mapping is defined as follows (CMake -> Ocean):
 #   Android -> android
 #   Darwin -> macos
+#   Emscripten -> emscripten
 #   Linux -> linux
 #   Windows -> win
 #
@@ -57,6 +58,8 @@ function(ocean_translate_system_name system_name_string translated_system_name_v
         set(${translated_system_name_variable} "linux" PARENT_SCOPE)
     elseif (${system_name_string} STREQUAL "Android")
         set(${translated_system_name_variable} "android" PARENT_SCOPE)
+    elseif (${system_name_string} STREQUAL "Emscripten")
+        set(${translated_system_name_variable} "emscripten" PARENT_SCOPE)
     else()
         message(FATAL_ERROR "Unknown/unsupported system name: ${system_name_string}")
     endif()
@@ -186,6 +189,16 @@ function(get_ocean_compiler_flags ocean_compiler_flags)
                 list(APPEND local_compiler_flags "-mavx2")
             endif()
         endif()
+    elseif (EMSCRIPTEN)
+        # Deliberately empty, and explicit rather than left to fall through the end
+        # of this chain.
+        #
+        # The macOS and Linux branches above add -msse4.1/-mavx2 on x86_64. The
+        # WebAssembly counterpart is -msimd128, which is NOT enabled here: it
+        # produces a .wasm that will not run in browsers without SIMD support, and
+        # that node rejects unless given an explicit flag. Turning on WASM SIMD is a
+        # separate decision with its own compatibility matrix, not a detail of
+        # porting the build.
     endif()
 
     set(${ocean_compiler_flags} ${local_compiler_flags} PARENT_SCOPE)
