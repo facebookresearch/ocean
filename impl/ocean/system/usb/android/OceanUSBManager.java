@@ -39,9 +39,9 @@ public class OceanUSBManager
 {
 	/**
 	 * Creates and initializes the manager.
-	 * Only one instance of this class can exist.
+	 * Only one instance of this class can exist at a time, release() must be called before a new instance can be created.
 	 * @param context The Android application's context, must be valid
-	 * @see isvalid()
+	 * @see isValid(), release().
 	 */
 	public OceanUSBManager(Context context)
 	{
@@ -53,7 +53,7 @@ public class OceanUSBManager
 
 		if (staticManager_ != null)
 		{
-			Log.e("Ocean", "OceanUSBManager: Only one instance of OceanUSBManager can be created");
+			Log.e("Ocean", "OceanUSBManager: Only one instance of OceanUSBManager can be created, release() the previous instance first");
 			return;
 		}
 
@@ -99,6 +99,54 @@ public class OceanUSBManager
 	public boolean isValid()
 	{
 		return context_ != null;
+	}
+
+	/**
+	 * Releases the manager, afterwards a new instance can be created.
+	 * All opened USB devices are closed and the receiver for permission requests is unregistered.
+	 * This function must be called when the context which was used to create the manager is destroyed, e.g., in Activity.onDestroy(), as otherwise the manager keeps a receiver registered with a destroyed context and no new manager can be created when the activity is re-created.
+	 * Native USB devices need to be closed before the manager is released.
+	 * @see isValid().
+	 */
+	public void release()
+	{
+		synchronized (OceanUSBManager.class)
+		{
+			if (context_ == null)
+			{
+				// the manager was never initialized or has been released already
+				return;
+			}
+
+			if (!openedDeviceList_.isEmpty())
+			{
+				Log.w("Ocean", "OceanUSBManager: Releasing the manager while " + openedDeviceList_.size() + " USB device(s) are still opened, the native code should have closed them before");
+			}
+
+			for (UsbDeviceConnection usbDeviceConnection : openedDeviceList_.values())
+			{
+				usbDeviceConnection.close();
+			}
+
+			openedDeviceList_.clear();
+			grantedDeviceList_.clear();
+
+			try
+			{
+				context_.unregisterReceiver(usbReciever_);
+			}
+			catch (IllegalArgumentException exception)
+			{
+				Log.w("Ocean", "OceanUSBManager: The receiver for permission requests was not registered");
+			}
+
+			context_ = null;
+
+			if (staticManager_ == this)
+			{
+				staticManager_ = null;
+			}
+		}
 	}
 
 	/**
@@ -490,8 +538,6 @@ public class OceanUSBManager
 						if (usbDevice != null)
 						{
 							Log.d("Ocean", "OceanUSBManager: Permission granted for device " + usbDevice.getDeviceName() + " (" + usbDevice.getProductName() + ")");
-
-							UsbDeviceConnection usbDeviceConnection = usbManager_.openDevice(usbDevice);
 
 							grantedDeviceList_.put(usbDevice.getDeviceName(), usbDevice);
 
