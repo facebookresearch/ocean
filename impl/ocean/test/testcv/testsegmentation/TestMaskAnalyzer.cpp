@@ -1362,7 +1362,7 @@ bool TestMaskAnalyzer::testFindOutlinePixels4(const unsigned int width, const un
 			const uint8_t maskValue = uint8_t(RandomI::random(randomGenerator, 255u));
 			const uint8_t nonMaskValue = uint8_t(((unsigned int)(maskValue) + RandomI::random(randomGenerator, 1u, 255u)) % 256u);
 
-			const Frame mask = generateTestMask(randomGenerator, widthToUse, heightToUse, maskValue, nonMaskValue);
+			const Frame mask = generateTestMask(randomGenerator, widthToUse, heightToUse, maskValue, nonMaskValue, RandomI::boolean(randomGenerator));
 
 			CV::PixelPositions outlinePixels;
 			CV::PixelBoundingBox boundingBox;
@@ -2390,69 +2390,38 @@ bool TestMaskAnalyzer::validateFindOutlinePixels4(const Frame& mask, const CV::P
 
 	const CV::PixelBoundingBox boundingBox = optionalBoundingBox.isValid() ? optionalBoundingBox : CV::PixelBoundingBox(CV::PixelPosition(0u, 0u), mask.width(), mask.height());
 
-	{
-		PixelPositionSet outlinePixelsSet;
-		for (auto a : outlinePixels)
-		{
-			ocean_assert(outlinePixelsSet.find(a) == outlinePixelsSet.cend());
-			outlinePixelsSet.emplace(a);
-		}
-	}
-
 	const PixelPositionSet outlinePixelsSet(outlinePixels.cbegin(), outlinePixels.cend());
 
-	ocean_assert(outlinePixelsSet.size() == outlinePixels.size());
 	if (outlinePixelsSet.size() != outlinePixels.size())
 	{
+		// a pixel must not be reported twice
 		return false;
 	}
 
-	CV::PixelPositions testPixels;
-	testPixels.reserve(1024);
+	// an outline pixel is not a mask pixel but has at least one mask pixel in its 4-neighborhood,
+	// pixels outside of the frame are not mask pixels, and the operation area is the bounding box and one pixel outside of it
+
+	const auto isMaskPixel = [&mask, nonMaskValue](const int x, const int y)
+	{
+		return x >= 0 && y >= 0 && x < int(mask.width()) && y < int(mask.height()) && mask.constpixel<uint8_t>((unsigned int)(x), (unsigned int)(y))[0] != nonMaskValue;
+	};
+
+	PixelPositionSet testPixelSet;
 
 	for (int y = int(boundingBox.top()) - 1; y <= int(boundingBox.bottomEnd()); ++y)
 	{
-		for (int x = int(boundingBox.left() - 1); x <= int(boundingBox.rightEnd()); ++x)
+		for (int x = int(boundingBox.left()) - 1; x <= int(boundingBox.rightEnd()); ++x)
 		{
-			bool isOutline = false;
-
-			for (int yy = -1; !isOutline && yy <= 1; ++yy)
+			if (!isMaskPixel(x, y) && (isMaskPixel(x - 1, y) || isMaskPixel(x + 1, y) || isMaskPixel(x, y - 1) || isMaskPixel(x, y + 1)))
 			{
-				const unsigned int yLookup = (unsigned int)(int(y) + yy);
-
-				if (yLookup < mask.height())
-				{
-					for (int xx = -1; !isOutline && xx <=1; ++xx)
-					{
-						const unsigned int xLookup = (unsigned int)(int(x) + xx);
-
-						if (xLookup < mask.width())
-						{
-							if (mask.constpixel<uint8_t>(xLookup, yLookup)[0u] != nonMaskValue)
-							{
-								isOutline = false;
-							}
-						}
-					}
-				}
-			}
-
-			if (!isOutline)
-			{
-				testPixels.emplace_back((unsigned int)(x), (unsigned int)(y));
+				testPixelSet.emplace((unsigned int)(x), (unsigned int)(y));
 			}
 		}
 	}
 
-	const PixelPositionSet testPixelSet(testPixels.cbegin(), testPixels.cend());
+	// together with the subset test below an identical size means both sets are equal
 
-	ocean_assert(testPixelSet.size() == testPixels.size());
-	if (testPixelSet.size() != testPixels.size())
-	{
-		return false;
-	}
-
-	if (outlinePixels.size() != outlinePixelsSet.size())
+	if (outlinePixelsSet.size() != testPixelSet.size())
 	{
 		return false;
 	}
