@@ -1661,6 +1661,15 @@ inline void FrameInterpolatorBilinear::interpolateRowHorizontal8BitPerChannel7Bi
 	constexpr uint8x8_t mask_left_8x8 = NEON::create_uint8x8(0, 0, 2, 2, 4, 4, 6, 6);
 	constexpr uint8x8_t mask_right_8x8 = NEON::create_uint8x8(1, 1, 3, 3, 5, 5, 7, 7);
 
+	// only the 4 bytes of the left and right pixel are guaranteed to be inside the extended row, and locations are not 4-byte aligned
+	const auto loadLeftRightPixels = [extendedSourceRow](const unsigned int location)
+	{
+		uint32_t leftRight;
+		memcpy(&leftRight, extendedSourceRow + location, sizeof(leftRight));
+
+		return vreinterpret_u8_u32(vdup_n_u32(leftRight));
+	};
+
 	for (unsigned int x = 0; x < targetWidth; x += 8u)
 	{
 		if (x + 8u > targetWidth)
@@ -1691,10 +1700,10 @@ inline void FrameInterpolatorBilinear::interpolateRowHorizontal8BitPerChannel7Bi
 
 		// we handle the first 4 pixels
 
-		const uint8x8_t pixel_0_8x8 = vld1_u8(extendedSourceRow + interpolationLocations[0]); // left, right
-		const uint8x8_t pixel_1_8x8 = vld1_u8(extendedSourceRow + interpolationLocations[1]); // left, right
-		const uint8x8_t pixel_2_8x8 = vld1_u8(extendedSourceRow + interpolationLocations[2]); // left, right
-		const uint8x8_t pixel_3_8x8 = vld1_u8(extendedSourceRow + interpolationLocations[3]); // left, right
+		const uint8x8_t pixel_0_8x8 = loadLeftRightPixels(interpolationLocations[0]); // left, right
+		const uint8x8_t pixel_1_8x8 = loadLeftRightPixels(interpolationLocations[1]); // left, right
+		const uint8x8_t pixel_2_8x8 = loadLeftRightPixels(interpolationLocations[2]); // left, right
+		const uint8x8_t pixel_3_8x8 = loadLeftRightPixels(interpolationLocations[3]); // left, right
 
 		const uint16x4x2_t pixel_01_16x4x2 = vtrn_u16(vreinterpret_u16_u8(pixel_0_8x8), vreinterpret_u16_u8(pixel_1_8x8)); // [left, left], [right, right]
 		const uint16x4x2_t pixel_23_16x4x2 = vtrn_u16(vreinterpret_u16_u8(pixel_2_8x8), vreinterpret_u16_u8(pixel_3_8x8)); // [left, left], [right, right]
@@ -1721,10 +1730,10 @@ inline void FrameInterpolatorBilinear::interpolateRowHorizontal8BitPerChannel7Bi
 
 		factors_u_8x8 = vget_high_u8(factors_u_8x16);
 
-		const uint8x8_t pixel_4_8x8 = vld1_u8(extendedSourceRow + interpolationLocations[4]); // left, right
-		const uint8x8_t pixel_5_8x8 = vld1_u8(extendedSourceRow + interpolationLocations[5]); // left, right
-		const uint8x8_t pixel_6_8x8 = vld1_u8(extendedSourceRow + interpolationLocations[6]); // left, right
-		const uint8x8_t pixel_7_8x8 = vld1_u8(extendedSourceRow + interpolationLocations[7]); // left, right
+		const uint8x8_t pixel_4_8x8 = loadLeftRightPixels(interpolationLocations[4]); // left, right
+		const uint8x8_t pixel_5_8x8 = loadLeftRightPixels(interpolationLocations[5]); // left, right
+		const uint8x8_t pixel_6_8x8 = loadLeftRightPixels(interpolationLocations[6]); // left, right
+		const uint8x8_t pixel_7_8x8 = loadLeftRightPixels(interpolationLocations[7]); // left, right
 
 		const uint16x4x2_t pixel_45_16x4x2 = vtrn_u16(vreinterpret_u16_u8(pixel_4_8x8), vreinterpret_u16_u8(pixel_5_8x8)); // [left, left], [right, right]
 		const uint16x4x2_t pixel_67_16x4x2 = vtrn_u16(vreinterpret_u16_u8(pixel_6_8x8), vreinterpret_u16_u8(pixel_7_8x8)); // [left, left], [right, right]
