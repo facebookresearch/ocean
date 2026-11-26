@@ -1,0 +1,143 @@
+name: Build Ocean Quest ExternalCamera APK
+
+on:
+  workflow_dispatch:
+
+env:
+  CMAKE_POLICY_VERSION_MINIMUM: "3.5"
+
+jobs:
+  build-quest-apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build perl
+          sudo apt-get remove -y libssl-dev || true
+          sudo rm -f /usr/lib/x86_64-linux-gnu/libssl.so /usr/lib/x86_64-linux-gnu/libcrypto.so
+          pip install -r build/python/requirements.txt
+
+      - name: Set up Android SDK and NDK (preinstalled on runner)
+        run: |
+          set +e
+          SDKM="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          yes | "$SDKM" --licenses > /dev/null 2>&1
+          NDK_VER=$(grep -rhoE 'ndkVersion\s*=\s*"[^"]+"' build/gradle | head -1 | grep -oE '"[^"]+"' | tr -d '"')
+          NDK_VER=${NDK_VER:-26.1.10909125}
+          echo "Using NDK $NDK_VER"
+          if [ ! -d "$ANDROID_HOME/ndk/$NDK_VER" ]; then
+            "$SDKM" "ndk;$NDK_VER" || { echo "NDK install failed"; exit 1; }
+          fi
+          echo "ANDROID_NDK_VERSION=$NDK_VER" >> $GITHUB_ENV
+          echo "ANDROID_NDK=$ANDROID_HOME/ndk/$NDK_VER" >> $GITHUB_ENV
+          echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/$NDK_VER" >> $GITHUB_ENV
+
+      - name: Patch curl to build without TLS (not needed for camera app)
+        run: |
+          F=build/python/dependencies.yaml
+          sed -i -E 's/^(\s*CURL_ENABLE_SSL:\s*)ON/\1OFF/' $F
+          sed -i -E 's/^(\s*CURL_USE_MBEDTLS:\s*)ON/\1OFF/' $F
+
+      - name: Remove Platform SDK dependency from ExternalCamera
+        run: |
+          python3 - <<'EOF'
+          import re
+          p = "impl/application/ocean/demo/media/externalcamera/CMakeLists.txt"
+          s = open(p).read()
+          s = re.sub(r'\n\s*if \(NOT TARGET ocean_platform_meta_quest_platformsdk\).*?endif\(\)\n', '\n', s, count=1, flags=re.S)
+          s = re.sub(r'\n[ \t]*ocean_platform_meta_quest_platformsdk(?=\n)', '', s)
+          open(p, "w").write(s)
+          EOF
+
+      - name: Build third-party libraries
+        run: |
+          python build/python/build_ocean_3rdparty.py --target android_arm64 --log-level verbose 2>&1 | tee 3rdparty.log
+          exit ${PIPESTATUS[0]}
+
+      - name: Build ExternalCamera APK
+        run: |
+          export OCEAN_DEVELOPMENT_PATH="$GITHUB_WORKSPACE"
+          export OCEAN_THIRDPARTY_PATH="$GITHUB_WORKSPACE/ocean_3rdparty/install"
+          APP_DIR=$(find build/gradle -type d -path '*externalcamera/quest' | head -1)
+          cd "$APP_DIR"
+          chmod +x gradlew
+          ./gradlew assembleDebug 2>&1 | tee "$GITHUB_WORKSPACE/gradle.log"
+          exit ${PIPESTATUS[0]}
+
+      - name: Add OpenXR loader to APK, align and re-sign
+        run: |
+          set -e
+          cd "$GITHUB_WORKSPACE"
+          APK=$(find build/gradle -path '*outputs/apk/debug/*.apk' | head -1)
+          echo "Original APK: $APK"
+          WORK="$GITHUB_WORKSPACE/fix"
+          rm -rf "$WORK"; mkdir -p "$WORK/x" "$WORK/add/lib/arm64-v8a"
+          cp "$APK" "$WORK/app.apk"
+          cd "$WORK"
+
+          echo "===== native libs inside original APK ====="
+          unzip -l app.apk | grep "lib/" || true
+          unzip -q app.apk 'lib/*' -d x || true
+          READELF="$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-readelf"
+          for f in x/lib/arm64-v8a/*.so; do
+            echo "--- $f needs:"
+            "$READELF" -d "$f" | grep NEEDED || true
+          done
+
+          if unzip -l app.apk | grep -q "libopenxr_loader.so"; then
+            echo "APK already contains libopenxr_loader.so - not adding another"
+            cp app.apk aligned_input.apk
+          else
+            echo "===== downloading Khronos OpenXR loader ====="
+            curl -fL -o loader.aar "https://repo1.maven.org/maven2/org/khronos/openxr/openxr_loader_for_android/1.1.54/openxr_loader_for_android-1.1.54.aar"
+            mkdir aar && unzip -q loader.aar -d aar
+            SO=$(find aar -path '*arm64-v8a*' -name libopenxr_loader.so | head -1)
+            echo "Found loader: $SO"
+            cp "$SO" add/lib/arm64-v8a/libopenxr_loader.so
+            zip -d app.apk 'META-INF/*' || true
+            (cd add && zip -0 -r ../app.apk lib/arm64-v8a/libopenxr_loader.so)
+            cp app.apk aligned_input.apk
+          fi
+
+          BT=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
+          echo "Using build-tools: $BT"
+          "$BT/zipalign" -p -f 4 aligned_input.apk aligned.apk
+
+          KS="$HOME/.android/debug.keystore"
+          if [ ! -f "$KS" ]; then
+            mkdir -p "$HOME/.android"
+            keytool -genkeypair -keystore "$KS" -storepass android -keypass android -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+          fi
+          "$BT/apksigner" sign --ks "$KS" --ks-pass pass:android --key-pass pass:android --out ExternalCamera-fixed.apk aligned.apk
+          "$BT/apksigner" verify ExternalCamera-fixed.apk && echo "APK signature OK"
+
+          mkdir -p "$GITHUB_WORKSPACE/fixed"
+          cp ExternalCamera-fixed.apk "$GITHUB_WORKSPACE/fixed/"
+
+      - name: Upload fixed APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ExternalCamera-fixed-apk
+          path: fixed/ExternalCamera-fixed.apk
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs
+          path: |
+            3rdparty.log
+            gradle.log
