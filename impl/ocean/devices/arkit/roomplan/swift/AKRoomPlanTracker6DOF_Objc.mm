@@ -192,7 +192,7 @@ using namespace Ocean::Devices::ARKit;
 	owner_->onCaptureSessionStarted();
 }
 
-- (void)onCaptureSessionAdded:(NSArray<PlanarRoomObject*>*)planarRoomObjects andVolumetric:(NSArray<VolumetricRoomObject*>*)volumetricRoomObjects;
+- (void)onCaptureSessionAdded:(NSArray<PlanarRoomObject*>*)planarRoomObjects andVolumetric:(NSArray<VolumetricRoomObject*>*)volumetricRoomObjects
 {
 	const ScopedLock scopedLock(lock_);
 
@@ -205,7 +205,7 @@ using namespace Ocean::Devices::ARKit;
 	owner_->onCaptureSessionAdded([AKRoomPlanTracker6DOF_Objc extractPlanarRoomObjects:planarRoomObjects], [AKRoomPlanTracker6DOF_Objc extractVolumetricRoomObjects:volumetricRoomObjects]);
 }
 
-- (void)onCaptureSessionRemoved:(NSArray<PlanarRoomObject*>*)planarRoomObjects andVolumetric:(NSArray<VolumetricRoomObject*>*)volumetricRoomObjects;
+- (void)onCaptureSessionRemoved:(NSArray<PlanarRoomObject*>*)planarRoomObjects andVolumetric:(NSArray<VolumetricRoomObject*>*)volumetricRoomObjects
 {
 	const ScopedLock scopedLock(lock_);
 
@@ -218,7 +218,7 @@ using namespace Ocean::Devices::ARKit;
 	owner_->onCaptureSessionRemoved([AKRoomPlanTracker6DOF_Objc extractPlanarRoomObjects:planarRoomObjects], [AKRoomPlanTracker6DOF_Objc extractVolumetricRoomObjects:volumetricRoomObjects]);
 }
 
-- (void)onCaptureSessionChanged:(NSArray<PlanarRoomObject*>*)planarRoomObjects andVolumetric:(NSArray<VolumetricRoomObject*>*)volumetricRoomObjects;
+- (void)onCaptureSessionChanged:(NSArray<PlanarRoomObject*>*)planarRoomObjects andVolumetric:(NSArray<VolumetricRoomObject*>*)volumetricRoomObjects
 {
 	const ScopedLock scopedLock(lock_);
 
@@ -231,7 +231,7 @@ using namespace Ocean::Devices::ARKit;
 	owner_->onCaptureSessionChanged([AKRoomPlanTracker6DOF_Objc extractPlanarRoomObjects:planarRoomObjects], [AKRoomPlanTracker6DOF_Objc extractVolumetricRoomObjects:volumetricRoomObjects]);
 }
 
-- (void)onCaptureSessionUpdated:(NSArray<PlanarRoomObject*>*)planarRoomObjects andVolumetric:(NSArray<VolumetricRoomObject*>*)volumetricRoomObjects;
+- (void)onCaptureSessionUpdated:(NSArray<PlanarRoomObject*>*)planarRoomObjects andVolumetric:(NSArray<VolumetricRoomObject*>*)volumetricRoomObjects
 {
 	const ScopedLock scopedLock(lock_);
 

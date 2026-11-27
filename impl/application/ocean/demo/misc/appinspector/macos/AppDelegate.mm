@@ -245,7 +245,7 @@ using namespace Ocean;
 	_mainWindowTextField.stringValue = StringApple::toNSString(text);
 }
 
--(void)showCallGraphForSymbol:(BinaryAnalyzer::SymbolId)symbolId forChildren:(bool)children;
+-(void)showCallGraphForSymbol:(BinaryAnalyzer::SymbolId)symbolId forChildren:(bool)children
 {
 	CallGraphWindow* callGraphWindow = [[CallGraphWindow alloc] initWithContentRect:NSMakeRect(0, 0, 800, 600) styleMask:(NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask) backing:NSBackingStoreBuffered defer:NO];
 
